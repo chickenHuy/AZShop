@@ -2,7 +2,7 @@ package com.azshop.models;
 
 import java.io.Serializable;
 
-public class AdressShippingModel implements Serializable {
+public class AddressShippingModel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
     private int id;
@@ -11,11 +11,11 @@ public class AdressShippingModel implements Serializable {
     private String address;
     private String phone;
     
-	public AdressShippingModel() {
+	public AddressShippingModel() {
 		super();
 	}
 
-	public AdressShippingModel(int id, int userId, String recipientName, String address, String phone) {
+	public AddressShippingModel(int id, int userId, String recipientName, String address, String phone) {
 		super();
 		this.id = id;
 		this.userId = userId;
@@ -66,7 +66,7 @@ public class AdressShippingModel implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AdressShippingModels [id=" + id + ", userId=" + userId + ", recipientName=" + recipientName
+		return "AddressShippingModels [id=" + id + ", userId=" + userId + ", recipientName=" + recipientName
 				+ ", address=" + address + ", phone=" + phone + "]";
 	}
 	
