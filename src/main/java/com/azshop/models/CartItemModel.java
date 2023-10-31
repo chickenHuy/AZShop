@@ -6,13 +6,13 @@ import java.util.Date;
 public class CartItemModel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-    private int id;
-    private int cartId;
-    private int productId;
-    private int styleValueId;
-    private int count;
-    private Date createAt;
-    private Date updateAt;
+	private int id;
+	private int cartId;
+	private int productId;
+	private int styleValueId;
+	private int count;
+	private Date createAt;
+	private Date updateAt;
     
 	public CartItemModel() {
 		super();
