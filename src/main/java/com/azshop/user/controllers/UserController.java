@@ -1,4 +1,4 @@
-package com.azshop.admin.controllers;
+package com.azshop.user.controllers;
 
 public class UserController {
 	// Some code
