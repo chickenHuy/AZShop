@@ -14,7 +14,6 @@ public class StoreLevelModel implements Serializable {
     private Date updateAt;
     
 	public StoreLevelModel() {
-		super();
 	}
 
 	public StoreLevelModel(int id, String name, int minPoint, int discount, Date createAt, Date updateAt) {

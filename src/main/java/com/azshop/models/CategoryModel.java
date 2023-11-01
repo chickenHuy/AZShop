@@ -3,9 +3,6 @@ package com.azshop.models;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * 
- */
 public class CategoryModel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -19,7 +16,6 @@ public class CategoryModel implements Serializable {
     private Date updateAt;
     
 	public CategoryModel() {
-		super();
 	}
 
 	public CategoryModel(int id, int categoryId, String name, String slug, String image, boolean isDeleted,

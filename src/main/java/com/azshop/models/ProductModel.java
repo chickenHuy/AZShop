@@ -24,7 +24,6 @@ public class ProductModel implements Serializable {
     private Date updateAt;
     
 	public ProductModel() {
-		super();
 	}
 
 	public ProductModel(int id, String name, String slug, String description, BigDecimal price, int quantity, int sold,

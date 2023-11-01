@@ -24,7 +24,6 @@ public class OrderModel implements Serializable {
     private Date updateAt;
     
 	public OrderModel() {
-		super();
 	}
 	
 	public OrderModel(int id, int userId, int storeId, int deliveryId, String recipientName, String address,

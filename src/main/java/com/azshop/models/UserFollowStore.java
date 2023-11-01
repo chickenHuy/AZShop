@@ -14,7 +14,6 @@ public class UserFollowStore implements Serializable {
     private Date updateAt;
        
 	public UserFollowStore() {
-		super();
 	}
 
 	public UserFollowStore(int id, int userId, int storeId, boolean isDeleted, Date createAt, Date updateAt) {

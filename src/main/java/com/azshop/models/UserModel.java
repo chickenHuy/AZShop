@@ -28,7 +28,6 @@ public class UserModel implements Serializable {
     private Date updateAt;
     
 	public UserModel() {
-		super();
 	}
 
 	public UserModel(int id, String firstName, String lastName, String slug, String cartId, String email, String phone,

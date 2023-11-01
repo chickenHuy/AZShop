@@ -16,7 +16,6 @@ public class DeliveryModel implements Serializable {
     private Date updateAt;
     
 	public DeliveryModel() {
-		super();
 	}
 	
 	public DeliveryModel(int id, String name, BigDecimal price, String description, boolean isDeleted, Date createAt,

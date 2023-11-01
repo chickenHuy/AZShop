@@ -17,7 +17,6 @@ public class ReviewModel implements Serializable {
     private Date updateAt;
     
 	public ReviewModel() {
-		super();
 	}
 	
 	public ReviewModel(int id, int userId, int productId, int storeId, int orderId, String content, int rating,

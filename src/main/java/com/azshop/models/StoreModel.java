@@ -24,7 +24,6 @@ public class StoreModel implements Serializable  {
     private Date updateAt;
     
 	public StoreModel() {
-		super();
 	}
 
 	public StoreModel(int id, String name, String bio, String slug, int ownerId, int storeLevelId, boolean isActive,

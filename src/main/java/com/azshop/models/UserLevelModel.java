@@ -15,7 +15,6 @@ public class UserLevelModel implements Serializable {
     private Date updatedAt;
     
 	public UserLevelModel() {
-		super();
 	}
 
 	public UserLevelModel(int id, String name, int minPoint, int discount, boolean isDeleted, Date createdAt,

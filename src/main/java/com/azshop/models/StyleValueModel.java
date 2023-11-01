@@ -14,7 +14,6 @@ public class StyleValueModel implements Serializable {
     private Date updateAt;
     
 	public StyleValueModel() {
-		super();
 	}
 
 	public StyleValueModel(int id, String name, int styleId, boolean isDeleted, Date createAt, Date updateAt) {

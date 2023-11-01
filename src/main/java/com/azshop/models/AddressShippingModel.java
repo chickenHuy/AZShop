@@ -12,7 +12,6 @@ public class AddressShippingModel implements Serializable {
     private String phone;
     
 	public AddressShippingModel() {
-		super();
 	}
 
 	public AddressShippingModel(int id, int userId, String recipientName, String address, String phone) {

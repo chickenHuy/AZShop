@@ -16,7 +16,6 @@ public class TransactionModel implements Serializable {
     private Date updateAt;
     
 	public TransactionModel() {
-		super();
 	}
 
 	public TransactionModel(int id, int userId, int storeId, boolean isUp, BigDecimal amount, Date createAt,

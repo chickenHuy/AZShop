@@ -14,7 +14,6 @@ public class OrderItemModel implements Serializable {
     private Date updateAt;
     
 	public OrderItemModel() {
-		super();
 	}
 	
 	public OrderItemModel(int id, int orderId, int productId, int count, Date createAt, Date updateAt) {

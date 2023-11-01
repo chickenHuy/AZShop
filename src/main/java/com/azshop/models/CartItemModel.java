@@ -15,7 +15,6 @@ public class CartItemModel implements Serializable {
 	private Date updateAt;
     
 	public CartItemModel() {
-		super();
 	}
 
 	public CartItemModel(int id, int cartId, int productId, int styleValueId, int count, Date createAt, Date updateAt) {

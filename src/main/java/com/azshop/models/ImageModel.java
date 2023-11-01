@@ -13,7 +13,6 @@ public class ImageModel implements Serializable {
     private Date updateAt;
     
 	public ImageModel() {
-		super();
 	}
 	
 	public ImageModel(int id, int productId, String image, Date createAt, Date updateAt) {
