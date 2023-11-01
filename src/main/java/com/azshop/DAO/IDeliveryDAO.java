@@ -1,5 +1,13 @@
 package com.azshop.DAO;
 
-public interface IDeliveryDAO {
+import java.util.List;
 
+import com.azshop.models.DeliveryModel;
+
+public interface IDeliveryDAO {
+	void insert(DeliveryModel delivery);
+    DeliveryModel getById(int id);
+    List<DeliveryModel> getAll();
+    void update(DeliveryModel delivery);
+    void delete(int id);
 }
