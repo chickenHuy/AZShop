@@ -1,5 +1,14 @@
 package com.azshop.DAO;
 
-public interface IUserFollowStoreDAO {
+import java.util.List;
 
+import com.azshop.models.UserFollowStoreModel;
+
+public interface IUserFollowStoreDAO {
+	void insert(UserFollowStoreModel userFollowStore);
+	void update(UserFollowStoreModel userFollowStore);
+	void delete(int id);
+	List<UserFollowStoreModel> getAll();
+	List<UserFollowStoreModel> getByUserId(int userId);
+	List<UserFollowStoreModel> getByStoreId(int storeId);
 }

@@ -1,5 +1,13 @@
 package com.azshop.DAO;
 
-public interface IUserDAO {
+import java.util.List;
 
+import com.azshop.models.UserModel;
+
+public interface IUserDAO {
+	void insert(UserModel user);
+	void update(UserModel user);
+	void delete(int id);
+	List<UserModel> getAll();
+	UserModel getById(int id);
 }

@@ -3,7 +3,7 @@ package com.azshop.models;
 import java.io.Serializable;
 import java.util.Date;
 
-public class UserFollowStore implements Serializable {
+public class UserFollowStoreModel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private int id;
@@ -13,10 +13,10 @@ public class UserFollowStore implements Serializable {
     private Date createAt;
     private Date updateAt;
        
-	public UserFollowStore() {
+	public UserFollowStoreModel() {
 	}
 
-	public UserFollowStore(int id, int userId, int storeId, boolean isDeleted, Date createAt, Date updateAt) {
+	public UserFollowStoreModel(int id, int userId, int storeId, boolean isDeleted, Date createAt, Date updateAt) {
 		super();
 		this.id = id;
 		this.userId = userId;
