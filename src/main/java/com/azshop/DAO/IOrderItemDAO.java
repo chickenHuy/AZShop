@@ -10,6 +10,7 @@ public interface IOrderItemDAO {
     OrderItemModel getById(int id);
     List<OrderItemModel> getAll();
     List<OrderItemModel> getByOrderId(int orderId);
+    List<OrderItemModel> getByProductId(int productId);
     void update(OrderItemModel orderItem);
     void delete(int id);
 }
