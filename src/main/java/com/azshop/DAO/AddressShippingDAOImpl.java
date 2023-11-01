@@ -9,7 +9,7 @@ import java.util.List;
 import com.azshop.models.AddressShippingModel;
 
 
-public class AddressShippingImpl implements IAddressShippingDAO{
+public class AddressShippingDAOImpl implements IAddressShippingDAO{
 
 	Connection conn = null;
 	PreparedStatement ps = null;
