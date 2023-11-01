@@ -1,4 +1,4 @@
-package com.azshop.customer.controllers;
+package com.azshop.controllers.customer;
 
 public class CustomerController {
 	// Some code
