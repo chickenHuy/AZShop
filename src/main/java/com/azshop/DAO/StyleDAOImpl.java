@@ -17,7 +17,7 @@ public class StyleDAOImpl implements IStyleDAO{
 	@Override
 	public void insert(StyleModel style) {
 		try {
-			String sql = "INSERT INTO styles (id, name, categoryId, isDeleted, createAt) VALUES (?, ?, ?, ?, GETDATE())";
+			String sql = "INSERT INTO Style (id, name, categoryId, isDeleted, createAt) VALUES (?, ?, ?, ?, GETDATE())";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -97,7 +97,7 @@ public class StyleDAOImpl implements IStyleDAO{
 	public List<StyleModel> getByCategoryId(int categoryId) {
 		List<StyleModel> styleModels = new ArrayList<StyleModel>();
 		try {
-			 String sql = "SELECT * FROM Style WHERE categoryId = ?, isDeleted = 0";
+			 String sql = "SELECT * FROM Style WHERE categoryId = ? AND isDeleted = 0";
 		        conn = new DBConnection().getConnection();
 		        
 		        ps = conn.prepareStatement(sql);
@@ -126,7 +126,7 @@ public class StyleDAOImpl implements IStyleDAO{
 	@Override
 	public void update(StyleModel style) {
 		try {
-		    String sql = "UPDATE styles SET name = ?, categoryId = ?, updateAt = GETDATE() WHERE id = ?";
+		    String sql = "UPDATE Style SET name = ?, categoryId = ?, updateAt = GETDATE() WHERE id = ?";
 		    conn = new DBConnection().getConnection();
 		    
 		    ps = conn.prepareStatement(sql);
@@ -146,7 +146,7 @@ public class StyleDAOImpl implements IStyleDAO{
 	@Override
 	public void delete(int id) {
 		try {
-		    String sql = "UPDATE styles SET isDeleted = 1, updateAt = GETDATE() WHERE id = ?";
+		    String sql = "UPDATE Style SET isDeleted = 1, updateAt = GETDATE() WHERE id = ?";
 		    conn = new DBConnection().getConnection();
 		    
 		    ps = conn.prepareStatement(sql);
