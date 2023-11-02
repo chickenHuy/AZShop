@@ -17,27 +17,26 @@ public class OrderDAOImpl implements IOrderDAO {
 	@Override
 	public void insert(OrderModel order) {
 		try {
-			String sql = "INSERT INTO Order (id, userId, storeId, deliveryId, recipientName, address, phone, status, isPaidBefore, "
+			String sql = "INSERT INTO Order (userId, storeId, deliveryId, recipientName, address, phone, status, isPaidBefore, "
 					+ "amountFromUser, amountFromStore, amountToStore, amountToAZShop, createAt) "
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GetDate())";
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE())";
 			
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
 			
-			ps.setInt(1, order.getId());
-			ps.setInt(2, order.getUserId());
-			ps.setInt(3, order.getStoreId());
-			ps.setInt(4, order.getDeliveryId());
-			ps.setString(5, order.getRecipientName());
-			ps.setString(6, order.getAddress());
-			ps.setString(7, order.getPhone());
-			ps.setString(8, order.getStatus());
-			ps.setBoolean(9, order.isPaidBefore());
-			ps.setBigDecimal(10, order.getAmountFromUser());
-			ps.setBigDecimal(11, order.getAmountFromStore());
-			ps.setBigDecimal(12, order.getAmountToStore());
-			ps.setBigDecimal(13, order.getAmountToAZShop());
+			ps.setInt(1, order.getUserId());
+			ps.setInt(2, order.getStoreId());
+			ps.setInt(3, order.getDeliveryId());
+			ps.setString(4, order.getRecipientName());
+			ps.setString(5, order.getAddress());
+			ps.setString(6, order.getPhone());
+			ps.setString(7, order.getStatus());
+			ps.setBoolean(8, order.isPaidBefore());
+			ps.setBigDecimal(9, order.getAmountFromUser());
+			ps.setBigDecimal(10, order.getAmountFromStore());
+			ps.setBigDecimal(11, order.getAmountToStore());
+			ps.setBigDecimal(12, order.getAmountToAZShop());
 			
 			ps.executeUpdate();
 			
@@ -251,26 +250,25 @@ public class OrderDAOImpl implements IOrderDAO {
 	@Override
 	public void update(OrderModel order) {
 		try {
-			String sql = "UPDATE Order SET id = ?, userId = ?, storeId = ?, deliveryId = ?, recipientName = ?, address = ?, phone = ?, status = ?, isPaidBefore = ?, "
-					+ "amountFromUser = ?, amountFromStore = ?, amountToStore = ?, amountToAZShop = ?, updateAt = GetDate()";
+			String sql = "UPDATE Order SET userId = ?, storeId = ?, deliveryId = ?, recipientName = ?, address = ?, phone = ?, status = ?, isPaidBefore = ?, "
+					+ "amountFromUser = ?, amountFromStore = ?, amountToStore = ?, amountToAZShop = ?, updateAt = GETDATE()";
 			
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
 			
-			ps.setInt(1, order.getId());
-			ps.setInt(2, order.getUserId());
-			ps.setInt(3, order.getStoreId());
-			ps.setInt(4, order.getDeliveryId());
-			ps.setString(5, order.getRecipientName());
-			ps.setString(6, order.getAddress());
-			ps.setString(7, order.getPhone());
-			ps.setString(8, order.getStatus());
-			ps.setBoolean(9, order.isPaidBefore());
-			ps.setBigDecimal(10, order.getAmountFromUser());
-			ps.setBigDecimal(11, order.getAmountFromStore());
-			ps.setBigDecimal(12, order.getAmountToStore());
-			ps.setBigDecimal(13, order.getAmountToAZShop());
+			ps.setInt(1, order.getUserId());
+			ps.setInt(2, order.getStoreId());
+			ps.setInt(3, order.getDeliveryId());
+			ps.setString(4, order.getRecipientName());
+			ps.setString(5, order.getAddress());
+			ps.setString(6, order.getPhone());
+			ps.setString(7, order.getStatus());
+			ps.setBoolean(8, order.isPaidBefore());
+			ps.setBigDecimal(9, order.getAmountFromUser());
+			ps.setBigDecimal(10, order.getAmountFromStore());
+			ps.setBigDecimal(11, order.getAmountToStore());
+			ps.setBigDecimal(12, order.getAmountToAZShop());
 			
 			ps.executeUpdate();
 			
