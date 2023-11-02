@@ -161,14 +161,15 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 	@Override
 	public void update(OrderItemModel orderItem) {
 		try {
-			String sql = "UPDATE OrderItem SET (orderID = ?, productId = ?, count = ?, updateAt = GETDATE())";
+			String sql = "UPDATE OrderItem SET orderID = ?, productId = ?, count = ?, updateAt = GETDATE() where id=?";
 			
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
-			
+						
 			ps.setInt(1, orderItem.getOrderId());
 			ps.setInt(2, orderItem.getProductId());
 			ps.setInt(3, orderItem.getCount());
+			ps.setInt(4, orderItem.getId());
 			
 			ps.executeUpdate();
 			
