@@ -20,7 +20,7 @@ public class ReviewDAOImpl implements IReviewDAO {
 	@Override
 	public void insert(ReviewModel review) {
 		try {
-			String sql = "INSERT INTO Review (userId, productId, storeId, orderId, content, rating, createAt) VALUES (?, ?, ?, ?, ?, ?, GETDATE(), ?)";
+			String sql = "INSERT INTO Review (userId, productId, storeId, orderId, content, rating, createAt) VALUES (?, ?, ?, ?, ?, ?, GETDATE())";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
