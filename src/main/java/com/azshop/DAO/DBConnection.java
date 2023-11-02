@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 
 public class DBConnection {
 
-	private final String serverName = StringServerName.getName;
+	private final String serverName = "ADMIN-PC\\SQLEXPRESS";
 	private final String dbName = "AZShop_Nhom_4";
 	private final String portNumber = "1433";
 	private final String instance = "";// MSSQLSERVER LEAVE THIS ONE
