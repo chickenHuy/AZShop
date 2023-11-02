@@ -134,6 +134,7 @@ public class AddressShippingDAOImpl implements IAddressShippingDAO{
 			ps.setString(2, addressShipping.getRecipientName());
 			ps.setString(3, addressShipping.getAddress());
 			ps.setString(4, addressShipping.getPhone());
+			ps.setInt(5, addressShipping.getId());
 			
 			ps.executeUpdate();
 			
