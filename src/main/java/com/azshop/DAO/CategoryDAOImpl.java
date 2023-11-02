@@ -18,7 +18,7 @@ public class CategoryDAOImpl implements ICategoryDAO {
 	@Override
 	public void insert(CategoryModel category) {
 		try {
-			String sql = "INSERT INTO Category(id, categoryId, name, slug, image, isDeleted, createAt, updateAt) VALUES (?, ?, ?, ?, ?, 'false', '(GETDATE)', '(GETDATE)')";
+			String sql = "INSERT INTO Category(id, categoryId, name, slug, image, isDeleted, createAt) VALUES (?, ?, ?, ?, ?, ?, GETDATE() )";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
@@ -28,7 +28,8 @@ public class CategoryDAOImpl implements ICategoryDAO {
 			ps.setString(3, category.getName());
 			ps.setString(4, category.getSlug());
 			ps.setString(5, category.getImage());
-
+			ps.setBoolean(6, false);
+			
 			ps.executeUpdate();
 
 			conn.close();
@@ -41,7 +42,7 @@ public class CategoryDAOImpl implements ICategoryDAO {
 	public CategoryModel getById(int id) {
 		CategoryModel category = new CategoryModel();
 		try {
-			String sql = "SELECT * FROM Category WHERE id = ?";
+			String sql = "SELECT * FROM Category WHERE id = ? AND isDeleted = 0";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
@@ -70,7 +71,7 @@ public class CategoryDAOImpl implements ICategoryDAO {
 	public List<CategoryModel> getAll() {
 		List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
 		try {
-			String sql = "SELECT * FROM Category";
+			String sql = "SELECT * FROM Category WHERE isDeleted = 0";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
@@ -100,7 +101,7 @@ public class CategoryDAOImpl implements ICategoryDAO {
 	public List<CategoryModel> getChildCategory(int parentId) {
 		List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
 		try {
-			String sql = "SELECT * FROM Category WHERE categoryId = ?";
+			String sql = "SELECT * FROM Category WHERE categoryId = ? AND isDeleted = 0";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
@@ -130,17 +131,16 @@ public class CategoryDAOImpl implements ICategoryDAO {
 	@Override
 	public void update(CategoryModel category) {
 		try {
-			String sql = "UPDATE Category SET categoryId = ?, name = ?, slug = ?, image = ?, isDeleted = ?, updateAt = GETDATE() WHERE id = ?";
+			String sql = "UPDATE Category SET categoryId = ?, name = ?, slug = ?, image = ?, updateAt = GETDATE() WHERE id = ?";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
 
 			ps.setInt(1, category.getCategoryId());
 			ps.setString(2, category.getName());
-			ps.setString(2, category.getSlug());
+			ps.setString(3, category.getSlug());
 			ps.setString(4, category.getImage());
-			ps.setBoolean(5, category.isDeleted());
-			ps.setInt(6, category.getId());
+			ps.setInt(5, category.getId());
 
 			ps.executeUpdate();
 
@@ -153,7 +153,7 @@ public class CategoryDAOImpl implements ICategoryDAO {
 	@Override
 	public void delete(int id) {
 		try {
-			String sql = "UPDATE Category SET  isDeleted = 'true', updateAt = GETDATE() WHERE id = ?";
+			String sql = "UPDATE Category SET  isDeleted = 1 , updateAt = GETDATE() WHERE id = ?";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
