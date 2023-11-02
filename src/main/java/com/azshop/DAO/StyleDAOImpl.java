@@ -17,15 +17,14 @@ public class StyleDAOImpl implements IStyleDAO{
 	@Override
 	public void insert(StyleModel style) {
 		try {
-			String sql = "INSERT INTO Style (id, name, categoryId, isDeleted, createAt) VALUES (?, ?, ?, ?, GETDATE())";
+			String sql = "INSERT INTO Style (name, categoryId, isDeleted, createAt) VALUES (?, ?, ?, GETDATE())";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
 			
-			ps.setInt(1, style.getId());
-			ps.setString(2, style.getName());
-			ps.setInt(3, style.getCategoryId());
-			ps.setBoolean(4, false);
+			ps.setString(1, style.getName());
+			ps.setInt(2, style.getCategoryId());
+			ps.setBoolean(3, false);
 			ps.executeUpdate();
 			
 			conn.close();
