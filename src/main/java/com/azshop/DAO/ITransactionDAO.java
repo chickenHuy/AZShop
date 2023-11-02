@@ -9,7 +9,7 @@ public interface ITransactionDAO {
 	void update(TransactionModel transaction);
 	void delete(int id);
 	List<TransactionModel> getAll();
-	List<TransactionModel> getById(int id);
+	TransactionModel getById(int id);
 	List<TransactionModel> getByUserId(int userId);
 	List<TransactionModel> getByStoreId(int storeId);
 }
