@@ -1,10 +1,10 @@
-package com.azshop.DAO;
+package com.azshop.services;
 
 import java.util.List;
 
 import com.azshop.models.AddressShippingModel;
 
-public interface IAddressShippingDAO {
+public interface IAddressShippingService {
 	void insert(AddressShippingModel addressShipping);
 
 	AddressShippingModel getById(int id);
