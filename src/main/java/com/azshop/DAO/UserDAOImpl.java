@@ -17,7 +17,7 @@ public class UserDAOImpl implements IUserDAO {
 	@Override
 	public void insert(UserModel user) {
 		try {
-			String sql = "INSERT INTO User (firstName, lastName, slug, cartId, email, phone, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, avatar, coverImage, point, eWallet, createAt, updateAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GetDate(), GetDate())";
+			String sql = "INSERT INTO User(firstName, lastName, slug, cartId, email, phone, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, avatar, coverImage, point, eWallet, createAt) VALUES (?, ?, ?, ?, ?, ?, 'false', 'false', ?, ?, ?, ?, ?, ?, 0, 0, GetDate())";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -28,17 +28,12 @@ public class UserDAOImpl implements IUserDAO {
 			ps.setString(4, user.getCartId());
 			ps.setString(5, user.getEmail());
 			ps.setString(6, user.getPhone());
-			ps.setBoolean(7, user.isEmailActive());
-			ps.setBoolean(8, user.isPhoneActive());
-			ps.setString(9, user.getSalt());
-			ps.setString(10, user.getHashedPassword());
-			ps.setString(11, user.getRole());
-			ps.setInt(12, user.getUserLevelId());
-			ps.setString(13, user.getAvatar());
-			ps.setString(14, user.getCoverImage());
-			ps.setInt(15, user.getPoint());
-			ps.setBigDecimal(16, user.geteWallet());
-			
+			ps.setString(7, user.getSalt());
+			ps.setString(8, user.getHashedPassword());
+			ps.setString(9, user.getRole());
+			ps.setInt(10, user.getUserLevelId());
+			ps.setString(11, user.getAvatar());
+			ps.setString(12, user.getCoverImage());
 			
 			ps.executeUpdate();
 			

@@ -17,7 +17,7 @@ public class UserLevelDAOImpl implements IUserLevelDAO {
 	@Override
 	public void insert(UserLevelModel userLevel) {
 		try {
-			String sql = "INSERT INTO UserLevel (name, minPoint, discount, isDeleted, createdAt, updatedAt) VALUES (?, ?, ?, ?, GetDate(), GetDate())";
+			String sql = "INSERT INTO UserLevel (name, minPoint, discount, isDeleted, createdAt) VALUES (?, ?, ?, 'false', GetDate())";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
