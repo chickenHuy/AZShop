@@ -1,7 +1,8 @@
 package com.azshop.DAO;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.Date;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -9,30 +10,25 @@ import java.util.List;
 
 import com.azshop.models.TransactionModel;
 
-public class TransactionDAOImpl implements ITransactionDAO{
+public class TransactionDAOImpl implements ITransactionDAO {
 
 	Connection conn = null;
 	PreparedStatement ps = null;
 	ResultSet rs = null;
-	
+
 	@Override
 	public void insert(TransactionModel transaction) {
 		try {
-			String sql = "INSERT INTO Transaction(id, userId, storeId, isUp, amount, createAt, updateAt) VALUES (?, ?, ?, 'false', ?, '(GETDATE)', '(GETDATE)')";
+			String sql = "INSERT INTO dbo.[Transaction] (userId, storeId, isUp, amount, createAt) VALUES (?, ?, ?, ?, GETDATE());";
 			conn = new DBConnection().getConnection();
-
 			ps = conn.prepareStatement(sql);
 
-			ps.setInt(1, transaction.getId());
-			ps.setInt(2, transaction.getUserId());
-			ps.setInt(3, transaction.getStoreId());
-			ps.setBoolean(4, transaction.isUp());
-			ps.setBigDecimal(5, transaction.getAmount());
-			ps.setDate(6, (Date)transaction.getCreateAt());
-			ps.setDate(7, (Date)transaction.getUpdateAt());
+			ps.setInt(1, transaction.getUserId());
+			ps.setInt(2, transaction.getStoreId());
+			ps.setBoolean(3, transaction.isUp());
+			ps.setBigDecimal(4, transaction.getAmount());
 
 			ps.executeUpdate();
-
 			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -42,11 +38,10 @@ public class TransactionDAOImpl implements ITransactionDAO{
 	@Override
 	public void update(TransactionModel transaction) {
 		try {
-			String sql = "UPDATE Transaction SET userId = ?, storeId = ?, isUp = ?, amount = ?,  updateAt = GETDATE() WHERE id = ?";
+			String sql = "UPDATE dbo.[Transaction] SET userId = ?, storeId = ?, isUp = ?, amount = ?,  updateAt = GETDATE() WHERE id = ?";
 			conn = new DBConnection().getConnection();
-
 			ps = conn.prepareStatement(sql);
-			
+
 			ps.setInt(1, transaction.getUserId());
 			ps.setInt(2, transaction.getStoreId());
 			ps.setBoolean(3, transaction.isUp());
@@ -54,7 +49,6 @@ public class TransactionDAOImpl implements ITransactionDAO{
 			ps.setInt(5, transaction.getId());
 
 			ps.executeUpdate();
-
 			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -64,17 +58,15 @@ public class TransactionDAOImpl implements ITransactionDAO{
 	@Override
 	public void delete(int id) {
 		try {
-			String sql = "DELETE Transaction WHERE id=?";
+			String sql = "DELETE dbo.[Transaction] WHERE id=?";
 			conn = new DBConnection().getConnection();
-			
 			ps = conn.prepareStatement(sql);
+
 			ps.setInt(1, id);
-			
-			rs = ps.executeQuery();
-			
+
+			ps.executeUpdate();
 			conn.close();
-			} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -83,12 +75,11 @@ public class TransactionDAOImpl implements ITransactionDAO{
 	public List<TransactionModel> getAll() {
 		List<TransactionModel> transactionList = new ArrayList<TransactionModel>();
 		try {
-			String sql = "SELECT * FROM Transaction";
+			String sql = "SELECT * FROM dbo.[Transaction]";
 			conn = new DBConnection().getConnection();
-
 			ps = conn.prepareStatement(sql);
-
 			rs = ps.executeQuery();
+
 			if (rs.next()) {
 				TransactionModel transaction = new TransactionModel();
 				transaction.setId(rs.getInt("id"));
@@ -112,7 +103,7 @@ public class TransactionDAOImpl implements ITransactionDAO{
 	public TransactionModel getById(int id) {
 		TransactionModel transaction = new TransactionModel();
 		try {
-			String sql = "SELECT * FROM Transaction Where id = ?";
+			String sql = "SELECT * FROM dbo.[Transaction] WHERE id = ?";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
@@ -140,7 +131,7 @@ public class TransactionDAOImpl implements ITransactionDAO{
 	public List<TransactionModel> getByUserId(int userId) {
 		List<TransactionModel> transactionList = new ArrayList<TransactionModel>();
 		try {
-			String sql = "SELECT * FROM Transaction Where userId = ?";
+			String sql = "SELECT * FROM dbo.[Transaction] WHERE userId = ?";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
@@ -170,7 +161,7 @@ public class TransactionDAOImpl implements ITransactionDAO{
 	public List<TransactionModel> getByStoreId(int storeId) {
 		List<TransactionModel> transactionList = new ArrayList<TransactionModel>();
 		try {
-			String sql = "SELECT * FROM Transaction Where storeId = ?";
+			String sql = "SELECT * FROM dbo.[Transaction] Where storeId = ?";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
@@ -195,5 +186,4 @@ public class TransactionDAOImpl implements ITransactionDAO{
 		}
 		return transactionList;
 	}
-
 }
