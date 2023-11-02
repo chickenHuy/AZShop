@@ -18,7 +18,7 @@ public class CategoryDAOImpl implements ICategoryDAO {
 	@Override
 	public void insert(CategoryModel category) {
 		try {
-			String sql = "INSERT INTO Category(id, categoryId, name, slug, image, isDeleted, createAt, updateAt) VALUES (?, ?, ?, ?, ?, 'false', '(GETDATE)', ?)";
+			String sql = "INSERT INTO Category(id, categoryId, name, slug, image, isDeleted, createAt, updateAt) VALUES (?, ?, ?, ?, ?, 'false', '(GETDATE)', '(GETDATE)')";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
@@ -28,7 +28,6 @@ public class CategoryDAOImpl implements ICategoryDAO {
 			ps.setString(3, category.getName());
 			ps.setString(4, category.getSlug());
 			ps.setString(5, category.getImage());
-			ps.setDate(6, (Date) category.getUpdateAt());
 
 			ps.executeUpdate();
 
