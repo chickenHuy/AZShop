@@ -8,7 +8,7 @@ public interface IImageDAO {
  	void insert(ImageModel image);
     ImageModel getById(int id);
     List<ImageModel> getAll();
-    List<ImageModel> getByProductId(int userId);
+    List<ImageModel> getByProductId(int productId);
     void update(ImageModel image);
     void delete(int id);
 }
