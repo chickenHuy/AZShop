@@ -4,31 +4,32 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class StoreModel implements Serializable  {
+public class StoreModel implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
-    private int id;
-    private String name;
-    private String bio;
-    private String slug;
-    private int ownerId;
-    private int storeLevelId;
-    private boolean isActive;
-    private String avatar;
-    private String cover;
-    private String featuredImage;
-    private int point;
-    private BigDecimal rating;
-    private BigDecimal eWallet;
-    private Date createAt;
-    private Date updateAt;
-    
+
+	private int id;
+	private String name;
+	private String bio;
+	private String slug;
+	private int ownerId;
+	private int storeLevelId;
+	private boolean isDeleted;
+	private boolean isActive;
+	private String avatar;
+	private String cover;
+	private String featuredImage;
+	private int point;
+	private BigDecimal rating;
+	private BigDecimal eWallet;
+	private Date createAt;
+	private Date updateAt;
+
 	public StoreModel() {
 	}
 
-	public StoreModel(int id, String name, String bio, String slug, int ownerId, int storeLevelId, boolean isActive,
-			String avatar, String cover, String featuredImage, int point, BigDecimal rating, BigDecimal eWallet,
-			Date createAt, Date updateAt) {
+	public StoreModel(int id, String name, String bio, String slug, int ownerId, int storeLevelId, boolean isDeleted,
+			boolean isActive, String avatar, String cover, String featuredImage, int point, BigDecimal rating,
+			BigDecimal eWallet, Date createAt, Date updateAt) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -36,6 +37,7 @@ public class StoreModel implements Serializable  {
 		this.slug = slug;
 		this.ownerId = ownerId;
 		this.storeLevelId = storeLevelId;
+		this.isDeleted = isDeleted;
 		this.isActive = isActive;
 		this.avatar = avatar;
 		this.cover = cover;
@@ -93,6 +95,14 @@ public class StoreModel implements Serializable  {
 
 	public void setStoreLevelId(int storeLevelId) {
 		this.storeLevelId = storeLevelId;
+	}
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
 	public boolean isActive() {
@@ -170,14 +180,9 @@ public class StoreModel implements Serializable  {
 	@Override
 	public String toString() {
 		return "StoreModel [id=" + id + ", name=" + name + ", bio=" + bio + ", slug=" + slug + ", ownerId=" + ownerId
-				+ ", storeLevelId=" + storeLevelId + ", isActive=" + isActive + ", avatar=" + avatar + ", cover="
-				+ cover + ", featuredImage=" + featuredImage + ", point=" + point + ", rating=" + rating + ", eWallet="
-				+ eWallet + ", createAt=" + createAt + ", updateAt=" + updateAt + "]";
+				+ ", storeLevelId=" + storeLevelId + ", isActive=" + isActive + ", isDeleted=" + isDeleted + ", avatar="
+				+ avatar + ", cover=" + cover + ", featuredImage=" + featuredImage + ", point=" + point + ", rating="
+				+ rating + ", eWallet=" + eWallet + ", createAt=" + createAt + ", updateAt=" + updateAt + "]";
 	}
-	
-	
-	
-    
-    
-	
-}	
+
+}

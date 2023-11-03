@@ -2,28 +2,31 @@ package com.azshop.models;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.nio.file.Paths;
 import java.util.Date;
 
 public class TransactionModel implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
-    private int id;
-    private int userId;
-    private int storeId;
-    private boolean isUp;
-    private BigDecimal amount;
-    private Date createAt;
-    private Date updateAt;
-    
+
+	private int id;
+	private int userId;
+	private int storeId;
+	private boolean isUp;
+	private boolean isDeleted;
+	private BigDecimal amount;
+	private Date createAt;
+	private Date updateAt;
+
 	public TransactionModel() {
 	}
 
-	public TransactionModel(int id, int userId, int storeId, boolean isUp, BigDecimal amount, Date createAt,
-			Date updateAt) {
+	public TransactionModel(int id, int userId, int storeId, boolean isDeleted, boolean isUp, BigDecimal amount,
+			Date createAt, Date updateAt) {
 		super();
 		this.id = id;
 		this.userId = userId;
 		this.storeId = storeId;
+		this.isDeleted = isDeleted;
 		this.isUp = isUp;
 		this.amount = amount;
 		this.createAt = createAt;
@@ -52,6 +55,14 @@ public class TransactionModel implements Serializable {
 
 	public void setStoreId(int storeId) {
 		this.storeId = storeId;
+	}
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
 	public boolean isUp() {
@@ -88,13 +99,8 @@ public class TransactionModel implements Serializable {
 
 	@Override
 	public String toString() {
-		return "TransactionModel [id=" + id + ", userId=" + userId + ", storeId=" + storeId + ", isUp=" + isUp
-				+ ", amount=" + amount + ", createAt=" + createAt + ", updateAt=" + updateAt + "]";
+		return "TransactionModel [id=" + id + ", userId=" + userId + ", storeId=" + storeId + ", isDeleted=" + isDeleted
+				+ ", isUp=" + isUp + ", amount=" + amount + ", createAt=" + createAt + ", updateAt=" + updateAt + "]";
 	}
-    
-	
-    
-    
-    
-	
+
 }

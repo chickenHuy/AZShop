@@ -10,18 +10,20 @@ public class StoreLevelModel implements Serializable {
     private String name;
     private int minPoint;
     private int discount;
+    private boolean isDeleted;
     private Date createAt;
     private Date updateAt;
     
 	public StoreLevelModel() {
 	}
 
-	public StoreLevelModel(int id, String name, int minPoint, int discount, Date createAt, Date updateAt) {
+	public StoreLevelModel(int id, String name, int minPoint, int discount, boolean isDeleted, Date createAt, Date updateAt) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.minPoint = minPoint;
 		this.discount = discount;
+		this.isDeleted = isDeleted;
 		this.createAt = createAt;
 		this.updateAt = updateAt;
 	}
@@ -58,6 +60,14 @@ public class StoreLevelModel implements Serializable {
 		this.discount = discount;
 	}
 
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
 	public Date getCreateAt() {
 		return createAt;
 	}
@@ -76,8 +86,8 @@ public class StoreLevelModel implements Serializable {
 
 	@Override
 	public String toString() {
-		return "StoreLevelModel [id=" + id + ", name=" + name + ", minPoint=" + minPoint + ", discount=" + discount
-				+ ", createAt=" + createAt + ", updateAt=" + updateAt + "]";
+		return "StoreLevelModel [id=" + id + ", name=" + name + ", minPoint=" + minPoint+ ", discount=" + discount
++ ", isDeleted=" + isDeleted + ", createAt=" + createAt + ", updateAt=" + updateAt + "]";
 	}
 	
 	

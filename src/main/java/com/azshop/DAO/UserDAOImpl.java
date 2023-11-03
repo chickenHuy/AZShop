@@ -86,7 +86,7 @@ public class UserDAOImpl implements IUserDAO {
 	@Override
 	public void delete(int id) {
 		try {
-			String sql = "DELETE User WHERE id=?";
+			String sql = "UPDATE User SET isDeleted = 1 WHERE id = ?";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -105,7 +105,7 @@ public class UserDAOImpl implements IUserDAO {
 	public List<UserModel> getAll() {
 		List<UserModel> userModelList = new ArrayList<UserModel>();
 	    try {
-	        String sql = "SELECT * FROM User";
+	        String sql = "SELECT * FROM User WHERE isDeleted = 0";
 	        conn = new DBConnection().getConnection();
 	        
 	        ps = conn.prepareStatement(sql);
@@ -147,7 +147,7 @@ public class UserDAOImpl implements IUserDAO {
 	public UserModel getById(int id) {
 		UserModel userModel = new UserModel();
 		try {
-			 String sql = "SELECT * FROM User WHERE id = ?";
+			 String sql = "SELECT * FROM User WHERE id = ? AND isDeleted = 0";
 		        conn = new DBConnection().getConnection();
 		        
 		        ps = conn.prepareStatement(sql);

@@ -1,6 +1,5 @@
 package com.azshop.DAO;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 
 import java.sql.PreparedStatement;
@@ -58,7 +57,7 @@ public class TransactionDAOImpl implements ITransactionDAO {
 	@Override
 	public void delete(int id) {
 		try {
-			String sql = "DELETE dbo.[Transaction] WHERE id=?";
+			String sql = "UPDATE dbo.[Transaction] SET isDeleted = 1 WHERE id = ?";
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
 
@@ -75,7 +74,7 @@ public class TransactionDAOImpl implements ITransactionDAO {
 	public List<TransactionModel> getAll() {
 		List<TransactionModel> transactionList = new ArrayList<TransactionModel>();
 		try {
-			String sql = "SELECT * FROM dbo.[Transaction]";
+			String sql = "SELECT * FROM dbo.[Transaction] WHERE isDeleted = 0";
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
@@ -103,7 +102,7 @@ public class TransactionDAOImpl implements ITransactionDAO {
 	public TransactionModel getById(int id) {
 		TransactionModel transaction = new TransactionModel();
 		try {
-			String sql = "SELECT * FROM dbo.[Transaction] WHERE id = ?";
+			String sql = "SELECT * FROM dbo.[Transaction] WHERE id = ? AND isDeleted = 0";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
@@ -124,14 +123,14 @@ public class TransactionDAOImpl implements ITransactionDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return transaction;
 	}
 
 	@Override
 	public List<TransactionModel> getByUserId(int userId) {
 		List<TransactionModel> transactionList = new ArrayList<TransactionModel>();
 		try {
-			String sql = "SELECT * FROM dbo.[Transaction] WHERE userId = ?";
+			String sql = "SELECT * FROM dbo.[Transaction] WHERE userId = ? AND isDeleted = 0";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
@@ -161,7 +160,7 @@ public class TransactionDAOImpl implements ITransactionDAO {
 	public List<TransactionModel> getByStoreId(int storeId) {
 		List<TransactionModel> transactionList = new ArrayList<TransactionModel>();
 		try {
-			String sql = "SELECT * FROM dbo.[Transaction] Where storeId = ?";
+			String sql = "SELECT * FROM dbo.[Transaction] Where storeId = ? AND isDeleted = 0";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);

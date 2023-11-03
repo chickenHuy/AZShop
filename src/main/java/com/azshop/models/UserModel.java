@@ -6,34 +6,35 @@ import java.util.Date;
 
 public class UserModel implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
-    private int id;
-    private String firstName;
-    private String lastName;
-    private String slug;
-    private String cartId;
-    private String email;
-    private String phone;
-    private boolean isEmailActive;
-    private boolean isPhoneActive;
-    private String salt;
-    private String hashedPassword;
-    private String role;
-    private int userLevelId;
-    private String avatar;
-    private String coverImage;
-    private int point;
-    private BigDecimal eWallet;
-    private Date createAt;
-    private Date updateAt;
-    
+
+	private int id;
+	private String firstName;
+	private String lastName;
+	private String slug;
+	private String cartId;
+	private String email;
+	private String phone;
+	private boolean isDeleted;
+	private boolean isEmailActive;
+	private boolean isPhoneActive;
+	private String salt;
+	private String hashedPassword;
+	private String role;
+	private int userLevelId;
+	private String avatar;
+	private String coverImage;
+	private int point;
+	private BigDecimal eWallet;
+	private Date createAt;
+	private Date updateAt;
+
 	public UserModel() {
 	}
 
 	public UserModel(int id, String firstName, String lastName, String slug, String cartId, String email, String phone,
-			boolean isEmailActive, boolean isPhoneActive, String salt, String hashedPassword, String role,
-			int userLevelId, String avatar, String coverImage, int point, BigDecimal eWallet, Date createAt,
-			Date updateAt) {
+			boolean isDeleted, boolean isEmailActive, boolean isPhoneActive, String salt, String hashedPassword,
+			String role, int userLevelId, String avatar, String coverImage, int point, BigDecimal eWallet,
+			Date createAt, Date updateAt) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -42,6 +43,7 @@ public class UserModel implements Serializable {
 		this.cartId = cartId;
 		this.email = email;
 		this.phone = phone;
+		this.isDeleted = isDeleted;
 		this.isEmailActive = isEmailActive;
 		this.isPhoneActive = isPhoneActive;
 		this.salt = salt;
@@ -110,6 +112,14 @@ public class UserModel implements Serializable {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
 	public boolean isEmailActive() {
@@ -211,15 +221,11 @@ public class UserModel implements Serializable {
 	@Override
 	public String toString() {
 		return "UserModels [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", slug=" + slug
-				+ ", cartId=" + cartId + ", email=" + email + ", phone=" + phone + ", isEmailActive=" + isEmailActive
-				+ ", isPhoneActive=" + isPhoneActive + ", salt=" + salt + ", hashedPassword=" + hashedPassword
-				+ ", role=" + role + ", userLevelId=" + userLevelId + ", avatar=" + avatar + ", coverImage="
-				+ coverImage + ", point=" + point + ", eWallet=" + eWallet + ", createAt=" + createAt + ", updateAt="
-				+ updateAt + "]";
+				+ ", cartId=" + cartId + ", email=" + email + ", phone=" + phone + ", isDeleted=" + isDeleted
+				+ ", isEmailActive=" + isEmailActive + ", isPhoneActive=" + isPhoneActive + ", salt=" + salt
+				+ ", hashedPassword=" + hashedPassword + ", role=" + role + ", userLevelId=" + userLevelId + ", avatar="
+				+ avatar + ", coverImage=" + coverImage + ", point=" + point + ", eWallet=" + eWallet + ", createAt="
+				+ createAt + ", updateAt=" + updateAt + "]";
 	}
-    
-	
-    
 
-	
 }

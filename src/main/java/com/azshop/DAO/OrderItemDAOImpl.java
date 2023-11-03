@@ -40,7 +40,7 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 		OrderItemModel orderItemModel = new OrderItemModel();
 		
 		try {
-			String sql = "Select *from OrderItem where id = ?";
+			String sql = "Select *from OrderItem where id = ? and isDeleted = 0";
 			
 			conn = new DBConnection().getConnection();			
 			ps = conn.prepareStatement(sql);		
@@ -69,7 +69,7 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 		List<OrderItemModel> orderItemModelList = new ArrayList<OrderItemModel>();
 		
 		try {
-			String sql = "Select *from OrderItem";
+			String sql = "Select *from OrderItem where isDeleted = 0";
 			
 			conn = new DBConnection().getConnection();			
 			ps = conn.prepareStatement(sql);		
@@ -99,7 +99,7 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 		List<OrderItemModel> orderItemModelList = new ArrayList<OrderItemModel>();
 		
 		try {
-			String sql = "Select *from OrderItem where orderID = ?";
+			String sql = "Select *from OrderItem where orderID = ? and isDeleted = 0";
 			
 			conn = new DBConnection().getConnection();			
 			ps = conn.prepareStatement(sql);
@@ -131,7 +131,7 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 		List<OrderItemModel> orderItemModelList = new ArrayList<OrderItemModel>();
 		
 		try {
-			String sql = "Select *from OrderItem where productId = ?";
+			String sql = "Select *from OrderItem where productId = ? and isDeleted = 0";
 			
 			conn = new DBConnection().getConnection();			
 			ps = conn.prepareStatement(sql);
@@ -182,7 +182,7 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 	@Override
 	public void delete(int id) {
 		try {
-			String sql = "DELETE OrderItem WHERE id=?";
+			String sql = "UPDATE OrderItem SET isDeleted = 1 WHERE id = ?";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);

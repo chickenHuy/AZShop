@@ -14,6 +14,7 @@ public class ProductModel implements Serializable {
     private BigDecimal price;
     private int quantity;
     private int sold;
+    private boolean isDeleted;
     private boolean isActive;
     private String video;
     private int categoryId;
@@ -27,7 +28,7 @@ public class ProductModel implements Serializable {
 	}
 
 	public ProductModel(int id, String name, String slug, String description, BigDecimal price, int quantity, int sold,
-			boolean isActive, String video, int categoryId, int styleValueId, int storeId, BigDecimal rating,
+			boolean isActive, boolean isDeleted, String video, int categoryId, int styleValueId, int storeId, BigDecimal rating,
 			Date createAt, Date updateAt) {
 		super();
 		this.id = id;
@@ -38,6 +39,7 @@ public class ProductModel implements Serializable {
 		this.quantity = quantity;
 		this.sold = sold;
 		this.isActive = isActive;
+		this.isDeleted = isDeleted;
 		this.video = video;
 		this.categoryId = categoryId;
 		this.styleValueId = styleValueId;
@@ -107,6 +109,14 @@ public class ProductModel implements Serializable {
 		return isActive;
 	}
 
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
@@ -170,7 +180,7 @@ public class ProductModel implements Serializable {
 	@Override
 	public String toString() {
 		return "ProductModel [id=" + id + ", name=" + name + ", slug=" + slug + ", description=" + description
-				+ ", price=" + price + ", quantity=" + quantity + ", sold=" + sold + ", isActive=" + isActive
+				+ ", price=" + price + ", quantity=" + quantity + ", sold=" + sold+ ", isDeleted=" + isDeleted + ", isActive=" + isActive
 				+ ", video=" + video + ", categoryId=" + categoryId + ", styleValueId=" + styleValueId + ", storeId="
 				+ storeId + ", rating=" + rating + ", createAt=" + createAt + ", updateAt=" + updateAt + "]";
 	}

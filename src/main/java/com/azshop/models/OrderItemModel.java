@@ -10,18 +10,20 @@ public class OrderItemModel implements Serializable {
     private int orderId;
     private int productId;
     private int count;
+    private boolean isDeleted;
     private Date createAt;
     private Date updateAt;
     
 	public OrderItemModel() {
 	}
 	
-	public OrderItemModel(int id, int orderId, int productId, int count, Date createAt, Date updateAt) {
+	public OrderItemModel(int id, int orderId, int productId, int count, boolean isDeleted, Date createAt, Date updateAt) {
 		super();
 		this.id = id;
 		this.orderId = orderId;
 		this.productId = productId;
 		this.count = count;
+		this.isDeleted = isDeleted;
 		this.createAt = createAt;
 		this.updateAt = updateAt;
 	}
@@ -53,6 +55,15 @@ public class OrderItemModel implements Serializable {
 	public Date getCreateAt() {
 		return createAt;
 	}
+	
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
 	public void setCreateAt(Date createAt) {
 		this.createAt = createAt;
 	}
@@ -66,7 +77,7 @@ public class OrderItemModel implements Serializable {
 	@Override
 	public String toString() {
 		return "OrderItemModel [id=" + id + ", orderId=" + orderId + ", productId=" + productId + ", count=" + count
-				+ ", createAt=" + createAt + ", updateAt=" + updateAt + "]";
+				+ ", isDelete=" + isDeleted + ", createAt=" + createAt + ", updateAt=" + updateAt + "]";
 	}
     
     

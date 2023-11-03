@@ -5,27 +5,25 @@ import java.util.Date;
 
 public class UserFollowStoreModel implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private int id;
-    private int userId;
-    private int storeId;
-    private boolean isDeleted;
-    private Date createAt;
-    private Date updateAt;
-       
+	private int userId;
+	private int storeId;
+	private Date createAt;
+	private Date updateAt;
+
 	public UserFollowStoreModel() {
 	}
 
-	public UserFollowStoreModel(int id, int userId, int storeId, boolean isDeleted, Date createAt, Date updateAt) {
+	public UserFollowStoreModel(int id, int userId, int storeId, Date createAt, Date updateAt) {
 		super();
 		this.id = id;
 		this.userId = userId;
 		this.storeId = storeId;
-		this.isDeleted = isDeleted;
 		this.createAt = createAt;
 		this.updateAt = updateAt;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -50,14 +48,6 @@ public class UserFollowStoreModel implements Serializable {
 		this.storeId = storeId;
 	}
 
-	public boolean isDeleted() {
-		return isDeleted;
-	}
-
-	public void setDeleted(boolean isDeleted) {
-		this.isDeleted = isDeleted;
-	}
-
 	public Date getCreateAt() {
 		return createAt;
 	}
@@ -76,11 +66,8 @@ public class UserFollowStoreModel implements Serializable {
 
 	@Override
 	public String toString() {
-		return "UserFollowStore [id=" + id + ", userId=" + userId + ", storeId=" + storeId + ", isDeleted=" + isDeleted
-				+ ", createAt=" + createAt + ", updateAt=" + updateAt + "]";
+		return "UserFollowStore [id=" + id + ", userId=" + userId + ", storeId=" + storeId + ", createAt=" + createAt
+				+ ", updateAt=" + updateAt + "]";
 	}
-	
-	
-    
-    
+
 }

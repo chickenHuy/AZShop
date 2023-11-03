@@ -15,6 +15,7 @@ public class OrderModel implements Serializable {
     private String address;
     private String phone;
     private String status;
+    private boolean isDeleted;
     private boolean isPaidBefore;
     private BigDecimal amountFromUser;
     private BigDecimal amountFromStore;
@@ -27,7 +28,7 @@ public class OrderModel implements Serializable {
 	}
 	
 	public OrderModel(int id, int userId, int storeId, int deliveryId, String recipientName, String address,
-			String phone, String status, boolean isPaidBefore, BigDecimal amountFromUser, BigDecimal amountFromStore,
+			String phone, String status, boolean isDeleted, boolean isPaidBefore, BigDecimal amountFromUser, BigDecimal amountFromStore,
 			BigDecimal amountToStore, BigDecimal amountToAZShop, Date createAt, Date updateAt) {
 		super();
 		this.id = id;
@@ -38,6 +39,7 @@ public class OrderModel implements Serializable {
 		this.address = address;
 		this.phone = phone;
 		this.status = status;
+		this.isDeleted = isDeleted;
 		this.isPaidBefore = isPaidBefore;
 		this.amountFromUser = amountFromUser;
 		this.amountFromStore = amountFromStore;
@@ -110,6 +112,14 @@ public class OrderModel implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
 
 	public boolean isPaidBefore() {
 		return isPaidBefore;
@@ -171,7 +181,7 @@ public class OrderModel implements Serializable {
 	public String toString() {
 		return "OrderModel [id=" + id + ", userId=" + userId + ", storeId=" + storeId + ", deliveryId=" + deliveryId
 				+ ", recipientName=" + recipientName + ", address=" + address + ", phone=" + phone + ", status="
-				+ status + ", isPaidBefore=" + isPaidBefore + ", amountFromUser=" + amountFromUser
+				+ status + ", isDelete=" + isDeleted + ", isPaidBefore=" + isPaidBefore + ", amountFromUser=" + amountFromUser
 				+ ", amountFromStore=" + amountFromStore + ", amountToStore=" + amountToStore + ", amountToAZShop="
 				+ amountToAZShop + ", createAt=" + createAt + ", updateAt=" + updateAt + "]";
 	}

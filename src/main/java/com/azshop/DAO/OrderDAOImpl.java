@@ -17,9 +17,9 @@ public class OrderDAOImpl implements IOrderDAO {
 	@Override
 	public void insert(OrderModel order) {
 		try {
-			String sql = "INSERT INTO [Order] (userId, storeId, deliveryId, recipientName, address, phone, status, isPaidBefore, "
+			String sql = "INSERT INTO [Order] (userId, storeId, deliveryId, recipientName, address, phone, status, isDeleted, isPaidBefore, "
 					+ "amountFromUser, amountFromStore, amountToStore, amountToAZShop, createAt) "
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE())";
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, GETDATE())";
 			
 			conn = new DBConnection().getConnection();
 			
@@ -51,7 +51,7 @@ public class OrderDAOImpl implements IOrderDAO {
 	public OrderModel getById(int id) {
 		OrderModel order = new OrderModel();
 		try {
-			String sql = "Select *from [Order] where id = ?";
+			String sql = "Select *from [Order] where id = ? and isDeleted = 0";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -89,7 +89,7 @@ public class OrderDAOImpl implements IOrderDAO {
 		List<OrderModel> oderModelList = new ArrayList<OrderModel>();
 		
 		try {
-			String sql = "Select *from [Order]";
+			String sql = "Select *from [Order] where isDeleted = 0";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -129,7 +129,7 @@ public class OrderDAOImpl implements IOrderDAO {
 		List<OrderModel> oderModelList = new ArrayList<OrderModel>();
 		
 		try {
-			String sql = "Select *from [Order] where userId = ?";
+			String sql = "Select *from [Order] where userId = ? and isDeleted = 0";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -170,7 +170,7 @@ public class OrderDAOImpl implements IOrderDAO {
 		List<OrderModel> oderModelList = new ArrayList<OrderModel>();
 		
 		try {
-			String sql = "Select *from [Order] where storeId = ?";
+			String sql = "Select *from [Order] where storeId = ? and isDeleted = 0";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -211,7 +211,7 @@ public class OrderDAOImpl implements IOrderDAO {
 		List<OrderModel> oderModelList = new ArrayList<OrderModel>();
 		
 		try {
-			String sql = "Select *from [Order] where deliveryId = ?";
+			String sql = "Select *from [Order] where deliveryId = ? and isDeleted = 0";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -284,7 +284,7 @@ public class OrderDAOImpl implements IOrderDAO {
 	@Override
 	public void delete(int id) {
 		try {
-			String sql = "DELETE [Order] WHERE id=?";
+			String sql = "UPDATE [Order] SET isDeleted = 1 WHERE id = ?";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
