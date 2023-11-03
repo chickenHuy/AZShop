@@ -1,20 +1,18 @@
 package com.azshop.DAO;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.azshop.models.AddressShippingModel;
 import com.azshop.models.DeliveryModel;
 
 public class DeliveryDAOImpl implements IDeliveryDAO{
 	
-	static Connection conn = null;
-	static PreparedStatement ps = null;
-	static ResultSet rs = null;
+	Connection conn = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
 
 	@Override
 	public void insert(DeliveryModel delivery) {
@@ -134,27 +132,5 @@ public class DeliveryDAOImpl implements IDeliveryDAO{
 		    }
 	}
 	
-	public static void main(String[] agrs) {
-		DeliveryModel delivery = new DeliveryModel();
-		delivery.setName("đâsd");
-		delivery.setPrice(new BigDecimal("100.000"));
-		delivery.setDescription("Do Khang con cho");
-		delivery.setId(1);
-		try {
-			String sql =  "UPDATE Delivery SET isDeleted = 1 WHERE id = ?";
-			conn = new DBConnection().getConnection();
-			
-			ps = conn.prepareStatement(sql);
-			
-			ps.setInt(1, 1);
-			ps.executeUpdate();
-			
-			conn.close();
-		    } 
-		catch (Exception e) 
-			{
-		        e.printStackTrace();
-		    }
-	}
 
 }
