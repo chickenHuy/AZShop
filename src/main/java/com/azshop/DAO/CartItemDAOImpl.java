@@ -43,7 +43,7 @@ public class CartItemDAOImpl implements ICartItemDAO {
 		CartItemModel cartItemModel = new CartItemModel();
 		
 		try {
-			String sql = "Select *from CartItem where id = ?";
+			String sql = "Select * from CartItem where id = ?";
 			
 			conn = new DBConnection().getConnection();			
 			ps = conn.prepareStatement(sql);		
@@ -73,7 +73,7 @@ public class CartItemDAOImpl implements ICartItemDAO {
 		List<CartItemModel> cartItemModelList = new ArrayList<CartItemModel>();
 		
 		try {
-			String sql = "Select *from CartItem";
+			String sql = "Select * from CartItem";
 			
 			conn = new DBConnection().getConnection();			
 			ps = conn.prepareStatement(sql);		
@@ -104,7 +104,7 @@ public class CartItemDAOImpl implements ICartItemDAO {
 		List<CartItemModel> cartItemModelList = new ArrayList<CartItemModel>();
 		
 		try {
-			String sql = "Select *from CartItem where cartID = ?";
+			String sql = "Select * from CartItem where cartID = ?";
 			
 			conn = new DBConnection().getConnection();			
 			ps = conn.prepareStatement(sql);
@@ -164,7 +164,7 @@ public class CartItemDAOImpl implements ICartItemDAO {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, id);
 			
-			rs = ps.executeQuery();
+			ps.executeQuery();
 			
 			conn.close();
 			} 
