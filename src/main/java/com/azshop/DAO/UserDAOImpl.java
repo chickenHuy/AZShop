@@ -92,7 +92,7 @@ public class UserDAOImpl implements IUserDAO {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, id);
 			
-			rs = ps.executeUpdate();
+			ps.executeUpdate();
 			
 			conn.close();
 			} 
