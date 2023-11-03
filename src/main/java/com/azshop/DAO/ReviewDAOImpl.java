@@ -263,7 +263,7 @@ public class ReviewDAOImpl implements IReviewDAO {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, id);
 
-			rs = ps.executeQuery();
+			rs = ps.executeUpdate();
 
 			conn.close();
 		}
