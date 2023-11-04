@@ -1,13 +1,12 @@
 package com.azshop.DAO;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.azshop.models.AddressShippingModel;
-import com.azshop.models.DeliveryModel;
 import com.azshop.models.ImageModel;
 
 public class ImageDAOImpl implements IImageDAO{

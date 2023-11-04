@@ -1,6 +1,5 @@
 package com.azshop.DAO;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -235,7 +234,7 @@ public class ProductDAOImpl implements IProductDAO {
 	@Override
 	public void update(ProductModel product) {
 		try {
-			String sql = "UPDATE dbo.Product SET name = ?, slug = ?, description = ?, price = ?, quantiny = ?, sold = ?, isActive = ?, video = ?, categoryId = ?, styleValueId = ?, storeId = ?, rating = ?, GETDATE() WHERE id = ?";
+			String sql = "UPDATE dbo.Product SET name = ?, slug = ?, description = ?, price = ?, quantiny = ?, sold = ?, isActive = ?, video = ?, categoryId = ?, styleValueId = ?, storeId = ?, rating = ?, updateAt = GETDATE() WHERE id = ?";
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
 

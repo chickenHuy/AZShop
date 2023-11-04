@@ -1,12 +1,12 @@
 package com.azshop.DAO;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.azshop.models.StyleModel;
 import com.azshop.models.StyleValueModel;
 
 public class StyleValueDAOImpl implements IStyleValueDAO{
@@ -71,7 +71,6 @@ public class StyleValueDAOImpl implements IStyleValueDAO{
 		        conn = new DBConnection().getConnection();
 		        
 		        ps = conn.prepareStatement(sql);
-		        
 		        rs = ps.executeQuery();
 		        while (rs.next()) {
 		        	StyleValueModel styleValueModel = new StyleValueModel();

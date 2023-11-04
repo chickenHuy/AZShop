@@ -164,7 +164,7 @@ public class CartItemDAOImpl implements ICartItemDAO {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, id);
 			
-			ps.executeQuery();
+			ps.executeUpdate();
 			
 			conn.close();
 			} 

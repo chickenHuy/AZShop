@@ -1,14 +1,12 @@
 package com.azshop.DAO;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Date;
 
-
-import com.azshop.models.AddressShippingModel;
 import com.azshop.models.ReviewModel;
 
 public class ReviewDAOImpl implements IReviewDAO {

@@ -187,7 +187,7 @@ List<CartModel> cartModelList = new ArrayList<CartModel>();
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, id);
 			
-			ps.executeQuery();
+			ps.executeUpdate();
 			
 			conn.close();
 			} 
