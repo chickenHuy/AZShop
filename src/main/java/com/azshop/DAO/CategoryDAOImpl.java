@@ -157,7 +157,7 @@ public class CategoryDAOImpl implements ICategoryDAO {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, id);
 
-			rs = ps.executeQuery();
+			ps.executeUpdate();
 
 			conn.close();
 		} catch (Exception e) {
