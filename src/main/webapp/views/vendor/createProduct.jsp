@@ -1,258 +1,299 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/common/taglib.jsp" %>
 
-<!doctype html>
-<html lang="en" data-bs-theme="dark">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!--plugins-->
-	<link href="<c:url value='/templates/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css' />" rel="stylesheet">
-	<link href="<c:url value='/templates/assets/plugins/metismenu/css/metisMenu.min.css' />" rel="stylesheet">
-	<link href="<c:url value='/templates/assets/plugins/simplebar/css/simplebar.css' />" rel="stylesheet">
-	<link href="<c:url value='/templates/assets/plugins/bs-stepper/css/bs-stepper.css' />" rel="stylesheet">
-	<!-- loader-->
-	<link href="<c:url value='/templates/assets/css/pace.min.css' />" rel="stylesheet">
-	<script src="<c:url value='/templates/assets/js/pace.min.js' />"></script>
-	
-	<!--Styles-->
-	<link href="<c:url value='/templates/assets/css/bootstrap.min.css' />" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-	<link href="<c:url value='/templates/assets/css/icons.css' />" rel="stylesheet">
-	
-	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-	<link href="<c:url value='/templates/assets/css/main.css' />" rel="stylesheet">
-	<link href="<c:url value='/templates/assets/css/dark-theme.css' />" rel="stylesheet">
-	<link href="<c:url value='/templates/assets/css/semi-dark-theme.css' />" rel="stylesheet">
-	<link href="<c:url value='/templates/assets/css/minimal-theme.css' />" rel="stylesheet">
-	<link href="<c:url value='/templates/assets/css/shadow-theme.css' />" rel="stylesheet">
-	
-</head>
-
-	<body>
-	<!--start stepper one--> 
-   
-	<div id="stepper1" class="bs-stepper">
-	  <div class="card">
-		
-		<div class="card-header bg-transparent">
-			<div class="d-lg-flex flex-lg-row align-items-lg-center justify-content-lg-between" role="tablist">
-				<div class="step" data-target="#test-l-1">
-				  <div class="step-trigger" role="tab" id="stepper1trigger1" aria-controls="test-l-1">
-					<div class="bs-stepper-circle">1</div>
-					<div class="">
-						<h5 class="mb-0 steper-title">Product Info</h5>
-						<p class="mb-0 steper-sub-title">Enter Product Details</p>
+   <main class="page-content">
+      <!--breadcrumb-->
+		<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+			<div class="breadcrumb-title pe-3">eCommerce</div>
+			<div class="ps-3">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb mb-0 p-0">
+						<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+						</li>
+						<li class="breadcrumb-item active" aria-current="page">Add Product</li>
+					</ol>
+				</nav>
+			</div>
+			<div class="ms-auto">
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary">Settings</button>
+					<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+					</button>
+					<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+            	<a class="dropdown-item" href="javascript:;">Action</a>
+						<a class="dropdown-item" href="javascript:;">Another action</a>
+						<a class="dropdown-item" href="javascript:;">Something else here</a>
+						<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
 					</div>
-				  </div>
 				</div>
-				<div class="bs-stepper-line"></div>
-				<div class="step" data-target="#test-l-2">
-					<div class="step-trigger" role="tab" id="stepper1trigger2" aria-controls="test-l-2">
-					  <div class="bs-stepper-circle">2</div>
-					  <div class="">
-						  <h5 class="mb-0 steper-title">Media Content</h5>
-						  <p class="mb-0 steper-sub-title">Video & Image</p>
-					  </div>
-					</div>
-				  </div>
-				<div class="bs-stepper-line"></div>
-				<div class="step" data-target="#test-l-3">
-					<div class="step-trigger" role="tab" id="stepper1trigger3" aria-controls="test-l-3">
-					  <div class="bs-stepper-circle">3</div>
-					  <div class="">
-						  <h5 class="mb-0 steper-title">Category Selection</h5>
-						  <p class="mb-0 steper-sub-title"></p>
-					  </div>
-					</div>
-				  </div>
-				  <div class="bs-stepper-line"></div>
-					<div class="step" data-target="#test-l-4">
-						<div class="step-trigger" role="tab" id="stepper1trigger4" aria-controls="test-l-4">
-						<div class="bs-stepper-circle">4</div>
-						<div class="">
-							<h5 class="mb-0 steper-title">Preview and Confirm</h5>
-							<p class="mb-0 steper-sub-title">Experience Details</p>
-						</div>
-						</div>
-					</div>
-			  </div>
+			</div>
 		</div>
-	    <div class="card-body">
-		
-		  <div class="bs-stepper-content">
-			<form onSubmit="return false">
-			  <div id="test-l-1" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger1">
-				<h5 class="mb-1">Your Personal Information</h5>
-				<p class="mb-4">Enter your personal information to get closer to copanies</p>
+		<!--end breadcrumb-->
+       
+       <div class="row">
+          <div class="col-12 col-lg-8">
+              <div class="card">
+                 <div class="card-body">
+                   <div class="mb-4">
+                      <h5 class="mb-3">Product Title</h5>
+                      <input type="text" class="form-control" placeholder="write title here....">
+                   </div>
+                   <div class="mb-4">
+                     <h5 class="mb-3">Product Description</h5>
+                     <textarea class="form-control" cols="4" rows="6" placeholder="write a description here.."></textarea>
+                   </div>
+                   <div class="mb-4">
+                    <h5 class="mb-3">Display images</h5>
+                    <input id="fancy-file-upload" type="file" name="files" accept=".jpg, .png, image/jpeg, image/png" multiple>
+                  </div>
+                  <div class="mb-4">
+                    <h5 class="mb-3">Inventory</h5>
+                    
+                    <div class="row g-3">
+                      <div class="col-12 col-lg-3">
+                        <div class="nav flex-column nav-pills border rounded vertical-pills overflow-hidden">
+                          <button class="nav-link px-4 rounded-0" data-bs-toggle="pill" data-bs-target="#Pricing" type="button"><i class="bi bi-tag-fill me-2"></i>Pricing</button>
+                          <button class="nav-link px-4 rounded-0" data-bs-toggle="pill" data-bs-target="#Restock" type="button"><i class="bi bi-box-seam-fill me-2"></i>Restock</button>
+                          <button class="nav-link active px-4 rounded-0" data-bs-toggle="pill" data-bs-target="#Shipping" type="button"><i class="bi bi-truck-front-fill me-2"></i>Shipping</button>
+                          <button class="nav-link px-4 rounded-0" data-bs-toggle="pill" data-bs-target="#GlobalDelivery" type="button"><i class="bi bi-globe me-2"></i>Global Delivery</button>
+                          <button class="nav-link px-4 rounded-0" data-bs-toggle="pill" data-bs-target="#Attributes" type="button"><i class="bi bi-hdd-rack-fill me-2"></i>Attributes</button>
+                          <button class="nav-link px-4 rounded-0" data-bs-toggle="pill" data-bs-target="#Advanced" type="button"><i class="bi bi-handbag-fill me-2"></i>Advanced</button>
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-9">
+                        <div class="tab-content">
+                          <div class="tab-pane fade" id="Pricing">
+                            <div class="row g-3">
+                              <div class="col-12 col-lg-6">
+                                <h6 class="mb-2">Regular price</h6>
+                                <input class="form-control" type="text" placeholder="$$$">
+                              </div>
+                              <div class="col-12 col-lg-6">
+                                <h6 class="mb-2">Sale price</h6>
+                                <input class="form-control" type="text" placeholder="$$$">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="tab-pane fade" id="Restock">
+                            <h6 class="mb-3">Add to Stock</h6>
+                            <div class="row g-3">
+                              <div class="col-sm-7">
+                                <input class="form-control" type="number" placeholder="Quantity">
+                              </div>
+                              <div class="col-sm">
+                                <button class="btn btn-outline-primary"><i class="bi bi-check2 me-2"></i>Confirm</button>
+                              </div>
+                            </div>
+                            <table class="mt-3">
+                              <thead>
+                                <tr>
+                                  <th style="width: 200px;"></th>
+                                  <th></th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td class="text-1000 fw-bold py-1">Product in stock now:</td>
+                                  <td class="text-700 fw-semi-bold py-1">$2,059<button class="btn p-0 ms-2" type="button"><i class="bi bi-arrow-clockwise"></i></button></td>
+                                </tr>
+                                <tr>
+                                  <td class="text-1000 fw-bold py-1">Product in transit:</td>
+                                  <td class="text-700 fw-semi-bold py-1">3000</td>
+                                </tr>
+                                <tr>
+                                  <td class="text-1000 fw-bold py-1">Last time restocked:</td>
+                                  <td class="text-700 fw-semi-bold py-1">25th March, 2020</td>
+                                </tr>
+                                <tr>
+                                  <td class="text-1000 fw-bold py-1">Total stock over lifetime:</td>
+                                  <td class="text-700 fw-semi-bold py-1">50,000</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <div class="tab-pane fade show active" id="Shipping">
+                            <div class="d-flex flex-column h-100">
+                              <h6 class="mb-3">Shipping Type</h6>
+                              <div class="flex-1">
+                                <div class="mb-4">
+                                  <div class="form-check mb-1">
+                                    <input class="form-check-input" type="radio" name="shippingRadio" id="fullfilledBySeller">
+                                    <label class="form-check-label fw-bold" for="fullfilledBySeller">Fullfilled by Seller</label></div>
+                                  <div class="ps-4">
+                                    <p class="mb-0">You’ll be responsible for product delivery. <br>Any damage or delay during shipping may cost you a Damage fee.</p>
+                                  </div>
+                                </div>
+                                <div class="mb-4">
+                                  <div class="form-check mb-1">
+                                    <input class="form-check-input" type="radio" name="shippingRadio" id="fullfilledByPhoenix" checked="checked">
+                                    <label class="form-check-label fw-bold d-flex align-items-center" for="fullfilledByPhoenix">Fullfilled by Admin <span class="badge bg-warning text-dark ms-2">Recommended</span></label></div>
+                                  <div class="ps-4">
+                                    <p class="mb-0">Your product, Our responsibility.<br>For a measly fee, we will handle the delivery process for you.</p>
+                                  </div>
+                                </div>
+                              </div>
+                              <p class="fs--1 fw-semi-bold mb-0">See our <a class="fw-bold" href="#!">Delivery terms and conditions </a>for details.</p>
+                            </div>
+                          </div>
+                          <div class="tab-pane fade" id="GlobalDelivery">
+                            <div class="d-flex flex-column h-100">
+                              <h6 class="mb-3">Global Delivery</h6>
+                              <div class="flex-1">
+                                <div class="mb-4">
+                                  <div class="form-check mb-1">
+                                    <input class="form-check-input" type="radio" name="shippingRadio" id="Worldwidedelivery">
+                                    <label class="form-check-label fw-bold" for="Worldwidedelivery">Worldwide delivery</label>
+                                  </div>
+                                  <div class="ps-4">
+                                    <p class="mb-0">Only available with Shipping method: <a href="#!">Fullfilled by Admin</a></p>
+                                  </div>
+                                </div>
+                                <div class="mb-4">
+                                  <div class="form-check mb-1">
+                                    <input class="form-check-input" type="radio" name="shippingRadio" id="SelectedCountries" checked="checked">
+                                    <label class="form-check-label fw-bold d-flex align-items-center" for="SelectedCountries">Selected Countries</label>
+                                  </div>
+                                  <div class="ps-4">
+                                    <input class="form-control" type="text" placeholder="Type Country name">
+                                  </div>
+                                </div>
+                                <div class="mb-0">
+                                  <div class="form-check mb-1">
+                                    <input class="form-check-input" type="radio" name="shippingRadio" id="Localdelivery">
+                                    <label class="form-check-label fw-bold" for="Localdelivery">Local delivery</label>
+                                  </div>
+                                  <div class="ps-4">
+                                    <p class="mb-0">Only available with Shipping method: <a href="#!">Fullfilled by Admin</a></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="tab-pane fade" id="Attributes">
+                            <h6 class="mb-3">Attributes</h6>
+                            <div class="form-check">
+                              <input class="form-check-input" id="fragileCheck" type="checkbox">
+                              <label class="form-check-label text-900 fs-0" for="fragileCheck">Fragile Product</label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" id="biodegradableCheck" type="checkbox">
+                              <label class="form-check-label text-900 fs-0" for="biodegradableCheck">Biodegradable</label>
+                            </div>
+                            <div class="mb-3">
+                              <div class="form-check"><input class="form-check-input" id="frozenCheck" type="checkbox" checked="checked">
+                                <label class="form-check-label text-900 fs-0" for="frozenCheck">Frozen Product</label>
+                                <input class="form-control" type="text" placeholder="Max. allowed Temperature" style="max-width: 350px;">
+                              </div>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" id="productCheck" type="checkbox" checked="checked">
+                              <label class="form-check-label text-900 fs-0" for="productCheck">Expiry Date of Product</label>
+                              <input class="form-control" id="inventory" type="date">
+                            </div>
+                          </div>
+                          <div class="tab-pane fade" id="Advanced">
+                            <h6 class="mb-3">Advanced</h6>
+                            <div class="row g-3">
+                              <div class="col-12 col-lg-6">
+                                <label class="mb-2">Product ID Type</label>
+                                <select class="form-select">
+                                  <option selected="selected">ISBN</option>
+                                  <option value="1">UPC</option>
+                                  <option value="2">EAN</option>
+                                  <option value="3">JAN</option>
+                                </select>
+                              </div>
+                              <div class="col-12 col-lg-6">
+                                <label class="mb-2">Product ID</label>
+                                <input class="form-control" type="text" placeholder="ISBN Number">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                     </div>
+                   </div> 
+                 </div>
+              </div>
+          </div> 
+          <div class="col-12 col-lg-4">
+             <div class="card">
+                <div class="card-body">
+                   <div class="d-flex align-items-center justify-content-between">
+                    <button type="button" class="btn btn-danger px-4">Discard</button>
+                    <button type="button" class="btn btn-success px-4">Save Draft</button>
+                    <button type="button" class="btn btn-primary px-4">Publish</button>
+                   </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                   <h5 class="mb-3">Organize</h5>
+                      <div class="row g-3">
+                          <div class="col-12">
+                            <label for="AddCategory" class="form-label fw-bold">Category</label>
+                            <select class="form-select" id="AddCategory">
+                              <option value="0">Topwear</option>
+                              <option value="1">Bottomwear</option>
+                              <option value="2">Casual Tshirt</option>
+                              <option value="3">Electronic</option>
+                            </select>
+                          </div>
+                          <div class="col-12">
+                            <label for="Collection" class="form-label fw-bold">Collection</label>
+                            <input type="text" class="form-control" id="Collection" placeholder="Collection">
+                          </div>
+                          <div class="col-12">
+                            <label for="Tags" class="form-label fw-bold">Tags</label>
+                            <input type="text" class="form-control" id="Tags" placeholder="Tags">
+                          </div>
+                          <div class="col-12">
+                            <div class="d-flex align-items-center gap-2">
+                              <a href="javascript:;" class="btn btn-sm btn-light border shadow-sm">Woman <i class="bi bi-x"></i></a>
+                              <a href="javascript:;" class="btn btn-sm btn-light border shadow-sm">Fashion <i class="bi bi-x"></i></a>
+                              <a href="javascript:;" class="btn btn-sm btn-light border shadow-sm">Furniture <i class="bi bi-x"></i></a>
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <label for="Vendor" class="form-label fw-bold">Vendor</label>
+                            <input type="text" class="form-control" id="Vendor" placeholder="Vendor">
+                          </div>
+                        </div><!--end row-->
+                     </div>
+                </div>
 
-				<div class="row g-3">
-					<div class="col-12 col-lg-6">
-						<label for="FisrtName" class="form-label">First Name</label>
-						<input type="text" class="form-control" id="FisrtName" placeholder="First Name">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="LastName" class="form-label">Last Name</label>
-						<input type="text" class="form-control" id="LastName" placeholder="Last Name">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="PhoneNumber" class="form-label">Phone Number</label>
-						<input type="text" class="form-control" id="PhoneNumber" placeholder="Phone Number">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="InputEmail" class="form-label">E-mail Address</label>
-						<input type="text" class="form-control" id="InputEmail" placeholder="Enter Email Address">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="InputCountry" class="form-label">Country</label>
-						<select class="form-select" id="InputCountry" aria-label="Default select example">
-							<option selected>---</option>
-							<option value="1">One</option>
-							<option value="2">Two</option>
-							<option value="3">Three</option>
-						  </select>
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="InputLanguage" class="form-label">Language</label>
-						<select class="form-select" id="InputLanguage" aria-label="Default select example">
-							<option selected>---</option>
-							<option value="1">One</option>
-							<option value="2">Two</option>
-							<option value="3">Three</option>
-						  </select>
-					</div>
-					<div class="col-12 col-lg-6">
-						<button class="btn btn-primary px-4" onclick="stepper1.next()">Next<i class='bx bx-right-arrow-alt ms-2'></i></button>
-					</div>
-				</div><!---end row-->
-				
-			  </div>
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="mb-3">Variants</h5>
+                    <div class="row g-3">
+                      <div class="col-12">
+                        <label for="Brand" class="form-label fw-bold">Brand</label>
+                        <input type="text" class="form-control" id="Brand" placeholder="Brand">
+                       </div>
+                      <div class="col-12">
+                        <label for="SKU" class="form-label fw-bold">SKU</label>
+                        <input type="text" class="form-control" id="SKU" placeholder="SKU">
+                       </div>
+                       <div class="col-12">
+                        <label for="Color" class="form-label fw-bold">Color</label>
+                        <input type="text" class="form-control" id="Color" placeholder="Color">
+                       </div>
+                       <div class="col-12">
+                        <label for="Size" class="form-label fw-bold">Size</label>
+                        <input type="text" class="form-control" id="Size" placeholder="Size">
+                       </div>
+                        <div class="col-12">
+                          <div class="d-grid">
+                            <button type="button" class="btn btn-primary">Add Variants</button>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                 </div>
 
-			  <div id="test-l-2" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger2">
-
-				<h5 class="mb-1">Account Details</h5>
-				<p class="mb-4">Enter Your Account Details.</p>
-
-				<div class="row g-3">
-					<div class="col-12 col-lg-6">
-						<label for="InputUsername" class="form-label">Username</label>
-						<input type="text" class="form-control" id="InputUsername" placeholder="jhon@123">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="InputEmail2" class="form-label">E-mail Address</label>
-						<input type="text" class="form-control" id="InputEmail2" placeholder="example@xyz.com">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="InputPassword" class="form-label">Password</label>
-						<input type="password" class="form-control" id="InputPassword" value="12345678">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="InputConfirmPassword" class="form-label">Confirm Password</label>
-						<input type="password" class="form-control" id="InputConfirmPassword" value="12345678">
-					</div>
-					<div class="col-12">
-						<div class="d-flex align-items-center gap-3">
-							<button class="btn btn-outline-secondary px-4" onclick="stepper1.previous()"><i class='bx bx-left-arrow-alt me-2'></i>Previous</button>
-							<button class="btn btn-primary px-4" onclick="stepper1.next()">Next<i class='bx bx-right-arrow-alt ms-2'></i></button>
-						</div>
-					</div>
-				</div><!---end row-->
-				
-			  </div>
-
-			  <div id="test-l-3" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger3">
-				<h5 class="mb-1">Your Education Information</h5>
-				<p class="mb-4">Inform companies about your education life</p>
-
-				<div class="row g-3">
-					<div class="col-12 col-lg-6">
-						<label for="SchoolName" class="form-label">School Name</label>
-						<input type="text" class="form-control" id="SchoolName" placeholder="School Name">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="BoardName" class="form-label">Board Name</label>
-						<input type="text" class="form-control" id="BoardName" placeholder="Board Name">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="UniversityName" class="form-label">University Name</label>
-						<input type="text" class="form-control" id="UniversityName" placeholder="University Name">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="InputCountrya" class="form-label">Course Name</label>
-						<select class="form-select" id="InputCountrya" aria-label="Default select example">
-							<option selected>---</option>
-							<option value="1">One</option>
-							<option value="2">Two</option>
-							<option value="3">Three</option>
-						  </select>
-					</div>
-					<div class="col-12">
-						<div class="d-flex align-items-center gap-3">
-							<button class="btn btn-outline-secondary px-4" onclick="stepper1.previous()"><i class='bx bx-left-arrow-alt me-2'></i>Previous</button>
-							<button class="btn btn-primary px-4" onclick="stepper1.next()">Next<i class='bx bx-right-arrow-alt ms-2'></i></button>
-						</div>
-					</div>
-				</div><!---end row-->
-				
-			  </div>
-
-			  <div id="test-l-4" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger4">
-				<h5 class="mb-1">Work Experiences</h5>
-				<p class="mb-4">Can you talk about your past work experience?</p>
-
-				<div class="row g-3">
-					<div class="col-12 col-lg-6">
-						<label for="Experience1" class="form-label">Experience 1</label>
-						<input type="text" class="form-control" id="Experience1" placeholder="Experience 1">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="Position1" class="form-label">Position</label>
-						<input type="text" class="form-control" id="Position1" placeholder="Position">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="Experience2" class="form-label">Experience 2</label>
-						<input type="text" class="form-control" id="Experience2" placeholder="Experience 2">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="PhoneNumber1" class="form-label">Position</label>
-						<input type="text" class="form-control" id="PhoneNumber1" placeholder="Position">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="Experience3" class="form-label">Experience 3</label>
-						<input type="text" class="form-control" id="Experience3" placeholder="Experience 3">
-					</div>
-					<div class="col-12 col-lg-6">
-						<label for="PhoneNumber2" class="form-label">Position</label>
-						<input type="text" class="form-control" id="PhoneNumber2" placeholder="Position">
-					</div>
-					<div class="col-12">
-						<div class="d-flex align-items-center gap-3">
-							<button class="btn btn-primary px-4" onclick="stepper1.previous()"><i class='bx bx-left-arrow-alt me-2'></i>Previous</button>
-							<button class="btn btn-success px-4" onclick="stepper1.next()">Submit</button>
-						</div>
-					</div>
-				</div><!---end row-->
-				
-			  </div>
-			</form>
-		  </div>
-		   
-		</div>
-	   </div>
-	 </div>
-	<!--end stepper one--> 
-	<!--plugins-->
-	<script src="<c:url value='/templates/assets/js/jquery.min.js' />"></script>
-	<script src="<c:url value='/templates/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js' />"></script>
-	<script src="<c:url value='/templates/assets/plugins/metismenu/js/metisMenu.min.js' />"></script>
-	<script src="<c:url value='/templates/assets/plugins/simplebar/js/simplebar.min.js' />"></script>
-	<script src="<c:url value='/templates/assets/plugins/bs-stepper/js/bs-stepper.min.js' />"></script>
-	<script src="<c:url value='/templates/assets/plugins/bs-stepper/js/main.js' />"></script>
-	
-	<!--BS Scripts-->
-	<script src="<c:url value='/templates/assets/js/bootstrap.bundle.min.js' />"></script>
-	<script src="<c:url value='/templates/assets/js/main.js' />"></script>
-
-  </body>
-</html>
+              </div>                
+          
+         </div><!--end row-->
+ 
+   </main>
