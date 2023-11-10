@@ -41,7 +41,7 @@
 								<a href="javascript:;">
 									<div class="app-box text-center">
 										<div class="app-icon">
-											<img src="assets/images/icons/behance.png" width="30" alt="">
+											<img src="<c:url value="/templates/assets/images/icons/behance.png"></c:url>" width="30" alt="">
 										</div>
 										<div class="app-name">
 											<p class="mb-0 mt-1">Behance</p>
@@ -53,8 +53,7 @@
 								<a href="javascript:;">
 									<div class="app-box text-center">
 										<div class="app-icon">
-											<img src="assets/images/icons/google-drive.png" width="30"
-												alt="">
+											<img src="<c:url value="templates/assets/images/icons/google-drive.png"></c:url>" width="30" alt="">
 										</div>
 										<div class="app-name">
 											<p class="mb-0 mt-1">Dribble</p>
@@ -66,7 +65,7 @@
 								<a href="javascript:;">
 									<div class="app-box text-center">
 										<div class="app-icon">
-											<img src="assets/images/icons/outlook.png" width="30" alt="">
+											<img src="<c:url value="templates/assets/images/icons/outlook.png"></c:url>" width="30" alt="">
 										</div>
 										<div class="app-name">
 											<p class="mb-0 mt-1">Outlook</p>
@@ -78,7 +77,7 @@
 								<a href="javascript:;">
 									<div class="app-box text-center">
 										<div class="app-icon">
-											<img src="assets/images/icons/github.png" width="30" alt="">
+											<img src="<c:url value="templates/assets/images/icons/github.png"></c:url>" width="30" alt="">
 										</div>
 										<div class="app-name">
 											<p class="mb-0 mt-1">GitHub</p>
@@ -90,7 +89,7 @@
 								<a href="javascript:;">
 									<div class="app-box text-center">
 										<div class="app-icon">
-											<img src="assets/images/icons/stack-overflow.png" width="30"
+											<img src="<c:url value="templates/assets/images/icons/stack-overflow.png"></c:url>" width="30" alt="">
 												alt="">
 										</div>
 										<div class="app-name">
@@ -103,7 +102,7 @@
 								<a href="javascript:;">
 									<div class="app-box text-center">
 										<div class="app-icon">
-											<img src="assets/images/icons/figma.png" width="30" alt="">
+											<img src="<c:url value="templates/assets/images/icons/figma.png"></c:url>" width="30" alt="">
 										</div>
 										<div class="app-name">
 											<p class="mb-0 mt-1">Stack</p>
@@ -115,7 +114,7 @@
 								<a href="javascript:;">
 									<div class="app-box text-center">
 										<div class="app-icon">
-											<img src="assets/images/icons/twitter.png" width="30" alt="">
+											<img src="<c:url value="templates/assets/images/icons/twitter.png"></c:url>" width="30" alt="">
 										</div>
 										<div class="app-name">
 											<p class="mb-0 mt-1">Twitter</p>
