@@ -1,8 +1,8 @@
 package com.azshop.models;
 
 import java.io.Serializable;
+
 import java.math.BigDecimal;
-import java.nio.file.Paths;
 import java.util.Date;
 
 public class TransactionModel implements Serializable {
