@@ -19,7 +19,7 @@
 	</decorator>
 	<decorator name="guest" page="guest.jsp">
 	
-		<pattern>*</pattern>
+		<pattern>/guest*</pattern>
 	
 	</decorator>
 	
