@@ -63,7 +63,7 @@
 					  <div class="bs-stepper-circle">3</div>
 					  <div class="">
 						  <h5 class="mb-0 steper-title">Category Selection</h5>
-						  <p class="mb-0 steper-sub-title">Education Details</p>
+						  <p class="mb-0 steper-sub-title"></p>
 					  </div>
 					</div>
 				  </div>
