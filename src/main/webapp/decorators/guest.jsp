@@ -26,7 +26,7 @@
 		<link href= '<c:url value="/templates/guest/css/nouislider.min.css" />' rel="stylesheet" type="text/css">
 
 		<!-- Font Awesome Icon -->
-		<link href= '<c:url value="/templates/guest/css/font-awesome.min.css" />' rel="stylesheet" type="text/css">
+		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
 		<!-- Custom stlylesheet -->
 		<link href= '<c:url value="/templates/guest/css/style.css" />' rel="stylesheet" type="text/css">
@@ -42,7 +42,7 @@
     <body>
 	<%@ include file="/common/guest/header.jsp"%>
 		<div class="container" style="width:100%;">
-	  		
+	  		Helllo
 		</div>
 	<%@ include file="/common/guest/footer.jsp"%>
 
