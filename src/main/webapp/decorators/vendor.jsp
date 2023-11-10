@@ -19,6 +19,9 @@
 <link rel="stylesheet"
 	href="<c:url value="/templates/assets/plugins/simplebar/css/simplebar.css"></c:url>"
 	type="text/css">
+<link rel="stylesheet"
+	href="<c:url value="/templates/assets/plugins/fancy-file-uploader/fancy_fileupload.css"></c:url>"
+	type="text/css">
 <!-- loader-->
 <link rel="stylesheet"
 	href="<c:url value="/templates/assets/css/pace.min.css"></c:url>"
@@ -83,12 +86,23 @@
 	<script
 		src="<c:url value="/templates/assets/plugins/simplebar/js/simplebar.min.js"></c:url>"></script>
 	<script src="<c:url value="/templates/assets/js/pace.min.js"></c:url>"></script>
-
+	<script src="<c:url value='/templates/assets/plugins/fancy-file-uploader/jquery.ui.widget.js' />"></script>
+	<script src="<c:url value='/templates/assets/plugins/fancy-file-uploader/jquery.fileupload.js' />"></script>
+	<script src="<c:url value='/templates/assets/plugins/fancy-file-uploader/jquery.iframe-transport.js' />"></script>
+	<script src="<c:url value='/templates/assets/plugins/fancy-file-uploader/jquery.fancy-fileupload.js' />"></script>
+		
 	<!--BS Scripts-->
 	<script
 		src="<c:url value="/templates/assets/js/bootstrap.bundle.min.js"></c:url>"></script>
 	<script src="<c:url value="/templates/assets/js/main.js"></c:url>"></script>
 	
-	
+	<script>
+	    $('#fancy-file-upload').FancyFileUpload({
+	        params: {
+	            action: 'fileuploader'
+	        },
+	        maxfilesize: 1000000
+	    });
+	</script>
 </body>
 </html>
