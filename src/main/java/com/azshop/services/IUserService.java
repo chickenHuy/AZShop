@@ -14,4 +14,10 @@ public interface IUserService {
 	List<UserModel> getAll();
 
 	UserModel getById(int id);
+	
+	boolean checkExistEmial(String email);
+
+	boolean insertRegister(String firstName, String lastName, String email, String password);
+
+	void updateStatusEmail(UserModel user);
 }

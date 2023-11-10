@@ -2,7 +2,6 @@ package com.azshop.utils;
 
 import java.util.Properties;
 import java.util.Random;
-import java.util.Set;
 
 import javax.mail.Authenticator;
 import javax.mail.Session;
@@ -20,7 +19,7 @@ public class Email {
 	}
 
 	// Send email to the user email
-	public Boolean sendEmail(UserModel user) {
+	public Boolean sendEmail(UserModel user, String code) {
 		Boolean testBoolean = false;
 
 		String toEmail = user.getEmail();
@@ -49,7 +48,7 @@ public class Email {
 			message.setSubject("Confirm Code");
 
 			// Set message text
-			message.setText("Your is code: ");
+			message.setText("Your is code: " + code);
 
 			// send the message
 			Transport.send(message);
