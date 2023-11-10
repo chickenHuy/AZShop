@@ -104,5 +104,13 @@
 	        maxfilesize: 1000000
 	    });
 	</script>
+	<script>
+	    $('#fancy-file-upload2').FancyFileUpload({
+	        params: {
+	            action: 'fileuploader'
+	        },
+	        maxfilesize: 1000000
+	    });
+	</script>
 </body>
 </html>
