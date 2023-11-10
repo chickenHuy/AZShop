@@ -88,5 +88,7 @@
 	<script
 		src="<c:url value="/templates/assets/js/bootstrap.bundle.min.js"></c:url>"></script>
 	<script src="<c:url value="/templates/assets/js/main.js"></c:url>"></script>
+	
+	
 </body>
 </html>

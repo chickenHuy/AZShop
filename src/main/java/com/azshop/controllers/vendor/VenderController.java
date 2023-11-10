@@ -20,7 +20,7 @@ public class VenderController extends HttpServlet {
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/dashboard.jsp");
 			rDispatcher.forward(req, resp);
 		}
-		if (url.contains("/register-shop")) {
+		if (url.contains("register-shop")) {
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/createShop.jsp");
 			rDispatcher.forward(req, resp);
 		}
