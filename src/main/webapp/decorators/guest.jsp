@@ -41,9 +41,7 @@
     </head>
     <body>
 	<%@ include file="/common/guest/header.jsp"%>
-		<div class="container" style="width:100%;">
-	  		<decorator:body></decorator:body>
-		</div>
+		<decorator:body></decorator:body>
 	<%@ include file="/common/guest/footer.jsp"%>
 
 
