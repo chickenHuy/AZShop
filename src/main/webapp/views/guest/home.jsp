@@ -104,8 +104,9 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
+												 <!-- Hiển thị ảnh đầu tiên của sản phẩm -->
 												<img
-													src="<c:url value="/image?fname=products/${image.image}" />"
+													src="<c:url value="/image?fname=products/${productImages[0].image}" />"
 													alt="">
 												<div class="product-label">
 													<span class="sale">-30%</span> <span class="new">NEW</span>
