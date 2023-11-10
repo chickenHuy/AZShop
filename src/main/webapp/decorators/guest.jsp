@@ -21,6 +21,8 @@
 <link
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 	rel="stylesheet" type="text/css">
+<link href='<c:url value="/templates/guest/css/bootstrap.min.css" />'
+	rel="stylesheet" type="text/css">
 
 <!-- Slick -->
 <link href='<c:url value="/templates/guest/css/slick.css" />'
@@ -50,7 +52,9 @@
 </head>
 <body>
 	<%@ include file="/common/guest/header.jsp"%>
-	<decorator:body></decorator:body>
+	<div class="contain">
+		<decorator:body></decorator:body>
+	</div>
 	<%@ include file="/common/guest/footer.jsp"%>
 
 
