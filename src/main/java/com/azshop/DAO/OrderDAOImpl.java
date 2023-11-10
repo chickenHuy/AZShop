@@ -288,9 +288,8 @@ public class OrderDAOImpl implements IOrderDAO {
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
-			ps.setInt(1, id);
-			
-			rs = ps.executeQuery();
+			ps.setInt(1, id);			
+			ps.executeUpdate();
 			
 			conn.close();
 			} 
