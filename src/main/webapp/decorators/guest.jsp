@@ -42,7 +42,7 @@
     <body>
 	<%@ include file="/common/guest/header.jsp"%>
 		<div class="container" style="width:100%;">
-	  		Helllo
+	  		<decorator:body></decorator:body>
 		</div>
 	<%@ include file="/common/guest/footer.jsp"%>
 
