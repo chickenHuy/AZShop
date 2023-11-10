@@ -13,7 +13,7 @@
             <h3 class="title">Verify Code</h3>
         </div>
 
-        <form action="#" method="post">
+        <form action="guest-VerifyCode" method="post">
             <div class="form-group">
                 <label for="verify-code">Enter Verify Code:</label>
                 <input class="input" type="text" name="verify-code" id="verify-code" required>

@@ -13,10 +13,10 @@
 			<h3 class="title">Register</h3>
 		</div>
 
-		<form action="#" method="post">
+		<form action="guest-register" method="post">
 			<div class="form-group">
-				<input class="input" type="text" name="username"
-					placeholder="Username" required>
+				<input class="input" type="text" name="email"
+					placeholder="Email" required>
 			</div>
 			<div class="form-group">
 				<input class="input" type="password" name="password"
