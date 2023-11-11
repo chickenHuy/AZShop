@@ -5,19 +5,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.azshop.models.UserModel;
+import com.azshop.utils.SlugUtil;
 
 public class UserDAOImpl implements IUserDAO {
 
 	Connection conn = null;
 	PreparedStatement ps = null;
 	ResultSet rs = null;
+	Random random = new Random();
+	
+	SlugUtil slugUtil = new SlugUtil();
 	
 	@Override
 	public void insert(UserModel user) {
 		try {
-			String sql = "INSERT INTO User(firstName, lastName, slug, cartId, email, phone, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, avatar, coverImage, point, eWallet, createAt) VALUES (?, ?, ?, ?, ?, ?, 'false', 'false', ?, ?, ?, ?, ?, ?, 0, 0, GetDate())";
+			String sql = "INSERT INTO [User](firstName, lastName, slug, cartId, email, phone, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, avatar, coverImage, point, eWallet, createAt) VALUES (?, ?, ?, ?, ?, ?, 'false', 'false', ?, ?, ?, ?, ?, ?, 0, 0, GetDate())";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -49,7 +54,7 @@ public class UserDAOImpl implements IUserDAO {
 	@Override
 	public void update(UserModel user) {
 		try {
-			String sql =  "UPDATE User SET firstName = ?, lastName = ?, slug = ?, cartId = ?, email = ?, phone = ?, isEmailActive = ?, isPhoneActive = ?, salt = ?, hashedPassword = ?, role = ?, userLevelId = ?, avatar = ?, coverImage = ?, point = ?, eWallet = ?, updateAt = GetDate() WHERE id = ?";
+			String sql =  "UPDATE [User] SET firstName = ?, lastName = ?, slug = ?, cartId = ?, email = ?, phone = ?, isEmailActive = ?, isPhoneActive = ?, salt = ?, hashedPassword = ?, role = ?, userLevelId = ?, avatar = ?, coverImage = ?, point = ?, eWallet = ?, updateAt = GetDate() WHERE id = ?";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -86,7 +91,7 @@ public class UserDAOImpl implements IUserDAO {
 	@Override
 	public void delete(int id) {
 		try {
-			String sql = "UPDATE User SET isDeleted = 1 WHERE id = ?";
+			String sql = "UPDATE [User] SET isDeleted = 1 WHERE id = ?";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -105,7 +110,7 @@ public class UserDAOImpl implements IUserDAO {
 	public List<UserModel> getAll() {
 		List<UserModel> userModelList = new ArrayList<UserModel>();
 	    try {
-	        String sql = "SELECT * FROM User WHERE isDeleted = 0";
+	        String sql = "SELECT * FROM [User] WHERE isDeleted = 0";
 	        conn = new DBConnection().getConnection();
 	        
 	        ps = conn.prepareStatement(sql);
@@ -147,7 +152,7 @@ public class UserDAOImpl implements IUserDAO {
 	public UserModel getById(int id) {
 		UserModel userModel = new UserModel();
 		try {
-			 String sql = "SELECT * FROM User WHERE id = ? AND isDeleted = 0";
+			 String sql = "SELECT * FROM [User] WHERE id = ? AND isDeleted = 0";
 		        conn = new DBConnection().getConnection();
 		        
 		        ps = conn.prepareStatement(sql);
@@ -181,6 +186,67 @@ public class UserDAOImpl implements IUserDAO {
 			e.printStackTrace();
 		}
 		return userModel;
+	}
+
+	@Override
+	public boolean checkExistEmial(String email) {
+		boolean duplicate = false;
+		String sql = "select * from User where email = ?";
+		try {
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			
+			ps.setString(1, email);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				duplicate = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return duplicate;
+	}
+
+	@Override
+	public void insertRegister(String firstName, String lastName, String email, String password) {
+		String sql = "INSERT INTO [User](firstName, lastName, slug, email, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, point, eWallet, createAt) VALUES (?, ?, ?, ?, 'false', 'false', ?, ?, 'customer', '1', 0, 0, GetDate())";
+		String slugString = slugUtil.toSlug(firstName + lastName);
+		String salt = Integer.toString(random.nextInt(1000000000 - 1 + 1) + 1);
+		try {
+			conn = new DBConnection().getConnection();
+			
+			ps = conn.prepareStatement(sql);
+			
+			ps.setString(1, firstName);
+			ps.setString(2, lastName);
+			ps.setString(3, slugString);
+			ps.setString(4, email);
+			ps.setString(5, salt);
+			ps.setString(6, "SHA2(CONCAT('" +password+ "', "+ salt +"), 256)");
+			
+			ps.executeUpdate();
+			
+			conn.close();
+		    } 
+		catch (Exception e) 
+			{
+		        e.printStackTrace();
+		    }
+	}
+
+	@Override
+	public void updateStatusEmail(UserModel user) {
+		String sql = "Update [User] Set isEmailActive = ? WHERE email = ?";
+		try {
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			
+			ps.setBoolean(1, user.isEmailActive());
+			ps.setString(2, user.getEmail());
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
