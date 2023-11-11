@@ -2,7 +2,6 @@ package com.azshop.utils;
 
 import java.util.Properties;
 import java.util.Random;
-import java.util.Set;
 
 import javax.mail.Authenticator;
 import javax.mail.Session;
@@ -20,12 +19,12 @@ public class Email {
 	}
 
 	// Send email to the user email
-	public Boolean sendEmail(UserModel user) {
+	public Boolean sendEmail(UserModel user, String code) {
 		Boolean testBoolean = false;
 
 		String toEmail = user.getEmail();
 		String fromEmail = "hieuthanhtran2908003@gmail.com";
-		String password = "123456hH@";
+		String password = "ifadpcrmlgomgimj";
 
 		try {
 			Properties properties = configEmail(new Properties());
@@ -49,7 +48,7 @@ public class Email {
 			message.setSubject("Confirm Code");
 
 			// Set message text
-			message.setText("Your is code: ");
+			message.setText("Your is code: " + code);
 
 			// send the message
 			Transport.send(message);
@@ -64,11 +63,9 @@ public class Email {
 	private Properties configEmail(Properties properties) {
 		// your host email smtp server details
 		properties.setProperty("mail.smtp.host", "smtp.gmail.com");
-		properties.setProperty("mail.smtp.port", "587");
-		properties.setProperty("mail.smtp.auth", "true");
-		properties.setProperty("mail.smtp.starttls.enable", "true");
-		properties.put("mail.smtp.socketFactory.port", "587");
-		properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-		return properties;
+	    properties.setProperty("mail.smtp.port", "587");
+	    properties.setProperty("mail.smtp.auth", "true");
+	    properties.setProperty("mail.smtp.starttls.enable", "true");
+	    return properties;
 	}
 }
