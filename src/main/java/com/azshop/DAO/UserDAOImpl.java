@@ -22,7 +22,7 @@ public class UserDAOImpl implements IUserDAO {
 	@Override
 	public void insert(UserModel user) {
 		try {
-			String sql = "INSERT INTO User(firstName, lastName, slug, cartId, email, phone, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, avatar, coverImage, point, eWallet, createAt) VALUES (?, ?, ?, ?, ?, ?, 'false', 'false', ?, ?, ?, ?, ?, ?, 0, 0, GetDate())";
+			String sql = "INSERT INTO [User](firstName, lastName, slug, cartId, email, phone, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, avatar, coverImage, point, eWallet, createAt) VALUES (?, ?, ?, ?, ?, ?, 'false', 'false', ?, ?, ?, ?, ?, ?, 0, 0, GetDate())";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -54,7 +54,7 @@ public class UserDAOImpl implements IUserDAO {
 	@Override
 	public void update(UserModel user) {
 		try {
-			String sql =  "UPDATE User SET firstName = ?, lastName = ?, slug = ?, cartId = ?, email = ?, phone = ?, isEmailActive = ?, isPhoneActive = ?, salt = ?, hashedPassword = ?, role = ?, userLevelId = ?, avatar = ?, coverImage = ?, point = ?, eWallet = ?, updateAt = GetDate() WHERE id = ?";
+			String sql =  "UPDATE [User] SET firstName = ?, lastName = ?, slug = ?, cartId = ?, email = ?, phone = ?, isEmailActive = ?, isPhoneActive = ?, salt = ?, hashedPassword = ?, role = ?, userLevelId = ?, avatar = ?, coverImage = ?, point = ?, eWallet = ?, updateAt = GetDate() WHERE id = ?";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -91,7 +91,7 @@ public class UserDAOImpl implements IUserDAO {
 	@Override
 	public void delete(int id) {
 		try {
-			String sql = "UPDATE User SET isDeleted = 1 WHERE id = ?";
+			String sql = "UPDATE [User] SET isDeleted = 1 WHERE id = ?";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -110,7 +110,7 @@ public class UserDAOImpl implements IUserDAO {
 	public List<UserModel> getAll() {
 		List<UserModel> userModelList = new ArrayList<UserModel>();
 	    try {
-	        String sql = "SELECT * FROM User WHERE isDeleted = 0";
+	        String sql = "SELECT * FROM [User] WHERE isDeleted = 0";
 	        conn = new DBConnection().getConnection();
 	        
 	        ps = conn.prepareStatement(sql);
@@ -152,7 +152,7 @@ public class UserDAOImpl implements IUserDAO {
 	public UserModel getById(int id) {
 		UserModel userModel = new UserModel();
 		try {
-			 String sql = "SELECT * FROM User WHERE id = ? AND isDeleted = 0";
+			 String sql = "SELECT * FROM [User] WHERE id = ? AND isDeleted = 0";
 		        conn = new DBConnection().getConnection();
 		        
 		        ps = conn.prepareStatement(sql);
@@ -209,7 +209,7 @@ public class UserDAOImpl implements IUserDAO {
 
 	@Override
 	public void insertRegister(String firstName, String lastName, String email, String password) {
-		String sql = "INSERT INTO User(firstName, lastName, slug, email, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, avatar, coverImage, point, eWallet, createAt) VALUES (?, ?, ?, ?, 'false', 'false', ?, ?, 'customer', '1', 0, 0, GetDate())";
+		String sql = "INSERT INTO [User](firstName, lastName, slug, email, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, point, eWallet, createAt) VALUES (?, ?, ?, ?, 'false', 'false', ?, ?, 'customer', '1', 0, 0, GetDate())";
 		String slugString = slugUtil.toSlug(firstName + lastName);
 		String salt = Integer.toString(random.nextInt(1000000000 - 1 + 1) + 1);
 		try {
@@ -236,7 +236,7 @@ public class UserDAOImpl implements IUserDAO {
 
 	@Override
 	public void updateStatusEmail(UserModel user) {
-		String sql = "Update User Set isEmailActive = ? WHERE email = ?";
+		String sql = "Update [User] Set isEmailActive = ? WHERE email = ?";
 		try {
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
