@@ -9,28 +9,53 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet (urlPatterns = {"/vendor-dashboard","/register-shop","/vendor/product/new","/vendor/order/processing"})
+import org.apache.commons.collections.functors.IfClosure;
+
+@WebServlet (urlPatterns = {
+				 "/vendor/dashboard"
+				,"/register-shop"
+				,"/vendor/product/new","/vendor/product/edit"
+				,"/vendor/order/processing","/vendor/order/processed", "/vendor/order/details"
+			})
 public class VenderController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURL().toString();
-		if (url.contains("vendor-dashboard")) {
+		if (url.contains("/vendor/dashboard")) {
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/dashboard.jsp");
 			rDispatcher.forward(req, resp);
 		}
-		if (url.contains("register-shop")) {
+		if (url.contains("/register-shop")) {
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/createShop.jsp");
 			rDispatcher.forward(req, resp);
 		}
-		if (url.contains("/vendor/product/new")) {
-			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/createProduct.jsp");
-			rDispatcher.forward(req, resp);
+		if (url.contains("/vendor/product")) {
+			if (url.contains("new")) {
+				RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/product.jsp");
+				rDispatcher.forward(req, resp);
+			}
+			if (url.contains("/vendor/product/edit")) {
+				RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/product.jsp");
+				rDispatcher.forward(req, resp);
+			}
 		}
-		if (url.contains("/vendor/order/processing")) {
-			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/order.jsp");
-			rDispatcher.forward(req, resp);
+		if (url.contains("/vendor/order")) {
+			if (url.contains("processing")) {
+				RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/order.jsp");
+				rDispatcher.forward(req, resp);
+			}
+			else if (url.contains("processed")) {
+				RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/order.jsp");
+				rDispatcher.forward(req, resp);
+			}
+			else if (url.contains("detail")) {
+				RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/orderDetails.jsp");
+				rDispatcher.forward(req, resp);
+			}
+				
+			
 		}
 	}
 	@Override
