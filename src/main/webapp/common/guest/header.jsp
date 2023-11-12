@@ -141,13 +141,13 @@
 			<div id="responsive-nav">
 				<!-- NAV -->
 				<ul class="main-nav nav navbar-nav">
-					<li class="active"><a href="#">Home</a></li>
-					<li><a href="#">Hot Deals</a></li>
-					<li><a href="#">Categories</a></li>
-					<li><a href="#">Laptops</a></li>
-					<li><a href="#">Smartphones</a></li>
-					<li><a href="#">Cameras</a></li>
-					<li><a href="#">Accessories</a></li>
+					<li class="active"><a href="#">Trang chủ</a></li>
+					<li><a href="#">Sản phẩm hot</a></li>
+					<li><a href="#">Danh mục</a></li>
+					<li><a href="#">Thời trang</a></li>
+					<li><a href="#">Điện gia dụng</a></li>
+					<li><a href="#">Trang sức</a></li>
+					<li><a href="#">Điện thoại - Laptop</a></li>
 				</ul>
 				<!-- /NAV -->
 			</div>

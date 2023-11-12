@@ -18,20 +18,17 @@
 	rel="stylesheet">
 
 <!-- Bootstrap -->
-<link
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-	rel="stylesheet" type="text/css">
-<link href='<c:url value="/templates/guest/css/bootstrap.min.css" />'
-	rel="stylesheet" type="text/css">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 <!-- Slick -->
-<link href='<c:url value="/templates/guest/css/slick.css" />'
+<link href="<c:url value="/templates/guest/css/slick.css" />"
 	rel="stylesheet" type="text/css">
-<link href='<c:url value="/templates/guest/css/slick-theme.css" />'
+<link href="<c:url value="/templates/guest/css/slick-theme.css" />"
 	rel="stylesheet" type="text/css">
 
 <!-- nouislider -->
-<link href='<c:url value="/templates/guest/css/nouislider.min.css" />'
+<link href="<c:url value="/templates/guest/css/nouislider.min.css" />"
 	rel="stylesheet" type="text/css">
 
 <!-- Font Awesome Icon -->
@@ -40,7 +37,7 @@
 	rel="stylesheet" type="text/css">
 
 <!-- Custom stlylesheet -->
-<link href='<c:url value="/templates/guest/css/style.css" />'
+<link href="<c:url value="/templates/guest/css/style.css" />"
 	rel="stylesheet" type="text/css">
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -59,12 +56,13 @@
 
 
 	<!-- jQuery Plugins -->
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/slick.min.js"></script>
-	<script src="js/nouislider.min.js"></script>
-	<script src="js/jquery.zoom.min.js"></script>
-	<script src="js/main.js"></script>
+	<script src="<c:url value="/templates/guest/js/jquery.min.js"></c:url>"></script>
+	<!-- JQuery phải được load trước do các tệp js khác có dùng đến nó -->
+	<script src="<c:url value="/templates/guest/js/slick.min.js"></c:url>"></script>
+	<script src="<c:url value="/templates/guest/js/bootstrap.min.js"></c:url>"></script>
+	<script src="<c:url value="/templates/guest/js/nouislider.min.js"></c:url>"></script>
+	<script src="<c:url value="/templates/guest/js/jquery.zoom.min.js"></c:url>"></script>
+	<script src="<c:url value="/templates/guest/js/main.js"></c:url>"></script>
 
 </body>
 </html>
