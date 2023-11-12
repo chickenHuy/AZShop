@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet (urlPatterns = {"/vendor-dashboard","/register-shop","/vendor/product/new"})
+@WebServlet (urlPatterns = {"/vendor-dashboard","/register-shop","/vendor/product/new","/vendor/order/processing"})
 public class VenderController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -26,6 +26,10 @@ public class VenderController extends HttpServlet {
 		}
 		if (url.contains("/vendor/product/new")) {
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/createProduct.jsp");
+			rDispatcher.forward(req, resp);
+		}
+		if (url.contains("/vendor/order/processing")) {
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/order.jsp");
 			rDispatcher.forward(req, resp);
 		}
 	}
