@@ -149,18 +149,6 @@ public class GuestController extends HttpServlet{
 	}
 
 	private void getAllProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<ProductModel> productList = productService.getAll();
-		
-		// Tạo một Map để lưu trữ danh sách ảnh của từng sản phẩm.
-		Map<Long, List<ImageModel>> productImagesMap = new HashMap<>();
-		
-		for (ProductModel product : productList) {
-			List<ImageModel> productImages = imageService.getByProductId(product.getId());
-		    productImagesMap.put((long) product.getId(), productImages);
-		}
-		
-		req.setAttribute("listproduct", productList);
-		req.setAttribute("productImagesMap", productImagesMap);
 		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/home.jsp");
 		rd.forward(req, resp);
 	}
