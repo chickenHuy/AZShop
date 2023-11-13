@@ -149,6 +149,13 @@ public class GuestController extends HttpServlet{
 	}
 
 	private void getAllProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+//		ProductModel product = productService.getById(3); 
+		
+		List<ProductModel> productList = productService.getAll();
+		
+//		req.setAttribute("product",product);
+		req.setAttribute("productList",productList);
 		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/home.jsp");
 		rd.forward(req, resp);
 	}
