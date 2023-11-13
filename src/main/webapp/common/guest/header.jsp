@@ -13,8 +13,7 @@
 						Stonecoal Road</a></li>
 			</ul>
 			<ul class="header-links pull-right">
-				<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
-				<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
+				<li><a href='<c:url value="/guest-register"/>'><i class="fa fa-user-o"></i> Tài khoản</a></li>
 			</ul>
 		</div>
 	</div>
@@ -141,13 +140,14 @@
 			<div id="responsive-nav">
 				<!-- NAV -->
 				<ul class="main-nav nav navbar-nav">
-					<li class="active"><a href="#">Home</a></li>
-					<li><a href="#">Hot Deals</a></li>
-					<li><a href="#">Categories</a></li>
-					<li><a href="#">Laptops</a></li>
-					<li><a href="#">Smartphones</a></li>
-					<li><a href="#">Cameras</a></li>
-					<li><a href="#">Accessories</a></li>
+					<li><a href='<c:url value="/guest-home"/>'>Trang chủ</a></li>
+					<li><a href='<c:url value="/guest-clothing"/>'>Sản phẩm hot</a></li>
+					<li><a href='<c:url value="/guest-clothing"/>'>Thời trang nam</a></li>
+					<li><a href='<c:url value="/guest-clothing"/>'>Thời trang nữ</a></li>
+					<li><a href='<c:url value="/guest-clothing"/>'>Điện gia dụng</a></li>
+					<li><a href='<c:url value="/guest-clothing"/>'>Điện thoại - Laptop</a></li>
+					<li><a href='<c:url value="/guest-clothing"/>'>Đồng hồ - Trang sức</a></li>
+					<li><a href='<c:url value="/guest-clothing"/>'>Phụ kiện thời trang</a></li>
 				</ul>
 				<!-- /NAV -->
 			</div>

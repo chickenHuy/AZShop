@@ -1164,7 +1164,7 @@ textarea.input {
 }
 
 .products-slick .product.slick-slide {
-  margin: 15px;
+  margin: 15px 15px 75px 15px;
 }
 
 .products-tabs>.tab-pane {

@@ -26,6 +26,11 @@
 <link rel="stylesheet"
 	href="<c:url value="/templates/assets/css/pace.min.css"></c:url>"
 	type="text/css">
+<script
+		src="<c:url value="/templates/assets/js/pace.min.js"></c:url>"></script>
+<link rel="stylesheet"
+	href="<c:url value="/templates/assets/plugins/datatable/css/dataTables.bootstrap5.min.css"></c:url>"
+	type="text/css">
 <!--Styles-->
 <link rel="stylesheet"
 	href="<c:url value="/templates/assets/css/bootstrap.min.css"></c:url>"
@@ -90,7 +95,9 @@
 	<script src="<c:url value='/templates/assets/plugins/fancy-file-uploader/jquery.fileupload.js' />"></script>
 	<script src="<c:url value='/templates/assets/plugins/fancy-file-uploader/jquery.iframe-transport.js' />"></script>
 	<script src="<c:url value='/templates/assets/plugins/fancy-file-uploader/jquery.fancy-fileupload.js' />"></script>
-		
+	
+	<script src="<c:url value='/templates/assets/plugins/datatable/js/jquery.dataTables.min.js' />"></script>
+	<script src="<c:url value='/templates/assets/plugins/datatable/js/dataTables.bootstrap5.min.js' />"></script>
 	<!--BS Scripts-->
 	<script
 		src="<c:url value="/templates/assets/js/bootstrap.bundle.min.js"></c:url>"></script>
@@ -112,5 +119,16 @@
 	        maxfilesize: 1000000
 	    });
 	</script>
+	<script>
+		$(document).ready(function() {
+			var table = $('#example2').DataTable( {
+				lengthChange: false,
+				buttons: [ 'copy', 'excel', 'pdf', 'print']
+			} );
+		 
+			table.buttons().container()
+				.appendTo( '#example2_wrapper .col-md-6:eq(0)' );
+		} );
+	 </script>
 </body>
 </html>
