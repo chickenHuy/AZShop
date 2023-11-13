@@ -45,7 +45,7 @@ public class ProductDAOImpl implements IProductDAO {
 
 		ProductModel product = new ProductModel();
 		try {
-			String sql = "SELECT * FROM dbo.[Transaction] WHERE id = ? AND isDeleted = 0";
+			String sql = "SELECT * FROM dbo.[Product] WHERE id = ? AND isDeleted = 0";
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, id);
@@ -80,7 +80,7 @@ public class ProductDAOImpl implements IProductDAO {
 	public List<ProductModel> getAll() {
 		List<ProductModel> listProduct = new ArrayList<ProductModel>();
 		try {
-			String sql = "SELECT * FROM dbo.[Transaction] WHERE isDeleted = 0";
+			String sql = "SELECT * FROM dbo.[Product] WHERE isDeleted = 0";
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
@@ -118,7 +118,7 @@ public class ProductDAOImpl implements IProductDAO {
 	public List<ProductModel> getByCategoryId(int categoryId) {
 		List<ProductModel> listProduct = new ArrayList<ProductModel>();
 		try {
-			String sql = "SELECT * FROM dbo.[Transaction] WHERE categoryId = ? and isDeleted = 0";
+			String sql = "SELECT * FROM dbo.[Product] WHERE categoryId = ? and isDeleted = 0";
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, categoryId);
@@ -157,7 +157,7 @@ public class ProductDAOImpl implements IProductDAO {
 	public List<ProductModel> getByStyleValueId(int styleValueId) {
 		List<ProductModel> listProduct = new ArrayList<ProductModel>();
 		try {
-			String sql = "SELECT * FROM dbo.[Transaction] WHERE styleValueId = ? and isDeleted = 0";
+			String sql = "SELECT * FROM dbo.[Product] WHERE styleValueId = ? and isDeleted = 0";
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, styleValueId);
@@ -196,7 +196,7 @@ public class ProductDAOImpl implements IProductDAO {
 	public List<ProductModel> getByStoreId(int storeId) {
 		List<ProductModel> listProduct = new ArrayList<ProductModel>();
 		try {
-			String sql = "SELECT * FROM dbo.[Transaction] WHERE storeId = ? and isDeleted = 0";
+			String sql = "SELECT * FROM dbo.[Product] WHERE storeId = ? and isDeleted = 0";
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, storeId);

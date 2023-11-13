@@ -58,6 +58,7 @@
 	<!-- jQuery Plugins -->
 	<script src="<c:url value="/templates/guest/js/jquery.min.js"></c:url>"></script>
 	<!-- JQuery phải được load trước do các tệp js khác có dùng đến nó -->
+	
 	<script src="<c:url value="/templates/guest/js/slick.min.js"></c:url>"></script>
 	<script src="<c:url value="/templates/guest/js/bootstrap.min.js"></c:url>"></script>
 	<script src="<c:url value="/templates/guest/js/nouislider.min.js"></c:url>"></script>
