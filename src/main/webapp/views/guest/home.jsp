@@ -238,7 +238,7 @@
 									<!-- product -->
 									<div class="product">
 										<div class="product-img">
-											<img src="templates/guest/img/product02.png" alt="">
+											<img src="templates/guest/img/product02.png" alt="">							
 											<div class="product-label">
 												<span class="new">NEW</span>
 											</div>
