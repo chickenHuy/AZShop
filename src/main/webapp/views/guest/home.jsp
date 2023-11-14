@@ -121,7 +121,7 @@
 													<a href="#">${product.name}</a>
 												</h3>
 												<h4 class="product-price">
-													${product.price}
+													${product.price} 
 													<del class="product-old-price">${product.price}</del>
 												</h4>
 												<div class="product-rating">

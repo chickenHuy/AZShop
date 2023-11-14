@@ -68,6 +68,11 @@ public class GuestController extends HttpServlet{
 	}
 	
 	private void getAllClothing(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		List<ProductModel> productList = productService.getAll();
+		
+//		req.setAttribute("product",product);
+		req.setAttribute("productList",productList);
+		
 		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/clothing.jsp");
 		rd.forward(req, resp);
 	}
