@@ -73,7 +73,7 @@ public class GuestController extends HttpServlet{
 	}
 
 	private void getVerifyCode(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.getRequestDispatcher("/views/guest/Verify.jsp").forward(req, resp);
+		req.getRequestDispatcher("/views/guest/Verify1.jsp").forward(req, resp);
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class GuestController extends HttpServlet{
 		String lastName = req.getParameter("last-name");
 		
 		if (userService.checkExistEmial(email)) {
-			req.getRequestDispatcher("/views/guest/Register.jsp").forward(req, resp);
+			resp.sendRedirect(req.getContextPath() + "/views/guest/register1.jsp");
 		} else {
 			Email mail = new Email();
 			String code = mail.getRandom();
@@ -135,7 +135,7 @@ public class GuestController extends HttpServlet{
 				if (isSuccess) {
 					resp.sendRedirect(req.getContextPath() + "/guest-VerifyCode");
 				} else {
-					req.getRequestDispatcher("/views/guest/Register.jsp").forward(req, resp);
+					req.getRequestDispatcher("/views/guest/register1.jsp").forward(req, resp);
 				}
 			} else {
 				PrintWriter outPrintWriter = resp.getWriter();
@@ -145,7 +145,7 @@ public class GuestController extends HttpServlet{
 	}
 
 	private void getRegister(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.getRequestDispatcher("/views/guest/Register.jsp").forward(req, resp);
+		req.getRequestDispatcher("/views/guest/register1.jsp").forward(req, resp);
 	}
 
 	private void getAllProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
