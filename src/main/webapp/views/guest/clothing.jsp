@@ -23,37 +23,37 @@
 
 							<div class="input-checkbox">
 								<input type="checkbox" id="category-1"> <label
-									for="category-1"> <span></span> Laptops <small>(120)</small>
+									for="category-1"> <span></span> Áo thun nam <small>(120)</small>
 								</label>
 							</div>
 
 							<div class="input-checkbox">
 								<input type="checkbox" id="category-2"> <label
-									for="category-2"> <span></span> Smartphones <small>(740)</small>
+									for="category-2"> <span></span> Áo sơ mi nam <small>(740)</small>
 								</label>
 							</div>
 
 							<div class="input-checkbox">
 								<input type="checkbox" id="category-3"> <label
-									for="category-3"> <span></span> Cameras <small>(1450)</small>
+									for="category-3"> <span></span> Áo khoác nam <small>(1450)</small>
 								</label>
 							</div>
 
 							<div class="input-checkbox">
 								<input type="checkbox" id="category-4"> <label
-									for="category-4"> <span></span> Accessories <small>(578)</small>
+									for="category-4"> <span></span> Quần Jean nam <small>(578)</small>
 								</label>
 							</div>
 
 							<div class="input-checkbox">
 								<input type="checkbox" id="category-5"> <label
-									for="category-5"> <span></span> Laptops <small>(120)</small>
+									for="category-5"> <span></span> Quần Tây nam <small>(120)</small>
 								</label>
 							</div>
 
 							<div class="input-checkbox">
 								<input type="checkbox" id="category-6"> <label
-									for="category-6"> <span></span> Smartphones <small>(740)</small>
+									for="category-6"> <span></span> Quần sort nam <small>(740)</small>
 								</label>
 							</div>
 						</div>
