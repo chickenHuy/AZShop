@@ -27,9 +27,9 @@
                     <div class="form-items">
                         <h3>Register new account</h3>
                         <br>
-                        <form>
-                            <input class="form-control" type="text" name="firstname" placeholder="First Name" required>
-                            <input class="form-control" type="text" name="lastname" placeholder="Last Name" required>
+                        <form action="register" method="post">
+                            <input class="form-control" type="text" name="first-name" placeholder="First Name" required>
+                            <input class="form-control" type="text" name="last-name" placeholder="Last Name" required>
                             <input class="form-control" type="email" name="email" placeholder="E-mail Address" required>
                             <input class="form-control" type="password" name="password" placeholder="Password" required>
                             <div class="form-button">
@@ -41,7 +41,7 @@
                             <a href="#"><i class="fab fa-facebook-f"></i>Facebook</a><a href="#"><i class="fab fa-google"></i>Google</a><a href="#"><i class="fab fa-linkedin-in"></i>Linkedin</a>
                         </div>
                         <div class="page-links">
-                            <a href="<c:url value="/views/guest/login.jsp" />">Login to account</a>
+                            <a href="<c:url value="/views/account/login.jsp" />">Login to account</a>
                         </div>
                     </div>
                 </div>

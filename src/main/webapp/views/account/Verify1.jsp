@@ -27,8 +27,8 @@
                     <div class="form-items">
                         <h3>Verify Code</h3>
                         <br>
-                        <form>
-                            <input class="form-control" type="text" name="verifycode" placeholder="Verify Code" required>
+                        <form action="VerifyCode" method="post">
+                            <input class="form-control" type="text" name="verify-code" placeholder="Verify Code" required>
                             <div class="form-button">
                                 <button id="submit" type="submit" class="ibtn">Submit</button>
                             </div>

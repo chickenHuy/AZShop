@@ -32,7 +32,7 @@
                             <input class="form-control" type="text" name="username" placeholder="Username" required>
                             <input class="form-control" type="password" name="password" placeholder="Password" required>
                             <div class="form-button">
-                                <button id="submit" type="submit" class="ibtn">Login</button> <a href="ForgetPassword.jsp">Forget password?</a>
+                                <button id="submit" type="submit" class="ibtn">Login</button> <a href="<c:url value="/views/account/ForgetPassword.jsp" />">Forget password?</a>
                             </div>
                         </form>
                         <div class="other-links">
@@ -40,7 +40,7 @@
                             <a href="#"><i class="fab fa-facebook-f"></i>Facebook</a><a href="#"><i class="fab fa-google"></i>Google</a><a href="#"><i class="fab fa-linkedin-in"></i>Linkedin</a>
                         </div>
                         <div class="page-links">
-                            <a href="register1.jsp">Register new account</a>
+                            <a href="<c:url value="/views/account/register1.jsp" />">Register new account</a>
                         </div>
                     </div>
                 </div>

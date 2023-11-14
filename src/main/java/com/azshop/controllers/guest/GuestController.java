@@ -26,7 +26,7 @@ import com.azshop.services.ProductServiceImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Email;
 
-@WebServlet(urlPatterns = {"/guest-home", "/guest-clothing", "/guest-register", "/guest-VerifyCode"})
+@WebServlet(urlPatterns = {"/guest-home", "/guest-clothing", "/register", "/VerifyCode"})
 public class GuestController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -51,14 +51,14 @@ public class GuestController extends HttpServlet{
 				e.printStackTrace();
 			}
 		}
-		else if (url.contains("guest-register")) {
+		else if (url.contains("register")) {
 			try {
 				getRegister(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		else if (url.contains("guest-VerifyCode")) {
+		else if (url.contains("VerifyCode")) {
 			try {
 				getVerifyCode(req, resp);
 			} catch (Exception e) {
@@ -73,15 +73,15 @@ public class GuestController extends HttpServlet{
 	}
 
 	private void getVerifyCode(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.getRequestDispatcher("/views/guest/Verify1.jsp").forward(req, resp);
+		req.getRequestDispatcher("/views/account/Verify1.jsp").forward(req, resp);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI().toString();
-		if (url.contains("guest-register")) {
+		if (url.contains("register")) {
 			postRegister(req, resp);
-		} else if (url.contains("guest-VerifyCode")) {
+		} else if (url.contains("VerifyCode")) {
 			postVerify(req, resp);
 		}
 	}
@@ -117,7 +117,7 @@ public class GuestController extends HttpServlet{
 		String lastName = req.getParameter("last-name");
 		
 		if (userService.checkExistEmial(email)) {
-			resp.sendRedirect(req.getContextPath() + "/views/guest/register1.jsp");
+			resp.sendRedirect(req.getContextPath() + "/views/account/register1.jsp");
 		} else {
 			Email mail = new Email();
 			String code = mail.getRandom();
@@ -133,9 +133,9 @@ public class GuestController extends HttpServlet{
 				boolean isSuccess = userService.insertRegister(firstName, lastName, email, password);
 				
 				if (isSuccess) {
-					resp.sendRedirect(req.getContextPath() + "/guest-VerifyCode");
+					resp.sendRedirect(req.getContextPath() + "/VerifyCode");
 				} else {
-					req.getRequestDispatcher("/views/guest/register1.jsp").forward(req, resp);
+					req.getRequestDispatcher("/views/account/register1.jsp").forward(req, resp);
 				}
 			} else {
 				PrintWriter outPrintWriter = resp.getWriter();
@@ -145,7 +145,7 @@ public class GuestController extends HttpServlet{
 	}
 
 	private void getRegister(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.getRequestDispatcher("/views/guest/register1.jsp").forward(req, resp);
+		req.getRequestDispatcher("/views/account/register1.jsp").forward(req, resp);
 	}
 
 	private void getAllProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -210,7 +210,7 @@ public class UserDAOImpl implements IUserDAO {
 	@Override
 	public void insertRegister(String firstName, String lastName, String email, String password) {
 		String sql = "INSERT INTO [User](firstName, lastName, slug, email, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, point, eWallet, createAt) VALUES (?, ?, ?, ?, 'false', 'false', ?, ?, 'customer', '1', 0, 0, GetDate())";
-		String slugString = slugUtil.toSlug(firstName + lastName);
+		String slugString = slugUtil.toSlug(firstName + " " + lastName);
 		String salt = Integer.toString(random.nextInt(1000000000 - 1 + 1) + 1);
 		try {
 			conn = new DBConnection().getConnection();
