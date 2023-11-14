@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/common/taglib.jsp" %>
-
+<body>
 
    <main class="page-content">
       <!--breadcrumb-->
@@ -91,23 +91,27 @@
                       <div class="row g-3">
                           <div class="col-12">
                             <label for="AddCategory" class="form-label fw-bold">Category</label>
-                            <select class="form-select" id="AddCategory">
-                              <option value="0">Topwear</option>
-                              <option value="1">Bottomwear</option>
-                              <option value="2">Casual Tshirt</option>
-                              <option value="3">Electronic</option>
+                            <select class="form-select" id="CategorySelected" name="categoryId" onchange="loadStyles()" >
+                            	<c:forEach var="item" items="${categorys}">
+            						<option value="${item.id}">${item.name}</option>
+       					 		</c:forEach>
                             </select>
                           </div>
-                           <div class="col-12">
-                            <label for="AddCategory" class="form-label fw-bold">Style</label>
-                            <select class="form-select" id="AddCategory">
-                              <option value="0">Topwear</option>
-                              <option value="1">Bottomwear</option>
-                              <option value="2">Casual Tshirt</option>
-                              <option value="3">Electronic</option>
-                            </select>
-                          </div>
-
+						  <div class="col-12">
+							    <label for="AddStyle" class="form-label fw-bold">Style</label>
+							    <!-- Thêm thẻ select cho danh sách styles -->
+							    <select class="form-select" id="StyleSelected" name="styleId" onchange="loadStylesValue()">
+							        <!-- Options sẽ được thêm bởi AJAX -->
+							    </select>
+							</div>
+							 <div class="col-12">
+							    <label for="AddStyle" class="form-label fw-bold">Style Value</label>
+							    <!-- Thêm thẻ select cho danh sách styles -->
+							    <select class="form-select" id="AddStyleValue" name="styleValueId">
+							        <!-- Options sẽ được thêm bởi AJAX -->
+							    </select>
+							</div>
+						</div>
                           </div>
                      </div>
                 </div>
@@ -130,6 +134,8 @@
 
               </div>                
           
-         </div>
+        
  
    </main>
+   </body>
+   		

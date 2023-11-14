@@ -75,7 +75,7 @@ public class CategoryDAOImpl implements ICategoryDAO {
 			ps = conn.prepareStatement(sql);
 
 			rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				CategoryModel category = new CategoryModel();
 				category.setId(rs.getInt("id"));
 				category.setCategoryId(rs.getInt("categoryId"));
