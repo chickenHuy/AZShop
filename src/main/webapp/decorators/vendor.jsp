@@ -130,5 +130,63 @@
 				.appendTo( '#example2_wrapper .col-md-6:eq(0)' );
 		} );
 	 </script>
+	 
+	 
+    <script>
+    function loadStyles() {
+        var categoryId = $("#CategorySelected").val();
+
+        $.ajax({
+            type: "GET",
+            url: "/AZShop/vendor/product/new?categoryId=" + encodeURIComponent(categoryId),
+            success: function(styles) {
+                // Cập nhật danh sách style
+                updateStyleList(styles);
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX request failed:", status, error);
+            }
+        });
+    }
+
+    function updateStyleList(styles) {
+        var styleSelect = $("#StyleSelected");
+        styleSelect.empty();
+
+        $.each(styles, function(index, style) {
+            styleSelect.append('<option value="' + style.id + '">' + style.name + '</option>');
+        });
+    }
+	
+	</script>
+
+	<script>
+    function loadStylesValue() {
+        var styleId = $("#StyleSelected").val();
+
+        $.ajax({
+            type: "GET",
+            url: "/AZShop/vendor/product/new?styleId=" + encodeURIComponent(styleId),
+            success: function(styleValues) {
+                // Cập nhật danh sách style value
+                updateStyleValueList(styleValues);
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX request failed:", status, error);
+            }
+        });
+    }
+
+    function updateStyleValueList(styleValues) {
+        var styleValueSelect = $("#AddStyleValue");
+        styleValueSelect.empty();
+
+        $.each(styleValues, function(index, styleValue) {
+            styleValueSelect.append('<option value="' + styleValue.id + '">' + styleValue.name + '</option>');
+        });
+    }
+	
+</script>
+</body>
 </body>
 </html>
