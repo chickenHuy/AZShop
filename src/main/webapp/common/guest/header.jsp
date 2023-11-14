@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%@ include file="/common/taglib.jsp"%>
 <header>
 	<!-- TOP HEADER -->
 	<div id="top-header">
@@ -144,10 +144,10 @@
 					<li><a href='<c:url value="/guest-clothing"/>'>Sản phẩm hot</a></li>
 					<li><a href='<c:url value="/guest-clothing"/>'>Thời trang nam</a></li>
 					<li><a href='<c:url value="/guest-clothing"/>'>Thời trang nữ</a></li>
-					<li><a href='<c:url value="/guest-clothing"/>'>Điện gia dụng</a></li>
-					<li><a href='<c:url value="/guest-clothing"/>'>Điện thoại - Laptop</a></li>
-					<li><a href='<c:url value="/guest-clothing"/>'>Đồng hồ - Trang sức</a></li>
-					<li><a href='<c:url value="/guest-clothing"/>'>Phụ kiện thời trang</a></li>
+					<li><a href='<c:url value="/guest-clothing"/>'>Phụ kiện thời trang</a></li>					
+					<li><a href='<c:url value="/guest-clothing"/>'>Điện thoại</a></li>
+					<li><a href='<c:url value="/guest-clothing"/>'>Laptop</a></li>	
+					<li><a href='<c:url value="/guest-clothing"/>'>Điện gia dụng</a></li>				
 				</ul>
 				<!-- /NAV -->
 			</div>
