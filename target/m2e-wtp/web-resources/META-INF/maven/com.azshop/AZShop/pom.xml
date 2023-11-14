@@ -24,7 +24,6 @@
 			<artifactId>mssql-jdbc</artifactId>
 			<version>9.4.1.jre16</version>
 		</dependency>
-
 		<!--
 		https://mvnrepository.com/artifact/javax.servlet.jsp/javax.servlet.jsp-api -->
 		<dependency>
@@ -33,21 +32,18 @@
 			<version>2.3.3</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/opensymphony/sitemesh -->
 		<dependency>
 			<groupId>opensymphony</groupId>
 			<artifactId>sitemesh</artifactId>
 			<version>2.4.2</version>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -61,7 +57,6 @@
 			<artifactId>commons-beanutils</artifactId>
 			<version>1.9.4</version>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/com.sun.mail/javax.mail -->
 		<dependency>
 			<groupId>com.sun.mail</groupId>
@@ -81,21 +76,19 @@
 			<version>1.1.1</version>
 		</dependency>
 		<dependency>
-        	<groupId>org.webjars</groupId>
-        	<artifactId>jquery</artifactId>
-        	<version>3.6.0</version> 
-    	</dependency>
-    	<dependency>
-	        <groupId>com.google.code.gson</groupId>
-	        <artifactId>gson</artifactId>
-	        <version>2.8.9</version>
-    </dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery</artifactId>
+			<version>3.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.9</version>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<pluginManagement>
 			<plugins>
-
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -105,23 +98,21 @@
 						<release>20</release>
 					</configuration>
 				</plugin>
-
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>
 					<version>3.4.0</version>
 				</plugin>
-				
-		        <plugin>
-		            <groupId>org.apache.maven.plugins</groupId>
-		            <artifactId>maven-war-plugin</artifactId>
-		            <version>3.2.3</version>
-		            <configuration>
-		                <failOnMissingWebXml>false</failOnMissingWebXml>
-		            </configuration>
-		        </plugin>
-    
-
+				<!-- 
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>3.2.3</version>
+					<configuration>
+						<failOnMissingWebXml>false</failOnMissingWebXml>
+					</configuration>
+				</plugin>
+				-->
 			</plugins>
 		</pluginManagement>
 	</build>
