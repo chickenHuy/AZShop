@@ -152,7 +152,7 @@
     function updateStyleList(styles) {
         var styleSelect = $("#StyleSelected");
         styleSelect.empty();
-
+        styleSelect.append('<option value="" disabled selected>Select a Style</option>');
         $.each(styles, function(index, style) {
             styleSelect.append('<option value="' + style.id + '">' + style.name + '</option>');
         });
@@ -180,7 +180,7 @@
     function updateStyleValueList(styleValues) {
         var styleValueSelect = $("#AddStyleValue");
         styleValueSelect.empty();
-
+		styleValueSelect.append('<option value="" disabled selected>Select a Style Value</option>');
         $.each(styleValues, function(index, styleValue) {
             styleValueSelect.append('<option value="' + styleValue.id + '">' + styleValue.name + '</option>');
         });

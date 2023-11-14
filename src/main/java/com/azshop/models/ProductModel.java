@@ -49,6 +49,20 @@ public class ProductModel implements Serializable {
 		this.updateAt = updateAt;
 	}
 
+	public ProductModel(String name2, String slug2, String description2, BigDecimal price2, int quantity2,
+			boolean isActive2, int categoryId2, int styleValueId2, int storeId2, String videoLink) {
+		name = name2;
+		slug = slug2;
+		description = description2;
+		price = price2;
+		quantity = quantity2;
+		isActive = isActive2;
+		categoryId = categoryId2;
+		styleValueId = styleValueId2;
+		storeId = styleValueId2;
+		video = videoLink;
+	}
+
 	public int getId() {
 		return id;
 	}
