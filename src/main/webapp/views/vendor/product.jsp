@@ -16,22 +16,23 @@
 				</nav>
 			</div>
 		</div>
-       
+        <form action="" method="post" id="productForm"> 
+        <input type="hidden" id="isActive" name="isActive">
        <div class="row">
           <div class="col-12 col-lg-8">
               <div class="card">
                  <div class="card-body">
                    <div class="mb-4">
                       <h5 class="mb-3">Product Title</h5>
-                      <input type="text" class="form-control" placeholder="write title here....">
+                      <input type="text" class="form-control" placeholder="write title here...." name="name" required>
                    </div>
                    <div class="mb-4">
                      <h5 class="mb-3">Product Description</h5>
-                     <textarea class="form-control" cols="4" rows="6" placeholder="write a description here.."></textarea>
+                     <textarea class="form-control" cols="4" rows="6" placeholder="write a description here.." name="description" required></textarea>
                    </div>
                    <div class="mb-4">
                     <h5 class="mb-3">Display images</h5>
-                    <input id="fancy-file-upload" type="file" name="files" accept=".jpg, .png, image/jpeg, image/png" multiple>
+                    <input id="fancy-file-upload" type="file" accept=".jpg, .png, image/jpeg, image/png" name="images" multiple required>
                   </div>
                   <div class="mb-4">
                     <h5 class="mb-3">Inventory</h5>
@@ -49,7 +50,7 @@
                             <div class="row g-3">
                               <div class="col-12 col-lg-6">
                                 <h6 class="mb-2">Regular price</h6>
-                                <input class="form-control" type="text" placeholder="VNĐ">
+                                <input class="form-control" type="text" placeholder="VNĐ" name="price" required>
                               </div>
                             </div>
                           </div>
@@ -57,10 +58,7 @@
                             <h6 class="mb-3">Add to Stock</h6>
                             <div class="row g-3">
                               <div class="col-sm-7">
-                                <input class="form-control" type="number" placeholder="Quantity">
-                              </div>
-                              <div class="col-sm">
-                                <button class="btn btn-outline-primary"><i class="bi bi-check2 me-2"></i>Confirm</button>
+                                <input class="form-control" type="number" placeholder="Quantity" name="quantity" required>
                               </div>
                             </div>
                           </div>
@@ -79,63 +77,99 @@
              <div class="card">
                 <div class="card-body">
                    <div class="d-flex align-items-center justify-content-between">
-                    <button type="button" class="btn btn-danger px-4">Discard</button>
-                    <button type="button" class="btn btn-success px-4">Save Draft</button>
-                    <button type="button" class="btn btn-primary px-4">Publish</button>
+                    <button type="button" class="btn btn-danger px-4" onclick="discardAction()">Discard</button>
+					<button type="submit" class="btn btn-success px-4" onclick="saveDraftAction()">Save Draft</button>
+					<button type="submit" class="btn btn-primary px-4" onclick="publishAction()">Publish</button>
                    </div>
                 </div>
               </div>
+              
               <div class="card">
                 <div class="card-body">
                    <h5 class="mb-3">Organize</h5>
                       <div class="row g-3">
                           <div class="col-12">
-                            <label for="AddCategory" class="form-label fw-bold">Category</label>
-                            <select class="form-select" id="CategorySelected" name="categoryId" onchange="loadStyles()" >
-                            	<c:forEach var="item" items="${categorys}">
-            						<option value="${item.id}">${item.name}</option>
-       					 		</c:forEach>
-                            </select>
-                          </div>
-						  <div class="col-12">
-							    <label for="AddStyle" class="form-label fw-bold">Style</label>
-							    <!-- Thêm thẻ select cho danh sách styles -->
-							    <select class="form-select" id="StyleSelected" name="styleId" onchange="loadStylesValue()">
-							        <!-- Options sẽ được thêm bởi AJAX -->
-							    </select>
-							</div>
-							 <div class="col-12">
-							    <label for="AddStyle" class="form-label fw-bold">Style Value</label>
-							    <!-- Thêm thẻ select cho danh sách styles -->
-							    <select class="form-select" id="AddStyleValue" name="styleValueId">
-							        <!-- Options sẽ được thêm bởi AJAX -->
-							    </select>
+						    <label for="AddCategory" class="form-label fw-bold">Category</label>
+						    <select class="form-select" id="CategorySelected" name="categoryId" onchange="loadStyles()" required>
+						        <option value="" disabled selected>Select a Category</option>
+						        <!-- Options sẽ được thêm bởi AJAX -->
+						        <c:forEach var="item" items="${categorys}">
+						            <option value="${item.id}">${item.name}</option>
+						        </c:forEach>
+						    </select>
+						</div>
+						<div class="col-12">
+						    <label for="StyleSelected" class="form-label fw-bold">Style</label>
+						    <!-- Thêm thẻ select cho danh sách styles -->
+						    <select class="form-select" id="StyleSelected" name="styleId" onchange="loadStylesValue()" required>
+						        <option value="" disabled selected>Select a Style</option>
+						        <!-- Options sẽ được thêm bởi AJAX -->
+						    </select>
+						</div>
+						<div class="col-12">
+						    <label for="AddStyleValue" class="form-label fw-bold">Style Value</label>
+						    <!-- Thêm thẻ select cho danh sách styles -->
+						    <select class="form-select" id="AddStyleValue" name="styleValueId" required>
+						        <option value="" disabled selected>Select a Style Value</option>
+						        <!-- Options sẽ được thêm bởi AJAX -->
+						    </select>
+						</div>
+
 							</div>
 						</div>
                           </div>
-                     </div>
-                </div>
-
+                     
+                
                 <div class="card">
                   <div class="card-body">
                     <h5 class="mb-3">Video Content</h5>
                     <div class="row g-3">
                        <div class="col-12">
-                          <input id="fancy-file-upload2" type="file" name="video" accept=".mp4">
+                          <input id="fancy-file-upload2" type="file" name="video" > 
                        </div>
-                        <div class="col-12">
-                          <div class="d-grid">
-                            <button type="button" class="btn btn-primary">Add Video</button>
-                          </div>
-                        </div>
                       </div>
                   </div>
                  </div>
-
-              </div>                
-          
+           </div>
+          </div>
         
- 
+ 	</form>
    </main>
+   
+   <script>
+    function discardAction() {
+        // Thực hiện hành động khi nhấp vào nút "Discard"
+        window.location.href = "/AZShop/Vendor/Product";
+    }
+
+    function saveDraftAction() {
+        // Thực hiện hành động khi nhấp vào nút "Save Draft"
+        document.getElementById("isActive").value = "false";
+        // Gửi form
+        document.forms[0].submit();
+    }
+
+    function publishAction() {
+        // Thực hiện hành động khi nhấp vào nút "Publish"
+        document.getElementById("isActive").value = "true";
+        // Gửi form
+        document.forms[0].submit();
+    }
+</script>
+
+<script>
+function setFormAction(action, productSlug) {
+    // Lấy form bằng id
+    var myForm = document.getElementById("productForm");
+
+    // Thay đổi hành động của form dựa trên giá trị của "action" và "productSlug"
+    if (action === 'insert') {
+        myForm.action = "vendor/product/new";
+    } else if (action === 'update') {
+        // Thêm slug vào đường dẫn
+        myForm.action = "vendor/product/edit/" + productSlug;
+    }
+}
+</script>
    </body>
    		
