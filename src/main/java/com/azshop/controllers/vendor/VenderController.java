@@ -30,6 +30,7 @@ import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadUtils;
 import com.google.gson.Gson;
+<<<<<<< HEAD
 @MultipartConfig(fileSizeThreshold = 1024*1024*10, maxFileSize = 1024*1024*50, maxRequestSize = 1024*1024*50 )
 @WebServlet (urlPatterns = {
 				 "/vendor/dashboard"
@@ -38,78 +39,89 @@ import com.google.gson.Gson;
 				,"/vendor/product/new","/vendor/product/edit/*","/vendor/product/detail/*"
 				,"/vendor/order/processing","/vendor/order/processed", "/vendor/order/details"
 			})
+=======
+
+@WebServlet(urlPatterns = { "/vendor/dashboard", "/register-shop", "/vendor/update-shop-info", "/vendor/product",
+		"/vendor/product/new", "/vendor/product/edit/*", "/vendor/product/detail/*", "/vendor/order/processing",
+		"/vendor/order/processed", "/vendor/order/details" })
+>>>>>>> 022dcbf74b34afaf8864d4b0d0e4ebd6aac1007b
 public class VenderController extends HttpServlet {
 
-	ICategoryService categoryService =  new CategoryServiceImpl();
+	ICategoryService categoryService = new CategoryServiceImpl();
 	IStyleService styleService = new StyleServiceImpl();
 	IStyleValueService styleValueService = new StyleValueImpl();
 	IProductService productService = new ProductServiceImpl();
 	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURL().toString();
-		if (url.contains("/vendor/dashboard")) {
-			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/dashboard.jsp");
-			rDispatcher.forward(req, resp);
-		}
 		if (url.contains("/register-shop")) {
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/createShop.jsp");
 			rDispatcher.forward(req, resp);
+			return;
+		}
+		if (url.contains("/vendor/dashboard")) {
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/dashboard.jsp");
+			rDispatcher.forward(req, resp);
+			return;
+		}
+		if (url.contains("/vendor/update-shop-info")) {
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/shopInfo.jsp");
+			req.setAttribute("isView", false);
+			rDispatcher.forward(req, resp);
+			return;
 		}
 		if (url.contains("/vendor/product")) {
-			doGetProduct(req,resp);
-			    
+			doGetProduct(req, resp);
+			return;
 		}
 		if (url.contains("/vendor/order")) {
 			if (url.contains("processing")) {
 				RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/order.jsp");
 				rDispatcher.forward(req, resp);
-			}
-			else if (url.contains("processed")) {
+			} else if (url.contains("processed")) {
 				RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/order.jsp");
 				rDispatcher.forward(req, resp);
-			}
-			else if (url.contains("detail")) {
+			} else if (url.contains("detail")) {
 				RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/orderDetails.jsp");
 				rDispatcher.forward(req, resp);
 			}
-				
-			
 		}
 	}
+
 	private void doGetProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURL().toString();
 		String categoryIdParam = req.getParameter("categoryId");
 		String styleIdParam = req.getParameter("styleId");
-        if (categoryIdParam != null && !categoryIdParam.isEmpty()) {
-            int categoryId = Integer.parseInt(categoryIdParam);
+		if (categoryIdParam != null && !categoryIdParam.isEmpty()) {
+			int categoryId = Integer.parseInt(categoryIdParam);
 
-         List<StyleModel> styles = styleService.getByCategoryId(categoryId);
+			List<StyleModel> styles = styleService.getByCategoryId(categoryId);
 
-         // Chuyển danh sách styles thành JSON và gửi về client
-         String json = new Gson().toJson(styles);
-         resp.setContentType("application/json");
-         resp.setCharacterEncoding("UTF-8");
-         resp.getWriter().write(json);
-        }
-        else if (styleIdParam != null && !styleIdParam.isEmpty()) {
-	         int styleId = Integer.parseInt(styleIdParam);
+			// Chuyển danh sách styles thành JSON và gửi về client
+			String json = new Gson().toJson(styles);
+			resp.setContentType("application/json");
+			resp.setCharacterEncoding("UTF-8");
+			resp.getWriter().write(json);
+		} else if (styleIdParam != null && !styleIdParam.isEmpty()) {
+			int styleId = Integer.parseInt(styleIdParam);
 
-	         List<StyleValueModel> styleValues = styleValueService.getByStyleId(styleId);
+			List<StyleValueModel> styleValues = styleValueService.getByStyleId(styleId);
 
-	         // Chuyển danh sách styles thành JSON và gửi về client
-	         String json = new Gson().toJson(styleValues);
-	         resp.setContentType("application/json");
-	         resp.setCharacterEncoding("UTF-8");
-	         resp.getWriter().write(json);
-		}
-        else {
-			
-            String action = "";
+			// Chuyển danh sách styles thành JSON và gửi về client
+			String json = new Gson().toJson(styleValues);
+			resp.setContentType("application/json");
+			resp.setCharacterEncoding("UTF-8");
+			resp.getWriter().write(json);
+		} else {
+
+			String action = "";
 			List<CategoryModel> categoryModels = categoryService.getAll();
 			req.setAttribute("categorys", categoryModels);
-			
+
 			if (url.contains("/new")) {
+<<<<<<< HEAD
 				action = "new";
 				
 			}
@@ -117,26 +129,35 @@ public class VenderController extends HttpServlet {
 				action = "edit";
 				
 				
+=======
+				action = "insert";
+
 			}
-			
+			if (url.contains("/edit")) {
+				action = "update";
+
+>>>>>>> 022dcbf74b34afaf8864d4b0d0e4ebd6aac1007b
+			}
+
 			req.setAttribute("action", action);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/product.jsp");
 			rDispatcher.forward(req, resp);
-        }
-		
+		}
+
 	}
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURL().toString();
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-		
+
 		if (url.contains("register-shop")) {
-			RegisterShop(req,resp);
-		}
-		else if (url.contains("/vendor/product/new")){
-			  // Lấy dữ liệu từ form
+			RegisterShop(req, resp);
+		} else if (url.contains("/vendor/product/new")) {
+			// Lấy dữ liệu từ form
 			try {
+<<<<<<< HEAD
 				
 			String name = req.getParameter("name");
 			String slug = SlugUtil.toSlug(name);
@@ -157,20 +178,36 @@ public class VenderController extends HttpServlet {
 				productModel.setVideo(UploadUtils.processUpload("video", req, Constant.DIR, fileName));
 			}
 			productService.insert(productModel);
+=======
+
+				String name = req.getParameter("name");
+				String slug = SlugUtil.toSlug(name);
+				String description = req.getParameter("description");
+				BigDecimal price = new BigDecimal(req.getParameter("price"));
+				int quantity = Integer.parseInt(req.getParameter("quantity"));
+				boolean isActive = Boolean.parseBoolean(req.getParameter("isActive"));
+				String video = req.getParameter("video");
+				int categoryId = Integer.parseInt(req.getParameter("categoryId"));
+				int styleValueId = Integer.parseInt(req.getParameter("styleValueId"));
+				int storeId = 0;
+
+				ProductModel productModel = new ProductModel(name, slug, description, price, quantity, isActive,
+						categoryId, styleValueId, storeId, video);
+				productService.insert(productModel);
+>>>>>>> 022dcbf74b34afaf8864d4b0d0e4ebd6aac1007b
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
-
 		}
 	}
-	private void RegisterShop(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException {
+
+	private void RegisterShop(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-		//Chuyen Dashboard 
+		// Chuyen Dashboard
 		resp.sendRedirect("vendor-dashboard");
-		
+
 	}
-	
-	
+
 }
