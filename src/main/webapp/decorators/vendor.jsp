@@ -104,22 +104,6 @@
 	<script src="<c:url value="/templates/assets/js/main.js"></c:url>"></script>
 	
 	<script>
-	    $('#fancy-file-upload').FancyFileUpload({
-	        params: {
-	            action: 'fileuploader'
-	        },
-	        maxfilesize: 1000000
-	    });
-	</script>
-	<script>
-	    $('#fancy-file-upload2').FancyFileUpload({
-	        params: {
-	            action: 'fileuploader'
-	        },
-	        maxfilesize: 1000000
-	    });
-	</script>
-	<script>
 		$(document).ready(function() {
 			var table = $('#example2').DataTable( {
 				lengthChange: false,
@@ -132,61 +116,7 @@
 	 </script>
 	 
 	 
-    <script>
-    function loadStyles() {
-        var categoryId = $("#CategorySelected").val();
-
-        $.ajax({
-            type: "GET",
-            url: "/AZShop/vendor/product/new?categoryId=" + encodeURIComponent(categoryId),
-            success: function(styles) {
-                // Cập nhật danh sách style
-                updateStyleList(styles);
-            },
-            error: function(xhr, status, error) {
-                console.error("AJAX request failed:", status, error);
-            }
-        });
-    }
-
-    function updateStyleList(styles) {
-        var styleSelect = $("#StyleSelected");
-        styleSelect.empty();
-        styleSelect.append('<option value="" disabled selected>Select a Style</option>');
-        $.each(styles, function(index, style) {
-            styleSelect.append('<option value="' + style.id + '">' + style.name + '</option>');
-        });
-    }
-	
-	</script>
-
-	<script>
-    function loadStylesValue() {
-        var styleId = $("#StyleSelected").val();
-
-        $.ajax({
-            type: "GET",
-            url: "/AZShop/vendor/product/new?styleId=" + encodeURIComponent(styleId),
-            success: function(styleValues) {
-                // Cập nhật danh sách style value
-                updateStyleValueList(styleValues);
-            },
-            error: function(xhr, status, error) {
-                console.error("AJAX request failed:", status, error);
-            }
-        });
-    }
-
-    function updateStyleValueList(styleValues) {
-        var styleValueSelect = $("#AddStyleValue");
-        styleValueSelect.empty();
-		styleValueSelect.append('<option value="" disabled selected>Select a Style Value</option>');
-        $.each(styleValues, function(index, styleValue) {
-            styleValueSelect.append('<option value="' + styleValue.id + '">' + styleValue.name + '</option>');
-        });
-    }
-	
-</script>
+    
 </body>
 </body>
 </html>

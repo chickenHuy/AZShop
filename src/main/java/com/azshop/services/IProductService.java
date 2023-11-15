@@ -8,6 +8,7 @@ public interface IProductService {
 	void insert(ProductModel product);
 
 	ProductModel getById(int id);
+	ProductModel getBySlug(String slug);
 
 	List<ProductModel> getAll();
 
