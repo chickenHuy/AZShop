@@ -30,7 +30,7 @@ import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadUtils;
 import com.google.gson.Gson;
-
+@MultipartConfig(fileSizeThreshold = 1024*1024*10, maxFileSize = 1024*1024*50, maxRequestSize = 1024*1024*50 )
 @WebServlet (urlPatterns = {
 				 "/vendor/dashboard"
 				,"/register-shop"
@@ -110,11 +110,11 @@ public class VenderController extends HttpServlet {
 			req.setAttribute("categorys", categoryModels);
 			
 			if (url.contains("/new")) {
-				action = "insert";
+				action = "new";
 				
 			}
 			if (url.contains("/edit")) {
-				action = "update";
+				action = "edit";
 				
 				
 			}
@@ -151,6 +151,11 @@ public class VenderController extends HttpServlet {
 			
 			
 			ProductModel productModel = new ProductModel(name, slug, description, price, quantity, isActive, categoryId, styleValueId,storeId, video);
+			if (req.getPart("video").getSize() != 0)
+			{
+				String fileName = "" + System.currentTimeMillis();
+				productModel.setVideo(UploadUtils.processUpload("video", req, Constant.DIR, fileName));
+			}
 			productService.insert(productModel);
 			} catch (Exception e) {
 				e.printStackTrace();

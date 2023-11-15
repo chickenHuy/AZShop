@@ -62,7 +62,7 @@
 <link rel="stylesheet"
 	href="<c:url value="/templates/assets/css/shadow-theme.css"></c:url>"
 	type="text/css">
-
+<decorator:head></decorator:head>
 </head>
 <body>
 	<%@ include file="/common/vendor/header.jsp"%>
