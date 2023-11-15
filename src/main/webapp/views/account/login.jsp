@@ -28,7 +28,7 @@
                     <div class="form-items">
                         <h3>Login to account</h3>
 						<br>
-                        <form>
+                        <form action="login-customer" method="post">
                             <input class="form-control" type="text" name="username" placeholder="Username" required>
                             <input class="form-control" type="password" name="password" placeholder="Password" required>
                             <div class="form-button">

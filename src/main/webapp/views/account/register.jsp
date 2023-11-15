@@ -27,7 +27,7 @@
                     <div class="form-items">
                         <h3>Register new account</h3>
                         <br>
-                        <form action="register" method="post">
+                        <form action="register-customer" method="post">
                             <input class="form-control" type="text" name="first-name" placeholder="First Name" required>
                             <input class="form-control" type="text" name="last-name" placeholder="Last Name" required>
                             <input class="form-control" type="email" name="email" placeholder="E-mail Address" required>

@@ -222,7 +222,7 @@ public class UserDAOImpl implements IUserDAO {
 			ps.setString(3, slugString);
 			ps.setString(4, email);
 			ps.setString(5, salt);
-			ps.setString(6, "SHA2(CONCAT('" +password+ "', "+ salt +"), 256)");
+			ps.setString(6, password + "-" + salt);
 			
 			ps.executeUpdate();
 			
@@ -247,6 +247,46 @@ public class UserDAOImpl implements IUserDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public UserModel getByEmail(String email) {
+		UserModel userModel = new UserModel();
+		try {
+			 String sql = "SELECT * FROM [User] WHERE email = ? AND isDeleted = 0";
+		        conn = new DBConnection().getConnection();
+		        
+		        ps = conn.prepareStatement(sql);
+		        ps.setString(1, email);
+		        
+		        rs = ps.executeQuery();
+		        if (rs.next()) {
+		        	userModel.setId(rs.getInt("id"));
+		        	userModel.setFirstName(rs.getString("firstName"));
+		            userModel.setLastName(rs.getString("lastName"));
+		            userModel.setSlug(rs.getString("slug"));
+		            userModel.setCartId(rs.getString("cartId"));
+		            userModel.setEmail(rs.getString("email"));
+		            userModel.setPhone(rs.getString("phone"));
+		            userModel.setEmailActive(rs.getBoolean("isEmailActive"));
+		            userModel.setPhoneActive(rs.getBoolean("isPhoneActive"));
+		            userModel.setSalt(rs.getString("salt"));
+		            userModel.setHashedPassword(rs.getString("hashedPassword"));
+		            userModel.setRole(rs.getString("role"));
+		            userModel.setUserLevelId(rs.getInt("userLevelId"));
+		            userModel.setAvatar(rs.getString("avatar"));
+		            userModel.setCoverImage(rs.getString("coverImage"));
+		            userModel.setPoint(rs.getInt("point"));
+		            userModel.seteWallet(rs.getBigDecimal("eWallet"));
+		            userModel.setCreateAt(rs.getDate("createAt"));
+		            userModel.setUpdateAt(rs.getDate("updateAt"));
+		        }
+		        
+		        conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return userModel;
 	}
 
 }

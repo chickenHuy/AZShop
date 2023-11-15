@@ -27,7 +27,7 @@
                     <div class="form-items">
                         <h3>Verify Code</h3>
                         <br>
-                        <form action="VerifyCode" method="post">
+                        <form action="verify-customer" method="post">
                             <input class="form-control" type="text" name="verify-code" placeholder="Verify Code" required>
                             <div class="form-button">
                                 <button id="submit" type="submit" class="ibtn">Submit</button>

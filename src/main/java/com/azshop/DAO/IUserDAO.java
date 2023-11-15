@@ -20,4 +20,6 @@ public interface IUserDAO {
 	void insertRegister(String firstName, String lastName, String email, String password);
 
 	void updateStatusEmail(UserModel user);
+	
+	UserModel getByEmail(String email);
 }

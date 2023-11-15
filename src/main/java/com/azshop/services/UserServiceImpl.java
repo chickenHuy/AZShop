@@ -53,4 +53,21 @@ public class UserServiceImpl implements IUserService{
 		userDAO.updateStatusEmail(user);
 	}
 
+	@Override
+	public UserModel getByEmail(String email) {
+		return userDAO.getByEmail(email);
+	}
+
+	@Override
+	public UserModel login(String email, String password) {
+		UserModel user = userDAO.getByEmail(email);
+		String check = password + "-" + user.getSalt();
+		if (user != null && check.equals(user.getHashedPassword())) {
+			return user;
+		}
+		return null;
+	}
+	
+	
+
 }

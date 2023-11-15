@@ -20,4 +20,8 @@ public interface IUserService {
 	boolean insertRegister(String firstName, String lastName, String email, String password);
 
 	void updateStatusEmail(UserModel user);
+	
+	UserModel getByEmail(String email);
+	
+	UserModel login(String email, String password);
 }

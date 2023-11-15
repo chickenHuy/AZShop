@@ -40,6 +40,15 @@ public class AccountController extends HttpServlet{
 	}
 
 	private void getLogin(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession(false);
+		if (session != null && session.getAttribute("account") != null) {
+			UserModel user = (UserModel) session.getAttribute("account");
+			req.setAttribute("username", user.getEmail());
+			String result = user.getHashedPassword().split("-")[0];
+			req.setAttribute("password", result);
+			resp.sendRedirect(req.getContextPath() + "/login-customer");
+			return;
+		}
 		req.getRequestDispatcher("/views/account/login.jsp").forward(req, resp);
 	}
 
@@ -70,9 +79,26 @@ public class AccountController extends HttpServlet{
 		
 	}
 
-	private void postLogin(HttpServletRequest req, HttpServletResponse resp) {
-		// TODO Auto-generated method stub
+	private void postLogin(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.setContentType("text/html;charset=UTF-8");
 		
+		String username = req.getParameter("username");
+		String password = req.getParameter("password");
+		
+		if (username.isEmpty() || password.isEmpty()) {
+			req.getRequestDispatcher("/views/account/login.jsp").forward(req, resp);
+			return;
+		}
+		
+		UserModel user = userService.login(username, password);
+		if (user != null) {
+			HttpSession session = req.getSession(true);
+			session.setAttribute("account", user);
+			resp.sendRedirect(req.getContextPath() + "/guest-home");
+		} else {
+			req.getRequestDispatcher("views/account/login.jsp").forward(req, resp);
+		}
+			
 	}
 
 	private void postVerify(HttpServletRequest req, HttpServletResponse resp) {
