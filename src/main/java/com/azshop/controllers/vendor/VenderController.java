@@ -30,14 +30,12 @@ import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadUtils;
 import com.google.gson.Gson;
-@MultipartConfig(fileSizeThreshold = 1024*1024*10, maxFileSize = 1024*1024*50, maxRequestSize = 1024*1024*50 )
-@WebServlet (urlPatterns = {
-				 "/vendor/dashboard"
-				,"/register-shop"
-				,"/vendor/product"
-				,"/vendor/product/new","/vendor/product/edit/*","/vendor/product/detail/*"
-				,"/vendor/order/processing","/vendor/order/processed", "/vendor/order/details"
-			})
+
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
+		* 50)
+@WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/register-shop", "/vendor/product", "/vendor/product/new",
+		"/vendor/product/edit/*", "/vendor/product/detail/*", "/vendor/order/processing", "/vendor/order/processed",
+		"/vendor/order/details" })
 public class VenderController extends HttpServlet {
 
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -115,11 +113,11 @@ public class VenderController extends HttpServlet {
 
 			if (url.contains("/new")) {
 				action = "new";
-				
+
 			}
 			if (url.contains("/edit")) {
 				action = "edit";
-				
+
 			}
 
 			req.setAttribute("action", action);
@@ -140,26 +138,25 @@ public class VenderController extends HttpServlet {
 		} else if (url.contains("/vendor/product/new")) {
 			// Lấy dữ liệu từ form
 			try {
-				
-			String name = req.getParameter("name");
-			String slug = SlugUtil.toSlug(name);
-			String description = req.getParameter("description");
-			BigDecimal price = new BigDecimal(req.getParameter("price"));
-			int quantity = Integer.parseInt(req.getParameter("quantity"));
-			boolean isActive = Boolean.parseBoolean(req.getParameter("isActive"));
-			String video = req.getParameter("video");
-			int categoryId = Integer.parseInt(req.getParameter("categoryId"));
-			int styleValueId = Integer.parseInt(req.getParameter("styleValueId"));
-			int storeId = 0;
-			
-			
-			ProductModel productModel = new ProductModel(name, slug, description, price, quantity, isActive, categoryId, styleValueId,storeId, video);
-			if (req.getPart("video").getSize() != 0)
-			{
-				String fileName = "" + System.currentTimeMillis();
-				productModel.setVideo(UploadUtils.processUpload("video", req, Constant.DIR, fileName));
-			}
-			productService.insert(productModel);
+
+				String name = req.getParameter("name");
+				String slug = SlugUtil.toSlug(name);
+				String description = req.getParameter("description");
+				BigDecimal price = new BigDecimal(req.getParameter("price"));
+				int quantity = Integer.parseInt(req.getParameter("quantity"));
+				boolean isActive = Boolean.parseBoolean(req.getParameter("isActive"));
+				String video = req.getParameter("video");
+				int categoryId = Integer.parseInt(req.getParameter("categoryId"));
+				int styleValueId = Integer.parseInt(req.getParameter("styleValueId"));
+				int storeId = 0;
+
+				ProductModel productModel = new ProductModel(name, slug, description, price, quantity, isActive,
+						categoryId, styleValueId, storeId, video);
+				if (req.getPart("video").getSize() != 0) {
+					String fileName = "" + System.currentTimeMillis();
+					productModel.setVideo(UploadUtils.processUpload("video", req, Constant.DIR, fileName));
+				}
+				productService.insert(productModel);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
