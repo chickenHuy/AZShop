@@ -46,7 +46,7 @@ public class AccountController extends HttpServlet{
 			req.setAttribute("username", user.getEmail());
 			String result = user.getHashedPassword().split("-")[0];
 			req.setAttribute("password", result);
-			resp.sendRedirect(req.getContextPath() + "/login-customer");
+			req.getRequestDispatcher("/views/account/login.jsp").forward(req, resp);
 			return;
 		}
 		req.getRequestDispatcher("/views/account/login.jsp").forward(req, resp);

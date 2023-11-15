@@ -41,7 +41,7 @@
                             <a href="#"><i class="fab fa-facebook-f"></i>Facebook</a><a href="#"><i class="fab fa-google"></i>Google</a><a href="#"><i class="fab fa-linkedin-in"></i>Linkedin</a>
                         </div>
                         <div class="page-links">
-                            <a href="<c:url value="/views/account/login.jsp" />">Login to account</a>
+                            <a href="${pageContext.request.contextPath}/login-customer" />Login to account</a>
                         </div>
                     </div>
                 </div>
