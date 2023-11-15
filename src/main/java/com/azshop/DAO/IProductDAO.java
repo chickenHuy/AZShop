@@ -7,6 +7,7 @@ import com.azshop.models.ProductModel;
 public interface IProductDAO {
 	void insert(ProductModel product);
     ProductModel getById(int id);
+    ProductModel getBySlug(String slug);
     List<ProductModel> getAll();
     List<ProductModel> getByCategoryId(int categoryId);
     List<ProductModel> getByStyleValueId(int styleValueId);

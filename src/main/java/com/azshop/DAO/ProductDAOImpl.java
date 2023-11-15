@@ -272,4 +272,39 @@ public class ProductDAOImpl implements IProductDAO {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public ProductModel getBySlug(String slug) {
+		ProductModel product = new ProductModel();
+		try {
+			String sql = "SELECT * FROM dbo.[Product] WHERE slug = ? AND isDeleted = 0";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, slug);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				product.setId(rs.getInt("id"));
+				product.setName(rs.getString("name"));
+				product.setSlug(rs.getString("slug"));
+				product.setDescription(rs.getString("description"));
+				product.setPrice(rs.getBigDecimal("price"));
+				product.setQuantity(rs.getInt("quantiny"));
+				product.setSold(rs.getInt("sold"));
+				product.setActive(rs.getBoolean("isActive"));
+				product.setVideo(rs.getString("video"));
+				product.setCategoryId(rs.getInt("categoryId"));
+				product.setStyleValueId(rs.getInt("styleValueId"));
+				product.setStoreId(rs.getInt("storeId"));
+				product.setRating(rs.getBigDecimal("rating"));
+				product.setCreateAt(rs.getDate("createAt"));
+				product.setUpdateAt(rs.getDate("updateAt"));
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return product;
+	}
 }

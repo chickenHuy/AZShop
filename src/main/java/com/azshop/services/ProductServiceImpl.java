@@ -49,4 +49,9 @@ public class ProductServiceImpl implements IProductService{
 		productDAO.delete(id);
 	}
 
+	@Override
+	public ProductModel getBySlug(String slug) {
+		return productDAO.getBySlug(slug);
+	}
+
 }
