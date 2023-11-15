@@ -36,14 +36,12 @@ import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadUtils;
 import com.google.gson.Gson;
-@MultipartConfig(fileSizeThreshold = 1024*1024*10, maxFileSize = 1024*1024*50, maxRequestSize = 1024*1024*50 )
-@WebServlet (urlPatterns = {
-				 "/vendor/dashboard"
-				,"/register-shop"
-				,"/vendor/product"
-				,"/vendor/product/new","/vendor/product/edit/*","/vendor/product/detail/*"
-				,"/vendor/order/processing","/vendor/order/processed", "/vendor/order/details"
-			})
+
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
+		* 50)
+@WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/register-shop", "/vendor/product", "/vendor/product/new",
+		"/vendor/product/edit/*", "/vendor/product/detail/*", "/vendor/order/processing", "/vendor/order/processed",
+		"/vendor/order/details" })
 public class VenderController extends HttpServlet {
 
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -122,11 +120,11 @@ public class VenderController extends HttpServlet {
 
 			if (url.contains("/new")) {
 				action = "new";
-				
+
 			}
 			if (url.contains("/edit")) {
 				action = "edit";
-				
+
 			}
 
 			req.setAttribute("action", action);
