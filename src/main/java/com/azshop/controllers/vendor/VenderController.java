@@ -3,6 +3,10 @@ package com.azshop.controllers.vendor;
 import java.awt.Image;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,6 +57,9 @@ public class VenderController extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
 		String url = req.getRequestURL().toString();
 		if (url.contains("/register-shop")) {
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/createShop.jsp");
@@ -124,35 +131,44 @@ public class VenderController extends HttpServlet {
 			}
 			if (url.contains("/edit")) {
 				action = "edit";
-				
-				String[] parts = url.split("/");
+				URI uri;
+				try {
+					uri = new URI(url);
+					String path = uri.getPath();
+					
+					String[] parts = path.split("/");
 			        
-		        if (parts.length > 0) {
-		            String slug = parts[parts.length - 1];
-		            try {
-		            	ProductModel productModel = productService.getBySlug(slug);
-		            	if (productModel == null)
-		            	{
-		            		req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-		            	}
-		            	else {
-							req.setAttribute("product", productModel);
-							List<ImageModel> imageModels = imageService.getByProductId(productModel.getId());
-							for (ImageModel imageModel : imageModels) {
-								int index = 1;
-								String image= "image" + String.valueOf(index);
-								req.setAttribute(image, imageModel);
-								System.out.println(imageModel.getImage());
-								index++;
+			        if (parts.length > 0) {
+			            String slug = parts[parts.length - 1];
+			            System.out.println(slug);
+			            try {
+			            	ProductModel productModel = productService.getBySlug(slug);
+			            	if (productModel == null)
+			            	{
+			            		req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+			            	}
+			            	else {
+								req.setAttribute("product", productModel);
+								List<ImageModel> imageModels = imageService.getByProductId(productModel.getId());
+								for (ImageModel imageModel : imageModels) {
+									int index = 1;
+									String image= "image" + String.valueOf(index);
+									req.setAttribute(image, imageModel);
+								
+									index++;
+								}
+								
 							}
-							System.out.println(productModel.getName());
+						} catch (Exception e) {
+							req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 						}
-					} catch (Exception e) {
-						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-					}
-		        } else {
-		        	req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-		        }
+			        } else {
+			        	req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+			        }
+		    	
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				}
 			}
 
 			req.setAttribute("action", action);

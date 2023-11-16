@@ -70,16 +70,16 @@
                                     <div class="mb-4">
                                         <h5 class="mb-3">Product Title</h5>
                                         <input type="text" class="form-control" placeholder="write title here...."
-                                            name="name" required>
+                                            name="name"  value="${product != null ? product.name : ''}" required>
                                     </div>
                                     <div class="mb-4">
                                         <h5 class="mb-3">Product Description</h5>
                                         <textarea class="form-control" cols="4" rows="6"
-                                            placeholder="write a description here.." name="description"
+                                            placeholder="write a description here.." name="description" value="${product != null ? product.description : ''}"
                                             required></textarea>
                                     </div>
                                     <div class="mb-4">
-                                        <h5 class="mb-3">Display images</h5>
+                                        <h5 class="mb-3">Display images</h5> 
                                         <div class="row g-3">
                                             <div class="container">
                                                 <div class="row g-3">
@@ -175,7 +175,7 @@
                                                             <div class="col-12 col-lg-6">
                                                                 <h6 class="mb-2">Regular price</h6>
                                                                 <input class="form-control" type="text"
-                                                                    placeholder="VNĐ" name="price" required>
+                                                                    placeholder="VNĐ" name="price" value="${product != null ? product.price : ''}" required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -184,7 +184,7 @@
                                                         <div class="row g-3">
                                                             <div class="col-sm-7">
                                                                 <input class="form-control" type="number"
-                                                                    placeholder="Quantity" name="quantity" required>
+                                                                    placeholder="Quantity" name="quantity" value="${product != null ? product.quantity : ''}" required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -255,7 +255,7 @@
                                         <div class="col-12">
                                             <label class="custom-file-input-wrapper">
                                                 <input type="file" name="video" accept=".mp4" id="fileInputVideo"
-                                                    class="custom-file-input" onchange="checkFileVideoSize()" />
+                                                    class="custom-file-input" onchange="checkFileVideoSize()" src="${product != null ? product.video : ''}"/>
                                                 <div class="custom-file-label">Choose Video</div>
                                             </label>
                                             <br><span id="fileSizeErrorVideo" style="color: red;"></span>
