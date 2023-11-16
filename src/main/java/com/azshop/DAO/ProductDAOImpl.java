@@ -299,9 +299,14 @@ public class ProductDAOImpl implements IProductDAO {
 				product.setRating(rs.getBigDecimal("rating"));
 				product.setCreateAt(rs.getDate("createAt"));
 				product.setUpdateAt(rs.getDate("updateAt"));
+				conn.close();
+			}
+			else {
+				conn.close();
+				return null;
 			}
 
-			conn.close();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

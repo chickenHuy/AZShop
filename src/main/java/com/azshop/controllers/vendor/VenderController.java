@@ -39,7 +39,7 @@ import com.google.gson.Gson;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
 		* 50)
-@WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/register-shop", "/vendor/product", "/vendor/product/new",
+@WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/register-shop", "/vendor/product/new", "/vendor/product/error404",
 		"/vendor/product/edit/*", "/vendor/product/detail/*", "/vendor/order/processing", "/vendor/order/processed",
 		"/vendor/order/details" })
 public class VenderController extends HttpServlet {
@@ -124,7 +124,35 @@ public class VenderController extends HttpServlet {
 			}
 			if (url.contains("/edit")) {
 				action = "edit";
-
+				
+				String[] parts = url.split("/");
+			        
+		        if (parts.length > 0) {
+		            String slug = parts[parts.length - 1];
+		            try {
+		            	ProductModel productModel = productService.getBySlug(slug);
+		            	if (productModel == null)
+		            	{
+		            		req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+		            	}
+		            	else {
+							req.setAttribute("product", productModel);
+							List<ImageModel> imageModels = imageService.getByProductId(productModel.getId());
+							for (ImageModel imageModel : imageModels) {
+								int index = 1;
+								String image= "image" + String.valueOf(index);
+								req.setAttribute(image, imageModel);
+								System.out.println(imageModel.getImage());
+								index++;
+							}
+							System.out.println(productModel.getName());
+						}
+					} catch (Exception e) {
+						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+					}
+		        } else {
+		        	req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+		        }
 			}
 
 			req.setAttribute("action", action);
@@ -143,54 +171,7 @@ public class VenderController extends HttpServlet {
 		if (url.contains("register-shop")) {
 			RegisterShop(req, resp);
 		} else if (url.contains("/vendor/product/new")) {
-			// Lấy dữ liệu từ form
-			try {
-				
-			String name = req.getParameter("name");
-			String slug = SlugUtil.toSlug(name);
-			String description = req.getParameter("description");
-			BigDecimal price = new BigDecimal(req.getParameter("price"));
-			int quantity = Integer.parseInt(req.getParameter("quantity"));
-			boolean isActive = Boolean.parseBoolean(req.getParameter("isActive"));
-			String video = req.getParameter("video");
-			int categoryId = Integer.parseInt(req.getParameter("categoryId"));
-			int styleValueId = Integer.parseInt(req.getParameter("styleValueId"));
-			int storeId = 0;
-			
-			
-			ProductModel productModel = new ProductModel(name, slug, description, price, quantity, isActive, categoryId, styleValueId,storeId, video);
-			if (req.getPart("video").getSize() != 0)
-			{
-				String fileName = "" + System.currentTimeMillis();
-				productModel.setVideo(UploadUtils.processUpload("video", req, Constant.DIR, fileName));
-			}
-			
-			
-			productService.insert(productModel);
-			
-			productModel = productService.getBySlug(slug);
-			String imageName = "image";
-			for (int i = 1; i <= 6; i++) {
-				
-				imageName += String.valueOf(i);
-				
-				
-				if (req.getPart(imageName).getSize() != 0)
-				{
-					ImageModel imageModel = new ImageModel();
-					String fileName = "" + System.currentTimeMillis();
-					imageModel.setImage(UploadUtils.processUpload(imageName, req, Constant.DIR, fileName));
-					imageModel.setProductId(productModel.getId());
-					
-					imageService.insert(imageModel);
-				}
-				imageName = imageName.substring(0, imageName.length() -1);
-				
-			}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
+			doPostProduct(req, resp);
 		}
 	}
 
@@ -200,6 +181,56 @@ public class VenderController extends HttpServlet {
 		// Chuyen Dashboard
 		resp.sendRedirect("vendor-dashboard");
 
+	}
+	private void doPostProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// Lấy dữ liệu từ form
+					try {
+						
+					String name = req.getParameter("name");
+					String slug = SlugUtil.toSlug(name);
+					String description = req.getParameter("description");
+					BigDecimal price = new BigDecimal(req.getParameter("price"));
+					int quantity = Integer.parseInt(req.getParameter("quantity"));
+					boolean isActive = Boolean.parseBoolean(req.getParameter("isActive"));
+					String video = req.getParameter("video");
+					int categoryId = Integer.parseInt(req.getParameter("categoryId"));
+					int styleValueId = Integer.parseInt(req.getParameter("styleValueId"));
+					int storeId = 0;
+					
+					
+					ProductModel productModel = new ProductModel(name, slug, description, price, quantity, isActive, categoryId, styleValueId,storeId, video);
+					if (req.getPart("video").getSize() != 0)
+					{
+						String fileName = "" + System.currentTimeMillis();
+						productModel.setVideo(UploadUtils.processUpload("video", req, Constant.DIR, fileName));
+					}
+					
+					
+					productService.insert(productModel);
+					
+					productModel = productService.getBySlug(slug);
+					String imageName = "image";
+					for (int i = 1; i <= 6; i++) {
+						
+						imageName += String.valueOf(i);
+						
+						
+						if (req.getPart(imageName).getSize() != 0)
+						{
+							ImageModel imageModel = new ImageModel();
+							String fileName = "" + System.currentTimeMillis();
+							imageModel.setImage(UploadUtils.processUpload(imageName, req, Constant.DIR, fileName));
+							imageModel.setProductId(productModel.getId());
+							
+							imageService.insert(imageModel);
+						}
+						imageName = imageName.substring(0, imageName.length() -1);
+						
+					}
+					} catch (Exception e) {
+						e.printStackTrace();
+					
+					}
 	}
 
 }

@@ -97,7 +97,7 @@
                                                         <label class="custom-file-input-wrapper">
                                                             <input type="file"
                                                                 accept=".jpg, .png, image/jpeg, image/png" name="image2"
-                                                                required class="custom-file-input"
+                                                                class="custom-file-input"
                                                                 onchange="handleImageSelection(this, 'thumbnail2')">
                                                             <div class="custom-file-label">Choose Image 2</div>
                                                         </label>
@@ -107,7 +107,7 @@
                                                         <label class="custom-file-input-wrapper">
                                                             <input type="file"
                                                                 accept=".jpg, .png, image/jpeg, image/png" name="image3"
-                                                                required class="custom-file-input"
+                                                                class="custom-file-input"
                                                                 onchange="handleImageSelection(this, 'thumbnail3')">
                                                             <div class="custom-file-label">Choose Image 3</div>
                                                         </label>
@@ -118,7 +118,7 @@
                                                         <label class="custom-file-input-wrapper">
                                                             <input type="file"
                                                                 accept=".jpg, .png, image/jpeg, image/png" name="image4"
-                                                                required class="custom-file-input"
+                                                                class="custom-file-input"
                                                                 onchange="handleImageSelection(this, 'thumbnail4')">
                                                             <div class="custom-file-label">Choose Image 4</div>
                                                         </label>
@@ -128,7 +128,7 @@
                                                         <label class="custom-file-input-wrapper">
                                                             <input type="file"
                                                                 accept=".jpg, .png, image/jpeg, image/png" name="image5"
-                                                                required class="custom-file-input"
+                                                                class="custom-file-input"
                                                                 onchange="handleImageSelection(this, 'thumbnail5')">
                                                             <div class="custom-file-label">Choose Image 5</div>
                                                         </label>
@@ -138,7 +138,7 @@
                                                         <label class="custom-file-input-wrapper">
                                                             <input type="file"
                                                                 accept=".jpg, .png, image/jpeg, image/png" name="image6"
-                                                                required class="custom-file-input"
+                                                                class="custom-file-input"
                                                                 onchange="handleImageSelection(this, 'thumbnail6')">
                                                             <div class="custom-file-label">Choose Image 6</div>
                                                         </label>
@@ -273,23 +273,54 @@
             </main>
 
             <script>
-                function discardAction() {
-                    // Thực hiện hành động khi nhấp vào nút "Discard"
-                    window.location.href = "/AZShop/vendor/product";
-                }
+            function discardAction() {
+                // Thực hiện hành động khi nhấp vào nút "Discard"
+                window.location.href = "/AZShop/vendor/product";
+            }
 
-                function saveDraftAction() {
-                    // Thực hiện hành động khi nhấp vào nút "Save Draft"
+            function saveDraftAction() {
+                // Thực hiện hành động khi nhấp vào nút "Save Draft"
+                if (validateForm()) {
                     document.getElementById("isActive").value = "false";
                     // Gửi form
                     document.forms[0].submit();
                 }
+            }
 
-                function publishAction() {
-                    // Thực hiện hành động khi nhấp vào nút "Publish"
+            function publishAction() {
+                // Thực hiện hành động khi nhấp vào nút "Publish"
+                if (validateForm()) {
                     document.getElementById("isActive").value = "true";
                     // Gửi form
                     document.forms[0].submit();
+                }
+            }
+                
+            function validateForm() {
+                var name = document.forms["productForm"]["name"].value;
+                var description = document.forms["productForm"]["description"].value;
+                var image1 = document.forms["productForm"]["image1"].value;
+                var category = document.forms["productForm"]["categoryId"].value;
+                var style = document.forms["productForm"]["styleId"].value;
+                var styleValue = document.forms["productForm"]["styleValueId"].value;
+                var quantity = document.forms["productForm"]["quantity"].value;
+                var price = document.forms["productForm"]["price"].value;
+                
+
+                // Add checks for other required fields
+                if (
+                    name.trim() === "" ||
+                    description.trim() === "" ||
+                    image1.trim() === "" ||
+                    video.trim() === "" ||
+                    category.trim() === "" ||
+                    style.trim() === "" ||
+                    styleValue.trim() === "" ||
+                    quantity.trim()=== "" ||
+                    price.trim() === "" ||
+                ) {
+                    alert("Please fill in all required fields.");
+                    return false;
                 }
             </script>
             <script>
