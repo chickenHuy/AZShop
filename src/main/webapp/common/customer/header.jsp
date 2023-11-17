@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ include file="/common/taglib.jsp"%>
 <header>
 	<!-- TOP HEADER -->
@@ -19,7 +19,6 @@
 		</div>
 	</div>
 	<!-- /TOP HEADER -->
-
 	<!-- MAIN HEADER -->
 	<div id="header">
 		<!-- container -->
@@ -34,7 +33,6 @@
 					</div>
 				</div>
 				<!-- /LOGO -->
-
 				<!-- SEARCH BAR -->
 				<div class="col-md-6">
 					<div class="header-search">
@@ -49,7 +47,6 @@
 					</div>
 				</div>
 				<!-- /SEARCH BAR -->
-
 				<!-- ACCOUNT -->
 				<div class="col-md-3 clearfix">
 					<div class="header-ctn">
@@ -61,7 +58,6 @@
 							</a>
 						</div>
 						<!-- /Wishlist -->
-
 						<!-- Cart -->
 						<div class="dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown"
@@ -116,7 +112,6 @@
 							</div>
 						</div>
 						<!-- /Cart -->
-
 						<!-- Menu Toogle -->
 						<div class="menu-toggle">
 							<a href="#"> <i class="fa fa-bars"></i> <span>Menu</span>
@@ -132,28 +127,29 @@
 		<!-- container -->
 	</div>
 	<!-- /MAIN HEADER -->
-
-	<!-- NAVIGATION -->
-	<nav id="navigation">
-		<!-- container -->
-		<div class="container">
-			<!-- responsive-nav -->
-			<div id="responsive-nav">
-				<!-- NAV -->
-				<ul class="main-nav nav navbar-nav">
-					<li class="active"><a href="#">Home</a></li>
-					<li><a href="#">Hot Deals</a></li>
-					<li><a href="#">Categories</a></li>
-					<li><a href="#">Laptops</a></li>
-					<li><a href="#">Smartphones</a></li>
-					<li><a href="#">Cameras</a></li>
-					<li><a href="#">Accessories</a></li>
-				</ul>
-				<!-- /NAV -->
-			</div>
-			<!-- /responsive-nav -->
+</header>
+<!-- /HEADER -->
+<!-- NAVIGATION -->
+<nav id="navigation">
+	<!-- container -->
+	<div class="container">
+		<!-- responsive-nav -->
+		<div id="responsive-nav">
+			<!-- NAV -->
+			<ul class="main-nav nav navbar-nav">
+				<li class="active"><a href="#">Home</a></li>
+				<li><a href="#">Hot Deals</a></li>
+				<li><a href="#">Categories</a></li>
+				<li><a href="#">Laptops</a></li>
+				<li><a href="#">Smartphones</a></li>
+				<li><a href="#">Cameras</a></li>
+				<li><a href="#">Accessories</a></li>
+			</ul>
+			<!-- /NAV -->
 		</div>
-		<!-- /container -->
-	</nav>
-	<!-- /NAVIGATION -->
+		<!-- /responsive-nav -->
+	</div>
+	<!-- /container -->
+</nav>
+<!-- /NAVIGATION -->
 </header>
