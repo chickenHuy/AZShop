@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = {"/customer-home"})
+@WebServlet(urlPatterns = {"/customer-home", "/customer-product"})
 public class CustomerController extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
@@ -22,8 +22,21 @@ public class CustomerController extends HttpServlet{
 				e.printStackTrace();
 			}
 		}
+		
+		else if (url.contains("customer-product")) {
+			try {
+				getProduct(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
+	private void getProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/product.jsp");
+		rd.forward(req, resp);
+	}
+	
 	private void getCollections(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/home.jsp");
 		rd.forward(req, resp);
