@@ -1,7 +1,12 @@
 package com.azshop.controllers.vendor;
 
 import java.awt.Image;
+import java.io.Console;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,7 +15,7 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.imageio.ImageReader;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -19,7 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
+
 
 import com.azshop.models.CategoryModel;
 import com.azshop.models.ImageModel;
@@ -140,7 +145,7 @@ public class VenderController extends HttpServlet {
 			        
 			        if (parts.length > 0) {
 			            String slug = parts[parts.length - 1];
-			            System.out.println(slug);
+			            req.setAttribute("slug", slug);
 			            try {
 			            	ProductModel productModel = productService.getBySlug(slug);
 			            	if (productModel == null)
@@ -149,12 +154,12 @@ public class VenderController extends HttpServlet {
 			            	}
 			            	else {
 								req.setAttribute("product", productModel);
+								int index = 1;
 								List<ImageModel> imageModels = imageService.getByProductId(productModel.getId());
 								for (ImageModel imageModel : imageModels) {
-									int index = 1;
+									
 									String image= "image" + String.valueOf(index);
-									req.setAttribute(image, imageModel);
-								
+									req.setAttribute(image, imageModel.getImage());
 									index++;
 								}
 								
@@ -170,7 +175,7 @@ public class VenderController extends HttpServlet {
 					e.printStackTrace();
 				}
 			}
-
+			
 			req.setAttribute("action", action);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/product.jsp");
 			rDispatcher.forward(req, resp);
