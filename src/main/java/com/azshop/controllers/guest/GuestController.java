@@ -26,7 +26,7 @@ import com.azshop.services.ProductServiceImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Email;
 
-@WebServlet(urlPatterns = {"/guest-home", "/guest-clothing"})
+@WebServlet(urlPatterns = {"/guest-home", "/guest-clothing", "/guest-product"})
 public class GuestController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -51,8 +51,20 @@ public class GuestController extends HttpServlet{
 				e.printStackTrace();
 			}
 		}
+		else if (url.contains("guest-product")) {
+			try {
+				getProduct(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
+	private void getProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/product.jsp");
+		rd.forward(req, resp);
+	}
+
 	private void getAllClothing(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<ProductModel> productList = productService.getAll();
 		

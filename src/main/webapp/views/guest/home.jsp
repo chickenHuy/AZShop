@@ -17,9 +17,11 @@
 				<!-- shop -->
 				<div class="col-md-4 col-xs-6">
 					<div class="shop">
-						<div class="shop-img">
-							<img src="templates/guest/img/product01.png" alt="">
-						</div>
+						<a href='<c:url value="/guest-product"/>'>
+							<div class="shop-img">
+								<img src="templates/guest/img/product01.png" alt="">
+							</div>
+						</a>
 						<div class="shop-body">
 							<h3>
 								Thời trang</a><br>Collection
@@ -34,9 +36,11 @@
 				<!-- shop -->
 				<div class="col-md-4 col-xs-6">
 					<div class="shop">
-						<div class="shop-img">
-							<img src="templates/guest/img/product02.png" alt="">
-						</div>
+						<a href='<c:url value="/guest-product"/>'>
+							<div class="shop-img">
+								<img src="templates/guest/img/product01.png" alt="">
+							</div>
+						</a>
 						<div class="shop-body">
 							<h3>
 								Đồ gia dụng<br>Collection
@@ -51,9 +55,11 @@
 				<!-- shop -->
 				<div class="col-md-4 col-xs-6">
 					<div class="shop">
-						<div class="shop-img">
-							<img src="templates/guest/img/product03.png" alt="">
-						</div>
+						<a href='<c:url value="/guest-product"/>'>
+							<div class="shop-img">
+								<img src="templates/guest/img/product01.png" alt="">
+							</div>
+						</a>
 						<div class="shop-body">
 							<h3>
 								Laptop<br>Collection
@@ -108,13 +114,15 @@
 									<c:forEach var="product" items="${productList}">
 										<!-- product -->
 										<div class="product">
-											<div class="product-img">
-												<!-- Use product-specific information -->
-												<img src="templates/guest/img/product02.png" alt="">
-												<div class="product-label">
-													<span class="new">NEW</span>
+											<a href='<c:url value="/guest-product"/>'>
+												<div class="product-img">
+													<!-- Use product-specific information -->
+													<img src="templates/guest/img/product02.png" alt="">
+													<div class="product-label">
+														<span class="new">NEW</span>
+													</div>
 												</div>
-											</div>
+											</a>
 											<div class="product-body">
 												<p class="product-category">Category</p>
 												<h3 class="product-name">
@@ -203,13 +211,15 @@
 									<c:forEach var="product" items="${productList}">
 										<!-- product -->
 										<div class="product">
-											<div class="product-img">
-												<!-- Use product-specific information -->
-												<img src="templates/guest/img/product02.png" alt="">
-												<div class="product-label">
-													<span class="new">NEW</span>
+											<a href='<c:url value="/guest-product"/>'>
+												<div class="product-img">
+													<!-- Use product-specific information -->
+													<img src="templates/guest/img/product02.png" alt="">
+													<div class="product-label">
+														<span class="new">NEW</span>
+													</div>
 												</div>
-											</div>
+											</a>
 											<div class="product-body">
 												<p class="product-category">Category</p>
 												<h3 class="product-name">
