@@ -329,10 +329,9 @@ public class ProductDAOImpl implements IProductDAO {
 					+ "JOIN \r\n"
 					+ "    StyleValue ON Style.id = StyleValue.id\r\n"
 					+ "WHERE  \r\n"
-					+ "    Product.name LIKE '%?%' or Product.slug LIKE '%?%' or Category.name LIKE '%?%' or Style.name LIKE '%?%' or StyleValue.name LIKE '%?%'";
+					+ "    Product.name LIKE '%" + keyword + "%' or Product.slug LIKE '%" + keyword + "%' or Category.name LIKE '%" + keyword + "%' or Style.name LIKE '%" + keyword + "%' or StyleValue.name LIKE '%" + keyword + "%'";
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, keyword);
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
