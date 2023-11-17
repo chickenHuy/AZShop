@@ -54,4 +54,9 @@ public class ProductServiceImpl implements IProductService{
 		return productDAO.getBySlug(slug);
 	}
 
+	@Override
+	public List<ProductModel> FindProduct(String keyword) {
+		return productDAO.FindProduct(keyword);
+	}
+
 }

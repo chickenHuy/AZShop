@@ -9,6 +9,8 @@ public interface IProductService {
 
 	ProductModel getById(int id);
 	ProductModel getBySlug(String slug);
+	
+	List<ProductModel> FindProduct(String keyword);
 
 	List<ProductModel> getAll();
 

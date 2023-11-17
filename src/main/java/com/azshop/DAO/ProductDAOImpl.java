@@ -312,4 +312,55 @@ public class ProductDAOImpl implements IProductDAO {
 		}
 		return product;
 	}
+
+	@Override
+	public List<ProductModel> FindProduct(String keyword) {
+		List<ProductModel> listProduct = new ArrayList<ProductModel>();
+		try {
+			String sql = "SELECT \r\n"
+					+ "	Product.id, Product.name, Product.slug, Product.description, Product.price, Product.quantiny, Product.isActive, Product.isDeleted, Product.video,\r\n"
+					+ "	Product.categoryId, Product.styleValueId, Product.storeId, Product.createAt, Product.updateAt\r\n"
+					+ "FROM \r\n"
+					+ "    Product\r\n"
+					+ "JOIN \r\n"
+					+ "    Category ON Product.categoryId = Category.id\r\n"
+					+ "JOIN \r\n"
+					+ "    Style ON Product.styleValueId = Style.id\r\n"
+					+ "JOIN \r\n"
+					+ "    StyleValue ON Style.id = StyleValue.id\r\n"
+					+ "WHERE  \r\n"
+					+ "    Product.name LIKE '%?%' or Product.slug LIKE '%?%' or Category.name LIKE '%?%' or Style.name LIKE '%?%' or StyleValue.name LIKE '%?%'";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, keyword);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ProductModel product = new ProductModel();
+
+				product.setId(rs.getInt("id"));
+				product.setName(rs.getString("name"));
+				product.setSlug(rs.getString("slug"));
+				product.setDescription(rs.getString("description"));
+				product.setPrice(rs.getBigDecimal("price"));
+				product.setQuantity(rs.getInt("quantiny"));
+				product.setSold(rs.getInt("sold"));
+				product.setActive(rs.getBoolean("isActive"));
+				product.setVideo(rs.getString("video"));
+				product.setCategoryId(rs.getInt("categoryId"));
+				product.setStyleValueId(rs.getInt("styleValueId"));
+				product.setStoreId(rs.getInt("storeId"));
+				product.setRating(rs.getBigDecimal("rating"));
+				product.setCreateAt(rs.getDate("createAt"));
+				product.setUpdateAt(rs.getDate("updateAt"));
+
+				listProduct.add(product);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listProduct;
+	}
 }
