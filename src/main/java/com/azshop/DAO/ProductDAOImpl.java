@@ -318,8 +318,8 @@ public class ProductDAOImpl implements IProductDAO {
 		List<ProductModel> listProduct = new ArrayList<ProductModel>();
 		try {
 			String sql = "SELECT \r\n"
-					+ "	Product.id, Product.name, Product.slug, Product.description, Product.price, Product.quantiny, Product.isActive, Product.isDeleted, Product.video,\r\n"
-					+ "	Product.categoryId, Product.styleValueId, Product.storeId, Product.createAt, Product.updateAt\r\n"
+					+ "	Product.id, Product.name, Product.slug, Product.description, Product.price, Product.quantiny, Product.sold, Product.isActive, Product.isDeleted, Product.video,\r\n"
+					+ "	Product.categoryId, Product.styleValueId, Product.storeId, Product.rating, Product.createAt, Product.updateAt\r\n"
 					+ "FROM \r\n"
 					+ "    Product\r\n"
 					+ "JOIN \r\n"
