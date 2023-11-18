@@ -27,5 +27,9 @@ public class ImageController extends HttpServlet {
 		{
 			IOUtils.copy(new FileInputStream(file),resp.getOutputStream());
 		}
+		else {
+			 System.out.println("File not found: " + file.getAbsolutePath());
+	         resp.sendError(HttpServletResponse.SC_NOT_FOUND, "File not found");
+		}
 	}
 }
