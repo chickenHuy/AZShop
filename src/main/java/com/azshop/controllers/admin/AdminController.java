@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@WebServlet(urlPatterns = {"/admin/dashboard"})
+@WebServlet(urlPatterns = {"/admin/dashboard", "/admin/product","/admin/addproduct"})
 public class AdminController extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	
@@ -22,6 +22,15 @@ public class AdminController extends HttpServlet{
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/dashboard.jsp");
 			rDispatcher.forward(req, resp);
 		}
+		else if (url.contains("/admin/product")) {
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
+			rDispatcher.forward(req, resp);
+		}
+		else if (url.contains("/admin/addproduct")) {
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/addproduct.jsp");
+			rDispatcher.forward(req, resp);
+		}
 	}
+	
 
 }
