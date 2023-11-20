@@ -1,6 +1,7 @@
 package com.azshop.controllers.vendor;
 
 import java.awt.Image;
+
 import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
@@ -150,45 +151,39 @@ public class VenderController extends HttpServlet {
 							ProductModel productModel = productService.getBySlug(slug);
 							if (productModel == null) {
 								req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-							} else {
-			        
-			        if (parts.length > 0) {
-			            String slug = parts[parts.length - 1];
-			            req.setAttribute("slug", slug);
-			            try {
-			            	ProductModel productModel = productService.getBySlug(slug);
-			            	if (productModel == null)
-			            	{
-			            		req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-			            	}
-			            	else {
-								req.setAttribute("product", productModel);
-								int index = 1;
-								List<ImageModel> imageModels = imageService.getByProductId(productModel.getId());
-								for (ImageModel imageModel : imageModels) {
-									int index = 1;
-									String image = "image" + String.valueOf(index);
-									req.setAttribute(image, imageModel);
-
-									
-									String image= "image" + String.valueOf(index);
-									req.setAttribute(image, imageModel.getImage());
-									index++;
-								}
-
 							}
 						} catch (Exception e) {
-							req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 						}
 					} else {
-						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+						if (parts.length > 0) {
+							String slug = parts[parts.length - 1];
+							req.setAttribute("slug", slug);
+							try {
+								ProductModel productModel = productService.getBySlug(slug);
+								if (productModel == null) {
+									req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+								} else {
+									req.setAttribute("product", productModel);
+									int index = 1;
+									List<ImageModel> imageModels = imageService.getByProductId(productModel.getId());
+									for (ImageModel imageModel : imageModels) {
+										String image = "image" + String.valueOf(index);
+										req.setAttribute(image, imageModel);
+										index++;
+									}
+								}
+							} catch (Exception e) {
+								req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+							}
+						} else {
+							req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+						}
 					}
-
 				} catch (URISyntaxException e) {
 					e.printStackTrace();
 				}
 			}
-			
+
 			req.setAttribute("action", action);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/product.jsp");
 			rDispatcher.forward(req, resp);
