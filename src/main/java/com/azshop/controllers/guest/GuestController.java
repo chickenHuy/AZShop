@@ -26,7 +26,7 @@ import com.azshop.services.ProductServiceImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Email;
 
-@WebServlet(urlPatterns = {"/guest-home", "/guest-clothing", "/guest-product"})
+@WebServlet(urlPatterns = {"/guest-home", "/guest-clothing", "/guest-product", "/guest-search"})
 public class GuestController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -58,8 +58,32 @@ public class GuestController extends HttpServlet{
 				e.printStackTrace();
 			}
 		}
+		else if (url.contains("guest-search")) {
+			try {
+				findProduct(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
+	private void findProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// ma hoa UTF-8
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		// nhan du lieu tu form
+		String keyword = req.getParameter("keyword");
+		
+		List<ProductModel> productList = productService.FindProduct(keyword);
+		
+//		req.setAttribute("product",product);
+		req.setAttribute("productList",productList);
+		
+		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/home.jsp");
+		rd.forward(req, resp);
+	}
+
 	private void getProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/product.jsp");
 		rd.forward(req, resp);

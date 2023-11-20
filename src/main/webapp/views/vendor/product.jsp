@@ -51,6 +51,7 @@
                 <!--breadcrumb-->
                 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                     <div class="breadcrumb-title pe-3">Product</div>
+                    
                     <div class="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-0 p-0">
@@ -75,8 +76,8 @@
                                     <div class="mb-4">
                                         <h5 class="mb-3">Product Description</h5>
                                         <textarea class="form-control" cols="4" rows="6"
-                                            placeholder="write a description here.." name="description" value="${product != null ? product.description : ''}"
-                                            required></textarea>
+                                            placeholder="write a description here.." name="description"
+                                            required> ${product != null ? product.description : ''}</textarea>
                                     </div>
                                     <div class="mb-4">
                                         <h5 class="mb-3">Display images</h5> 
@@ -317,13 +318,13 @@
                     style.trim() === "" ||
                     styleValue.trim() === "" ||
                     quantity.trim()=== "" ||
-                    price.trim() === "" ||
+                    price.trim() === ""
                 ) {
                     alert("Please fill in all required fields.");
                     return false;
                 }
-            </script>
-            <script>
+                }
+            
                 function checkFileVideoSize() {
                     var fileInput = document.getElementById('fileInputVideo');
                     var fileSize = fileInput.files[0].size; // kích thước file
@@ -358,9 +359,7 @@
                         reader.readAsDataURL(file);
                     }
                 }
-            </script>
-
-            <script>
+        
                 function handleImageSelection(input, thumbnailId) {
                     var file = input.files[0];
                     var thumbnail = document.getElementById(thumbnailId);
@@ -409,8 +408,7 @@
 
                     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
                 }
-            </script>
-            <script>
+       
                 function loadStyles() {
                     var categoryId = $("#CategorySelected").val();
 
@@ -439,9 +437,7 @@
                     });
                 }
 
-            </script>
-
-            <script>
+            
                 function loadStylesValue() {
                     var styleId = $("#StyleSelected").val();
 
@@ -467,8 +463,6 @@
                     });
                 }
 
-            </script>
-            <script>
                 function displayImage(input, thumbnailId) {
                     var file = input.files[0];
                     var thumbnail = document.getElementById(thumbnailId);
@@ -487,7 +481,54 @@
                         reader.readAsDataURL(file);
                     }
                 }
-            </script>
+                
+                function displayProductInfo() {
+                    // Lấy các giá trị của các thuộc tính image từ các trường input
+                    var image1Value = getImageValue("${image1}");
+                    var image2Value = getImageValue("${image2}");
+                    var image3Value = getImageValue("${image3}");
+                    var image4Value = getImageValue("${image4}");
+                    var image5Value = getImageValue("${image5}");
+                    var image6Value = getImageValue("${image6}");
+
+                    // Hiển thị hình ảnh trên các thẻ thumbnail tương ứng
+                    displayImageFromSource(image1Value, 'thumbnail1');
+                    displayImageFromSource(image2Value, 'thumbnail2');
+                    displayImageFromSource(image3Value, 'thumbnail3');
+                    displayImageFromSource(image4Value, 'thumbnail4');
+                    displayImageFromSource(image5Value, 'thumbnail5');
+                    displayImageFromSource(image6Value, 'thumbnail6');
+                }
+
+                // Hàm kiểm tra giá trị của image và trả về giá trị hoặc null
+                function getImageValue(image) {
+                    if (image) {
+                        return "/AZShop/image?fname=" + image;
+                    } else {
+                        return null;
+                    }
+                }
+
+                // Hàm hiển thị hình ảnh từ nguồn (source) trên một thẻ thumbnail cụ thể
+                function displayImageFromSource(source, thumbnailId) {
+                    var thumbnail = document.getElementById(thumbnailId);
+
+                    if (source) {
+                        // Tạo và hiển thị hình ảnh mới
+                        var img = document.createElement('img');
+                        img.src = source;
+                        img.classList.add('thumbnail');
+                        thumbnail.innerHTML = '';
+                        thumbnail.appendChild(img);
+                    }
+                }
+
+                // Gọi hàm khi trang web được tải
+                window.onload = function () {
+                    displayProductInfo();
+                };
 
 
+</script>
+			
         </body>
