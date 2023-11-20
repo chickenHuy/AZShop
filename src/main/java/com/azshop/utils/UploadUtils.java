@@ -33,6 +33,5 @@ public class UploadUtils {
 		}
 		filePart.write(Paths.get(uploadPath.toString(),storeFileName).toString());
 		return storeFileName;
-		
 	}
 }

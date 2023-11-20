@@ -30,10 +30,10 @@
 					<div class="menu-title">Product</div>
 			</a>
 				<ul>
+					<li><a href="<c:url value="/vendor/product/all"/>"><span
+							class="material-symbols-outlined">arrow_right</span>Product List</a></li>
 					<li><a href="<c:url value="/vendor/product/new"/>"><span
 							class="material-symbols-outlined">arrow_right</span>Add Product</a></li>
-					<li><a href="widget-static.html"><span
-							class="material-symbols-outlined">arrow_right</span>Product List</a></li>
 				</ul></li>
 			<li><a href="javascript:;" class="has-arrow">
 					<div class="parent-icon">

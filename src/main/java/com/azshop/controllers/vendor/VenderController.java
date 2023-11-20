@@ -1,16 +1,12 @@
 package com.azshop.controllers.vendor;
 
-import java.awt.Image;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.imageio.ImageReader;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -18,8 +14,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.beanutils.BeanUtils;
 
 import com.azshop.models.CategoryModel;
 import com.azshop.models.ImageModel;
@@ -38,14 +32,15 @@ import com.azshop.services.StyleServiceImpl;
 import com.azshop.services.StyleValueImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
+import com.azshop.utils.UploadImage;
 import com.azshop.utils.UploadUtils;
 import com.google.gson.Gson;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
 		* 50)
-@WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/register-shop", "/vendor/product/new", "/vendor/product/error404",
-		"/vendor/product/edit/*", "/vendor/product/detail/*", "/vendor/order/processing", "/vendor/order/processed",
-		"/vendor/order/details" })
+@WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/register-shop", "/vendor/product/new",
+		"/vendor/product/all", "/vendor/product/error404", "/vendor/product/edit/*", "/vendor/product/detail/*",
+		"/vendor/order/processing", "/vendor/order/processed", "/vendor/order/details" })
 public class VenderController extends HttpServlet {
 
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -74,6 +69,11 @@ public class VenderController extends HttpServlet {
 		if (url.contains("/vendor/update-shop-info")) {
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/shopInfo.jsp");
 			req.setAttribute("isView", false);
+			rDispatcher.forward(req, resp);
+			return;
+		}
+		if (url.contains("/vendor/product/all")) {
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/allProduct.jsp");
 			rDispatcher.forward(req, resp);
 			return;
 		}
@@ -135,37 +135,35 @@ public class VenderController extends HttpServlet {
 				try {
 					uri = new URI(url);
 					String path = uri.getPath();
-					
+
 					String[] parts = path.split("/");
-			        
-			        if (parts.length > 0) {
-			            String slug = parts[parts.length - 1];
-			            System.out.println(slug);
-			            try {
-			            	ProductModel productModel = productService.getBySlug(slug);
-			            	if (productModel == null)
-			            	{
-			            		req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-			            	}
-			            	else {
+
+					if (parts.length > 0) {
+						String slug = parts[parts.length - 1];
+						System.out.println(slug);
+						try {
+							ProductModel productModel = productService.getBySlug(slug);
+							if (productModel == null) {
+								req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+							} else {
 								req.setAttribute("product", productModel);
 								List<ImageModel> imageModels = imageService.getByProductId(productModel.getId());
 								for (ImageModel imageModel : imageModels) {
 									int index = 1;
-									String image= "image" + String.valueOf(index);
+									String image = "image" + String.valueOf(index);
 									req.setAttribute(image, imageModel);
-								
+
 									index++;
 								}
-								
+
 							}
 						} catch (Exception e) {
 							req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 						}
-			        } else {
-			        	req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-			        }
-		    	
+					} else {
+						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+					}
+
 				} catch (URISyntaxException e) {
 					e.printStackTrace();
 				}
@@ -186,9 +184,37 @@ public class VenderController extends HttpServlet {
 
 		if (url.contains("register-shop")) {
 			RegisterShop(req, resp);
-		} else if (url.contains("/vendor/product/new")) {
-			doPostProduct(req, resp);
+			return;
 		}
+		if (url.contains("/vendor/product/new")) {
+			doPostProduct(req, resp);
+			return;
+		}
+		if (url.contains("/vendor/update-shop-info")) {
+			UpdateShopInfo(req, resp);
+			return;
+		}
+	}
+
+	private void UpdateShopInfo(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		String shopName = req.getParameter("shopName").toString();
+		String shopBio = req.getParameter("shopBio").toString();
+		String storageLocation = "D:\\uploads";
+		String coverImage = UploadImage.UploadImageToLocal("coverImage", req, storageLocation);
+		String avatarImage = UploadImage.UploadImageToLocal("avatarImage", req, storageLocation);
+		String featuredImage = UploadImage.UploadImageToLocal("featuredImage", req, storageLocation);
+
+//		JsonObject responseStatus = new JsonObject();
+//		responseStatus.addProperty("status", "success");
+//		responseStatus.addProperty("message", "Dữ liệu đã được xử lý thành công");
+
+		resp.setContentType("application/json");
+		resp.setCharacterEncoding("UTF-8");
+		resp.getWriter().println("1: " + shopName);
+		resp.getWriter().println("2: " + shopBio);
+		resp.getWriter().println("3: " + coverImage);
+		resp.getWriter().println("4: " + avatarImage);
+		resp.getWriter().println("5: " + featuredImage);
 	}
 
 	private void RegisterShop(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -198,55 +224,52 @@ public class VenderController extends HttpServlet {
 		resp.sendRedirect("vendor-dashboard");
 
 	}
+
 	private void doPostProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// Lấy dữ liệu từ form
-					try {
-						
-					String name = req.getParameter("name");
-					String slug = SlugUtil.toSlug(name);
-					String description = req.getParameter("description");
-					BigDecimal price = new BigDecimal(req.getParameter("price"));
-					int quantity = Integer.parseInt(req.getParameter("quantity"));
-					boolean isActive = Boolean.parseBoolean(req.getParameter("isActive"));
-					String video = req.getParameter("video");
-					int categoryId = Integer.parseInt(req.getParameter("categoryId"));
-					int styleValueId = Integer.parseInt(req.getParameter("styleValueId"));
-					int storeId = 0;
-					
-					
-					ProductModel productModel = new ProductModel(name, slug, description, price, quantity, isActive, categoryId, styleValueId,storeId, video);
-					if (req.getPart("video").getSize() != 0)
-					{
-						String fileName = "" + System.currentTimeMillis();
-						productModel.setVideo(UploadUtils.processUpload("video", req, Constant.DIR, fileName));
-					}
-					
-					
-					productService.insert(productModel);
-					
-					productModel = productService.getBySlug(slug);
-					String imageName = "image";
-					for (int i = 1; i <= 6; i++) {
-						
-						imageName += String.valueOf(i);
-						
-						
-						if (req.getPart(imageName).getSize() != 0)
-						{
-							ImageModel imageModel = new ImageModel();
-							String fileName = "" + System.currentTimeMillis();
-							imageModel.setImage(UploadUtils.processUpload(imageName, req, Constant.DIR, fileName));
-							imageModel.setProductId(productModel.getId());
-							
-							imageService.insert(imageModel);
-						}
-						imageName = imageName.substring(0, imageName.length() -1);
-						
-					}
-					} catch (Exception e) {
-						e.printStackTrace();
-					
-					}
+		try {
+
+			String name = req.getParameter("name");
+			String slug = SlugUtil.toSlug(name);
+			String description = req.getParameter("description");
+			BigDecimal price = new BigDecimal(req.getParameter("price"));
+			int quantity = Integer.parseInt(req.getParameter("quantity"));
+			boolean isActive = Boolean.parseBoolean(req.getParameter("isActive"));
+			String video = req.getParameter("video");
+			int categoryId = Integer.parseInt(req.getParameter("categoryId"));
+			int styleValueId = Integer.parseInt(req.getParameter("styleValueId"));
+			int storeId = 0;
+
+			ProductModel productModel = new ProductModel(name, slug, description, price, quantity, isActive, categoryId,
+					styleValueId, storeId, video);
+			if (req.getPart("video").getSize() != 0) {
+				String fileName = "" + System.currentTimeMillis();
+				productModel.setVideo(UploadUtils.processUpload("video", req, Constant.DIR, fileName));
+			}
+
+			productService.insert(productModel);
+
+			productModel = productService.getBySlug(slug);
+			String imageName = "image";
+			for (int i = 1; i <= 6; i++) {
+
+				imageName += String.valueOf(i);
+
+				if (req.getPart(imageName).getSize() != 0) {
+					ImageModel imageModel = new ImageModel();
+					String fileName = "" + System.currentTimeMillis();
+					imageModel.setImage(UploadUtils.processUpload(imageName, req, Constant.DIR, fileName));
+					imageModel.setProductId(productModel.getId());
+
+					imageService.insert(imageModel);
+				}
+				imageName = imageName.substring(0, imageName.length() - 1);
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
 	}
 
 }
