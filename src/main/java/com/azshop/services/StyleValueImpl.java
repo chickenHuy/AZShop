@@ -17,8 +17,7 @@ public class StyleValueImpl implements IStyleValueService {
 
 	@Override
 	public StyleValueModel getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return styleValueDAO.getById(id);
 	}
 
 	@Override

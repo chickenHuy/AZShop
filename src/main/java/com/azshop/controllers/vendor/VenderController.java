@@ -154,15 +154,26 @@ public class VenderController extends HttpServlet {
 			            	}
 			            	else {
 								req.setAttribute("product", productModel);
-								int index = 1;
+								
+								int index = 2;
 								List<ImageModel> imageModels = imageService.getByProductId(productModel.getId());
 								for (ImageModel imageModel : imageModels) {
 									
-									String image= "image" + String.valueOf(index);
-									req.setAttribute(image, imageModel.getImage());
-									index++;
+									if (imageModel.getImage().contains("image"))
+									{
+										req.setAttribute("image1", imageModel.getImage());
+									}
+									else {
+										String imageName = "image" + String.valueOf(index);
+										req.setAttribute(imageName , imageModel.getImage());
+										index++;
+									}
 								}
 								
+								
+								StyleValueModel styleValueModel = styleValueService.getById(productModel.getStyleValueId());
+								StyleModel styleModel = styleService.getById(styleValueModel.getStyleId());
+								req.setAttribute("styleModelId", styleModel.getId());
 							}
 						} catch (Exception e) {
 							req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
@@ -239,7 +250,17 @@ public class VenderController extends HttpServlet {
 						if (req.getPart(imageName).getSize() != 0)
 						{
 							ImageModel imageModel = new ImageModel();
-							String fileName = "" + System.currentTimeMillis();
+							String fileName = "";
+							if (i == 1)
+							{
+								 fileName = "image";
+							}
+							else 
+							{
+								fileName = "album";
+							}
+							
+							fileName +=  System.currentTimeMillis();
 							imageModel.setImage(UploadUtils.processUpload(imageName, req, Constant.DIR, fileName));
 							imageModel.setProductId(productModel.getId());
 							

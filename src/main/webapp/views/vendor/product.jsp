@@ -219,11 +219,18 @@
                                             <label for="AddCategory" class="form-label fw-bold">Category</label>
                                             <select class="form-select" id="CategorySelected" name="categoryId"
                                                 onchange="loadStyles()" required>
-                                                <option value="" disabled selected>Select a Category</option>
+                                             	<option value="" disabled selected>Select a Category</option>
                                                 <!-- Options sẽ được thêm bởi AJAX -->
-                                                <c:forEach var="item" items="${categorys}">
-                                                    <option value="${item.id}">${item.name}</option>
-                                                </c:forEach>
+                                               <c:forEach var="item" items="${categorys}">
+											        <c:choose>
+											            <c:when test="${product != null && product.categoryId == item.id}">
+											                <option value="${item.id}" selected>${item.name}</option>
+											            </c:when>
+											            <c:otherwise>
+											                <option value="${item.id}">${item.name}</option>
+											            </c:otherwise>
+											        </c:choose>
+											    </c:forEach>
                                             </select>
                                         </div>
                                         <div class="col-12">
@@ -231,7 +238,12 @@
                                             <!-- Thêm thẻ select cho danh sách styles -->
                                             <select class="form-select" id="StyleSelected" name="styleId"
                                                 onchange="loadStylesValue()" required>
-                                                <option value="" disabled selected>Select a Style</option>
+                                                 <c:if test="${styleModelId == null}">
+										            <option value="" disabled selected>Select a Style</option>
+										         </c:if>
+										        
+										       
+        
                                                 <!-- Options sẽ được thêm bởi AJAX -->
                                             </select>
                                         </div>
@@ -239,7 +251,9 @@
                                             <label for="AddStyleValue" class="form-label fw-bold">Style Value</label>
                                             <!-- Thêm thẻ select cho danh sách styles -->
                                             <select class="form-select" id="AddStyleValue" name="styleValueId" required>
-                                                <option value="" disabled selected>Select a Style Value</option>
+                                                 <c:if test="${product == null}">
+										            <option value="" disabled selected>Select a Style</option>
+										         </c:if>
                                                 <!-- Options sẽ được thêm bởi AJAX -->
                                             </select>
                                         </div>
@@ -256,12 +270,12 @@
                                         <div class="col-12">
                                             <label class="custom-file-input-wrapper">
                                                 <input type="file" name="video" accept=".mp4" id="fileInputVideo"
-                                                    class="custom-file-input" onchange="checkFileVideoSize()" src="${product != null ? product.video : ''}"/>
+                                                    class="custom-file-input" onchange="checkFileVideoSize()"/>
                                                 <div class="custom-file-label">Choose Video</div>
                                             </label>
                                             <br><span id="fileSizeErrorVideo" style="color: red;"></span>
                                             <div class="card">
-                                                <video controls id="selectedVideo"></video>
+                                                <video controls id="selectedVideo"  src="${(product != null && product.video != null) ? '/AZShop/video?fname=' : ''}${(product != null && product.video != null) ? product.video : ''}"></video>
                                             </div>
                                         </div>
                                     </div>
@@ -428,13 +442,24 @@
                 function updateStyleList(styles) {
                     var styleSelect = $("#StyleSelected");
                     var styleValueSelect = $("#AddStyleValue");
+                    var styleIdSelected = "${styleModelId}";
                     styleSelect.empty();
-                    styleSelect.append('<option value="" disabled selected>Select a Style</option>');
+                    
                     styleValueSelect.empty();
                     styleValueSelect.append('<option value="" disabled selected>Select a Style Value</option>');
                     $.each(styles, function (index, style) {
-                        styleSelect.append('<option value="' + style.id + '">' + style.name + '</option>');
+                    	if (styleIdSelected != style.id) {
+                        	styleSelect.append('<option value="' + style.id + '">' + style.name + '</option>');
+                    	}
+                    	else
+                    	{
+                    		styleSelect.append('<option selected value="' + style.id + '">' + style.name + '  </option>');
+                    	}
                     });
+
+                    if ( styleIdSelected == "") {
+                        styleSelect.append('<option value="" disabled selected>Select a Style</option>');
+                    }
                 }
 
             
@@ -456,11 +481,22 @@
 
                 function updateStyleValueList(styleValues) {
                     var styleValueSelect = $("#AddStyleValue");
+                    var styleValueIdSelected = "${product.styleValueId}";
                     styleValueSelect.empty();
-                    styleValueSelect.append('<option value="" disabled selected>Select a Style Value</option>');
                     $.each(styleValues, function (index, styleValue) {
-                        styleValueSelect.append('<option value="' + styleValue.id + '">' + styleValue.name + '</option>');
+                        if (styleValueIdSelected != styleValue){
+                            styleValueSelect.append('<option value="' + styleValue.id + '">' + styleValue.name + '</option>');
+                        }
+                        esle
+                        {
+                            styleValueSelect.append('<option selected value="' + styleValue.id + '">' + styleValue.name + '</option>');
+                        }
                     });
+                    if (styleValueIdSelected == "")
+                    {
+                        styleValueSelect.append('<option value="" disabled selected>Select a Style Value</option>');
+                    }
+                    
                 }
 
                 function displayImage(input, thumbnailId) {
@@ -526,6 +562,8 @@
                 // Gọi hàm khi trang web được tải
                 window.onload = function () {
                     displayProductInfo();
+                    loadStyles();
+                    loadStylesValue();
                 };
 
 
