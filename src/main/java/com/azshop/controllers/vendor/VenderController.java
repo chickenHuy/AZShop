@@ -82,6 +82,8 @@ public class VenderController extends HttpServlet {
 			return;
 		}
 		if (url.contains("/vendor/product/all")) {
+			List<ProductModel> listProductModels = productService.getByStoreId(0);
+			req.setAttribute("products", listProductModels);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/allProduct.jsp");
 			rDispatcher.forward(req, resp);
 			return;
@@ -240,12 +242,14 @@ public class VenderController extends HttpServlet {
 	        productModel.setPrice(price);
 	        productModel.setQuantity(quantity);
 	        productModel.setActive(isActive);
+	        productModel.setStoreId(0);
 			String video = "";
 	        if (req.getPart("video").getSize() != 0)
 			{
 				String fileName = "" + System.currentTimeMillis();
 				video = UploadUtils.processUpload("video", req, Constant.DIR, fileName);
 			}
+	        
 	        if (video != null && video != "")
 	        {
 	        	ImageUtil.deleteImage(productModel.getVideo());

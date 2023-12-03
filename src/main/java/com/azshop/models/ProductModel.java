@@ -59,7 +59,7 @@ public class ProductModel implements Serializable {
 		isActive = isActive2;
 		categoryId = categoryId2;
 		styleValueId = styleValueId2;
-		storeId = styleValueId2;
+		storeId = storeId2;
 		video = videoLink;
 	}
 

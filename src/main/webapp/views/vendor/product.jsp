@@ -83,7 +83,7 @@
                     </div>
                 </div>
                 <form action="${action}" method="post" id="productForm" enctype="multipart/form-data">
-                    <input type="hidden" id="isActive" name="isActive">
+                    <input type="hidden" id="isActive" name="isActive" value="true">
                     <div class="row">
                         <div class="col-12 col-lg-8">
                             <div class="card">
@@ -322,7 +322,8 @@
             function saveDraftAction() {
                 // Thực hiện hành động khi nhấp vào nút "Save Draft"
                 if (validateForm()) {
-                    document.getElementById("isActive").value = "false";
+                	var isActiveInput = document.getElementById("isActive");
+                	isActiveInput.value = "false";
                     // Gửi form
                     document.forms[0].submit();
                 }
@@ -331,7 +332,8 @@
             function publishAction() {
                 // Thực hiện hành động khi nhấp vào nút "Publish"
                 if (validateForm()) {
-                    document.getElementById("isActive").value = "true";
+                	var isActiveInput = document.getElementById("isActive");
+                	isActiveInput.value = "true";
                     // Gửi form
                     document.forms[0].submit();
                 }
@@ -351,7 +353,6 @@
                 if (
                     name.trim() === "" ||
                     description.trim() === "" ||
-                    video.trim() === "" ||
                     category.trim() === "" ||
                     style.trim() === "" ||
                     styleValue.trim() === "" ||
