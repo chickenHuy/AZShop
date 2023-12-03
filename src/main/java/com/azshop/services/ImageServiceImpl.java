@@ -5,6 +5,7 @@ import java.util.List;
 import com.azshop.DAO.IImageDAO;
 import com.azshop.DAO.ImageDAOImpl;
 import com.azshop.models.ImageModel;
+import com.azshop.utils.ImageUtil;
 
 public class ImageServiceImpl implements IImageService{
 	IImageDAO imageDAO = new ImageDAOImpl();
@@ -36,6 +37,18 @@ public class ImageServiceImpl implements IImageService{
 	@Override
 	public void delete(int id) {
 		imageDAO.delete(id);
+	}
+
+	@Override
+	public int deletedByIndex(int index, int productId) {
+		List<ImageModel> imageModels = imageDAO.getByProductId(productId);
+		for (ImageModel imageModel : imageModels) {
+			if (Integer.parseInt(imageModel.getImage().substring(0, 1)) == index) {
+				ImageUtil.deleteImage(imageModel.getImage());
+				imageDAO.delete(imageModel.getId());
+			}
+		}
+		return 1;
 	}
 
 }

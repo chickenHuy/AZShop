@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -20,6 +21,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.tree.DefaultTreeCellEditor.EditorContainer;
 
 import com.azshop.models.CategoryModel;
 import com.azshop.models.ImageModel;
@@ -37,6 +39,7 @@ import com.azshop.services.ProductServiceImpl;
 import com.azshop.services.StyleServiceImpl;
 import com.azshop.services.StyleValueImpl;
 import com.azshop.utils.Constant;
+import com.azshop.utils.ImageUtil;
 import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadImage;
 import com.azshop.utils.UploadUtils;
@@ -141,12 +144,13 @@ public class VenderController extends HttpServlet {
 				try {
 					uri = new URI(url);
 					String path = uri.getPath();
-
+					
 					String[] parts = path.split("/");
 			        
 			        if (parts.length > 0) {
 			            String slug = parts[parts.length - 1];
 			            req.setAttribute("slug", slug);
+			            action = action + slug;
 			            try {
 			            	ProductModel productModel = productService.getBySlug(slug);
 			            	if (productModel == null)
@@ -156,19 +160,9 @@ public class VenderController extends HttpServlet {
 			            	else {
 								req.setAttribute("product", productModel);
 								
-								int index = 2;
 								List<ImageModel> imageModels = imageService.getByProductId(productModel.getId());
 								for (ImageModel imageModel : imageModels) {
-									
-									if (imageModel.getImage().contains("image"))
-									{
-										req.setAttribute("image1", imageModel.getImage());
-									}
-									else {
-										String imageName = "image" + String.valueOf(index);
-										req.setAttribute(imageName , imageModel.getImage());
-										index++;
-									}
+									req.setAttribute("image" + imageModel.getImage().charAt(0), imageModel.getImage());
 								}
 			            	}
 								
@@ -206,13 +200,96 @@ public class VenderController extends HttpServlet {
 			return;
 		}
 		if (url.contains("/vendor/product/new")) {
-			doPostProduct(req, resp);
+			NewProduct(req, resp);
 			return;
 		}
 		if (url.contains("/vendor/update-shop-info")) {
 			UpdateShopInfo(req, resp);
 			return;
 		}
+		if (url.contains("vendor/product/edit"))
+		{
+			EditProduct(req,resp, url);
+		}
+	}
+
+	private void EditProduct(HttpServletRequest req, HttpServletResponse resp, String url)throws ServletException, IOException  {
+		try {
+			
+			String name = req.getParameter("name");
+			String description = req.getParameter("description");
+			BigDecimal price = new BigDecimal(req.getParameter("price"));
+			int quantity = Integer.parseInt(req.getParameter("quantity"));
+			boolean isActive = Boolean.parseBoolean(req.getParameter("isActive"));
+			int categoryId = Integer.parseInt(req.getParameter("categoryId"));
+			int styleValueId = Integer.parseInt(req.getParameter("styleValueId"));
+			int storeId = 0;
+			
+			URI uri;
+			uri = new URI(url);
+			String path = uri.getPath();
+			
+			String[] parts = path.split("/");
+	        
+	        String slug = parts[parts.length - 1];
+	        slug = slug.substring(4); 
+			
+	        ProductModel productModel = productService.getBySlug(slug);
+	        productModel.setName(name);
+	        productModel.setDescription(description);
+	        productModel.setPrice(price);
+	        productModel.setQuantity(quantity);
+	        productModel.setActive(isActive);
+			String video = "";
+	        if (req.getPart("video").getSize() != 0)
+			{
+				String fileName = "" + System.currentTimeMillis();
+				video = UploadUtils.processUpload("video", req, Constant.DIR, fileName);
+			}
+	        if (video != null && video != "")
+	        {
+	        	ImageUtil.deleteImage(productModel.getVideo());
+	        	productModel.setVideo(video);
+	        }
+			productModel.setCategoryId(categoryId);
+			productModel.setStyleValueId(styleValueId);
+			productService.update(productModel);
+			
+			String imageName = "image";
+			
+			for (int i = 1; i <= 6; i++) {
+			    String thumbnail = req.getParameter("deletethumbnail" + String.valueOf(i));
+			    System.out.println(thumbnail);
+			    if (thumbnail.equals("1")) {
+			        imageService.deletedByIndex(i, productModel.getId());
+			    }
+			}
+			
+			for (int i = 1; i <= 6; i++) {
+				
+				imageName += String.valueOf(i);
+				
+				
+				if (req.getPart(imageName).getSize() != 0)
+				{
+					ImageModel imageModel = new ImageModel();
+					String fileName = String.valueOf(i);
+					
+					fileName +=  System.currentTimeMillis();
+					imageModel.setImage(UploadUtils.processUpload(imageName, req, Constant.DIR, fileName));
+					imageModel.setProductId(productModel.getId());
+					imageService.deletedByIndex(i, productModel.getId());
+					imageService.insert(imageModel);
+				}
+				imageName = "image";
+				
+			}
+			
+		}
+			catch (Exception e) {
+				e.printStackTrace();
+			
+			}
 	}
 
 	private void UpdateShopInfo(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
@@ -244,7 +321,7 @@ public class VenderController extends HttpServlet {
 
 	}
 
-	private void doPostProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private void NewProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 					try {
 						
 					String name = req.getParameter("name");
@@ -279,15 +356,7 @@ public class VenderController extends HttpServlet {
 						if (req.getPart(imageName).getSize() != 0)
 						{
 							ImageModel imageModel = new ImageModel();
-							String fileName = "";
-							if (i == 1)
-							{
-								 fileName = "image";
-							}
-							else 
-							{
-								fileName = "album";
-							}
+							String fileName = String.valueOf(i);
 							
 							fileName +=  System.currentTimeMillis();
 							imageModel.setImage(UploadUtils.processUpload(imageName, req, Constant.DIR, fileName));
@@ -295,7 +364,7 @@ public class VenderController extends HttpServlet {
 							
 							imageService.insert(imageModel);
 						}
-						imageName = imageName.substring(0, imageName.length() -1);
+						imageName = "image";
 						
 					}
 					} catch (Exception e) {

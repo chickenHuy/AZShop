@@ -16,4 +16,6 @@ public interface IImageService {
 	void update(ImageModel image);
 
 	void delete(int id);
+	
+	int deletedByIndex(int index, int productId);
 }

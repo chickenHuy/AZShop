@@ -2,6 +2,7 @@
     <%@ include file="/common/taglib.jsp" %>
 
         <head>
+        
             <style>
                 .custom-file-input-wrapper {
                     position: relative;
@@ -37,10 +38,29 @@
                     margin: 10px 0;
                     display: block;
                 }
-
                 .file-size-error {
                     color: red;
                 }
+                .delete-button {
+				  opacity: 0.1;
+				  display: flex;
+				  color: red;
+				  width: 22px;
+				  height: 22px;
+				  background-color: #0077cc;
+				  cursor: pointer;
+				  border-radius: 50%;
+				  display: flex;
+				  justify-content: center;
+				  align-items: center;
+				}
+				
+				.delete-button:hover {
+				  opacity: 1;
+				}
+				
+			
+
             </style>
 
         </head>
@@ -87,8 +107,7 @@
                                                     <div class="col-md-6">
                                                         <label class="custom-file-input-wrapper">
                                                             <input type="file"
-                                                                accept=".jpg, .png, image/jpeg, image/png" name="image1"
-                                                                required class="custom-file-input"
+                                                                accept=".jpg, .png, image/jpeg, image/png" name="image1" class="custom-file-input"
                                                                 onchange="handleImageSelection(this, 'thumbnail1')">
                                                             <div class="custom-file-label">Choose Image 1</div>
                                                         </label>
@@ -283,6 +302,13 @@
                             </div>
                         </div>
                     </div>
+                    <input type="hidden" id="deletethumbnail1" name="deletethumbnail1" value="0">
+					<input type="hidden" id="deletethumbnail2" name="deletethumbnail2" value="0">
+					<input type="hidden" id="deletethumbnail3" name="deletethumbnail3" value="0">
+					<input type="hidden" id="deletethumbnail4" name="deletethumbnail4" value="0">
+					<input type="hidden" id="deletethumbnail5" name="deletethumbnail5" value="0">
+					<input type="hidden" id="deletethumbnail6" name="deletethumbnail6" value="0">
+                    
 
                 </form>
             </main>
@@ -314,7 +340,6 @@
             function validateForm() {
                 var name = document.forms["productForm"]["name"].value;
                 var description = document.forms["productForm"]["description"].value;
-                var image1 = document.forms["productForm"]["image1"].value;
                 var category = document.forms["productForm"]["categoryId"].value;
                 var style = document.forms["productForm"]["styleId"].value;
                 var styleValue = document.forms["productForm"]["styleValueId"].value;
@@ -326,7 +351,6 @@
                 if (
                     name.trim() === "" ||
                     description.trim() === "" ||
-                    image1.trim() === "" ||
                     video.trim() === "" ||
                     category.trim() === "" ||
                     style.trim() === "" ||
@@ -380,10 +404,12 @@
                     var fileSizeElementId = 'fileSize' + input.name.substring(input.name.length - 1);
                     var fileSizeElement = document.getElementById(fileSizeElementId);
                     var fileSizeError = document.getElementById('fileSizeError');
-
                     if (file) {
                         var reader = new FileReader();
-
+                        var previousImageSource = thumbnail.getAttribute('data-previous-source');
+                        if (previousImageSource != null){
+							deleteImage(previousImageSource,thumbnailId)
+                        }
                         reader.onload = function (e) {
                             var img = document.createElement('img');
                             img.src = e.target.result;
@@ -454,6 +480,7 @@
                     	else
                     	{
                     		styleSelect.append('<option selected value="' + style.id + '">' + style.name + '  </option>');
+                    		loadStylesValue();
                     	}
                     });
 
@@ -487,7 +514,7 @@
                         if (styleValueIdSelected != styleValue){
                             styleValueSelect.append('<option value="' + styleValue.id + '">' + styleValue.name + '</option>');
                         }
-                        esle
+                        else
                         {
                             styleValueSelect.append('<option selected value="' + styleValue.id + '">' + styleValue.name + '</option>');
                         }
@@ -544,26 +571,44 @@
                         return null;
                     }
                 }
-
                 // Hàm hiển thị hình ảnh từ nguồn (source) trên một thẻ thumbnail cụ thể
-                function displayImageFromSource(source, thumbnailId) {
-                    var thumbnail = document.getElementById(thumbnailId);
-
-                    if (source) {
-                        // Tạo và hiển thị hình ảnh mới
-                        var img = document.createElement('img');
-                        img.src = source;
-                        img.classList.add('thumbnail');
-                        thumbnail.innerHTML = '';
-                        thumbnail.appendChild(img);
-                    }
-                }
+				function displayImageFromSource(source, thumbnailId) {
+				    var thumbnail = document.getElementById(thumbnailId);
+				
+				    if (source) {
+				        // Tạo và hiển thị hình ảnh mới
+				        var img = document.createElement('img');
+				        img.src = source;
+				        img.classList.add('thumbnail');
+				        thumbnail.innerHTML = '';
+				        thumbnail.appendChild(img);
+				        thumbnail.setAttribute('data-previous-source', img.src);
+				
+				        // Tạo nút xóa
+				        var deleteButton = document.createElement('span');
+				        deleteButton.innerHTML = '<i class="fas fa-times"></i>';
+				        deleteButton.classList.add('delete-button');
+				
+				        // Gắn kết sự kiện click để xóa hình ảnh và gửi yêu cầu AJAX
+				        deleteButton.addEventListener('click', function() {
+				            deleteImage(source,thumbnailId)
+				            thumbnail.innerHTML = '';
+				            
+				        });
+				
+				        // Thêm nút xóa vào thumbnail
+				        thumbnail.appendChild(deleteButton);
+				    }
+				}
+				function deleteImage(imageSource, thumbnailId) {
+				    console.log('Delete button clicked for image ' + thumbnailId);
+				    document.getElementById('delete' + thumbnailId).value = '1';
+				}
 
                 // Gọi hàm khi trang web được tải
                 window.onload = function () {
                     displayProductInfo();
                     loadStyles();
-                    loadStylesValue();
                 };
 
 

@@ -135,7 +135,7 @@ public class ImageDAOImpl implements IImageDAO{
 	@Override
 	public void delete(int id) {
 		try {
-			String sql =  "DELETE Image WHERE id = ?";
+			String sql =  "DELETE FROM Image WHERE id = ?";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
