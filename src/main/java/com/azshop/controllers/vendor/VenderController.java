@@ -1,6 +1,7 @@
 package com.azshop.controllers.vendor;
 
 import java.awt.Image;
+
 import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,11 +11,7 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.Iterator;
 import java.util.List;
-
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -23,8 +20,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
 
 import com.azshop.models.CategoryModel;
 import com.azshop.models.ImageModel;
@@ -43,14 +38,15 @@ import com.azshop.services.StyleServiceImpl;
 import com.azshop.services.StyleValueImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
+import com.azshop.utils.UploadImage;
 import com.azshop.utils.UploadUtils;
 import com.google.gson.Gson;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
 		* 50)
-@WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/register-shop", "/vendor/product/new", "/vendor/product/error404",
-		"/vendor/product/edit/*", "/vendor/product/detail/*", "/vendor/order/processing", "/vendor/order/processed",
-		"/vendor/order/details" })
+@WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/register-shop", "/vendor/product/new",
+		"/vendor/product/all", "/vendor/product/error404", "/vendor/product/edit/*", "/vendor/product/detail/*",
+		"/vendor/order/processing", "/vendor/order/processed", "/vendor/order/details" })
 public class VenderController extends HttpServlet {
 
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -79,6 +75,11 @@ public class VenderController extends HttpServlet {
 		if (url.contains("/vendor/update-shop-info")) {
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/shopInfo.jsp");
 			req.setAttribute("isView", false);
+			rDispatcher.forward(req, resp);
+			return;
+		}
+		if (url.contains("/vendor/product/all")) {
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/allProduct.jsp");
 			rDispatcher.forward(req, resp);
 			return;
 		}
@@ -140,7 +141,7 @@ public class VenderController extends HttpServlet {
 				try {
 					uri = new URI(url);
 					String path = uri.getPath();
-					
+
 					String[] parts = path.split("/");
 			        
 			        if (parts.length > 0) {
@@ -169,24 +170,24 @@ public class VenderController extends HttpServlet {
 										index++;
 									}
 								}
+			            	}
 								
 								
 								StyleValueModel styleValueModel = styleValueService.getById(productModel.getStyleValueId());
 								StyleModel styleModel = styleService.getById(styleValueModel.getStyleId());
 								req.setAttribute("styleModelId", styleModel.getId());
+								
+							} catch (Exception e) {
+								req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 							}
-						} catch (Exception e) {
+						} else {
 							req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 						}
-			        } else {
-			        	req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-			        }
-		    	
 				} catch (URISyntaxException e) {
 					e.printStackTrace();
 				}
 			}
-			
+
 			req.setAttribute("action", action);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/product.jsp");
 			rDispatcher.forward(req, resp);
@@ -202,9 +203,37 @@ public class VenderController extends HttpServlet {
 
 		if (url.contains("register-shop")) {
 			RegisterShop(req, resp);
-		} else if (url.contains("/vendor/product/new")) {
-			doPostProduct(req, resp);
+			return;
 		}
+		if (url.contains("/vendor/product/new")) {
+			doPostProduct(req, resp);
+			return;
+		}
+		if (url.contains("/vendor/update-shop-info")) {
+			UpdateShopInfo(req, resp);
+			return;
+		}
+	}
+
+	private void UpdateShopInfo(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		String shopName = req.getParameter("shopName").toString();
+		String shopBio = req.getParameter("shopBio").toString();
+		String storageLocation = "D:\\uploads";
+		String coverImage = UploadImage.UploadImageToLocal("coverImage", req, storageLocation);
+		String avatarImage = UploadImage.UploadImageToLocal("avatarImage", req, storageLocation);
+		String featuredImage = UploadImage.UploadImageToLocal("featuredImage", req, storageLocation);
+
+//		JsonObject responseStatus = new JsonObject();
+//		responseStatus.addProperty("status", "success");
+//		responseStatus.addProperty("message", "Dữ liệu đã được xử lý thành công");
+
+		resp.setContentType("application/json");
+		resp.setCharacterEncoding("UTF-8");
+		resp.getWriter().println("1: " + shopName);
+		resp.getWriter().println("2: " + shopBio);
+		resp.getWriter().println("3: " + coverImage);
+		resp.getWriter().println("4: " + avatarImage);
+		resp.getWriter().println("5: " + featuredImage);
 	}
 
 	private void RegisterShop(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -214,8 +243,8 @@ public class VenderController extends HttpServlet {
 		resp.sendRedirect("vendor-dashboard");
 
 	}
+
 	private void doPostProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// Lấy dữ liệu từ form
 					try {
 						
 					String name = req.getParameter("name");
