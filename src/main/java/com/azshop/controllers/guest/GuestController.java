@@ -85,6 +85,17 @@ public class GuestController extends HttpServlet{
 	}
 
 	private void getProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// ma hoa UTF-8
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		// nhan du lieu tu form
+		int id = Integer.parseInt(req.getParameter("id"));
+		
+		ProductModel product = productService.getById(id);
+		
+		req.setAttribute("product", product);
+		
 		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/product.jsp");
 		rd.forward(req, resp);
 	}
