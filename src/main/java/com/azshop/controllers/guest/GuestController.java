@@ -24,6 +24,7 @@ import com.azshop.services.IUserService;
 import com.azshop.services.ImageServiceImpl;
 import com.azshop.services.ProductServiceImpl;
 import com.azshop.services.UserServiceImpl;
+import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
 
 @WebServlet(urlPatterns = {"/guest-home", "/guest-clothing", "/guest-product", "/guest-search"})
@@ -85,6 +86,18 @@ public class GuestController extends HttpServlet{
 	}
 
 	private void getProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// ma hoa UTF-8
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		// nhan du lieu tu form
+		int id = Integer.parseInt(req.getParameter("id"));
+		
+		ProductModel product = productService.getById(id);
+		List<ImageModel> imageList = imageService.getByProductId(id);		
+		req.setAttribute("product", product);
+		req.setAttribute("imageList", imageList);
+		
 		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/product.jsp");
 		rd.forward(req, resp);
 	}

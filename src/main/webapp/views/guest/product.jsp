@@ -62,21 +62,11 @@
 				<!-- Product thumb imgs -->
 				<div class="col-md-2  col-md-pull-5">
 					<div id="product-imgs">
-						<div class="product-preview">
-							<img src="templates/guest/img/product01.png" alt="">
-						</div>
-
-						<div class="product-preview">
-							<img src="templates/guest/img/product01.png" alt="">
-						</div>
-
-						<div class="product-preview">
-							<img src="templates/guest/img/product01.png" alt="">
-						</div>
-
-						<div class="product-preview">
-							<img src="templates/guest/img/product01.png" alt="">
-						</div>
+						<c:forEach var="image" items="${imageList}"> 
+							<div class="product-preview">
+								 <img src="/AZShop/image?fname=${image.image}" alt="">
+							</div>
+						</c:forEach>
 					</div>
 				</div>
 				<!-- /Product thumb imgs -->
@@ -84,7 +74,8 @@
 				<!-- Product details -->
 				<div class="col-md-5">
 					<div class="product-details">
-						<h2 class="product-name">product name goes here</h2>
+						<h2 class="product-name">${product.name}
+						</h2>
 						<div>
 							<div class="product-rating">
 								<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
@@ -96,15 +87,12 @@
 						</div>
 						<div>
 							<h3 class="product-price">
-								$980.00
-								<del class="product-old-price">$990.00</del>
+								${product.price}
+								<del class="product-old-price">${product.price}</del>
 							</h3>
 							<span class="product-available">In Stock</span>
 						</div>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-							sed do eiusmod tempor incididunt ut labore et dolore magna
-							aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-							ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+						<p>${product.description}</p>
 
 						<div class="product-options">
 							<label> Size <select class="input-select">
