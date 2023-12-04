@@ -1,4 +1,4 @@
-
+ 
 <!-- Search Modal -->
 <div class="modal" id="exampleModal" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">

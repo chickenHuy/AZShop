@@ -362,4 +362,265 @@ public class ProductDAOImpl implements IProductDAO {
 		}
 		return listProduct;
 	}
+
+	@Override
+	public int countDraftByStore(int storeId) {
+		try {
+			String sql = "SELECT COUNT(*) as sumDraft FROM dbo.[Product] WHERE storeId = ? and isActive = 0 and isDeleted = 0";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+			 return rs.getInt("sumDraft");
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return -1;
+	}
+
+	@Override
+	public int countPublishByStore(int storeId) {
+		try {
+			String sql = "SELECT COUNT(*) as sumPublish FROM dbo.[Product] WHERE storeId = ? and isActive = 1 and isDeleted = 0";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+			 return rs.getInt("sumPublish");
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return -1;
+	}
+
+	@Override
+	public int countAllByStore(int storeId) {
+		try {
+			String sql = "SELECT COUNT(*) as sumAll FROM dbo.[Product] WHERE storeId = ? and isDeleted = 0";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+			 return rs.getInt("sumAll");
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return -1;
+	}
+
+	@Override
+	public List<ProductModel> getByCategoryIdAndStoreId(int categoryId, int storeId) {
+		List<ProductModel> listProduct = new ArrayList<ProductModel>();
+		try {
+			String sql = "SELECT * FROM dbo.[Product] WHERE storeId = ? and categoryId = ? and isDeleted = 0";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			ps.setInt(2, categoryId);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ProductModel product = new ProductModel();
+
+				product.setId(rs.getInt("id"));
+				product.setName(rs.getString("name"));
+				product.setSlug(rs.getString("slug"));
+				product.setDescription(rs.getString("description"));
+				product.setPrice(rs.getBigDecimal("price"));
+				product.setQuantity(rs.getInt("quantiny"));
+				product.setSold(rs.getInt("sold"));
+				product.setActive(rs.getBoolean("isActive"));
+				product.setVideo(rs.getString("video"));
+				product.setCategoryId(rs.getInt("categoryId"));
+				product.setStyleValueId(rs.getInt("styleValueId"));
+				product.setStoreId(rs.getInt("storeId"));
+				product.setRating(rs.getBigDecimal("rating"));
+				product.setCreateAt(rs.getDate("createAt"));
+				product.setUpdateAt(rs.getDate("updateAt"));
+
+				listProduct.add(product);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listProduct;
+	}
+
+	@Override
+	public List<ProductModel> getByCategoryIdAndStoreIdAndDraft(int categoryId, int storeId) {
+		List<ProductModel> listProduct = new ArrayList<ProductModel>();
+		try {
+			String sql = "SELECT * FROM dbo.[Product] WHERE storeId = ? and categoryId = ? and isDeleted = 0 and isActive = 0";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			ps.setInt(2, categoryId);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ProductModel product = new ProductModel();
+
+				product.setId(rs.getInt("id"));
+				product.setName(rs.getString("name"));
+				product.setSlug(rs.getString("slug"));
+				product.setDescription(rs.getString("description"));
+				product.setPrice(rs.getBigDecimal("price"));
+				product.setQuantity(rs.getInt("quantiny"));
+				product.setSold(rs.getInt("sold"));
+				product.setActive(rs.getBoolean("isActive"));
+				product.setVideo(rs.getString("video"));
+				product.setCategoryId(rs.getInt("categoryId"));
+				product.setStyleValueId(rs.getInt("styleValueId"));
+				product.setStoreId(rs.getInt("storeId"));
+				product.setRating(rs.getBigDecimal("rating"));
+				product.setCreateAt(rs.getDate("createAt"));
+				product.setUpdateAt(rs.getDate("updateAt"));
+
+				listProduct.add(product);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listProduct;
+	}
+
+	@Override
+	public List<ProductModel> getByCategoryIdAndStoreIdAndPublish(int categoryId, int storeId) {
+		List<ProductModel> listProduct = new ArrayList<ProductModel>();
+		try {
+			String sql = "SELECT * FROM dbo.[Product] WHERE storeId = ? and categoryId = ? and isDeleted = 0 and isActive = 1";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			ps.setInt(2, categoryId);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ProductModel product = new ProductModel();
+
+				product.setId(rs.getInt("id"));
+				product.setName(rs.getString("name"));
+				product.setSlug(rs.getString("slug"));
+				product.setDescription(rs.getString("description"));
+				product.setPrice(rs.getBigDecimal("price"));
+				product.setQuantity(rs.getInt("quantiny"));
+				product.setSold(rs.getInt("sold"));
+				product.setActive(rs.getBoolean("isActive"));
+				product.setVideo(rs.getString("video"));
+				product.setCategoryId(rs.getInt("categoryId"));
+				product.setStyleValueId(rs.getInt("styleValueId"));
+				product.setStoreId(rs.getInt("storeId"));
+				product.setRating(rs.getBigDecimal("rating"));
+				product.setCreateAt(rs.getDate("createAt"));
+				product.setUpdateAt(rs.getDate("updateAt"));
+
+				listProduct.add(product);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listProduct;
+	}
+
+	@Override
+	public List<ProductModel> getByStoreIdAndDraft(int storeId) {
+		List<ProductModel> listProduct = new ArrayList<ProductModel>();
+		try {
+			String sql = "SELECT * FROM dbo.[Product] WHERE storeId = ? and isDeleted = 0 and isActive = 0";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ProductModel product = new ProductModel();
+
+				product.setId(rs.getInt("id"));
+				product.setName(rs.getString("name"));
+				product.setSlug(rs.getString("slug"));
+				product.setDescription(rs.getString("description"));
+				product.setPrice(rs.getBigDecimal("price"));
+				product.setQuantity(rs.getInt("quantiny"));
+				product.setSold(rs.getInt("sold"));
+				product.setActive(rs.getBoolean("isActive"));
+				product.setVideo(rs.getString("video"));
+				product.setCategoryId(rs.getInt("categoryId"));
+				product.setStyleValueId(rs.getInt("styleValueId"));
+				product.setStoreId(rs.getInt("storeId"));
+				product.setRating(rs.getBigDecimal("rating"));
+				product.setCreateAt(rs.getDate("createAt"));
+				product.setUpdateAt(rs.getDate("updateAt"));
+
+				listProduct.add(product);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listProduct;
+	}
+
+	@Override
+	public List<ProductModel> getByStoreIdAndPublish(int storeId) {
+		List<ProductModel> listProduct = new ArrayList<ProductModel>();
+		try {
+			String sql = "SELECT * FROM dbo.[Product] WHERE storeId = ? and isDeleted = 0 and isActive = 1";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ProductModel product = new ProductModel();
+
+				product.setId(rs.getInt("id"));
+				product.setName(rs.getString("name"));
+				product.setSlug(rs.getString("slug"));
+				product.setDescription(rs.getString("description"));
+				product.setPrice(rs.getBigDecimal("price"));
+				product.setQuantity(rs.getInt("quantiny"));
+				product.setSold(rs.getInt("sold"));
+				product.setActive(rs.getBoolean("isActive"));
+				product.setVideo(rs.getString("video"));
+				product.setCategoryId(rs.getInt("categoryId"));
+				product.setStyleValueId(rs.getInt("styleValueId"));
+				product.setStoreId(rs.getInt("storeId"));
+				product.setRating(rs.getBigDecimal("rating"));
+				product.setCreateAt(rs.getDate("createAt"));
+				product.setUpdateAt(rs.getDate("updateAt"));
+
+				listProduct.add(product);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listProduct;
+	}
 }

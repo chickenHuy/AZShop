@@ -50,7 +50,7 @@ import com.google.gson.Gson;
 		* 50)
 @WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/register-shop", "/vendor/product/new",
 		"/vendor/product/all", "/vendor/product/error404", "/vendor/product/edit/*", "/vendor/product/detail/*",
-		"/vendor/order/processing", "/vendor/order/processed", "/vendor/order/details" })
+		"/vendor/order/processing", "/vendor/order/processed", "/vendor/order/details" , "/vendor/product/delete/*"})
 public class VenderController extends HttpServlet {
 
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -83,22 +83,15 @@ public class VenderController extends HttpServlet {
 			return;
 		}
 		if (url.contains("/vendor/product/all")) {
-			List<ProductModel> listProductModels = productService.getByStoreId(0);
-			List<CategoryModel> listCategoryModels = categoryService.getAll();
-			List<StyleValueModel> listStyleValueModels = styleValueService.getAll();
-			req.setAttribute("products", listProductModels);
-			req.setAttribute("styleValues", listStyleValueModels);
-			req.setAttribute("categorys", listCategoryModels);
-			List<ImageModel> lisImageModels = new ArrayList<ImageModel>();
-			for (ProductModel productModel : listProductModels) {
-				lisImageModels.add(imageService.getImage(productModel.getId()));
-			}
-			req.setAttribute("images", lisImageModels);
-			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/allProduct.jsp");
-			rDispatcher.forward(req, resp);
+			AllProduct(req,resp);
 			return;
 		}
-		if (url.contains("/vendor/product")) {
+		if (url.contains("/vendor/product/delete"))
+		{
+			DeleteProduct(req, resp);
+			return;
+		}
+		if (url.contains("/vendor/product/new") || url.contains("/vendor/product/edit")) {
 			doGetProduct(req, resp);
 			return;
 		}
@@ -114,6 +107,112 @@ public class VenderController extends HttpServlet {
 				rDispatcher.forward(req, resp);
 			}
 		}
+	}
+
+	private void DeleteProduct(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
+		String url = req.getRequestURL().toString();
+		URI uri;
+		try {
+			uri = new URI(url);
+			String path = uri.getPath();
+			String[] parts = path.split("/");
+			PrintWriter out = resp.getWriter();
+	        if (parts.length > 0) {
+	            String slug = parts[parts.length - 1];
+	            System.out.println(slug);
+	            ProductModel productModel = productService.getBySlug(slug);
+	            if (productModel == null) {
+	            	req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+				}
+	            else {
+				
+					try {
+						productService.delete(productModel.getId());
+						req.setAttribute("message", "Đã xóa: " + productModel.getName());
+				        RequestDispatcher dispatcher = req.getRequestDispatcher("vendor/product/all");
+				        dispatcher.forward(req,resp);
+					} catch (Exception e) {
+						req.setAttribute("error", "Xóa thất bại");
+						RequestDispatcher dispatcher = req.getRequestDispatcher("vendor/product/all");
+					    dispatcher.forward(req,resp);		
+					}
+			        }
+	            }
+		} catch (Exception e) {
+			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+		}
+	}
+
+	private void AllProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String categorySlug = req.getParameter("category");
+		String saveType = req.getParameter("save");
+		if (saveType != null) {
+			req.setAttribute("saveType", saveType);
+		}
+			List<ProductModel> listProductModels;
+			if (saveType != null && saveType.equals("draft"))
+			{
+				if (categorySlug != null && categorySlug != "")
+				{
+					CategoryModel categoryModel = categoryService.getCategoryBySlug(categorySlug);
+					if (categoryModel == null)
+					{	
+						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+						return;
+					}
+					listProductModels = productService.getByCategoryIdAndStoreIdAndDraft(categoryModel.getId(), 0);
+				}
+				else {
+					listProductModels = productService.getByStoreIdAndDraft(0);
+				}
+			}
+			else if (saveType != null && saveType.equals("publish")){
+				if (categorySlug != null && categorySlug != "")
+				{
+					CategoryModel categoryModel = categoryService.getCategoryBySlug(categorySlug);
+					if (categoryModel == null)
+					{	
+						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+						return;
+					}
+					listProductModels = productService.getByCategoryIdAndStoreIdAndPublish(categoryModel.getId(), 0);
+				}
+				else {
+					listProductModels = productService.getByStoreIdAndPublish(0);
+				}
+			}
+		else if (categorySlug != null && categorySlug != "")
+		{
+			CategoryModel categoryModel = categoryService.getCategoryBySlug(categorySlug);
+			if (categoryModel == null)
+			{	
+				req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+				return;
+			}
+			listProductModels = productService.getByCategoryIdAndStoreId(categoryModel.getId(), 0);
+		}
+		else {
+			listProductModels = productService.getByStoreId(0);
+		}
+		List<CategoryModel> listCategoryModels = categoryService.getAll();
+		List<StyleValueModel> listStyleValueModels = styleValueService.getAll();
+		req.setAttribute("products", listProductModels);
+		req.setAttribute("styleValues", listStyleValueModels);
+		req.setAttribute("categorys", listCategoryModels);
+		List<ImageModel> lisImageModels = new ArrayList<ImageModel>();
+		int sumDraft = productService.countDraftByStore(0);
+		req.setAttribute("sumDraft", sumDraft);
+		int sumPublish = productService.countPublishByStore(0);
+		req.setAttribute("sumPublish", sumPublish);
+		int sumAll = productService.countAllByStore(0);
+		req.setAttribute("sumAll", sumAll);
+		for (ProductModel productModel : listProductModels) {
+			lisImageModels.add(imageService.getImage(productModel.getId()));
+		}
+		req.setAttribute("images", lisImageModels);
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/allProduct.jsp");
+		rDispatcher.forward(req, resp);
+		
 	}
 
 	private void doGetProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

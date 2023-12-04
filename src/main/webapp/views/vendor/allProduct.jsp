@@ -64,15 +64,25 @@
 					</div>
 				</div>
 				<!--end breadcrumb-->
-
-
+				<c:if test="${message!=null}">
+					<div class="alert alert-success border-0 bg-success alert-dismissible fade show">
+						<div class="text-white">${message}</div>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					  </div>
+				</c:if>
+				<c:if test="${error!=null}">
+					<div class="alert alert-danger border-0 bg-danger alert-dismissible fade show">
+						<div class="text-white">${error}</div>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				</c:if>
 				<div class="product-count d-flex align-items-center gap-3 gap-lg-4 mb-4 fw-bold flex-wrap font-text1">
-					<a href="javascript:;"><span class="me-1">All</span><span class="text-secondary">(88754)</span></a>
-					<a href="javascript:;"><span class="me-1">Published</span><span
-							class="text-secondary">(56242)</span></a>
-					<a href="javascript:;"><span class="me-1">Drafts</span><span class="text-secondary">(17)</span></a>
-					<a href="javascript:;"><span class="me-1">On Discount</span><span
-							class="text-secondary">(88754)</span></a>
+					<a href='<c:url value="/vendor/product/all"/>'><span class="me-1">All</span><span class="text-secondary">
+						(${sumAll})
+					</span></a>
+					<a href='<c:url value="/vendor/product/all?save=publish"/>'><span class="me-1">Published</span><span
+							class="text-secondary">(${sumPublish})</span></a>
+					<a href='<c:url value="/vendor/product/all?save=draft"/>'><span class="me-1">Drafts</span><span class="text-secondary">(${sumDraft})</span></a>
 				</div>
 
 				<div class="row g-3">
@@ -89,14 +99,14 @@
 									data-bs-toggle="dropdown" aria-expanded="false">
 									Category</button>
 								<ul class="dropdown-menu">
-									<li><a class="dropdown-item" href="javascript:;">Action</a></li>
-									<li><a class="dropdown-item" href="javascript:;">Another
-											action</a></li>
-									<li>
-										<hr class="dropdown-divider">
-									</li>
-									<li><a class="dropdown-item" href="javascript:;">Something
-											else here</a></li>
+									<c:forEach var="category" items="${categorys}">
+										<c:if test="${saveType == null}">
+											<li><a class="dropdown-item" href='<c:url value="/vendor/product/all?save=${saveType}&category=${category.slug}"/>'>${category.name}</a></li>
+										</c:if>
+										<c:if test="${saveType != null}">
+											<li><a class="dropdown-item" href='<c:url value="/vendor/product/all?save=${saveType}&category=${category.slug}"/>'>${category.name}</a></li>
+										</c:if>
+									</c:forEach>
 								</ul>
 							</div>
 							<div class="btn-group position-static">
@@ -136,7 +146,8 @@
 								<i class="bi bi-box-arrow-right me-2"></i>Export
 							</button>
 							<button class="btn btn-primary px-4">
-								<i class="bi bi-plus-lg me-2"></i>Add Product
+								
+								<a href='<c:url value="/vendor/product/new"/>' style="color: #fff;">Add Product</a>
 							</button>
 						</div>
 					</div>
@@ -226,7 +237,7 @@
 													</button>
 													<ul class="dropdown-menu">
 														<li><a class="dropdown-item" href='<c:url value="/vendor/product/edit/${product.slug}"/>'>Edit</a></li>
-														<li><a class="dropdown-item" href="#">Delete</a></li>
+														<li><a class="dropdown-item" href='<c:url value="/vendor/product/delete/${product.slug}"/>'>Delete</a></li>
 													</ul>
 												</div>
 											</td>
@@ -238,10 +249,7 @@
 						</div>
 					</div>
 				</div>
-
 			</main>
-			<!--end main content-->
-
 		</body>
 
 		</html>

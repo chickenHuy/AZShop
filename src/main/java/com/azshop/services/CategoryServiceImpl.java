@@ -39,4 +39,9 @@ public class CategoryServiceImpl implements ICategoryService {
 		categoryDAO.delete(id);
 	}
 
+	@Override
+	public CategoryModel getCategoryBySlug(String slug) {
+		return categoryDAO.getCategoryBySlug(slug);
+	}
+
 }

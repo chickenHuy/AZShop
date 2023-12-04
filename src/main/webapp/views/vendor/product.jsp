@@ -220,7 +220,14 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <button type="button" id="discard" class="btn btn-danger px-4">Discard</button>
+                                        <button type="button" id="discard" class="btn btn-danger px-4">
+                                            <c:if test="${product == null}">
+                                                <a href='<c:url value="/vendor/product/all"/>' style="color: #f0faff;">Discard</a>
+                                            </c:if>
+                                            <c:if test="${product != null}">
+                                                <a href='<c:url value="/vendor/product/delete/${product.slug}"/>' style="color: #f0faff;">Discard</a>
+                                            </c:if>
+                                        </button>
                                         <button type="submit" class="btn btn-success px-4" onclick="saveDraft()" >Save Draft</button>
                                         <button type="submit" id="publish" class="btn btn-primary px-4" onclick="publish()">Publish</button>
                                     </div>
