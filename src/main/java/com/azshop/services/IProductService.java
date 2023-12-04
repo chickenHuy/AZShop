@@ -19,8 +19,16 @@ public interface IProductService {
 	List<ProductModel> getByStyleValueId(int styleValueId);
 
 	List<ProductModel> getByStoreId(int storeId);
+    List<ProductModel> getByStoreIdAndDraft(int storeId);
+    List<ProductModel> getByStoreIdAndPublish(int storeId);
 
 	void update(ProductModel product);
 
 	void delete(int id);
+	int countDraftByStore(int storeId);
+    int countPublishByStore(int storeId);
+    int countAllByStore(int storeId);
+    List<ProductModel> getByCategoryIdAndStoreId(int categoryId, int storeId);
+    List<ProductModel> getByCategoryIdAndStoreIdAndDraft(int categoryId, int storeId);
+    List<ProductModel> getByCategoryIdAndStoreIdAndPublish(int categoryId, int storeId);
 }

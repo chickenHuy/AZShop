@@ -44,4 +44,9 @@ public class CategoryServiceImpl implements ICategoryService {
 		
 	}
 
+	@Override
+	public CategoryModel getCategoryBySlug(String slug) {
+		return categoryDAO.getCategoryBySlug(slug);
+	}
+
 }

@@ -144,13 +144,68 @@ public class VenderController extends HttpServlet {
 	}
 
 	private void AllProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<ProductModel> listProductModels = productService.getByStoreId(0);
+		String categorySlug = req.getParameter("category");
+		String saveType = req.getParameter("save");
+		if (saveType != null) {
+			req.setAttribute("saveType", saveType);
+		}
+			List<ProductModel> listProductModels;
+			if (saveType != null && saveType.equals("draft"))
+			{
+				if (categorySlug != null && categorySlug != "")
+				{
+					CategoryModel categoryModel = categoryService.getCategoryBySlug(categorySlug);
+					if (categoryModel == null)
+					{	
+						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+						return;
+					}
+					listProductModels = productService.getByCategoryIdAndStoreIdAndDraft(categoryModel.getId(), 0);
+				}
+				else {
+					listProductModels = productService.getByStoreIdAndDraft(0);
+				}
+			}
+			else if (saveType != null && saveType.equals("publish")){
+				if (categorySlug != null && categorySlug != "")
+				{
+					CategoryModel categoryModel = categoryService.getCategoryBySlug(categorySlug);
+					if (categoryModel == null)
+					{	
+						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+						return;
+					}
+					listProductModels = productService.getByCategoryIdAndStoreIdAndPublish(categoryModel.getId(), 0);
+				}
+				else {
+					listProductModels = productService.getByStoreIdAndPublish(0);
+				}
+			}
+		else if (categorySlug != null && categorySlug != "")
+		{
+			CategoryModel categoryModel = categoryService.getCategoryBySlug(categorySlug);
+			if (categoryModel == null)
+			{	
+				req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+				return;
+			}
+			listProductModels = productService.getByCategoryIdAndStoreId(categoryModel.getId(), 0);
+		}
+		else {
+			listProductModels = productService.getByStoreId(0);
+		}
 		List<CategoryModel> listCategoryModels = categoryService.getAll();
 		List<StyleValueModel> listStyleValueModels = styleValueService.getAll();
 		req.setAttribute("products", listProductModels);
 		req.setAttribute("styleValues", listStyleValueModels);
 		req.setAttribute("categorys", listCategoryModels);
 		List<ImageModel> lisImageModels = new ArrayList<ImageModel>();
+		int sumDraft = productService.countDraftByStore(0);
+		req.setAttribute("sumDraft", sumDraft);
+		int sumPublish = productService.countPublishByStore(0);
+		req.setAttribute("sumPublish", sumPublish);
+		int sumAll = productService.countAllByStore(0);
+		req.setAttribute("sumAll", sumAll);
 		for (ProductModel productModel : listProductModels) {
 			lisImageModels.add(imageService.getImage(productModel.getId()));
 		}

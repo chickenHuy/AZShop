@@ -11,4 +11,5 @@ public interface ICategoryDAO {
 	    List<CategoryModel> getChildCategory(int parentId);
 	    void update(CategoryModel category);
 	    void delete(int id);
+	    CategoryModel getCategoryBySlug(String slug);
 }

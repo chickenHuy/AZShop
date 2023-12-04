@@ -165,4 +165,33 @@ public class CategoryDAOImpl implements ICategoryDAO {
 		}
 	}
 
+	@Override
+	public CategoryModel getCategoryBySlug(String slug) {
+		CategoryModel category = new CategoryModel();
+		try {
+			String sql = "SELECT * FROM Category WHERE slug = ? AND isDeleted = 0";
+			conn = new DBConnection().getConnection();
+
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, slug);
+
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				category.setId(rs.getInt("id"));
+				category.setCategoryId(rs.getInt("categoryId"));
+				category.setName(rs.getString("name"));
+				category.setSlug(rs.getString("slug"));
+				category.setImage(rs.getString("image"));
+				category.setDeleted(rs.getBoolean("isDeleted"));
+				category.setCreateAt(rs.getDate("createAt"));
+				category.setUpdateAt(rs.getDate("updateAt"));
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return category;
+	}
+
 }
