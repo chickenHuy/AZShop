@@ -117,20 +117,37 @@
 											<a href='<c:url value="/guest-product?id=${product.id}"/>'>
 												<div class="product-img">
 													<!-- Use product-specific information -->
-													<img src="templates/guest/img/product02.png" alt="">
+													<c:set var="hasImages" value="false" />
+													<c:forEach var="image" items="${imageList}">
+														<c:if test="${product.id eq image.productId}">
+															<img src="/AZShop/image?fname=${image.image}" alt="" />
+															<c:set var="hasImages" value="true" />
+														</c:if>
+													</c:forEach>
+
+													<c:if test="${not hasImages}">
+														<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
+														<img
+															src="${pageContext.request.contextPath}/templates/static/none.png"
+															alt="" />
+													</c:if>
 													<div class="product-label">
 														<span class="new">NEW</span>
 													</div>
 												</div>
 											</a>
 											<div class="product-body">
-												<p class="product-category">Category</p>
+												<c:forEach var="category" items="${categoryList}">
+													<c:if test="${product.categoryId eq category.id}">
+														<p class="product-category">${category.name}</p>
+													</c:if>
+												</c:forEach>
+												
 												<h3 class="product-name">
 													<a href="#">${product.name}</a>
 												</h3>
 												<h4 class="product-price">
-													${product.price} 
-													<del class="product-old-price">${product.price}</del>
+													${product.price} 													
 												</h4>
 												<div class="product-rating">
 													<!-- Your rating logic here -->

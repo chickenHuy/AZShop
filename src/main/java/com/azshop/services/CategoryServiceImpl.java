@@ -11,14 +11,12 @@ public class CategoryServiceImpl implements ICategoryService {
 	ICategoryDAO categoryDAO = new CategoryDAOImpl();
 	@Override
 	public void insert(CategoryModel category) {
-		// TODO Auto-generated method stub
-		
+		categoryDAO.insert(category);
 	}
 
 	@Override
 	public CategoryModel getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return categoryDAO.getById(id);
 	}
 
 	@Override
@@ -28,20 +26,17 @@ public class CategoryServiceImpl implements ICategoryService {
 
 	@Override
 	public List<CategoryModel> getChildCategory(int parentId) {
-		// TODO Auto-generated method stub
-		return null;
+		return categoryDAO.getChildCategory(parentId);
 	}
 
 	@Override
 	public void update(CategoryModel category) {
-		// TODO Auto-generated method stub
-		
+		categoryDAO.update(category);
 	}
 
 	@Override
 	public void delete(int id) {
-		// TODO Auto-generated method stub
-		
+		categoryDAO.delete(id);
 	}
 
 }
