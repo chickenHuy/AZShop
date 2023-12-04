@@ -5,10 +5,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Customer</title>
+<title>Store</title>
 </head>
 <body>
-	<!--start main content-->
 	<main class="page-content">
 		<!--breadcrumb-->
 		<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -18,7 +17,7 @@
 					<ol class="breadcrumb mb-0 p-0">
 						<li class="breadcrumb-item"><a href="javascript:;"><i
 								class="bx bx-home-alt"></i></a></li>
-						<li class="breadcrumb-item active" aria-current="page">Products</li>
+						<li class="breadcrumb-item active" aria-current="page">Stores</li>
 					</ol>
 				</nav>
 			</div>
@@ -60,7 +59,7 @@
 			<div class="col-auto">
 				<div class="position-relative">
 					<input class="form-control px-5" type="search"
-						placeholder="Search Customers"> <span
+						placeholder="Search Store"> <span
 						class="material-symbols-outlined position-absolute ms-3 translate-middle-y start-0 top-50 fs-5">search</span>
 				</div>
 			</div>
@@ -114,9 +113,6 @@
 					<button class="btn btn-light px-4">
 						<i class="bi bi-box-arrow-right me-2"></i>Export
 					</button>
-					<button class="btn btn-primary px-4">
-						<i class="bi bi-plus-lg me-2"></i>Add Customers
-					</button>
 				</div>
 			</div>
 		</div>
@@ -129,63 +125,46 @@
 						<table class="table align-middle">
 							<thead class="table-light">
 								<tr>
-									<th><input class="form-check-input" type="checkbox">
-									</th>
-									<th>Customers</th>
-									<th>Email</th>
-									<th>Phone</th>
-									<th>Role</th>
-									<th>Active Email</th>
-									<th>Active Phone</th>
+									<th>Store</th>
+									<th>Bio</th>
+									<th>Store level</th>
 									<th>Point</th>
+									<th>Rating</th>
+									<th>Date create</th>
+									<th>Active</th>
+									<th>Licensing/Banning</th>
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="user" items="${listuser}">
+								<c:forEach var="store" items="${liststore}">
 									<tr>
-										<td><input class="form-check-input" type="checkbox">
-										</td>
 										<td><a class="d-flex align-items-center gap-3"
 											href="javascript:;">
 												<div class="customer-pic">
-													<img src="${user.coverImage }" class="rounded-circle"
+													<img src="${store.avatar }" class="rounded-circle"
 														width="40" height="40" alt="">
 												</div>
-												<p class="mb-0 customer-name fw-bold">${user.firstName }
-													${user.lastName }</p>
+												<p class="mb-0 customer-name fw-bold">${store.name }</p>
 										</a></td>
-										<td><a href="javascript:;" class="font-text1">${user.email }</a>
-										</td>
-										<td>${user.phone }</td>
-										<td>${user.role }</td>
-										<td><c:choose>
-												<c:when test="${user.emailActive }">
-													<span
-														class="lable-table bg-success-subtle text-success rounded border border-success-subtle font-text2 fw-bold">Activated</span>
+										<td>${store.bio }</td>
+										<td>${store.storeLevelId }</td>
+										<td>${store.point }</td>
+										<td>${store.rating }</td>
+										<td>${store.createAt }</td>
+										<c:choose>
+											<c:when test="${store.active }">
+												<td><span
+													class="lable-table bg-success-subtle text-success rounded border border-success-subtle font-text2 fw-bold">Activated</span></td>
+												<td><a href="javascript:;" class="font-text1">Banning</a></td>
+											</c:when>
+											<c:otherwise>
+												<td><span
+													class="lable-table bg-danger-subtle text-danger rounded border border-danger-subtle font-text2 fw-bold">Banned</span></td>
+												<td><a href="javascript:;" class="font-text1">Licensing</a></td>
+											</c:otherwise>
 
-												</c:when>
-												<c:otherwise>
-													<span
-														class="lable-table bg-danger-subtle text-danger rounded border border-danger-subtle font-text2 fw-bold">not
-														activated</span>
-												</c:otherwise>
+										</c:choose>
 
-											</c:choose></td>
-										<td><c:choose>
-												<c:when test="${user.phoneActive }">
-													<span
-														class="lable-table bg-success-subtle text-success rounded border border-success-subtle font-text2 fw-bold">Activated</span>
-
-												</c:when>
-												<c:otherwise>
-													<span
-														class="lable-table bg-danger-subtle text-danger rounded border border-danger-subtle font-text2 fw-bold">not
-														activated</span>
-
-												</c:otherwise>
-
-											</c:choose></td>
-										<td>${user.point }</td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -196,7 +175,5 @@
 		</div>
 
 	</main>
-	<!--end main content-->
-
 </body>
 </html>
