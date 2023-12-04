@@ -22,8 +22,7 @@ public class StyleServiceImpl implements IStyleService {
 
 	@Override
 	public List<StyleModel> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return styleDAO.getAll();
 	}
 
 	@Override

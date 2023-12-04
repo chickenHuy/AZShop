@@ -1,3 +1,4 @@
+ <%@ include file="/common/taglib.jsp"%>
  <main class="page-content">
        <!--breadcrumb-->
 		<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -82,7 +83,7 @@
           <div class="col-auto">
             <div class="d-flex align-items-center gap-2 justify-content-lg-end">
                <button class="btn btn-light px-4"><i class="bi bi-box-arrow-right me-2"></i>Export</button>
-               <button class="btn btn-primary px-4"><i class="bi bi-plus-lg me-2"></i>Add Product</button>
+               <a class="btn btn-primary px-4" href="addproduct"><i class="bi bi-plus-lg me-2"></i>Add Product</a>
             </div>
           </div>
         </div><!--end row-->
@@ -94,21 +95,38 @@
                  <table class="table align-middle">
                   <thead class="table-light">
                     <tr>
-                      <th>
-                        <input class="form-check-input" type="checkbox">
-                      </th>
                       <th>Product Name</th>
+                      <th>Description</th>
                       <th>Price</th>
-                      <th>Category</th>
-                      <th>Tags</th>
+                      <th>Quantity</th>
+                      <th>Sold</th>
                       <th>Rating</th>
-                      <th>Vendor</th>
-                      <th>Date</th>
-                      <th>Action</th>
                     </tr>
                    </thead>
                    <tbody>
-                     <tr>
+                   	<c:forEach var="product" items="${listProduct}">
+                   		<tr>
+							<td>${product.name}</td>
+							<td>${product.description}</td>
+							<td>${product.price}</td>
+							<td>${product.quantity}</td>
+							<td>${product.sold}</td>
+							<td>${product.rating}</td>
+							<td>
+                       			<div class="dropdown">
+                          			<button class="btn btn-sm btn-light border dropdown-toggle dropdown-toggle-nocaret" type="button" data-bs-toggle="dropdown">
+                           				<i class="bi bi-three-dots"></i>
+                         			</button>
+                         		<ul class="dropdown-menu">
+                         			<li><a class="dropdown-item" href="detailProduct?id=${product.id}">Detail</a></li>
+                           			<li><a class="dropdown-item" href="updateProduct?id=${product.id}">Update</a></li>
+                           			<li><a class="dropdown-item" href="#">Delete</a></li>
+                        		</ul>
+                       			</div>
+                      		</td>
+						</tr>
+					</c:forEach>
+                     <!-- <tr>
                        <td>
                          <input class="form-check-input" type="checkbox">
                        </td>
@@ -557,7 +575,7 @@
                          </ul>
                        </div>
                       </td>
-                    </tr>
+                    </tr> -->
 
                    </tbody>
                  </table>
