@@ -29,8 +29,6 @@
             <div class="menu-title">eCommerce</div>
           </a>
           <ul>
-            <li> <a href="addproduct"><span class="material-symbols-outlined">arrow_right</span>Add Product</a>
-            </li>
             <li> <a href="product"><span class="material-symbols-outlined">arrow_right</span>Products</a>
             </li>
             <li> <a href="ecommerce-customers.html"><span class="material-symbols-outlined">arrow_right</span>Customers</a>
