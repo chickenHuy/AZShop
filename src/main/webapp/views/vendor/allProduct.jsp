@@ -64,8 +64,18 @@
 					</div>
 				</div>
 				<!--end breadcrumb-->
-
-
+				<c:if test="${message!=null}">
+					<div class="alert alert-success border-0 bg-success alert-dismissible fade show">
+						<div class="text-white">${message}</div>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					  </div>
+				</c:if>
+				<c:if test="${error!=null}">
+					<div class="alert alert-danger border-0 bg-danger alert-dismissible fade show">
+						<div class="text-white">${error}</div>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				</c:if>
 				<div class="product-count d-flex align-items-center gap-3 gap-lg-4 mb-4 fw-bold flex-wrap font-text1">
 					<a href="javascript:;"><span class="me-1">All</span><span class="text-secondary">(88754)</span></a>
 					<a href="javascript:;"><span class="me-1">Published</span><span
@@ -226,7 +236,7 @@
 													</button>
 													<ul class="dropdown-menu">
 														<li><a class="dropdown-item" href='<c:url value="/vendor/product/edit/${product.slug}"/>'>Edit</a></li>
-														<li><a class="dropdown-item" href="#">Delete</a></li>
+														<li><a class="dropdown-item" href='<c:url value="/vendor/product/delete/${product.slug}"/>'>Delete</a></li>
 													</ul>
 												</div>
 											</td>
@@ -238,10 +248,7 @@
 						</div>
 					</div>
 				</div>
-
 			</main>
-			<!--end main content-->
-
 		</body>
 
 		</html>
