@@ -62,21 +62,11 @@
 				<!-- Product thumb imgs -->
 				<div class="col-md-2  col-md-pull-5">
 					<div id="product-imgs">
-						<div class="product-preview">
-							<img src="templates/guest/img/product01.png" alt="">
-						</div>
-
-						<div class="product-preview">
-							<img src="templates/guest/img/product01.png" alt="">
-						</div>
-
-						<div class="product-preview">
-							<img src="templates/guest/img/product01.png" alt="">
-						</div>
-
-						<div class="product-preview">
-							<img src="templates/guest/img/product01.png" alt="">
-						</div>
+						<c:forEach var="image" items="${imageList}"> 
+							<div class="product-preview">
+								 <img src="/AZShop/image?fname=${image.image}" alt="">
+							</div>
+						</c:forEach>
 					</div>
 				</div>
 				<!-- /Product thumb imgs -->
