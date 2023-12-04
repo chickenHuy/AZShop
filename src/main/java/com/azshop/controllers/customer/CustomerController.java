@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(urlPatterns = {"/customer-home", "/customer-product"})
 public class CustomerController extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-
+	// Push success!!!
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI().toString();
 		if (url.contains("customer-home")) {
