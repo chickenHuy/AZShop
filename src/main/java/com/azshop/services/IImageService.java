@@ -2,6 +2,8 @@ package com.azshop.services;
 
 import java.util.List;
 
+import javax.mail.Store;
+
 import com.azshop.models.ImageModel;
 
 public interface IImageService {
@@ -18,4 +20,7 @@ public interface IImageService {
 	void delete(int id);
 	
 	int deletedByIndex(int index, int productId);
+	ImageModel getImage(int productId);
+	
+	
 }

@@ -83,7 +83,7 @@
                     </div>
                 </div>
                 <form action="${action}" method="post" id="productForm" enctype="multipart/form-data">
-                    <input type="hidden" id="isActive" name="isActive" value="true">
+                    <input type="hidden" id="isActive" name="isActive" value='1'>
                     <div class="row">
                         <div class="col-12 col-lg-8">
                             <div class="card">
@@ -220,12 +220,9 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <button type="button" class="btn btn-danger px-4"
-                                            onclick="discardAction()">Discard</button>
-                                        <button type="submit" class="btn btn-success px-4"
-                                            onclick="saveDraftAction()">Save Draft</button>
-                                        <button type="submit" class="btn btn-primary px-4"
-                                            onclick="publishAction()">Publish</button>
+                                        <button type="button" id="discard" class="btn btn-danger px-4">Discard</button>
+                                        <button type="submit" class="btn btn-success px-4" onclick="saveDraft()" >Save Draft</button>
+                                        <button type="submit" id="publish" class="btn btn-primary px-4" onclick="publish()">Publish</button>
                                     </div>
                                 </div>
                             </div>
@@ -314,31 +311,17 @@
             </main>
 
             <script>
-            function discardAction() {
-                // Thực hiện hành động khi nhấp vào nút "Discard"
-                window.location.href = "/AZShop/vendor/product";
-            }
+            function saveDraft() {
 
-            function saveDraftAction() {
-                // Thực hiện hành động khi nhấp vào nút "Save Draft"
-                if (validateForm()) {
-                	var isActiveInput = document.getElementById("isActive");
-                	isActiveInput.value = "false";
-                    // Gửi form
-                    document.forms[0].submit();
-                }
-            }
+            // Đặt giá trị vào trường ẩn
+            document.getElementById("isActive").value = '0';
+            }  
+            function publish() {
 
-            function publishAction() {
-                // Thực hiện hành động khi nhấp vào nút "Publish"
-                if (validateForm()) {
-                	var isActiveInput = document.getElementById("isActive");
-                	isActiveInput.value = "true";
-                    // Gửi form
-                    document.forms[0].submit();
-                }
-            }
-                
+            // Đặt giá trị vào trường ẩn
+            document.getElementById("isActive").value = '1';
+            }  
+                    
             function validateForm() {
                 var name = document.forms["productForm"]["name"].value;
                 var description = document.forms["productForm"]["description"].value;
@@ -613,6 +596,6 @@
                 };
 
 
-</script>
+            </script>
 			
         </body>

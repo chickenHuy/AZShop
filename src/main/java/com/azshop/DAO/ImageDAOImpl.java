@@ -150,6 +150,49 @@ public class ImageDAOImpl implements IImageDAO{
 		        e.printStackTrace();
 		    }
 	}
+
+	@Override
+	public ImageModel getImage(int productId) {
+		ImageModel imageModel = new ImageModel();
+		try {
+			 String sql = "WITH RankedImages AS (\r\n"
+			 		+ "    SELECT\r\n"
+			 		+ "        id,\r\n"
+			 		+ "        productId,\r\n"
+			 		+ "        image,\r\n"
+			 		+ "        ROW_NUMBER() OVER (PARTITION BY productId ORDER BY CAST(SUBSTRING(image, 1, 1) AS INT) ASC) AS RowNum\r\n"
+			 		+ "    FROM\r\n"
+			 		+ "        Image\r\n"
+			 		+ "    WHERE\r\n"
+			 		+ "        productId = ?\r\n"
+			 		+ ")\r\n"
+			 		+ "SELECT\r\n"
+			 		+ "    id,\r\n"
+			 		+ "    productId,\r\n"
+			 		+ "    image\r\n"
+			 		+ "FROM\r\n"
+			 		+ "    RankedImages\r\n"
+			 		+ "WHERE\r\n"
+			 		+ "    RowNum = 1;\r\n"
+			 		+ "";
+		        conn = new DBConnection().getConnection();
+		        
+		        ps = conn.prepareStatement(sql);
+		        ps.setInt(1, productId);
+		        
+		        rs = ps.executeQuery();
+		        if (rs.next()) {
+		        	imageModel.setId(rs.getInt("id"));
+		        	imageModel.setProductId(rs.getInt("productId"));
+		        	imageModel.setImage(rs.getString("image"));
+		        }
+		        
+		        conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return imageModel;
+	}
 	
 
 }

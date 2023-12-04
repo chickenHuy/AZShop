@@ -170,24 +170,45 @@
 											<td>
 												<div class="d-flex align-items-center gap-3">
 													<div class="product-box">
-														<img src="assets/images/products/01.webp" alt="">
+														<c:set var="hasImages" value="false" />
+														<c:forEach var="image" items="${images}">
+															<c:if test="${product.id eq image.productId}">
+																<img src="/AZShop/image?fname=${image.image}" alt=""/>
+																<c:set var="hasImages" value="true" />
+															</c:if>
+														</c:forEach>
+
+														<c:if test="${not hasImages}">
+															<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
+															<img src="${pageContext.request.contextPath}/templates/static/none.png" alt=""/>
+														</c:if>
 													</div>
 													<div class="product-info">
 														<a href="javascript:;" class="product-title">${product.name}</a>
-														<p class="mb-0 product-category">Category: trống</p>
+														<c:forEach var="category" items="${categorys}">
+															<c:if test="${product.categoryId eq category.id}">
+																<p>${category.name}</p>
+															</c:if>
+													</c:forEach>
 													</div>
 												</div>
 											</td>
 											<td>${product.price}</td>
 											<td>
 												<c:if test="${product.isActive() == true}">
-												    Đang bán
+												    <span class="lable-table bg-primary-subtle text-primary rounded border border-primary-subtle font-text2 fw-bold">Publish<i class="bi bi-check2-all ms-2"></i></span>
 												</c:if>
 												<c:if test="${product.isActive() == false}">
-												    Ngừng bán
+												    <span class="lable-table bg-warning-subtle text-warning rounded border border-warning-subtle font-text2 fw-bold">Draft<i class="bi bi-info-circle ms-2"></i></span>
 												</c:if>
 											</td>
-											<td>tàg</td>
+											<td>
+												<c:forEach var="styleValue" items="${styleValues}">
+															<c:if test="${product.styleValueId eq styleValue.id}">
+																<p>${styleValue.name}</p>
+															</c:if>
+												</c:forEach>
+											</td>
 											<td>
 												<div class="product-rating">
 													<i class="fa-solid fa-star-half-stroke"></i><span>4.8</span>

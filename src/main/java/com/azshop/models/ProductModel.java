@@ -24,6 +24,7 @@ public class ProductModel implements Serializable {
     private Date createAt;
     private Date updateAt;
     
+    
 	public ProductModel() {
 	}
 

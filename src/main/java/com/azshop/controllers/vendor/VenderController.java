@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -83,7 +84,16 @@ public class VenderController extends HttpServlet {
 		}
 		if (url.contains("/vendor/product/all")) {
 			List<ProductModel> listProductModels = productService.getByStoreId(0);
+			List<CategoryModel> listCategoryModels = categoryService.getAll();
+			List<StyleValueModel> listStyleValueModels = styleValueService.getAll();
 			req.setAttribute("products", listProductModels);
+			req.setAttribute("styleValues", listStyleValueModels);
+			req.setAttribute("categorys", listCategoryModels);
+			List<ImageModel> lisImageModels = new ArrayList<ImageModel>();
+			for (ProductModel productModel : listProductModels) {
+				lisImageModels.add(imageService.getImage(productModel.getId()));
+			}
+			req.setAttribute("images", lisImageModels);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/allProduct.jsp");
 			rDispatcher.forward(req, resp);
 			return;
@@ -222,7 +232,10 @@ public class VenderController extends HttpServlet {
 			String description = req.getParameter("description");
 			BigDecimal price = new BigDecimal(req.getParameter("price"));
 			int quantity = Integer.parseInt(req.getParameter("quantity"));
-			boolean isActive = Boolean.parseBoolean(req.getParameter("isActive"));
+			Boolean isActive = true;
+			if (req.getParameter("isActive").equals("0")) {
+				isActive = false;
+			}
 			int categoryId = Integer.parseInt(req.getParameter("categoryId"));
 			int styleValueId = Integer.parseInt(req.getParameter("styleValueId"));
 			int storeId = 0;
@@ -242,7 +255,7 @@ public class VenderController extends HttpServlet {
 	        productModel.setPrice(price);
 	        productModel.setQuantity(quantity);
 	        productModel.setActive(isActive);
-	        productModel.setStoreId(0);
+	        productModel.setStoreId(storeId);
 			String video = "";
 	        if (req.getPart("video").getSize() != 0)
 			{
@@ -333,7 +346,10 @@ public class VenderController extends HttpServlet {
 					String description = req.getParameter("description");
 					BigDecimal price = new BigDecimal(req.getParameter("price"));
 					int quantity = Integer.parseInt(req.getParameter("quantity"));
-					boolean isActive = Boolean.parseBoolean(req.getParameter("isActive"));
+					Boolean isActive = true;
+					if (req.getParameter("isActive").equals("0")) {
+						isActive = false;
+					}
 					String video = req.getParameter("video");
 					int categoryId = Integer.parseInt(req.getParameter("categoryId"));
 					int styleValueId = Integer.parseInt(req.getParameter("styleValueId"));

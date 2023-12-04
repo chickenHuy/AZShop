@@ -11,4 +11,5 @@ public interface IImageDAO {
     List<ImageModel> getByProductId(int productId);
     void update(ImageModel image);
     void delete(int id);
+    ImageModel getImage(int productId);
 }

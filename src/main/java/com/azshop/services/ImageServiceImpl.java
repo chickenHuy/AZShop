@@ -51,4 +51,9 @@ public class ImageServiceImpl implements IImageService{
 		return 1;
 	}
 
+	@Override
+	public ImageModel getImage(int productId) {
+		return imageDAO.getImage(productId);
+	}
+
 }
