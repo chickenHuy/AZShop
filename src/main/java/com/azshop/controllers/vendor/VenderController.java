@@ -11,10 +11,12 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.mail.Message;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -116,7 +118,6 @@ public class VenderController extends HttpServlet {
 			uri = new URI(url);
 			String path = uri.getPath();
 			String[] parts = path.split("/");
-			PrintWriter out = resp.getWriter();
 	        if (parts.length > 0) {
 	            String slug = parts[parts.length - 1];
 	            System.out.println(slug);
@@ -128,11 +129,11 @@ public class VenderController extends HttpServlet {
 				
 					try {
 						productService.delete(productModel.getId());
-						req.setAttribute("message", "Đã xóa: " + productModel.getName());
+						req.setAttribute("message", "The product has been successfully deleted.");
 				        RequestDispatcher dispatcher = req.getRequestDispatcher("vendor/product/all");
 				        dispatcher.forward(req,resp);
 					} catch (Exception e) {
-						req.setAttribute("error", "Xóa thất bại");
+						req.setAttribute("error", "The deletion of the product was unsuccessful.");
 						RequestDispatcher dispatcher = req.getRequestDispatcher("vendor/product/all");
 					    dispatcher.forward(req,resp);		
 					}
@@ -143,9 +144,24 @@ public class VenderController extends HttpServlet {
 		}
 	}
 
-	private void AllProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private void AllProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 		String categorySlug = req.getParameter("category");
 		String saveType = req.getParameter("save");
+		String message = req.getParameter("message");
+		String error = req.getParameter("error");
+		String searchTerm = req.getParameter("search");
+		if (searchTerm != null) {
+				searchTerm = URLDecoder.decode(searchTerm, "UTF-8");
+				System.out.println(searchTerm);
+		}
+		if (message!= null)
+		{
+			req.setAttribute("message", message);
+		}
+		if (error!= null)
+		{
+			req.setAttribute("error", error);
+		}
 		if (saveType != null) {
 			req.setAttribute("saveType", saveType);
 		}
@@ -194,6 +210,7 @@ public class VenderController extends HttpServlet {
 		else {
 			listProductModels = productService.getByStoreId(0);
 		}
+		
 		List<CategoryModel> listCategoryModels = categoryService.getAll();
 		List<StyleValueModel> listStyleValueModels = styleValueService.getAll();
 		req.setAttribute("products", listProductModels);
@@ -400,11 +417,13 @@ public class VenderController extends HttpServlet {
 				imageName = "image";
 				
 			}
+			req.setAttribute("message", "The product has been updated.");
+			resp.sendRedirect(req.getContextPath() + "/vendor/product/all?message=The product has been updated.");
 			
 		}
 			catch (Exception e) {
 				e.printStackTrace();
-			
+				resp.sendRedirect(req.getContextPath() + "/vendor/product/all?error=The update has failed.");
 			}
 	}
 
@@ -486,9 +505,10 @@ public class VenderController extends HttpServlet {
 						imageName = "image";
 						
 					}
+					resp.sendRedirect("all?message=The product has been successfully added.");
 					} catch (Exception e) {
 						e.printStackTrace();
-					
+						resp.sendRedirect("all?error=The addition of the product has failed.");
 					}
 	}
 
