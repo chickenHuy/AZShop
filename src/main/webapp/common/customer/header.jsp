@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/common/taglib.jsp"%>
+
 <header>
 	<!-- TOP HEADER -->
 	<div id="top-header">
@@ -14,7 +15,15 @@
 			</ul>
 			<ul class="header-links pull-right">
 				<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
-				<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+					   <i class="fa fa-user-o"></i> ${user.email} <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" style="background-color: #1E1F29; border: 1px solid #1E1F29;">
+					   <li style="padding: 8px;"><a href="#">Tài khoản của tôi</a></li>
+					   <li style="padding: 8px;"><a href="<c:url value='/logout-customer' />">Đăng xuất</a></li>
+					</ul>
+				 </li>
 			</ul>
 		</div>
 	</div>

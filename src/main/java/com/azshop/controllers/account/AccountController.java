@@ -16,7 +16,7 @@ import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
 
-@WebServlet(urlPatterns = {"/login-customer", "/verify-customer", "/register-customer", "/forget-customer"})
+@WebServlet(urlPatterns = {"/login-customer", "/verify-customer", "/register-customer", "/forget-customer", "/logout-customer"})
 public class AccountController extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
@@ -34,6 +34,16 @@ public class AccountController extends HttpServlet{
 		} else if (url.contains("forget-customer")) {
 			getForget(req, resp);
 		}
+		else if (url.contains("logout-customer")) {
+			getLogout(req, resp);
+		}
+	}
+
+	private void getLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		HttpSession session = req.getSession();
+		session.removeAttribute("account");
+		
+		resp.sendRedirect("./login-customer");
 	}
 
 	private void getForget(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
