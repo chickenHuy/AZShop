@@ -31,6 +31,8 @@
           <ul>
             <li> <a href="product"><span class="material-symbols-outlined">arrow_right</span>Products</a>
             </li>
+            <li> <a href="categories"><span class="material-symbols-outlined">arrow_right</span>Categories</a>
+            </li>
             <li> <a href="ecommerce-customers.html"><span class="material-symbols-outlined">arrow_right</span>Customers</a>
             </li>
             <li> <a href="ecommerce-customer-details.html"><span class="material-symbols-outlined">arrow_right</span>Customer Details</a>

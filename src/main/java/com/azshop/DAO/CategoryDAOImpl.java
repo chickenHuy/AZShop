@@ -17,20 +17,38 @@ public class CategoryDAOImpl implements ICategoryDAO {
 	@Override
 	public void insert(CategoryModel category) {
 		try {
-			String sql = "INSERT INTO Category(categoryId, name, slug, image, isDeleted, createAt) VALUES ( ?, ?, ?, ?, ?, GETDATE() )";
-			conn = new DBConnection().getConnection();
+			if (category.getCategoryId() == 0) {
+				String sql = "INSERT INTO Category(name, slug, image, isDeleted, createAt) VALUES ( ?, ?, ?, ?, GETDATE() )";
+				conn = new DBConnection().getConnection();
 
-			ps = conn.prepareStatement(sql);
+				ps = conn.prepareStatement(sql);
 
-			ps.setInt(1, category.getCategoryId());
-			ps.setString(2, category.getName());
-			ps.setString(3, category.getSlug());
-			ps.setString(4, category.getImage());
-			ps.setBoolean(5, false);
-			
-			ps.executeUpdate();
+				ps.setString(1, category.getName());
+				ps.setString(2, category.getSlug());
+				ps.setString(3, category.getImage());
+				ps.setBoolean(4, false);
 
-			conn.close();
+				ps.executeUpdate();
+
+				conn.close();
+			} else
+			{
+				String sql = "INSERT INTO Category(categoryId, name, slug, image, isDeleted, createAt) VALUES ( ?, ?, ?, ?, ?, GETDATE() )";
+
+				conn = new DBConnection().getConnection();
+
+				ps = conn.prepareStatement(sql);
+
+				ps.setInt(1, category.getCategoryId());
+				ps.setString(2, category.getName());
+				ps.setString(3, category.getSlug());
+				ps.setString(4, category.getImage());
+				ps.setBoolean(5, false);
+
+				ps.executeUpdate();
+
+				conn.close();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
