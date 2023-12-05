@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.azshop.models.OrderModel;
 
-public interface IOderService {
+public interface IOrderService {
 	void insert(OrderModel order);
 
 	OrderModel getById(int id);

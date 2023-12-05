@@ -37,7 +37,7 @@
             </li>
             <li> <a href="ecommerce-customer-details.html"><span class="material-symbols-outlined">arrow_right</span>Customer Details</a>
             </li>
-            <li> <a href="ecommerce-orders.html"><span class="material-symbols-outlined">arrow_right</span>Orders</a>
+            <li> <a href="orders"><span class="material-symbols-outlined">arrow_right</span>Orders</a>
             </li>
             <li> <a href="ecommerce-customer-details.html"><span class="material-symbols-outlined">arrow_right</span>Order Details</a>
             </li>

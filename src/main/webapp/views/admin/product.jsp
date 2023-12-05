@@ -21,7 +21,7 @@ s
 				</ol>
 			</nav>
 		</div>
-		
+
 	</div>
 	<!--end breadcrumb-->
 
@@ -48,8 +48,7 @@ s
 		<div class="col-auto flex-grow-1 overflow-auto">
 			<div class="btn-group position-static">
 				<div class="btn-group position-static">
-					<select
-						class="form-select" id="Category" name="categoryId">
+					<select class="form-select" id="Category" name="categoryId">
 						<c:forEach var="category" items="${listCategory}">
 							<option value=${category.id}>${category.name}</option>
 						</c:forEach>
@@ -73,6 +72,7 @@ s
 								<th>Quantity</th>
 								<th>Sold</th>
 								<th>Rating</th>
+								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -84,7 +84,16 @@ s
 									<td>${product.quantity}</td>
 									<td>${product.sold}</td>
 									<td>${product.rating}</td>
-									<td><a class="dropdown-item" href="#">Delete</a></td>
+									<td>
+										<c:choose>
+										    <c:when test="${product.isActive}">
+										        <a href="#">Cấm</a>
+										    </c:when>
+										    <c:otherwise>
+										        <a href="#">Cấp phép</a>
+										    </c:otherwise>
+										</c:choose>
+									</td>
 								</tr>
 							</c:forEach>
 						</tbody>

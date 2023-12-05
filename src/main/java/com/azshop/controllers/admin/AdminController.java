@@ -24,14 +24,16 @@ import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadUtils;
 import com.azshop.models.CategoryModel;
+import com.azshop.models.OrderModel;
 import com.azshop.models.ProductModel;
 import com.azshop.services.*;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
-		* 50)
+* 50)
 
 @WebServlet(urlPatterns = { "/admin/dashboard", "/admin/product", "/admin/customer", "/admin/store",
-		"/admin/categories", "/admin/addcategory", "/admin/store/edit-status/*" })
+		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit/*", "/admin/store/edit-status/*" })
+		
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	IUserService userService = new UserServiceImpl();
@@ -39,7 +41,7 @@ public class AdminController extends HttpServlet {
 
 	IProductService productService = new ProductServiceImpl();
 	ICategoryService categoryService = new CategoryServiceImpl();
-	IStyleValueService styleValueService = new StyleValueImpl();
+	IOrderService orderService = new OrderServiceImpl();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -54,6 +56,8 @@ public class AdminController extends HttpServlet {
 			getAllCategory(req, resp);
 		} else if (url.contains("/admin/addcategory")) {
 			getAddCategory(req, resp);
+		} else if (url.contains("/admin/category/edit")) {
+			getEditCategory(req, resp);
 		} else if (url.contains("/admin/customer")) {
 			getAllUser(req, resp);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/customer.jsp");
@@ -67,7 +71,33 @@ public class AdminController extends HttpServlet {
 			}
 		} else if (url.contains("/admin/store")) {
 			getAllStore(req, resp);
+		} else if (url.contains("/admin/orders")) {
+			getAllOrder(req, resp);
 		}
+	}
+	
+	
+
+	private void getEditCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		List<CategoryModel> listCategory = categoryService.getAll();
+		req.setAttribute("listCategory", listCategory);
+
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/addCategory.jsp");
+		rDispatcher.forward(req, resp);
+	}
+
+	private void getAllOrder(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		List<OrderModel> listOrder = orderService.getAll();
+		req.setAttribute("listOrder", listOrder);
+
+		List<StoreModel> listStore = storeService.getAll();
+		req.setAttribute("listStore", listStore);
+
+		List<UserModel> listUser = userService.getAll();
+		req.setAttribute("listUser", listUser);
+
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/orders.jsp");
+		rDispatcher.forward(req, resp);
 	}
 
 	private void editStatus(HttpServletRequest req, HttpServletResponse resp) throws URISyntaxException, IOException, ServletException {
@@ -82,7 +112,7 @@ public class AdminController extends HttpServlet {
 				if (url.contains("banning")) {
 					String slug = parts[parts.length - 1].replace("banning-", "");
 					System.out.println(slug);
-	
+
 					StoreModel storeModel = storeService.getBySlug(slug);
 					if (storeModel == null) {
 						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
@@ -94,7 +124,7 @@ public class AdminController extends HttpServlet {
 				} else {
 					String slug = parts[parts.length - 1].replace("liencing-", "");
 					System.out.println(slug);
-	
+
 					StoreModel storeModel = storeService.getBySlug(slug);
 					if (storeModel == null) {
 						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
@@ -144,44 +174,42 @@ public class AdminController extends HttpServlet {
 		if (url.contains("/admin/addcategory")) {
 			postAddCategory(req, resp);
 		}
-
 	}
 
-	private void postAddCategory(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException, ServletException {
+	private void postAddCategory(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-
+		
 		CategoryModel category = new CategoryModel();
-
+		
 		String name = req.getParameter("categoryName");
 		String slug = SlugUtil.toSlug(name);
 		int indexOfDash = slug.lastIndexOf("-");
 		if (indexOfDash != -1) {
-			slug = slug.substring(0, indexOfDash);
+		    slug = slug.substring(0, indexOfDash);
 		}
-
+		
 		String categoryId = req.getParameter("categoryId");
 		try {
 			category.setCategoryId(Integer.parseInt(categoryId));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		Part imagePart = req.getPart("image");
 
 		if (imagePart != null && imagePart.getSize() != 0) {
-			// Tên file duy nhất
-			String fileName = "image" + System.currentTimeMillis();
+		    // Tên file duy nhất
+		    String fileName = "image" + System.currentTimeMillis();
 
-			// Xử lý tải lên và lưu trữ hình ảnh
-			String imagePath = UploadUtils.processUpload("image", req, Constant.DIR, fileName);
-			category.setImage(imagePath);
-		}
+		    // Xử lý tải lên và lưu trữ hình ảnh
+		    String imagePath = UploadUtils.processUpload("image", req, Constant.DIR, fileName);
+		    category.setImage(imagePath);
+		} 
 
 		category.setName(name);
 		category.setSlug(slug);
-
+		
 		categoryService.insert(category);
 		resp.sendRedirect("categories");
 	}
