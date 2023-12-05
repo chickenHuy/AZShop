@@ -149,11 +149,7 @@ public class VenderController extends HttpServlet {
 		String saveType = req.getParameter("save");
 		String message = req.getParameter("message");
 		String error = req.getParameter("error");
-		String searchTerm = req.getParameter("search");
-		if (searchTerm != null) {
-				searchTerm = URLDecoder.decode(searchTerm, "UTF-8");
-				System.out.println(searchTerm);
-		}
+		String searchText = req.getParameter("search");
 		if (message!= null)
 		{
 			req.setAttribute("message", message);
@@ -165,52 +161,18 @@ public class VenderController extends HttpServlet {
 		if (saveType != null) {
 			req.setAttribute("saveType", saveType);
 		}
-			List<ProductModel> listProductModels;
-			if (saveType != null && saveType.equals("draft"))
-			{
-				if (categorySlug != null && categorySlug != "")
-				{
-					CategoryModel categoryModel = categoryService.getCategoryBySlug(categorySlug);
-					if (categoryModel == null)
-					{	
-						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-						return;
-					}
-					listProductModels = productService.getByCategoryIdAndStoreIdAndDraft(categoryModel.getId(), 0);
-				}
-				else {
-					listProductModels = productService.getByStoreIdAndDraft(0);
-				}
-			}
-			else if (saveType != null && saveType.equals("publish")){
-				if (categorySlug != null && categorySlug != "")
-				{
-					CategoryModel categoryModel = categoryService.getCategoryBySlug(categorySlug);
-					if (categoryModel == null)
-					{	
-						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-						return;
-					}
-					listProductModels = productService.getByCategoryIdAndStoreIdAndPublish(categoryModel.getId(), 0);
-				}
-				else {
-					listProductModels = productService.getByStoreIdAndPublish(0);
-				}
-			}
-		else if (categorySlug != null && categorySlug != "")
-		{
-			CategoryModel categoryModel = categoryService.getCategoryBySlug(categorySlug);
-			if (categoryModel == null)
-			{	
-				req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-				return;
-			}
-			listProductModels = productService.getByCategoryIdAndStoreId(categoryModel.getId(), 0);
+		List<ProductModel> listProductModels = null;
+		CategoryModel categoryModel = categoryService.getCategoryBySlug(categorySlug);
+		if (categorySlug == null)
+		{	
+			listProductModels = productService.getBySearch(-1, 0, saveType, searchText);
+		}
+		else if (categoryModel == null) {
+			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 		}
 		else {
-			listProductModels = productService.getByStoreId(0);
+			listProductModels = productService.getBySearch(categoryModel.getId(), 0, saveType, searchText);
 		}
-		
 		List<CategoryModel> listCategoryModels = categoryService.getAll();
 		List<StyleValueModel> listStyleValueModels = styleValueService.getAll();
 		req.setAttribute("products", listProductModels);
@@ -233,6 +195,16 @@ public class VenderController extends HttpServlet {
 	}
 
 	private void doGetProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String message = req.getParameter("message");
+		String error = req.getParameter("error");
+		if (message!= null)
+		{
+			req.setAttribute("message", message);
+		}
+		if (error!= null)
+		{
+			req.setAttribute("error", error);
+		}
 		String url = req.getRequestURL().toString();
 		String categoryIdParam = req.getParameter("categoryId");
 		String styleIdParam = req.getParameter("styleId");
@@ -457,59 +429,59 @@ public class VenderController extends HttpServlet {
 	}
 
 	private void NewProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-					try {
-						
-					String name = req.getParameter("name");
-					String slug = SlugUtil.toSlug(name);
-					String description = req.getParameter("description");
-					BigDecimal price = new BigDecimal(req.getParameter("price"));
-					int quantity = Integer.parseInt(req.getParameter("quantity"));
-					Boolean isActive = true;
-					if (req.getParameter("isActive").equals("0")) {
-						isActive = false;
-					}
-					String video = req.getParameter("video");
-					int categoryId = Integer.parseInt(req.getParameter("categoryId"));
-					int styleValueId = Integer.parseInt(req.getParameter("styleValueId"));
-					int storeId = 0;
-					
-					
-					ProductModel productModel = new ProductModel(name, slug, description, price, quantity, isActive, categoryId, styleValueId,storeId, video);
-					if (req.getPart("video").getSize() != 0)
-					{
-						String fileName = "" + System.currentTimeMillis();
-						productModel.setVideo(UploadUtils.processUpload("video", req, Constant.DIR, fileName));
-					}
-					
-					
-					productService.insert(productModel);
-					
-					productModel = productService.getBySlug(slug);
-					String imageName = "image";
-					for (int i = 1; i <= 6; i++) {
-						
-						imageName += String.valueOf(i);
-						
-						
-						if (req.getPart(imageName).getSize() != 0)
-						{
-							ImageModel imageModel = new ImageModel();
-							String fileName = String.valueOf(i);
-							
-							fileName +=  System.currentTimeMillis();
-							imageModel.setImage(UploadUtils.processUpload(imageName, req, Constant.DIR, fileName));
-							imageModel.setProductId(productModel.getId());
-							
-							imageService.insert(imageModel);
-						}
-						imageName = "image";
-						
-					}
-					resp.sendRedirect("all?message=The product has been successfully added.");
-					} catch (Exception e) {
-						e.printStackTrace();
-						resp.sendRedirect("all?error=The addition of the product has failed.");
-					}
+		try {
+			
+		String name = req.getParameter("name");
+		String slug = SlugUtil.toSlug(name);
+		String description = req.getParameter("description");
+		BigDecimal price = new BigDecimal(req.getParameter("price"));
+		int quantity = Integer.parseInt(req.getParameter("quantity"));
+		Boolean isActive = true;
+		if (req.getParameter("isActive").equals("0")) {
+			isActive = false;
+		}
+		String video = req.getParameter("video");
+		int categoryId = Integer.parseInt(req.getParameter("categoryId"));
+		int styleValueId = Integer.parseInt(req.getParameter("styleValueId"));
+		int storeId = 0;
+		
+		
+		ProductModel productModel = new ProductModel(name, slug, description, price, quantity, isActive, categoryId, styleValueId,storeId, video);
+		if (req.getPart("video").getSize() != 0)
+		{
+			String fileName = "" + System.currentTimeMillis();
+			productModel.setVideo(UploadUtils.processUpload("video", req, Constant.DIR, fileName));
+		}
+		
+		
+		productService.insert(productModel);
+		
+		productModel = productService.getBySlug(slug);
+		String imageName = "image";
+		for (int i = 1; i <= 6; i++) {
+			
+			imageName += String.valueOf(i);
+			
+			
+			if (req.getPart(imageName).getSize() != 0)
+			{
+				ImageModel imageModel = new ImageModel();
+				String fileName = String.valueOf(i);
+				
+				fileName +=  System.currentTimeMillis();
+				imageModel.setImage(UploadUtils.processUpload(imageName, req, Constant.DIR, fileName));
+				imageModel.setProductId(productModel.getId());
+				
+				imageService.insert(imageModel);
+			}
+			imageName = "image";
+			
+		}
+		resp.sendRedirect("?message=The product has been successfully added.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect("?error=The addition of the product has failed.");
+		}
 	}
 
 }
