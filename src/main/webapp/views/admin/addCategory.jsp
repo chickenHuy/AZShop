@@ -33,7 +33,7 @@
 							<div class="mb-4">
 								<h5 class="mb-3">Category Name</h5>
 								<input type="text" class="form-control"
-									placeholder="write name here...." name="categoryName">
+									placeholder="write name here...." name="categoryName" value=${category.name}>
 							</div>
 							<div class="mb-4">
 								<h5 class="mb-3">Display images</h5>

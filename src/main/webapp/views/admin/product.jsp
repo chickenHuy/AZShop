@@ -7,7 +7,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-s
 <main class="page-content">
 	<!--breadcrumb-->
 	<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -38,32 +37,29 @@ s
 	</div>
 
 	<div class="row g-3">
-		<div class="col-auto">
-			<div class="position-relative">
-				<input class="form-control px-5" type="search"
-					placeholder="Search Products"> <span
-					class="material-symbols-outlined position-absolute ms-3 translate-middle-y start-0 top-50 fs-5">search</span>
-			</div>
-		</div>
 		<div class="col-auto flex-grow-1 overflow-auto">
-			<div class="btn-group position-static">
-				<div class="btn-group position-static">
-					<select class="form-select" id="Category" name="categoryId">
-						<c:forEach var="category" items="${listCategory}">
-							<option value=${category.id}>${category.name}</option>
-						</c:forEach>
-					</select>
-				</div>
-			</div>
+			<form action="/AZShop/admin/productsByCategory" method="get"
+				class="d-flex">
+				<select class="form-select" id="Category" name="categoryId"
+					style="width: 200px;">
+					<option value="-1">-- Select Category --</option> <!-- Lựa chọn với giá trị null -->
+					<c:forEach var="category" items="${listCategory}">
+						<option value="${category.id}">${category.name}</option>
+					</c:forEach>
+				</select>
+				<div class="mx-2"></div> <!-- Khoảng trắng giữa select và button -->
+				<button type="submit" class="btn btn-primary">Filter</button>
+			</form>
 		</div>
 	</div>
+
 	<!--end row-->
 
 	<div class="card mt-4">
 		<div class="card-body">
 			<div class="product-table">
 				<div class="table-responsive white-space-nowrap">
-					<table class="table align-middle">
+					<table id="example2" class="table align-middle">
 						<thead class="table-light">
 							<tr>
 								<th>Product Name</th>
@@ -75,7 +71,7 @@ s
 								<th>Action</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="productTableBody">
 							<c:forEach var="product" items="${listProduct}">
 								<tr>
 									<td>${product.name}</td>
@@ -84,16 +80,16 @@ s
 									<td>${product.quantity}</td>
 									<td>${product.sold}</td>
 									<td>${product.rating}</td>
-									<td>
-										<c:choose>
-										    <c:when test="${product.isActive}">
-										        <a class="dropdown-item" href='<c:url value="/admin/product/edit-status/banning-${product.slug}"/>'>Banning</a>
-										    </c:when>
-										    <c:otherwise>
-										        <a class="dropdown-item" href='<c:url value="/admin/product/edit-status/liencing-${product.slug}"/>'>Liencing</a>
-										    </c:otherwise>
-										</c:choose>
-									</td>
+									<td><c:choose>
+											<c:when test="${product.isActive}">
+												<a class="dropdown-item"
+													href='<c:url value="/admin/product/edit-status/banning-${product.slug}"/>'>Banning</a>
+											</c:when>
+											<c:otherwise>
+												<a class="dropdown-item"
+													href='<c:url value="/admin/product/edit-status/liencing-${product.slug}"/>'>Liencing</a>
+											</c:otherwise>
+										</c:choose></td>
 								</tr>
 							</c:forEach>
 						</tbody>
