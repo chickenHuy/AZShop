@@ -9,6 +9,7 @@ public interface ICategoryDAO {
 	    CategoryModel getById(int id);
 	    List<CategoryModel> getAll();
 	    List<CategoryModel> getChildCategory(int parentId);
+	    List<CategoryModel> getParentCategory();
 	    void update(CategoryModel category);
 	    void delete(int id);
 	    CategoryModel getCategoryBySlug(String slug);

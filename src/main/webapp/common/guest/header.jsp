@@ -13,7 +13,7 @@
 						Stonecoal Road</a></li>
 			</ul>
 			<ul class="header-links pull-right">
-				<li><a href='<c:url value="/guest-register"/>'><i class="fa fa-user-o"></i> Tài khoản</a></li>
+				<li><a href="${pageContext.request.contextPath}/login-customer" /><i class="fa fa-user-o"></i> Tài khoản</a></li>
 			</ul>
 		</div>
 	</div>
@@ -142,12 +142,9 @@
 				<ul class="main-nav nav navbar-nav">
 					<li><a href='<c:url value="/guest-home"/>'>Trang chủ</a></li>
 					<li><a href='<c:url value="/guest-clothing"/>'>Sản phẩm hot</a></li>
-					<li><a href='<c:url value="/guest-clothing"/>'>Thời trang nam</a></li>
-					<li><a href='<c:url value="/guest-clothing"/>'>Thời trang nữ</a></li>
-					<li><a href='<c:url value="/guest-clothing"/>'>Phụ kiện thời trang</a></li>					
-					<li><a href='<c:url value="/guest-clothing"/>'>Điện thoại</a></li>
-					<li><a href='<c:url value="/guest-clothing"/>'>Laptop</a></li>	
-					<li><a href='<c:url value="/guest-clothing"/>'>Điện gia dụng</a></li>				
+					<c:forEach var="category" items="${categoryParentList}">
+						<li><a href='<c:url value="/guest/category/${category.slug}"/>'>${category.name}</a></li>
+					</c:forEach>
 				</ul>
 				<!-- /NAV -->
 			</div>
