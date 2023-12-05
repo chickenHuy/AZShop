@@ -120,7 +120,7 @@ public class ProductModel implements Serializable {
 		this.sold = sold;
 	}
 
-	public boolean isActive() {
+	public boolean getIsActive() {
 		return isActive;
 	}
 
