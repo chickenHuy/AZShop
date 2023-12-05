@@ -2,6 +2,8 @@ package com.azshop.controllers.guest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,9 +66,9 @@ public class GuestController extends HttpServlet{
 				e.printStackTrace();
 			}
 		}
-		else if (url.contains("guest/category/man-fashion")) {
+		else if (url.contains("guest/category")) {
 			try {
-				getAllClothing(req, resp);
+				getCategory(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -87,6 +89,52 @@ public class GuestController extends HttpServlet{
 		}
 	}
 	
+	private void getCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String url = req.getRequestURL().toString();
+		if (url.contains("/category")) {
+			String pageCurrent = "category";
+			URI uri;
+			try {
+	
+				uri = new URI(url);
+				String path = uri.getPath();
+				System.out.println("Extracted path: " + path);
+				
+				String[] parts = path.split("/");
+	
+				if (parts.length > 0) {
+					String slug = parts[parts.length - 1];
+					req.setAttribute("slug", slug);
+					pageCurrent = pageCurrent + slug;
+	
+					// Print the slug to the console for debugging
+					System.out.println("Extracted Slug: " + slug);
+					
+					try {
+		                CategoryModel categoryParent = categoryService.getCategoryBySlug(slug);
+
+		                if (categoryParent == null) {
+		                    req.getRequestDispatcher("/views/guest/404.jsp").forward(req, resp);
+		                } else {
+
+		                    List<CategoryModel> categoryChildList = categoryService.getChildCategory(categoryParent.getId());
+
+		                    req.setAttribute("categoryChildList", categoryChildList);
+		                }
+		            } catch (Exception e) {
+		                e.printStackTrace();
+		            }
+					
+				}
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+			
+			RequestDispatcher rd = req.getRequestDispatcher("/views/guest/category.jsp");
+            rd.forward(req, resp);
+		}
+	}
+
 	private void findProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// ma hoa UTF-8
 		req.setCharacterEncoding("UTF-8");
@@ -132,15 +180,6 @@ public class GuestController extends HttpServlet{
 		req.setAttribute("imageRelateds", imageRelateds);
 		
 		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/product.jsp");
-		rd.forward(req, resp);
-	}
-
-	private void getAllClothing(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<ProductModel> productList = productService.getAll();
-		
-		req.setAttribute("productList",productList);
-		
-		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/clothing.jsp");
 		rd.forward(req, resp);
 	}
 
