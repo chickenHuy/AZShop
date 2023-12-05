@@ -89,6 +89,16 @@ public class GuestController extends HttpServlet{
 		}
 	}
 	
+	public int countProductsInCategory(int categoryId) {
+        // Get products by category
+        List<ProductModel> productList = productService.getByCategoryId(categoryId);
+
+        // Count the number of products
+        int productCount = (productList != null) ? productList.size() : 0;
+
+        return productCount;
+    }
+	
 	private void getCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURL().toString();
 		if (url.contains("/category")) {
@@ -118,6 +128,12 @@ public class GuestController extends HttpServlet{
 		                } else {
 
 		                    List<CategoryModel> categoryChildList = categoryService.getChildCategory(categoryParent.getId());
+		                    
+		                    for (CategoryModel categoryChild : categoryChildList) {
+								int countProduct = countProductsInCategory(categoryChild.getId());
+								
+								categoryChild.setCountProduct(countProduct);
+							}
 
 		                    req.setAttribute("categoryChildList", categoryChildList);
 		                }

@@ -32,7 +32,8 @@ import com.azshop.services.*;
 * 50)
 
 @WebServlet(urlPatterns = { "/admin/dashboard", "/admin/product", "/admin/customer", "/admin/store",
-		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit/*", "/admin/store/edit-status/*" })
+		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit/*", "/admin/store/edit-status/*", 
+		"/admin/product/edit-status/*" })
 		
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -50,6 +51,13 @@ public class AdminController extends HttpServlet {
 		if (url.contains("/admin/dashboard")) {
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/dashboard.jsp");
 			rDispatcher.forward(req, resp);
+		}else if (url.contains("/admin/product/edit-status")) {
+			try {
+				editProductStatus(req, resp);
+			} catch (URISyntaxException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (url.contains("/admin/product")) {
 			getAllProduct(req, resp);
 		} else if (url.contains("/admin/categories")) {
@@ -73,14 +81,58 @@ public class AdminController extends HttpServlet {
 			getAllStore(req, resp);
 		} else if (url.contains("/admin/orders")) {
 			getAllOrder(req, resp);
-		}
+		} 
 	}
 	
 	
 
+	private void editProductStatus(HttpServletRequest req, HttpServletResponse resp) throws URISyntaxException, ServletException, IOException {
+		
+		String url = req.getRequestURL().toString();
+		URI uri;
+		try {
+			uri = new URI(url);
+			String path = uri.getPath();
+			String[] parts = path.split("/");
+			PrintWriter out = resp.getWriter();
+			if (parts.length > 0) {
+				if (url.contains("banning")) {
+					String slug = parts[parts.length - 1].replace("banning-", "");
+
+					ProductModel productModel = productService.getBySlug(slug);
+					if (productModel == null) {
+						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+					} else {
+						productModel.setActive(false);
+						productService.update(productModel);
+						getAllProduct(req, resp);
+					}
+				} else {
+					String slug = parts[parts.length - 1].replace("liencing-", "");
+
+					ProductModel productModel = productService.getBySlug(slug);
+					if (productModel == null) {
+						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+					} else {
+						productModel.setActive(true);
+						productService.update(productModel);
+						getAllProduct(req, resp);
+					}
+				}
+
+			}
+		} catch (Exception e) {
+			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+		}
+	}
+
+
+
 	private void getEditCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<CategoryModel> listCategory = categoryService.getAll();
 		req.setAttribute("listCategory", listCategory);
+		
+		//CategoryModel category = categoryService.getCategoryBySlug(slug);
 
 		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/addCategory.jsp");
 		rDispatcher.forward(req, resp);
@@ -102,6 +154,7 @@ public class AdminController extends HttpServlet {
 
 	private void editStatus(HttpServletRequest req, HttpServletResponse resp) throws URISyntaxException, IOException, ServletException {
 		String url = req.getRequestURL().toString();
+		System.out.println(url);
 		URI uri;
 		try {
 			uri = new URI(url);
@@ -111,7 +164,6 @@ public class AdminController extends HttpServlet {
 			if (parts.length > 0) {
 				if (url.contains("banning")) {
 					String slug = parts[parts.length - 1].replace("banning-", "");
-					System.out.println(slug);
 
 					StoreModel storeModel = storeService.getBySlug(slug);
 					if (storeModel == null) {

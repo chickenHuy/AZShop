@@ -55,8 +55,6 @@ Table OF Contents
 	Typography
 \*----------------------------*/
 
-
-
 body {
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
@@ -207,7 +205,6 @@ textarea.input {
 .input-radio label, .input-checkbox label {
   font-weight: 500;
   min-height: 20px;
-  padding-left: 20px;
   margin-bottom: 5px;
   cursor: pointer;
 }
@@ -1164,7 +1161,7 @@ textarea.input {
 }
 
 .products-slick .product.slick-slide {
-  margin: 15px 15px 75px 15px;
+  margin: 15px;
 }
 
 .products-tabs>.tab-pane {
