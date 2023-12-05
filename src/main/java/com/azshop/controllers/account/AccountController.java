@@ -128,7 +128,7 @@ public class AccountController extends HttpServlet{
 			resp.sendRedirect(req.getContextPath() + "/customer-home");
 		} else {
 			// Đăng nhập không thành công, đặt thông báo lỗi vào request
-	        req.setAttribute("loginError", "Thông tin đăng nhập không chính xác");
+	        req.setAttribute("loginError", "Thông tin đăng nhập không chính xác!");
 	        // Forward lại đến trang login.jsp để hiển thị thông báo lỗi
 	        req.getRequestDispatcher("/views/account/login.jsp").forward(req, resp);
 		}
