@@ -40,4 +40,9 @@ public class StoreServiceImpl implements IStoreService {
 		storeDAO.delete(id);
 	}
 
+	@Override
+	public StoreModel getBySlug(String slug) {
+		return storeDAO.getBySlug(slug);
+	}
+
 }

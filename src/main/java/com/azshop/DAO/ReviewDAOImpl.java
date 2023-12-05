@@ -49,7 +49,7 @@ public class ReviewDAOImpl implements IReviewDAO {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, id);
 			rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				reviewModel.setId(rs.getInt("id"));
 				reviewModel.setUserId(rs.getInt("userId"));
 				reviewModel.setProductId(rs.getInt("productId"));

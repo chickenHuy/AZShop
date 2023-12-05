@@ -11,4 +11,5 @@ public interface IStoreDAO {
 	List<StoreModel> getByStoreLevelId(int storeLevelId);
 	void update(StoreModel store);
 	void delete(int id);
+	StoreModel getBySlug(String slug);
 }

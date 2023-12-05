@@ -16,4 +16,6 @@ public interface IStoreService {
 	void update(StoreModel store);
 
 	void delete(int id);
+	
+	StoreModel getBySlug(String slug);
 }
