@@ -16,7 +16,7 @@ import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
 
-@WebServlet(urlPatterns = {"/login-customer", "/verify-customer", "/register-customer", "/forget-customer", "/logout-customer"})
+@WebServlet(urlPatterns = {"/login-customer", "/verify-customer", "/register-customer", "/forget-customer", "/logout-customer", "/reset-success-customer"})
 public class AccountController extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
@@ -37,6 +37,13 @@ public class AccountController extends HttpServlet{
 		else if (url.contains("logout-customer")) {
 			getLogout(req, resp);
 		}
+		else if (url.contains("reset-success-customer")) {
+			getResetSuccess(req, resp);
+		}
+	}
+
+	private void getResetSuccess(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.getRequestDispatcher("/views/account/reset-success.jsp").forward(req, resp);
 	}
 
 	private void getLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -98,7 +105,7 @@ public class AccountController extends HttpServlet{
 			boolean test = mail.sendEmailForget(user, newPassword);
 			if (test) {
 				userService.updatePassword(user, newPassword);
-				resp.sendRedirect(req.getContextPath() + "/login-customer");
+				resp.sendRedirect(req.getContextPath() + "/reset-success-customer");
 			} else {
 				req.setAttribute("forGetError", "Lỗi khi gửi mail");
 				req.getRequestDispatcher("/views/account/forget.jsp").forward(req, resp);
@@ -149,6 +156,7 @@ public class AccountController extends HttpServlet{
 				userModel.setEmailActive(true);
 				
 				userService.updateStatusEmail(userModel);
+				resp.sendRedirect(req.getContextPath() + "/login-customer");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

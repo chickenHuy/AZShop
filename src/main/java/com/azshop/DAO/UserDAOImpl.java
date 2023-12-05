@@ -209,9 +209,11 @@ public class UserDAOImpl implements IUserDAO {
 
 	@Override
 	public void insertRegister(String firstName, String lastName, String email, String password) {
-		String sql = "INSERT INTO [User](firstName, lastName, slug, email, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, point, eWallet, createAt) VALUES (?, ?, ?, ?, 'false', 'false', ?, ?, 'customer', '1', 0, 0, GetDate())";
+		String sql = "INSERT INTO [User](firstName, lastName, slug, cartId, email, phone, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, point, eWallet, createAt) VALUES (?, ?, ?, ?, ?, ?, 'false', 'false', ?, ?, 'customer', '1', 0, 0, GetDate())";
 		String slugString = slugUtil.toSlug(firstName + " " + lastName);
 		String salt = Integer.toString(random.nextInt(1000000000 - 1 + 1) + 1);
+		String cartId = Integer.toString(random.nextInt(100000 - 1 + 1) + 1);
+		String phone = Integer.toString(random.nextInt(1000000000 - 1 + 1) + 1);
 		try {
 			conn = new DBConnection().getConnection();
 			
@@ -220,9 +222,11 @@ public class UserDAOImpl implements IUserDAO {
 			ps.setString(1, firstName);
 			ps.setString(2, lastName);
 			ps.setString(3, slugString);
-			ps.setString(4, email);
-			ps.setString(5, salt);
-			ps.setString(6, password + "-" + salt);
+			ps.setString(4, cartId);
+			ps.setString(5, email);
+			ps.setString(6, phone);
+			ps.setString(7, salt);
+			ps.setString(8, password + "-" + salt);
 			
 			ps.executeUpdate();
 			
