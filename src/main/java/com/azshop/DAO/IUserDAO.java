@@ -22,4 +22,6 @@ public interface IUserDAO {
 	void updateStatusEmail(UserModel user);
 	
 	UserModel getByEmail(String email);
+	
+	void updatePassword(UserModel user, String newPassword);
 }

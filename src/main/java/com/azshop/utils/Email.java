@@ -59,6 +59,47 @@ public class Email {
 		}
 		return testBoolean;
 	}
+	
+	public Boolean sendEmailForget(UserModel user, String newPassword) {
+		Boolean testBoolean = false;
+
+		String toEmail = user.getEmail();
+		String fromEmail = "hieuthanhtran2908003@gmail.com";
+		String password = "ifadpcrmlgomgimj";
+
+		try {
+			Properties properties = configEmail(new Properties());
+
+			Session session = Session.getInstance(properties, new Authenticator() {
+				@Override
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(fromEmail, password);
+				}
+			});
+
+			// Set email message details
+			Message message = new MimeMessage(session);
+			message.setHeader("Content-Type", "text/plain; charset=UTF-8");
+			// Set from email address
+			message.setFrom(new InternetAddress(fromEmail));
+			// Set to email address or destination email address
+			message.setRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
+
+			// Set email subject
+			message.setSubject("New your password");
+
+			// Set message text
+			message.setText("Your is password: " + newPassword);
+
+			// send the message
+			Transport.send(message);
+			testBoolean = true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return testBoolean;
+	}
 
 	private Properties configEmail(Properties properties) {
 		// your host email smtp server details

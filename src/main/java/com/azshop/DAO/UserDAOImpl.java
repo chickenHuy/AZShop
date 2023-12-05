@@ -289,4 +289,19 @@ public class UserDAOImpl implements IUserDAO {
 		return userModel;
 	}
 
+	@Override
+	public void updatePassword(UserModel user, String newPassword) {
+		String sql = "Update [User] Set hashedPassword = ? WHERE email = ?";
+		try {
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			
+			ps.setString(1, newPassword + "-" + user.getSalt());
+			ps.setString(2, user.getEmail());
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }
