@@ -13,7 +13,7 @@
 						Stonecoal Road</a></li>
 			</ul>
 			<ul class="header-links pull-right">
-				<li><a href='<c:url value="/guest-register"/>'><i class="fa fa-user-o"></i> Tài khoản</a></li>
+				<li><a href="${pageContext.request.contextPath}/login-customer" /><i class="fa fa-user-o"></i> Tài khoản</a></li>
 			</ul>
 		</div>
 	</div>

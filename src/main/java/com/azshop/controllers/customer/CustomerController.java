@@ -33,6 +33,7 @@ public class CustomerController extends HttpServlet{
 	}
 
 	private void getProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
 		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/product.jsp");
 		rd.forward(req, resp);
 	}

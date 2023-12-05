@@ -13,9 +13,10 @@ import javax.servlet.http.HttpSession;
 import com.azshop.models.UserModel;
 import com.azshop.services.IUserService;
 import com.azshop.services.UserServiceImpl;
+import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
 
-@WebServlet(urlPatterns = {"/register-customer", "/verify-customer", "/login-customer", "/forget-customer"})
+@WebServlet(urlPatterns = {"/login-customer", "/verify-customer", "/register-customer", "/forget-customer"})
 public class AccountController extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
@@ -36,7 +37,7 @@ public class AccountController extends HttpServlet{
 	}
 
 	private void getForget(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.getRequestDispatcher("/views/account/forgetPassword.jsp").forward(req, resp);
+		req.getRequestDispatcher("/views/account/forget.jsp").forward(req, resp);
 	}
 
 	private void getLogin(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -94,11 +95,14 @@ public class AccountController extends HttpServlet{
 		if (user != null) {
 			HttpSession session = req.getSession(true);
 			session.setAttribute("account", user);
-			resp.sendRedirect(req.getContextPath() + "/guest-home");
+			Constant.SESSION = session;
+			resp.sendRedirect(req.getContextPath() + "/customer-home");
 		} else {
-			req.getRequestDispatcher("views/account/login.jsp").forward(req, resp);
+			// Đăng nhập không thành công, đặt thông báo lỗi vào request
+	        req.setAttribute("loginError", "Thông tin đăng nhập không chính xác");
+	        // Forward lại đến trang login.jsp để hiển thị thông báo lỗi
+	        req.getRequestDispatcher("/views/account/login.jsp").forward(req, resp);
 		}
-			
 	}
 
 	private void postVerify(HttpServletRequest req, HttpServletResponse resp) {
@@ -132,7 +136,8 @@ public class AccountController extends HttpServlet{
 		String lastName = req.getParameter("last-name");
 		
 		if (userService.checkExistEmial(email)) {
-			resp.sendRedirect(req.getContextPath() + "/views/account/register.jsp");
+			req.setAttribute("registrationError", "Email đã tồn tại");
+			req.getRequestDispatcher("/views/account/register.jsp").forward(req, resp);
 		} else {
 			Email mail = new Email();
 			String code = mail.getRandom();
