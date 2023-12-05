@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.azshop.DAO.IProductDAO;
 import com.azshop.DAO.ProductDAOImpl;
+import com.azshop.models.CategoryModel;
 import com.azshop.models.ProductModel;
 
 public class ProductServiceImpl implements IProductService{
@@ -74,29 +75,11 @@ public class ProductServiceImpl implements IProductService{
 		return productDAO.countAllByStore(storeId);
 	}
 
+	
 	@Override
-	public List<ProductModel> getByCategoryIdAndStoreId(int categoryId, int storeId) {
-		return productDAO.getByCategoryIdAndStoreId(categoryId, storeId);
-	}
-
-	@Override
-	public List<ProductModel> getByCategoryIdAndStoreIdAndDraft(int categoryId, int storeId) {
-		return productDAO.getByCategoryIdAndStoreIdAndDraft(categoryId, storeId);
-	}
-
-	@Override
-	public List<ProductModel> getByCategoryIdAndStoreIdAndPublish(int categoryId, int storeId) {
-		return productDAO.getByCategoryIdAndStoreIdAndPublish(categoryId, storeId);
-	}
-
-	@Override
-	public List<ProductModel> getByStoreIdAndDraft(int storeId) {
-		return productDAO.getByStoreIdAndDraft(storeId);
-	}
-
-	@Override
-	public List<ProductModel> getByStoreIdAndPublish(int storeId) {
-		return productDAO.getByStoreIdAndPublish(storeId);
+	public List<ProductModel> getBySearch(int categoryId, int storeId, String isActive, String content)
+	{
+		return productDAO.getBySearch(categoryId, storeId, isActive, content);
 	}
 
 }

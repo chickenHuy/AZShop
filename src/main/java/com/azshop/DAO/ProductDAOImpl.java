@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.azshop.models.CategoryModel;
 import com.azshop.models.ProductModel;
 
 public class ProductDAOImpl implements IProductDAO {
@@ -427,58 +428,46 @@ public class ProductDAOImpl implements IProductDAO {
 	}
 
 	@Override
-	public List<ProductModel> getByCategoryIdAndStoreId(int categoryId, int storeId) {
-		List<ProductModel> listProduct = new ArrayList<ProductModel>();
-		try {
-			String sql = "SELECT * FROM dbo.[Product] WHERE storeId = ? and categoryId = ? and isDeleted = 0";
-			conn = new DBConnection().getConnection();
-			ps = conn.prepareStatement(sql);
-			ps.setInt(1, storeId);
-			ps.setInt(2, categoryId);
-			rs = ps.executeQuery();
+	public List<ProductModel> getBySearch(int categoryId, int storeId, String isActive, String content) {
+	    List<ProductModel> listProduct = new ArrayList<ProductModel>();
 
-			while (rs.next()) {
-				ProductModel product = new ProductModel();
+	    try {
+	        String sql = "SELECT * FROM dbo.[Product] WHERE storeId = ? AND isDeleted = 0";
 
-				product.setId(rs.getInt("id"));
-				product.setName(rs.getString("name"));
-				product.setSlug(rs.getString("slug"));
-				product.setDescription(rs.getString("description"));
-				product.setPrice(rs.getBigDecimal("price"));
-				product.setQuantity(rs.getInt("quantiny"));
-				product.setSold(rs.getInt("sold"));
-				product.setActive(rs.getBoolean("isActive"));
-				product.setVideo(rs.getString("video"));
-				product.setCategoryId(rs.getInt("categoryId"));
-				product.setStyleValueId(rs.getInt("styleValueId"));
-				product.setStoreId(rs.getInt("storeId"));
-				product.setRating(rs.getBigDecimal("rating"));
-				product.setCreateAt(rs.getDate("createAt"));
-				product.setUpdateAt(rs.getDate("updateAt"));
+	        if (categoryId != -1) {
+	            sql += " AND categoryId = ?";
+	        }
 
-				listProduct.add(product);
-			}
+	        if (isActive != null) {
+	        	if (isActive.equals("draft"))
+	        		sql += " AND isActive = 0";
+	        	if (isActive.equals("publish")) {
+	        		sql += " AND isActive = 1";
+				}
+	        }
+	        if (content != null && !content.isEmpty()) {
+	            sql += " AND (name LIKE ? OR description LIKE ?)";
+	        }
 
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return listProduct;
-	}
+	        conn = new DBConnection().getConnection();
+	        ps = conn.prepareStatement(sql);
 
-	@Override
-	public List<ProductModel> getByCategoryIdAndStoreIdAndDraft(int categoryId, int storeId) {
-		List<ProductModel> listProduct = new ArrayList<ProductModel>();
-		try {
-			String sql = "SELECT * FROM dbo.[Product] WHERE storeId = ? and categoryId = ? and isDeleted = 0 and isActive = 0";
-			conn = new DBConnection().getConnection();
-			ps = conn.prepareStatement(sql);
-			ps.setInt(1, storeId);
-			ps.setInt(2, categoryId);
-			rs = ps.executeQuery();
+	        int parameterIndex = 1;
+	        ps.setInt(parameterIndex++, storeId);
 
-			while (rs.next()) {
-				ProductModel product = new ProductModel();
+	        if (categoryId != -1) {
+	            ps.setInt(parameterIndex++, categoryId);
+	        }
+
+	        if (content != null && !content.isEmpty()) {
+	            ps.setString(parameterIndex++, "%" + content + "%");
+	            ps.setString(parameterIndex++, "%" + content + "%");
+	        }
+
+	        rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	        	ProductModel product = new ProductModel();
 
 				product.setId(rs.getInt("id"));
 				product.setName(rs.getString("name"));
@@ -497,130 +486,15 @@ public class ProductDAOImpl implements IProductDAO {
 				product.setUpdateAt(rs.getDate("updateAt"));
 
 				listProduct.add(product);
-			}
+	        }
 
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return listProduct;
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return listProduct;
 	}
 
-	@Override
-	public List<ProductModel> getByCategoryIdAndStoreIdAndPublish(int categoryId, int storeId) {
-		List<ProductModel> listProduct = new ArrayList<ProductModel>();
-		try {
-			String sql = "SELECT * FROM dbo.[Product] WHERE storeId = ? and categoryId = ? and isDeleted = 0 and isActive = 1";
-			conn = new DBConnection().getConnection();
-			ps = conn.prepareStatement(sql);
-			ps.setInt(1, storeId);
-			ps.setInt(2, categoryId);
-			rs = ps.executeQuery();
 
-			while (rs.next()) {
-				ProductModel product = new ProductModel();
-
-				product.setId(rs.getInt("id"));
-				product.setName(rs.getString("name"));
-				product.setSlug(rs.getString("slug"));
-				product.setDescription(rs.getString("description"));
-				product.setPrice(rs.getBigDecimal("price"));
-				product.setQuantity(rs.getInt("quantiny"));
-				product.setSold(rs.getInt("sold"));
-				product.setActive(rs.getBoolean("isActive"));
-				product.setVideo(rs.getString("video"));
-				product.setCategoryId(rs.getInt("categoryId"));
-				product.setStyleValueId(rs.getInt("styleValueId"));
-				product.setStoreId(rs.getInt("storeId"));
-				product.setRating(rs.getBigDecimal("rating"));
-				product.setCreateAt(rs.getDate("createAt"));
-				product.setUpdateAt(rs.getDate("updateAt"));
-
-				listProduct.add(product);
-			}
-
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return listProduct;
-	}
-
-	@Override
-	public List<ProductModel> getByStoreIdAndDraft(int storeId) {
-		List<ProductModel> listProduct = new ArrayList<ProductModel>();
-		try {
-			String sql = "SELECT * FROM dbo.[Product] WHERE storeId = ? and isDeleted = 0 and isActive = 0";
-			conn = new DBConnection().getConnection();
-			ps = conn.prepareStatement(sql);
-			ps.setInt(1, storeId);
-			rs = ps.executeQuery();
-
-			while (rs.next()) {
-				ProductModel product = new ProductModel();
-
-				product.setId(rs.getInt("id"));
-				product.setName(rs.getString("name"));
-				product.setSlug(rs.getString("slug"));
-				product.setDescription(rs.getString("description"));
-				product.setPrice(rs.getBigDecimal("price"));
-				product.setQuantity(rs.getInt("quantiny"));
-				product.setSold(rs.getInt("sold"));
-				product.setActive(rs.getBoolean("isActive"));
-				product.setVideo(rs.getString("video"));
-				product.setCategoryId(rs.getInt("categoryId"));
-				product.setStyleValueId(rs.getInt("styleValueId"));
-				product.setStoreId(rs.getInt("storeId"));
-				product.setRating(rs.getBigDecimal("rating"));
-				product.setCreateAt(rs.getDate("createAt"));
-				product.setUpdateAt(rs.getDate("updateAt"));
-
-				listProduct.add(product);
-			}
-
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return listProduct;
-	}
-
-	@Override
-	public List<ProductModel> getByStoreIdAndPublish(int storeId) {
-		List<ProductModel> listProduct = new ArrayList<ProductModel>();
-		try {
-			String sql = "SELECT * FROM dbo.[Product] WHERE storeId = ? and isDeleted = 0 and isActive = 1";
-			conn = new DBConnection().getConnection();
-			ps = conn.prepareStatement(sql);
-			ps.setInt(1, storeId);
-			rs = ps.executeQuery();
-
-			while (rs.next()) {
-				ProductModel product = new ProductModel();
-
-				product.setId(rs.getInt("id"));
-				product.setName(rs.getString("name"));
-				product.setSlug(rs.getString("slug"));
-				product.setDescription(rs.getString("description"));
-				product.setPrice(rs.getBigDecimal("price"));
-				product.setQuantity(rs.getInt("quantiny"));
-				product.setSold(rs.getInt("sold"));
-				product.setActive(rs.getBoolean("isActive"));
-				product.setVideo(rs.getString("video"));
-				product.setCategoryId(rs.getInt("categoryId"));
-				product.setStyleValueId(rs.getInt("styleValueId"));
-				product.setStoreId(rs.getInt("storeId"));
-				product.setRating(rs.getBigDecimal("rating"));
-				product.setCreateAt(rs.getDate("createAt"));
-				product.setUpdateAt(rs.getDate("updateAt"));
-
-				listProduct.add(product);
-			}
-
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return listProduct;
-	}
 }

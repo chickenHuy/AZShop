@@ -25,6 +25,14 @@
             <div class="form-holder">
                 <div class="form-content">
                     <div class="form-items">
+                    	<%-- Hiển thị thông báo lỗi đăng ký nếu có --%>
+                        <% String registrationError = (String) request.getAttribute("registrationError"); %>
+                        <% if (registrationError != null) { %>
+                            <div class="alert alert-danger" role="alert">
+                                <%= registrationError %>
+                            </div>
+                        <% } %>
+                        
                         <h3>Register new account</h3>
                         <br>
                         <form action="register-customer" method="post">
