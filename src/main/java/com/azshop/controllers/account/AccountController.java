@@ -104,7 +104,7 @@ public class AccountController extends HttpServlet{
 				req.getRequestDispatcher("/views/account/forget.jsp").forward(req, resp);
 			}
 		} else {
-			req.setAttribute("forGetError", "Email không tồn tại");
+			req.setAttribute("forGetError", "Email không tồn tại!");
 			req.getRequestDispatcher("/views/account/forget.jsp").forward(req, resp);
 		}
 	}
