@@ -101,5 +101,15 @@ public class CategoryModel implements Serializable {
 				+ ", image=" + image + ", isDeleted=" + isDeleted + ", createAt=" + createAt + ", updateAt=" + updateAt
 				+ "]";
 	}
+	
+	public int countProduct;
+
+	public int getCountProduct() {
+		return countProduct;
+	}
+
+	public void setCountProduct(int countProduct) {
+		this.countProduct = countProduct;
+	}
 
 }
