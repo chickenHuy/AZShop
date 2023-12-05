@@ -27,7 +27,7 @@ public class ProductDAOImpl implements IProductDAO {
 			ps.setString(3, product.getDescription());
 			ps.setBigDecimal(4, product.getPrice());
 			ps.setInt(5, product.getQuantity());
-			ps.setBoolean(6, product.isActive());
+			ps.setBoolean(6, product.getIsActive());
 			ps.setString(7, product.getVideo());
 			ps.setInt(8, product.getCategoryId());
 			ps.setInt(9, product.getStyleValueId());
@@ -245,7 +245,7 @@ public class ProductDAOImpl implements IProductDAO {
 			ps.setBigDecimal(4, product.getPrice());
 			ps.setInt(5, product.getQuantity());
 			ps.setInt(6, product.getSold());
-			ps.setBoolean(7, product.isActive());
+			ps.setBoolean(7, product.getIsActive());
 			ps.setString(8, product.getVideo());
 			ps.setInt(9, product.getCategoryId());
 			ps.setInt(10, product.getStyleValueId());

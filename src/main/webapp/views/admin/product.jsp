@@ -87,10 +87,10 @@ s
 									<td>
 										<c:choose>
 										    <c:when test="${product.isActive}">
-										        <a href="#">Cấm</a>
+										        <a class="dropdown-item" href='<c:url value="/admin/product/edit-status/banning-${product.slug}"/>'>Banning</a>
 										    </c:when>
 										    <c:otherwise>
-										        <a href="#">Cấp phép</a>
+										        <a class="dropdown-item" href='<c:url value="/admin/product/edit-status/liencing-${product.slug}"/>'>Liencing</a>
 										    </c:otherwise>
 										</c:choose>
 									</td>
