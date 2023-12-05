@@ -5,7 +5,7 @@
 
 		<head>
 			<meta charset="UTF-8">
-			<title>Insert title here</title>
+			<title>Product List</title>
 
 			<style>
 				.form-check-input {
@@ -88,7 +88,7 @@
 				<div class="row g-3">
 					<div class="col-auto">
 						<div class="position-relative">
-							<input class="form-control px-5" type="search" placeholder="Search Products"> <span
+							<input class="form-control px-5" type="search" placeholder="Search Products"  id="searchInput"> <span
 								class="material-symbols-outlined position-absolute ms-3 translate-middle-y start-0 top-50 fs-5">search</span>
 						</div>
 					</div>
@@ -109,35 +109,7 @@
 									</c:forEach>
 								</ul>
 							</div>
-							<div class="btn-group position-static">
-								<button type="button" class="btn border btn-light dropdown-toggle px-4"
-									data-bs-toggle="dropdown" aria-expanded="false">Vendor</button>
-								<ul class="dropdown-menu">
-									<li><a class="dropdown-item" href="javascript:;">Action</a></li>
-									<li><a class="dropdown-item" href="javascript:;">Another
-											action</a></li>
-									<li>
-										<hr class="dropdown-divider">
-									</li>
-									<li><a class="dropdown-item" href="javascript:;">Something
-											else here</a></li>
-								</ul>
-							</div>
-							<div class="btn-group position-static">
-								<button type="button" class="btn border btn-light dropdown-toggle px-4"
-									data-bs-toggle="dropdown" aria-expanded="false">
-									Collection</button>
-								<ul class="dropdown-menu">
-									<li><a class="dropdown-item" href="javascript:;">Action</a></li>
-									<li><a class="dropdown-item" href="javascript:;">Another
-											action</a></li>
-									<li>
-										<hr class="dropdown-divider">
-									</li>
-									<li><a class="dropdown-item" href="javascript:;">Something
-											else here</a></li>
-								</ul>
-							</div>
+							
 						</div>
 					</div>
 					<div class="col-auto">
@@ -250,6 +222,32 @@
 					</div>
 				</div>
 			</main>
+			<script>
+				// Lấy tham chiếu đến trường nhập liệu
+				var searchInput = document.getElementById("searchInput");
+			  
+				// Bắt sự kiện khi người dùng nhấn phím
+				searchInput.addEventListener("keydown", function(event) {
+				  // Kiểm tra xem phím được nhấn có phải là phím Enter không
+				  if (event.key === "Enter") {
+					// Lấy giá trị tìm kiếm từ trường nhập liệu
+					var searchTerm = searchInput.value;
+					
+					// Tạo URL mới bằng cách cộng thêm biến tìm kiếm vào URL hiện tại
+					var currentURL = window.location.href;
+					
+					var regex = /(\?|&)search=([^&]*)/g;
+					currentURL = currentURL.replace(regex, '');
+
+					// Thêm tham số tìm kiếm mới vào URL
+					var newURL = currentURL + (currentURL.includes('?') ? '&' : '?') + "search=" + encodeURI(searchTerm);
+					console.log("After Encoding: " + newURL);
+					// Chuyển hướng đến URL mới
+					window.location.href = newURL;
+				  }
+				});
+			  </script>
 		</body>
+		
 
 		</html>

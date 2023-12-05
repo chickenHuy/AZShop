@@ -96,7 +96,7 @@ public class StoreDAOImpl implements IStoreDAO {
     public StoreModel getById(int id) {
         StoreModel store = new StoreModel();
         try {
-            String sql = "SELECT * FROM Store WHERE id = ?";
+            String sql = "SELECT * FROM Store WHERE id = ? AND isDeleted = 0";
             conn = new DBConnection().getConnection();
 
             ps = conn.prepareStatement(sql);
@@ -133,7 +133,7 @@ public class StoreDAOImpl implements IStoreDAO {
     public List<StoreModel> getAll() {
         List<StoreModel> storeList = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM Store";
+            String sql = "SELECT * FROM Store WHERE isDeleted = 0";
             conn = new DBConnection().getConnection();
 
             ps = conn.prepareStatement(sql);
@@ -207,4 +207,41 @@ public class StoreDAOImpl implements IStoreDAO {
         }
         return storeList;
     }
+
+	@Override
+	public StoreModel getBySlug(String slug) {
+		StoreModel store = new StoreModel();
+        try {
+            String sql = "SELECT * FROM Store WHERE slug = ? AND isDeleted = 0 ";
+            conn = new DBConnection().getConnection();
+
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, slug);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                store.setId(rs.getInt("id"));
+                store.setName(rs.getString("name"));
+                store.setBio(rs.getString("bio"));
+                store.setSlug(rs.getString("slug"));
+                store.setOwnerId(rs.getInt("ownerId"));
+                store.setStoreLevelId(rs.getInt("storeLevelId"));
+                store.setActive(rs.getBoolean("isActive"));
+                store.setDeleted(rs.getBoolean("isDeleted"));
+                store.setAvatar(rs.getString("avatar"));
+                store.setCover(rs.getString("cover"));
+                store.setFeaturedImage(rs.getString("featuredImage"));
+                store.setPoint(rs.getInt("point"));
+                store.setRating(rs.getBigDecimal("rating"));
+                store.seteWallet(rs.getBigDecimal("eWallet"));
+                store.setCreateAt(rs.getDate("createAt"));
+                store.setUpdateAt(rs.getDate("updateAt"));
+            }
+
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return store;
+	}
 }

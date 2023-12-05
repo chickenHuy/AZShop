@@ -68,7 +68,18 @@
         <body>
 
             <main class="page-content">
-                <!--breadcrumb-->
+                <c:if test="${message!=null}">
+					<div class="alert alert-success border-0 bg-success alert-dismissible fade show">
+						<div class="text-white">${message}</div>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					  </div>
+				</c:if>
+				<c:if test="${error!=null}">
+					<div class="alert alert-danger border-0 bg-danger alert-dismissible fade show">
+						<div class="text-white">${error}</div>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				</c:if>
                 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                     <div class="breadcrumb-title pe-3">Product</div>
                     

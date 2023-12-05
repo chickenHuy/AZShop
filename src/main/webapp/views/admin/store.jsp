@@ -122,7 +122,7 @@
 			<div class="card-body">
 				<div class="customer-table">
 					<div class="table-responsive white-space-nowrap">
-						<table class="table align-middle">
+						<table id="example2" class="table align-middle">
 							<thead class="table-light">
 								<tr>
 									<th>Store</th>
@@ -155,12 +155,12 @@
 											<c:when test="${store.active }">
 												<td><span
 													class="lable-table bg-success-subtle text-success rounded border border-success-subtle font-text2 fw-bold">Activated</span></td>
-												<td><a href="javascript:;" class="font-text1">Banning</a></td>
+												<td><a href='<c:url value="/admin/store/edit-status/banning-${store.slug }"/>' class="font-text1">Banning</a></td>
 											</c:when>
 											<c:otherwise>
 												<td><span
 													class="lable-table bg-danger-subtle text-danger rounded border border-danger-subtle font-text2 fw-bold">Banned</span></td>
-												<td><a href="javascript:;" class="font-text1">Licensing</a></td>
+												<td><a href='<c:url value="/admin/store/edit-status/liencing-${store.slug }"/>' class="font-text1">Licensing</a></td>
 											</c:otherwise>
 
 										</c:choose>
