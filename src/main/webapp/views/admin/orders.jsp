@@ -17,7 +17,7 @@ s
 				<ol class="breadcrumb mb-0 p-0">
 					<li class="breadcrumb-item"><a href="javascript:;"><i
 							class="bx bx-home-alt"></i></a></li>
-					<li class="breadcrumb-item active" aria-current="page">Categories</li>
+					<li class="breadcrumb-item active" aria-current="page">Orders</li>
 				</ol>
 			</nav>
 		</div>
@@ -29,7 +29,7 @@ s
 	<div
 		class="product-count d-flex align-items-center gap-3 gap-lg-4 mb-4 fw-bold flex-wrap font-text1">
 		<a href="javascript:;"><span class="me-1">All</span><span
-			class="text-secondary">( ${countAllCategory} )</span></a>
+			class="text-secondary">( ${countAllOrder} )</span></a>
 	</div>
 
 	<div class="row g-3">
@@ -40,10 +40,15 @@ s
 					class="material-symbols-outlined position-absolute ms-3 translate-middle-y start-0 top-50 fs-5">search</span>
 			</div>
 		</div>
-		<div class="col-auto">
-			<div class="d-flex align-items-center gap-2 justify-content-lg-end">
-				<a class="btn btn-primary px-4" href="addcategory"><i
-					class="bi bi-plus-lg me-2"></i>Add Category</a>
+		<div class="col-auto flex-grow-1 overflow-auto">
+			<div class="btn-group position-static">
+				<div class="btn-group position-static">
+					<select class="form-select" id="Category" name="categoryId">
+						<c:forEach var="orders" items="${listOrder}">
+							<option value=${category.id}>${category.name}</option>
+						</c:forEach>
+					</select>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -56,27 +61,34 @@ s
 					<table class="table align-middle">
 						<thead class="table-light">
 							<tr>
-								<th>Category Name</th>
-								<th>Slug</th>
+								<th>Order ID</th>
+								<th>Customer</th>
+								<th>Store</th>
+								<th>Status</th>
 								<th>Date</th>
 								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
-							<c:forEach var="category" items="${listCategory}">
+							<c:forEach var="order" items="${listOrder}">
 								<tr>
-									<td><div class="customer-pic">
-											<img src="${category.image }" class="rounded-circle"
-												width="40" height="40" alt="">
-										</div>
-										<p class="mb-0 customer-name fw-bold">${category.name}</p>
-									</td>
-									<td>${category.slug}</td>
-									<td>${category.updateAt != null ? category.updateAt : category.createAt}</td>
-									<td>
-										<a class="dropdown-item" href='<c:url value="/admin/category/edit/${category.slug}"/>'>Edit</a>
-										<a class="dropdown-item" href="/admin/delete/${category.slug}">Delete</a>
-									</td>
+									<td>${order.id}</td>
+
+									<c:forEach var="user" items="${listUser}">
+										<c:if test="${user.id eq order.userId}">
+											<td>${user.lastName}</td>
+										</c:if>
+									</c:forEach>
+
+									<c:forEach var="store" items="${listStore}">
+										<c:if test="${store.id eq order.storeId}">
+											<td>${store.name}</td>
+										</c:if>
+									</c:forEach>
+
+									<td>${order.status}</td>
+									<td>${order.createAt}</td>
+									<td>Action</td>
 								</tr>
 							</c:forEach>
 						</tbody>
