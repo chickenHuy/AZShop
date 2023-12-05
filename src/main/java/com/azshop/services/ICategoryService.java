@@ -12,6 +12,8 @@ public interface ICategoryService {
 	List<CategoryModel> getAll();
 
 	List<CategoryModel> getChildCategory(int parentId);
+	
+	List<CategoryModel> getParentCategory();
 
 	void update(CategoryModel category);
 

@@ -114,7 +114,7 @@
 									<c:forEach var="product" items="${productList}">
 										<!-- product -->
 										<div class="product">
-											<a href='<c:url value="/guest-product?id=${product.id}"/>'>
+											<a href='<c:url value="/guest/product?id=${product.id}"/>'>
 												<div class="product-img">
 													<!-- Use product-specific information -->
 													<c:set var="hasImages" value="false" />
