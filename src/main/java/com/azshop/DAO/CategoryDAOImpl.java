@@ -106,7 +106,7 @@ public class CategoryDAOImpl implements ICategoryDAO {
 			ps.setInt(1, parentId);
 
 			rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				CategoryModel category = new CategoryModel();
 				category.setId(rs.getInt("id"));
 				category.setCategoryId(rs.getInt("categoryId"));
@@ -192,6 +192,36 @@ public class CategoryDAOImpl implements ICategoryDAO {
 			e.printStackTrace();
 		}
 		return category;
+	}
+
+	@Override
+	public List<CategoryModel> getParentCategory() {
+		List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+		try {
+			String sql = "SELECT * FROM Category WHERE categoryId is null AND isDeleted = 0";
+			conn = new DBConnection().getConnection();
+
+			ps = conn.prepareStatement(sql);
+
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				CategoryModel category = new CategoryModel();
+				category.setId(rs.getInt("id"));
+				category.setCategoryId(rs.getInt("categoryId"));
+				category.setName(rs.getString("name"));
+				category.setSlug(rs.getString("slug"));
+				category.setImage(rs.getString("image"));
+				category.setDeleted(rs.getBoolean("isDeleted"));
+				category.setCreateAt(rs.getDate("createAt"));
+				category.setUpdateAt(rs.getDate("updateAt"));
+				categoryList.add(category);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return categoryList;
 	}
 
 }

@@ -39,7 +39,7 @@ import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
 
-@WebServlet(urlPatterns = {"/guest-home", "/guest-clothing", "/guest-product", "/guest-search"})
+@WebServlet(urlPatterns = {"/guest-home", "/guest/category/*", "/guest/product", "/guest-search"})
 public class GuestController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -53,6 +53,10 @@ public class GuestController extends HttpServlet{
 	
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI().toString();
+		
+		List<CategoryModel> categoryParentList = categoryService.getParentCategory();
+		req.setAttribute("categoryParentList", categoryParentList);
+		
 		if (url.contains("guest-home")) {
 			try {
 				getAllProduct(req, resp);
@@ -60,14 +64,14 @@ public class GuestController extends HttpServlet{
 				e.printStackTrace();
 			}
 		}
-		else if (url.contains("guest-clothing")) {
+		else if (url.contains("guest/category/man-fashion")) {
 			try {
 				getAllClothing(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		else if (url.contains("guest-product")) {
+		else if (url.contains("guest/product")) {
 			try {
 				getProduct(req, resp);
 			} catch (Exception e) {
@@ -93,7 +97,6 @@ public class GuestController extends HttpServlet{
 		
 		List<ProductModel> productList = productService.FindProduct(keyword);
 		
-//		req.setAttribute("product",product);
 		req.setAttribute("productList",productList);
 		
 		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/home.jsp");
@@ -109,10 +112,12 @@ public class GuestController extends HttpServlet{
 		int id = Integer.parseInt(req.getParameter("id"));
 		
 		ProductModel product = productService.getById(id);
-		CategoryModel category = categoryService.getById(product.getCategoryId());
-		List<ProductModel> productRelateds = productService.getByCategoryId(product.getCategoryId());
+		CategoryModel category = categoryService.getById(product.getCategoryId());	
 		StyleValueModel styleValue = styleValueService.getById(product.getStyleValueId());
 		List<ImageModel> imageList = imageService.getByProductId(id);
+		
+		//san pham lien quan
+		List<ProductModel> productRelateds = productService.getByCategoryId(product.getCategoryId());
 		List<ImageModel> imageRelateds = new ArrayList<ImageModel>();
 		for (ProductModel productRelated : productRelateds) {
 			ImageModel imageRelate = imageService.getImage(productRelated.getId());
@@ -133,7 +138,6 @@ public class GuestController extends HttpServlet{
 	private void getAllClothing(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<ProductModel> productList = productService.getAll();
 		
-//		req.setAttribute("product",product);
 		req.setAttribute("productList",productList);
 		
 		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/clothing.jsp");
