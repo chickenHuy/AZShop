@@ -17,9 +17,9 @@
 				<!-- shop -->
 				<div class="col-md-4 col-xs-6">
 					<div class="shop">
-						<a href='<c:url value="/guest-product"/>'>
+						<a href='<c:url value="/guest/product"/>'>
 							<div class="shop-img">
-								<img src="templates/guest/img/product01.png" alt="">
+								<img src="" alt="">
 							</div>
 						</a>
 						<div class="shop-body">
@@ -36,9 +36,9 @@
 				<!-- shop -->
 				<div class="col-md-4 col-xs-6">
 					<div class="shop">
-						<a href='<c:url value="/guest-product"/>'>
+						<a href='<c:url value="/guest/product"/>'>
 							<div class="shop-img">
-								<img src="templates/guest/img/product01.png" alt="">
+								<img src="" alt="">
 							</div>
 						</a>
 						<div class="shop-body">
@@ -55,9 +55,9 @@
 				<!-- shop -->
 				<div class="col-md-4 col-xs-6">
 					<div class="shop">
-						<a href='<c:url value="/guest-product"/>'>
+						<a href='<c:url value="/guest/product"/>'>
 							<div class="shop-img">
-								<img src="templates/guest/img/product01.png" alt="">
+								<img src="" alt="">
 							</div>
 						</a>
 						<div class="shop-body">
@@ -206,12 +206,10 @@
 						<h3 class="title">Sản phẩm bán chạy</h3>
 						<div class="section-nav">
 							<ul class="section-tab-nav tab-nav">
-								<li class="active"><a data-toggle="tab" href="#tab1">Thời trang nam</a></li>
-								<li><a data-toggle="tab" href="#tab1">Thời trang nữ</a></li>
-								<li><a data-toggle="tab" href="#tab1">Phụ kiện thời trang</a></li>
-								<li><a data-toggle="tab" href="#tab1">Điện thoại</a></li>
-								<li><a data-toggle="tab" href="#tab1">Latop</a></li>
-								<li><a data-toggle="tab" href="#tab1">Điện gia dụng</a></li>								
+								<c:forEach var="category" items="${categoryParentList}">
+									<li><a
+										href='<c:url value="/guest/category/${category.slug}"/>'>${category.name}</a></li>
+								</c:forEach>
 							</ul>
 						</div>
 					</div>
@@ -228,7 +226,7 @@
 									<c:forEach var="product" items="${productList}">
 										<!-- product -->
 										<div class="product">
-											<a href='<c:url value="/guest-product"/>'>
+											<a href='<c:url value="/guest/product"/>'>
 												<div class="product-img">
 													<!-- Use product-specific information -->
 													<img src="templates/guest/img/product02.png" alt="">
@@ -306,7 +304,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product07.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -324,7 +322,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product08.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -342,7 +340,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product09.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -362,7 +360,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product01.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -380,7 +378,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product02.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -398,7 +396,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product03.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -429,7 +427,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product04.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -447,7 +445,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product05.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -465,7 +463,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product06.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -485,7 +483,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product07.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -503,7 +501,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product08.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -521,7 +519,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product09.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -554,7 +552,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product01.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -572,7 +570,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product02.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -590,7 +588,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product03.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -610,7 +608,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product04.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -628,7 +626,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product05.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
@@ -646,7 +644,7 @@
 							<!-- product widget -->
 							<div class="product-widget">
 								<div class="product-img">
-									<img src="./img/product06.png" alt="">
+									<img src="" alt="">
 								</div>
 								<div class="product-body">
 									<p class="product-category">Category</p>
