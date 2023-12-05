@@ -85,9 +85,28 @@ public class AccountController extends HttpServlet{
 		}
 	}
 
-	private void postForget(HttpServletRequest req, HttpServletResponse resp) {
-		// TODO Auto-generated method stub
+	private void postForget(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		resp.setContentType("text/html;charset=UTF-8");
 		
+		String email = req.getParameter("username");
+		if (userService.checkExistEmial(email)) {
+			Email mail = new Email();
+			String newPassword = mail.getRandom();
+			
+			UserModel user = userService.getByEmail(email);
+			
+			boolean test = mail.sendEmail(user, newPassword);
+			if (test) {
+				userService.updatePassword(user, newPassword);
+				resp.sendRedirect(req.getContextPath() + "/login-customer");
+			} else {
+				req.setAttribute("forGetError", "Lỗi khi gửi mail");
+				req.getRequestDispatcher("/views/account/forget.jsp").forward(req, resp);
+			}
+		} else {
+			req.setAttribute("forGetError", "Email không tồn tại");
+			req.getRequestDispatcher("/views/account/forget.jsp").forward(req, resp);
+		}
 	}
 
 	private void postLogin(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -24,4 +24,6 @@ public interface IUserService {
 	UserModel getByEmail(String email);
 	
 	UserModel login(String email, String password);
+	
+	void updatePassword(UserModel user, String newPassword);
 }
