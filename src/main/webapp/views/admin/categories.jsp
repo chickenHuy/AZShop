@@ -74,8 +74,8 @@ s
 									<td>${category.slug}</td>
 									<td>${category.updateAt != null ? category.updateAt : category.createAt}</td>
 									<td>
-										<a class="dropdown-item" href='<c:url value="/admin/category/edit/${category.slug}"/>'>Edit</a>
-										<a class="dropdown-item" href="/admin/delete/${category.slug}">Delete</a>
+										<a class="dropdown-item" href='<c:url value="/admin/category/edit/edit-${category.slug}"/>'>Edit</a>
+										<a class="dropdown-item" href='<c:url value="/admin/category/delete/delete-${category.slug}"/>'>Delete</a>
 									</td>
 								</tr>
 							</c:forEach>
