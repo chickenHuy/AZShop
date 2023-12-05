@@ -32,7 +32,7 @@
 				<!-- LOGO -->
 				<div class="col-md-3">
 					<div class="header-logo">
-						<a href="#" class="logo"> <img src="./img/logo.png" alt="">
+						<a href="#" class="logo"> <img src="" alt="">
 						</a>
 					</div>
 				</div>
@@ -76,7 +76,7 @@
 								<div class="cart-list">
 									<div class="product-widget">
 										<div class="product-img">
-											<img src="./img/product01.png" alt="">
+											<img src="" alt="">
 										</div>
 										<div class="product-body">
 											<h3 class="product-name">
@@ -93,7 +93,7 @@
 
 									<div class="product-widget">
 										<div class="product-img">
-											<img src="./img/product02.png" alt="">
+											<img src="" alt="">
 										</div>
 										<div class="product-body">
 											<h3 class="product-name">
