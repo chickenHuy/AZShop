@@ -38,7 +38,7 @@
                         <form action="forget-customer" method="post">
                             <input class="form-control" type="text" name="username" placeholder="E-mail Address" required>
                             <div class="form-button full-width">
-                                <button id="submit" type="submit" class="ibtn btn-forget">Send Reset Link</button>
+                                <button id="submit" type="submit" class="ibtn">Send Reset Link</button>
                             </div>
                         </form>
                     </div>

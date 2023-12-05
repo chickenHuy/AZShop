@@ -95,7 +95,7 @@ public class AccountController extends HttpServlet{
 			
 			UserModel user = userService.getByEmail(email);
 			
-			boolean test = mail.sendEmail(user, newPassword);
+			boolean test = mail.sendEmailForget(user, newPassword);
 			if (test) {
 				userService.updatePassword(user, newPassword);
 				resp.sendRedirect(req.getContextPath() + "/login-customer");
