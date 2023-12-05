@@ -29,15 +29,15 @@
             <div class="menu-title">eCommerce</div>
           </a>
           <ul>
-            <li> <a href="product"><span class="material-symbols-outlined">arrow_right</span>Products</a>
+            <li> <a href='<c:url value="/admin/product"/>'><span class="material-symbols-outlined">arrow_right</span>Products</a>
             </li>
-            <li> <a href="categories"><span class="material-symbols-outlined">arrow_right</span>Categories</a>
+            <li> <a href='<c:url value="/admin/categories"/>'><span class="material-symbols-outlined">arrow_right</span>Categories</a>
             </li>
             <li> <a href="ecommerce-customers.html"><span class="material-symbols-outlined">arrow_right</span>Customers</a>
             </li>
             <li> <a href="ecommerce-customer-details.html"><span class="material-symbols-outlined">arrow_right</span>Customer Details</a>
             </li>
-            <li> <a href="orders"><span class="material-symbols-outlined">arrow_right</span>Orders</a>
+            <li> <a href='<c:url value="/admin/orders"/>'><span class="material-symbols-outlined">arrow_right</span>Orders</a>
             </li>
             <li> <a href="ecommerce-customer-details.html"><span class="material-symbols-outlined">arrow_right</span>Order Details</a>
             </li>
