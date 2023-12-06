@@ -91,9 +91,11 @@
 										class="qty-down">-</span>
 								</div>
 							</div>
-							<button class="add-to-cart-btn">
-								<i class="fa fa-shopping-cart"></i> add to cart
-							</button>
+							<a href="<c:url value='/customer/add-to-cart'/>">
+								<button class="add-to-cart-btn">
+									<i class="fa fa-shopping-cart"></i> add to cart
+								</button>
+							</a>
 						</div>
 
 						<ul class="product-btns">
@@ -396,11 +398,13 @@
 									</button>
 								</div>
 							</div>
-							<div class="add-to-cart">
-								<button class="add-to-cart-btn">
-									<i class="fa fa-shopping-cart"></i> add to cart
-								</button>
-							</div>
+							<a href="<c:url value='/customer/add-to-cart'/>">
+								<div class="add-to-cart">
+									<button class="add-to-cart-btn">
+										<i class="fa fa-shopping-cart"></i> add to cart
+									</button>
+								</div>
+							</a>
 						</div>
 					</div>
 					<!-- /product -->

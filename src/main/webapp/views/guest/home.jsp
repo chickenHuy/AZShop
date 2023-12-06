@@ -165,11 +165,13 @@
 													</button>
 												</div>
 											</div>
-											<div class="add-to-cart">
-												<button class="add-to-cart-btn">
-													<i class="fa fa-shopping-cart"></i> add to cart
-												</button>
-											</div>
+											<a href="<c:url value='/login-customer' />">
+												<div class="add-to-cart">
+													<button class="add-to-cart-btn">
+														<i class="fa fa-shopping-cart"></i> add to cart
+													</button>
+												</div>
+											</a>
 										</div>
 										<!-- /product -->
 									</c:forEach>
