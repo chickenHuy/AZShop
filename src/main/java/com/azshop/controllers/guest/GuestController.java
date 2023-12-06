@@ -121,22 +121,31 @@ public class GuestController extends HttpServlet{
 					System.out.println("Extracted Slug: " + slug);
 					
 					try {
-		                CategoryModel categoryParent = categoryService.getCategoryBySlug(slug);
-
-		                if (categoryParent == null) {
-		                    req.getRequestDispatcher("/views/guest/404.jsp").forward(req, resp);
+						//Lấy category từ slug
+		                CategoryModel category = categoryService.getCategoryBySlug(slug);
+		                
+		                //Kiểm tra xem category này có phải là category gốc không
+		                CategoryModel categoryParent = categoryService.getParentCategory(category.getId());		                
+		                
+		                List<CategoryModel> categoryChildList = categoryService.getChildCategory(category.getId());
+		                
+		                //nếu không phải
+		                if (categoryChildList.size() == 0) {
+		                	categoryChildList = categoryService.getChildCategory(category.getCategoryId());
+		                	categoryParent = categoryService.getById(category.getCategoryId());		                	
 		                } else {
 
-		                    List<CategoryModel> categoryChildList = categoryService.getChildCategory(categoryParent.getId());
-		                    
-		                    for (CategoryModel categoryChild : categoryChildList) {
-								int countProduct = countProductsInCategory(categoryChild.getId());
-								
-								categoryChild.setCountProduct(countProduct);
-							}
+		                    categoryChildList = categoryService.getChildCategory(category.getId());
 
-		                    req.setAttribute("categoryChildList", categoryChildList);
 		                }
+		                
+		                for (CategoryModel categoryChild : categoryChildList) {
+							int countProduct = countProductsInCategory(categoryChild.getId());
+							
+							categoryChild.setCountProduct(countProduct);
+						}
+		                req.setAttribute("categoryChildList", categoryChildList);
+		                req.setAttribute("categoryParent", categoryParent);
 		            } catch (Exception e) {
 		                e.printStackTrace();
 		            }

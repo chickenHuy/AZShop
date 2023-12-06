@@ -242,4 +242,34 @@ public class CategoryDAOImpl implements ICategoryDAO {
 		return categoryList;
 	}
 
+	@Override
+	public CategoryModel getParentCategory(int id) {
+		CategoryModel category = new CategoryModel();
+		try {
+			String sql = "SELECT * FROM Category WHERE id = ? AND categoryId is null AND isDeleted = 0";
+			conn = new DBConnection().getConnection();
+
+			
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, id);
+
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				category.setId(rs.getInt("id"));
+				category.setCategoryId(rs.getInt("categoryId"));
+				category.setName(rs.getString("name"));
+				category.setSlug(rs.getString("slug"));
+				category.setImage(rs.getString("image"));
+				category.setDeleted(rs.getBoolean("isDeleted"));
+				category.setCreateAt(rs.getDate("createAt"));
+				category.setUpdateAt(rs.getDate("updateAt"));
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return category;
+	}
+
 }
