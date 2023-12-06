@@ -1,5 +1,5 @@
 # Nhóm 3 - Dự án AZSHOP
-AZShop là một ứng dụng thương mại điện tử đa chức năng, được xây dựng trên nền tảng Servlet, JSP/JSTL, Bootstrap, JDBC, SQL Server, và Decorator Seitemest. Nó mang lại trải nghiệm mua sắm trực tuyến toàn diện cho cả khách hàng và người bán hàng.
+AZShop là một website thương mại điện tử đa chức năng, được xây dựng trên nền tảng Servlet, JSP/JSTL, Bootstrap, JDBC, SQL Server, và Decorator Seitemest. Nó mang lại trải nghiệm mua sắm trực tuyến toàn diện cho cả khách hàng và người bán hàng.
 ## Thành viên
 
 1. **MSSV:** 21110497
