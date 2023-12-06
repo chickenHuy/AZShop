@@ -10,4 +10,6 @@ public interface IStoreLevelDAO {
 	List<StoreLevelModel> getAll();
 	void update(StoreLevelModel storeLevel);
 	void delete(int id);
+	int getDefaultLevel();
+	
 }
