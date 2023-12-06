@@ -32,6 +32,7 @@ import com.azshop.DAO.IOrderDAO;
 import com.azshop.models.CategoryModel;
 import com.azshop.models.DeliveryModel;
 import com.azshop.models.ImageModel;
+import com.azshop.models.OrderItemModel;
 import com.azshop.models.OrderModel;
 import com.azshop.models.ProductModel;
 import com.azshop.models.StoreModel;
@@ -43,11 +44,13 @@ import com.azshop.services.DeliveryServiceImpl;
 import com.azshop.services.ICategoryService;
 import com.azshop.services.IDeliveryService;
 import com.azshop.services.IImageService;
+import com.azshop.services.IOrderItemService;
 import com.azshop.services.IOrderService;
 import com.azshop.services.IProductService;
 import com.azshop.services.IStyleService;
 import com.azshop.services.IStyleValueService;
 import com.azshop.services.ImageServiceImpl;
+import com.azshop.services.OrderItemServiceImpl;
 import com.azshop.services.OrderServiceImpl;
 import com.azshop.services.ProductServiceImpl;
 import com.azshop.services.StyleServiceImpl;
@@ -73,7 +76,7 @@ public class VenderController extends HttpServlet {
 	IImageService imageService = new ImageServiceImpl();
 	IOrderService orderService = new OrderServiceImpl();
 	IDeliveryService deliveryService = new DeliveryServiceImpl();
-	
+	IOrderItemService orderItemService =  new OrderItemServiceImpl();
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -133,7 +136,7 @@ public class VenderController extends HttpServlet {
 				 getOrderList(req, resp, orderModels);
 			}
 			 else if (url.contains("/detail")) {
-				return;
+				DetailOrder(req,resp,url, storeModel.getId());
 			}
 		}
 		if (url.contains("vendor/logout")) {
@@ -148,6 +151,45 @@ public class VenderController extends HttpServlet {
 		if (url.contains("vendor/order/status")) {
 			ChangeStatusOrder(req, resp);
 		}
+	}
+
+	private void DetailOrder(HttpServletRequest req, HttpServletResponse resp, String url, int storeId) throws ServletException, IOException{
+		URI uri;
+		try {
+			uri = new URI(url);
+			String path = uri.getPath();
+			String[] parts = path.split("/");
+	        if (parts.length > 0) {
+	            int id =  Integer.parseInt(parts[parts.length - 1]);
+	            OrderModel orderModel = orderService.getById(id);
+	            if (orderModel == null) {
+	            	req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+				}
+	            else {
+	            	int countItem = orderItemService.countByOrder(orderModel.getId());
+	            	req.setAttribute("countItem", countItem);
+	            	req.setAttribute("order", orderModel);
+					List<OrderItemModel> orderItemModels = orderItemService.getByOrderId(id);
+					req.setAttribute("orderItems", orderItemModels);
+					List<ProductModel> productModels = productService.getByStoreId(storeId);
+					
+					List<ImageModel> imageModels = new ArrayList<ImageModel>();
+					req.setAttribute("products", productModels);
+					for (ProductModel productModel : productModels) {
+						imageModels.add(imageService.getImage(productModel.getId()));
+					}
+					req.setAttribute("images", imageModels);
+					req.setAttribute("categorys", categoryService.getAll());
+					List<DeliveryModel> deliveryModels = deliveryService.getAll();
+					req.setAttribute("delivery", deliveryModels);
+					req.getRequestDispatcher("/views/vendor/orderDetails.jsp").forward(req, resp);
+	            	}
+	        }
+		} catch (URISyntaxException e) {
+			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void getOrderList(HttpServletRequest req, HttpServletResponse resp, List<OrderModel> orderModels) throws ServletException, IOException {
@@ -179,7 +221,6 @@ public class VenderController extends HttpServlet {
 			String[] parts = path.split("/");
 	        if (parts.length > 0) {
 	            String slug = parts[parts.length - 1];
-	            System.out.println(slug);
 	            ProductModel productModel = productService.getBySlug(slug);
 	            if (productModel == null) {
 	            	req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);

@@ -30,8 +30,7 @@ public class OrderItemServiceImpl implements IOrderItemService {
 
 	@Override
 	public List<OrderItemModel> getByOrderId(int orderId) {
-		// TODO Auto-generated method stub
-		return null;
+		return orderItemDAO.getByOrderId(orderId);
 	}
 
 	@Override
@@ -50,6 +49,11 @@ public class OrderItemServiceImpl implements IOrderItemService {
 	public void delete(int id) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public int countByOrder(int orderId) {
+		return orderItemDAO.countByOrder(orderId);
 	}
 
 }
