@@ -1,4 +1,5 @@
 # Nhóm 3 - Dự án AZSHOP
+AZShop là một ứng dụng thương mại điện tử đa chức năng, được xây dựng trên nền tảng Servlet, JSP/JSTL, Bootstrap, JDBC, SQL Server, và Decorator Seitemest. Nó mang lại trải nghiệm mua sắm trực tuyến toàn diện cho cả khách hàng và người bán hàng.
 ## Thành viên
 
 1. **MSSV:** 21110497
@@ -25,4 +26,8 @@
 8. **MSSV:** 21110637
    - **Họ tên:** Nguyễn Thiện Tâm
 
-## Hướng dẫn sử dụng
+## Môi trường phát triển
+- **Máy chủ web:** Apache Tomcat
+- **Cơ sở dữ liệu:** Microsoft SQL Server
+- **JDK:** Java 20
+- **IDE:** Eclipse
