@@ -1,5 +1,3 @@
- 
-<!--start sidebar-->
 <aside class="sidebar-wrapper">
 	<div class="sidebar-header">
 		<div class="logo-icon">
@@ -93,8 +91,11 @@
 				<img src="assets/images/avatars/01.png" alt="">
 			</div>
 			<div class="user-info">
-				<h5 class="mb-0 user-name">Jhon Maxwell</h5>
-				<p class="mb-0 user-designation">UI Engineer</p>
+				<h5 class="mb-0 user-name">
+					<c:if test="${user != null}">
+						${user.firstName} ${user.lastName}
+					</c:if>
+				</h5>
 			</div>
 		</div>
 		<ul class="dropdown-menu dropdown-menu-end">
@@ -116,10 +117,9 @@
 			<li>
 				<div class="dropdown-divider mb-0"></div>
 			</li>
-			<li><a class="dropdown-item" href="javascript:;"><span
+			<li><a class="dropdown-item" href="/AZShop/vendor/logout"><span
 					class="material-symbols-outlined me-2"> logout </span><span>Logout</span></a>
 			</li>
 		</ul>
 	</div>
 </aside>
-<!--end sidebar-->

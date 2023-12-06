@@ -131,4 +131,24 @@ public class StoreLevelDAOImpl implements IStoreLevelDAO {
         }
         return storeLevelList;
     }
+
+	@Override
+	public int getDefaultLevel() {
+        try {
+            String sql = "SELECT * FROM StoreLevel WHERE minPoint = 0";
+            conn = new DBConnection().getConnection();
+
+            ps = conn.prepareStatement(sql);
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+	}
 }

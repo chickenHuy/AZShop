@@ -6,4 +6,5 @@ public class Constant {
 	public static final String DIR ="D:\\uploads";
 	
 	public static String userSession = "Account";
+	public static String storeSession = "Store";
 }

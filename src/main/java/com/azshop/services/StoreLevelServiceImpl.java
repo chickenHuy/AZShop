@@ -36,4 +36,9 @@ public class StoreLevelServiceImpl implements IStoreLevelService{
 		storeLevelDAO.delete(id);
 	}
 
+	@Override
+	public int getDefaultLevel() {
+		return storeLevelDAO.getDefaultLevel();
+	}
+
 }

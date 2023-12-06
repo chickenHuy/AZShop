@@ -14,4 +14,5 @@ public interface IStoreLevelService {
 	void update(StoreLevelModel storeLevel);
 
 	void delete(int id);
+	int getDefaultLevel();
 }
