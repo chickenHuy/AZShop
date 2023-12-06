@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.mail.Message;
+import javax.mail.Session;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -24,13 +25,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.swing.tree.DefaultTreeCellEditor.EditorContainer;
 
 import com.azshop.models.CategoryModel;
 import com.azshop.models.ImageModel;
 import com.azshop.models.ProductModel;
+import com.azshop.models.StoreModel;
 import com.azshop.models.StyleModel;
 import com.azshop.models.StyleValueModel;
+import com.azshop.models.UserModel;
 import com.azshop.services.CategoryServiceImpl;
 import com.azshop.services.ICategoryService;
 import com.azshop.services.IImageService;
@@ -52,7 +56,7 @@ import com.google.gson.Gson;
 		* 50)
 @WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/vendor/product/new",
 		"/vendor/product/all", "/vendor/product/error404", "/vendor/product/edit/*", "/vendor/product/detail/*",
-		"/vendor/order/processing", "/vendor/order/processed", "/vendor/order/details" , "/vendor/product/delete/*"})
+		"/vendor/order/processing", "/vendor/order/processed", "/vendor/order/details" , "/vendor/product/delete/*","/vendor/logout"})
 public class VenderController extends HttpServlet {
 
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -66,7 +70,15 @@ public class VenderController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-
+		HttpSession session = req.getSession();
+		UserModel userModel = (UserModel) session.getAttribute(Constant.userSession);
+		StoreModel storeModel = (StoreModel) session.getAttribute(Constant.storeSession);
+		if (userModel == null || storeModel == null)
+		{
+			resp.sendRedirect(req.getContextPath() + "/login-customer");
+			return;
+		}
+		req.setAttribute("user", userModel);
 		String url = req.getRequestURL().toString();
 		if (url.contains("/register-shop")) {
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/createShop.jsp");
@@ -107,6 +119,15 @@ public class VenderController extends HttpServlet {
 			} else if (url.contains("detail")) {
 				RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/orderDetails.jsp");
 				rDispatcher.forward(req, resp);
+			}
+		}
+		if (url.contains("vendor/logout")) {
+			{ 
+				if (userModel !=	null)
+					session.removeAttribute(Constant.userSession);
+				if (storeModel != null)
+					session.removeAttribute(Constant.storeSession);
+				resp.sendRedirect(req.getContextPath()+ "/login-customer");
 			}
 		}
 	}

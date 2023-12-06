@@ -70,6 +70,9 @@ public class CheckStoreController extends HttpServlet{
 				storeModel.setStoreLevelId(storeLevel);
 				storeModel.setOwnerId(ownerId);
 				storeService.insert(storeModel);
+				storeModel = storeService.getByOwnerId(ownerId);
+				session.setAttribute(Constant.storeSession, storeModel);
+		        resp.sendRedirect("vendor/dashboard");
 
 			} catch (Exception e) {
 				e.printStackTrace();
