@@ -50,7 +50,7 @@ import com.google.gson.Gson;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
 		* 50)
-@WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/register-shop", "/vendor/product/new",
+@WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/vendor/product/new",
 		"/vendor/product/all", "/vendor/product/error404", "/vendor/product/edit/*", "/vendor/product/detail/*",
 		"/vendor/order/processing", "/vendor/order/processed", "/vendor/order/details" , "/vendor/product/delete/*"})
 public class VenderController extends HttpServlet {
