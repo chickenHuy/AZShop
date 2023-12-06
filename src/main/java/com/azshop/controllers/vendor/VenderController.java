@@ -28,20 +28,27 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.swing.tree.DefaultTreeCellEditor.EditorContainer;
 
+import com.azshop.DAO.IOrderDAO;
 import com.azshop.models.CategoryModel;
+import com.azshop.models.DeliveryModel;
 import com.azshop.models.ImageModel;
+import com.azshop.models.OrderModel;
 import com.azshop.models.ProductModel;
 import com.azshop.models.StoreModel;
 import com.azshop.models.StyleModel;
 import com.azshop.models.StyleValueModel;
 import com.azshop.models.UserModel;
 import com.azshop.services.CategoryServiceImpl;
+import com.azshop.services.DeliveryServiceImpl;
 import com.azshop.services.ICategoryService;
+import com.azshop.services.IDeliveryService;
 import com.azshop.services.IImageService;
+import com.azshop.services.IOrderService;
 import com.azshop.services.IProductService;
 import com.azshop.services.IStyleService;
 import com.azshop.services.IStyleValueService;
 import com.azshop.services.ImageServiceImpl;
+import com.azshop.services.OrderServiceImpl;
 import com.azshop.services.ProductServiceImpl;
 import com.azshop.services.StyleServiceImpl;
 import com.azshop.services.StyleValueImpl;
@@ -55,8 +62,8 @@ import com.google.gson.Gson;
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
 		* 50)
 @WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/vendor/product/new",
-		"/vendor/product/all", "/vendor/product/error404", "/vendor/product/edit/*", "/vendor/product/detail/*",
-		"/vendor/order/processing", "/vendor/order/processed", "/vendor/order/details" , "/vendor/product/delete/*","/vendor/logout"})
+		"/vendor/product/all", "/vendor/product/error404", "/vendor/product/edit/*", "/vendor/order/detail/*",
+		"/vendor/order/cancelled","/vendor/order/all","/vendor/order/processing", "/vendor/order/processed", "/vendor/order/details" , "/vendor/product/delete/*","/vendor/logout", "/vendor/order/status"})
 public class VenderController extends HttpServlet {
 
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -64,6 +71,9 @@ public class VenderController extends HttpServlet {
 	IStyleValueService styleValueService = new StyleValueImpl();
 	IProductService productService = new ProductServiceImpl();
 	IImageService imageService = new ImageServiceImpl();
+	IOrderService orderService = new OrderServiceImpl();
+	IDeliveryService deliveryService = new DeliveryServiceImpl();
+	
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -97,7 +107,7 @@ public class VenderController extends HttpServlet {
 			return;
 		}
 		if (url.contains("/vendor/product/all")) {
-			AllProduct(req,resp);
+			AllProduct(req,resp, storeModel.getId());
 			return;
 		}
 		if (url.contains("/vendor/product/delete"))
@@ -110,15 +120,19 @@ public class VenderController extends HttpServlet {
 			return;
 		}
 		if (url.contains("/vendor/order")) {
-			if (url.contains("processing")) {
-				RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/order.jsp");
-				rDispatcher.forward(req, resp);
-			} else if (url.contains("processed")) {
-				RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/order.jsp");
-				rDispatcher.forward(req, resp);
-			} else if (url.contains("detail")) {
-				RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/orderDetails.jsp");
-				rDispatcher.forward(req, resp);
+			if (url.contains("/all")) {
+				getOrderList(req, resp, storeModel.getId());
+			} else if (url.contains("/processing")) {
+				getOrderList(req, resp, storeModel.getId());
+			} 
+			 else if (url.contains("/processed")) {
+				 getOrderList(req, resp, storeModel.getId());
+			}
+			 else if (url.contains("/cancelled")) {
+				 getOrderList(req, resp, storeModel.getId());
+			}
+			 else if (url.contains("/detail")) {
+				 getOrderList(req, resp, storeModel.getId());
 			}
 		}
 		if (url.contains("vendor/logout")) {
@@ -130,6 +144,30 @@ public class VenderController extends HttpServlet {
 				resp.sendRedirect(req.getContextPath()+ "/login-customer");
 			}
 		}
+		if (url.contains("vendor/order/status")) {
+			ChangeStatusOrder(req, resp);
+		}
+	}
+
+	private void getOrderList(HttpServletRequest req, HttpServletResponse resp, int storeId) throws ServletException, IOException {
+		String message = req.getParameter("message");
+		String error = req.getParameter("error");
+		if (message!= null)
+		{
+			req.setAttribute("message", message);
+		}
+		if (error!= null)
+		{
+			req.setAttribute("error", error);
+		}
+		List<OrderModel> orderModels = orderService.getByStoreId(storeId);
+		List<DeliveryModel> deliveryModels = deliveryService.getAll();
+		req.setAttribute("status", orderService.statusForVendor());
+		req.setAttribute("orders", orderModels);
+		req.setAttribute("deliverys", deliveryModels);
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/order.jsp");
+		rDispatcher.forward(req, resp);
+		
 	}
 
 	private void DeleteProduct(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
@@ -165,7 +203,7 @@ public class VenderController extends HttpServlet {
 		}
 	}
 
-	private void AllProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+	private void AllProduct(HttpServletRequest req, HttpServletResponse resp,int storeId) throws ServletException, IOException{
 		String categorySlug = req.getParameter("category");
 		String saveType = req.getParameter("save");
 		String message = req.getParameter("message");
@@ -186,13 +224,13 @@ public class VenderController extends HttpServlet {
 		CategoryModel categoryModel = categoryService.getCategoryBySlug(categorySlug);
 		if (categorySlug == null)
 		{	
-			listProductModels = productService.getBySearch(-1, 0, saveType, searchText);
+			listProductModels = productService.getBySearch(-1, storeId, saveType, searchText);
 		}
 		else if (categoryModel == null) {
 			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 		}
 		else {
-			listProductModels = productService.getBySearch(categoryModel.getId(), 0, saveType, searchText);
+			listProductModels = productService.getBySearch(categoryModel.getId(), storeId, saveType, searchText);
 		}
 		List<CategoryModel> listCategoryModels = categoryService.getAll();
 		List<StyleValueModel> listStyleValueModels = styleValueService.getAll();
@@ -200,11 +238,11 @@ public class VenderController extends HttpServlet {
 		req.setAttribute("styleValues", listStyleValueModels);
 		req.setAttribute("categorys", listCategoryModels);
 		List<ImageModel> lisImageModels = new ArrayList<ImageModel>();
-		int sumDraft = productService.countDraftByStore(0);
+		int sumDraft = productService.countDraftByStore(storeId);
 		req.setAttribute("sumDraft", sumDraft);
-		int sumPublish = productService.countPublishByStore(0);
+		int sumPublish = productService.countPublishByStore(storeId);
 		req.setAttribute("sumPublish", sumPublish);
-		int sumAll = productService.countAllByStore(0);
+		int sumAll = productService.countAllByStore(storeId);
 		req.setAttribute("sumAll", sumAll);
 		for (ProductModel productModel : listProductModels) {
 			lisImageModels.add(imageService.getImage(productModel.getId()));
@@ -315,13 +353,15 @@ public class VenderController extends HttpServlet {
 		String url = req.getRequestURL().toString();
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-
+		HttpSession session = req.getSession();
+		StoreModel storeModel = (StoreModel) session.getAttribute(Constant.storeSession);
+		
 		if (url.contains("register-shop")) {
 			RegisterShop(req, resp);
 			return;
 		}
 		if (url.contains("/vendor/product/new")) {
-			NewProduct(req, resp);
+			NewProduct(req, resp, storeModel.getId());
 			return;
 		}
 		if (url.contains("/vendor/update-shop-info")) {
@@ -330,11 +370,27 @@ public class VenderController extends HttpServlet {
 		}
 		if (url.contains("vendor/product/edit"))
 		{
-			EditProduct(req,resp, url);
+			EditProduct(req,resp, url, storeModel.getId());
 		}
+		
 	}
 
-	private void EditProduct(HttpServletRequest req, HttpServletResponse resp, String url)throws ServletException, IOException  {
+	private void ChangeStatusOrder(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  {
+		try {
+			int id = Integer.parseInt(req.getParameter("id"));
+			String status = req.getParameter("status");
+			orderService.changeStatus(id, status);
+			resp.sendRedirect(req.getContextPath() + "/vendor/order/processing?message=The status has been updated.");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.sendRedirect(req.getContextPath() + "/vendor/order/processing?error=The update has failed.");
+			
+		}
+		
+	}
+
+	private void EditProduct(HttpServletRequest req, HttpServletResponse resp, String url, int storeId)throws ServletException, IOException  {
 		try {
 			
 			String name = req.getParameter("name");
@@ -347,7 +403,6 @@ public class VenderController extends HttpServlet {
 			}
 			int categoryId = Integer.parseInt(req.getParameter("categoryId"));
 			int styleValueId = Integer.parseInt(req.getParameter("styleValueId"));
-			int storeId = 0;
 			
 			URI uri;
 			uri = new URI(url);
@@ -449,7 +504,7 @@ public class VenderController extends HttpServlet {
 
 	}
 
-	private void NewProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private void NewProduct(HttpServletRequest req, HttpServletResponse resp, int storeId) throws ServletException, IOException {
 		try {
 			
 		String name = req.getParameter("name");
@@ -464,7 +519,6 @@ public class VenderController extends HttpServlet {
 		String video = req.getParameter("video");
 		int categoryId = Integer.parseInt(req.getParameter("categoryId"));
 		int styleValueId = Integer.parseInt(req.getParameter("styleValueId"));
-		int storeId = 0;
 		
 		
 		ProductModel productModel = new ProductModel(name, slug, description, price, quantity, isActive, categoryId, styleValueId,storeId, video);
