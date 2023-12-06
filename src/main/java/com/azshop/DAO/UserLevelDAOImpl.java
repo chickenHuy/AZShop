@@ -25,7 +25,6 @@ public class UserLevelDAOImpl implements IUserLevelDAO {
 			ps.setString(1, userLevel.getName());
 			ps.setInt(2, userLevel.getMinPoint());
 			ps.setInt(3, userLevel.getDiscount());
-			ps.setBoolean(4, userLevel.isDeleted());
 			
 			ps.executeUpdate();
 			
@@ -64,13 +63,17 @@ public class UserLevelDAOImpl implements IUserLevelDAO {
 	}
 
 	@Override
-	public void delete(int id) {
+	public void delete(UserLevelModel userLevel) {
 		try {
-			String sql = "DELETE UserLevel WHERE id=?";
+			String sql = "UPDATE UserLevel SET name = ?, minPoint = ?, discount = ?, isDeleted = True, updatedAt = GetDate() WHERE id = ?";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
-			ps.setInt(1, id);
+
+			ps.setString(1, userLevel.getName());
+			ps.setInt(2, userLevel.getMinPoint());
+			ps.setInt(3, userLevel.getDiscount());
+			ps.setInt(4, userLevel.getId());
 			
 			ps.executeUpdate();
 			
@@ -93,7 +96,7 @@ public class UserLevelDAOImpl implements IUserLevelDAO {
 		    ps.setInt(1, id);
 
 		    rs = ps.executeQuery();
-		    if (rs.next()) {
+		    while (rs.next()) {
 		        userLevel.setId(rs.getInt("id"));
 		        userLevel.setName(rs.getString("name"));
 		        userLevel.setMinPoint(rs.getInt("minPoint"));
@@ -114,7 +117,7 @@ public class UserLevelDAOImpl implements IUserLevelDAO {
 	public List<UserLevelModel> getAll() {
 		List<UserLevelModel> userLevelList = new ArrayList<UserLevelModel>();
 		try {
-		    String sql = "SELECT * FROM UserLevel";
+		    String sql = "SELECT * FROM UserLevel WHERE isDeleted = 0";
 		    conn = new DBConnection().getConnection();
 
 		    ps = conn.prepareStatement(sql);

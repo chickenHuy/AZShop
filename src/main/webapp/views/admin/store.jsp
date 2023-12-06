@@ -21,100 +21,7 @@
 					</ol>
 				</nav>
 			</div>
-			<div class="ms-auto">
-				<div class="btn-group">
-					<button type="button" class="btn btn-primary">Settings</button>
-					<button type="button"
-						class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split"
-						data-bs-toggle="dropdown">
-						<span class="visually-hidden">Toggle Dropdown</span>
-					</button>
-					<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
-						<a class="dropdown-item" href="javascript:;">Action</a> <a
-							class="dropdown-item" href="javascript:;">Another action</a> <a
-							class="dropdown-item" href="javascript:;">Something else here</a>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="javascript:;">Separated link</a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!--end breadcrumb-->
 
-
-		<div
-			class="product-count d-flex align-items-center gap-3 gap-lg-4 mb-4 fw-bold flex-wrap font-text1">
-			<a href="javascript:;"><span class="me-1">All</span><span
-				class="text-secondary">(85472)</span></a> <a href="javascript:;"><span
-				class="me-1">New</span><span class="text-secondary">(145)</span></a> <a
-				href="javascript:;"><span class="me-1">Checkouts</span><span
-				class="text-secondary">(89)</span></a> <a href="javascript:;"><span
-				class="me-1">Locals</span><span class="text-secondary">(5872)</span></a>
-			<a href="javascript:;"><span class="me-1">Subscribers</span><span
-				class="text-secondary">(163)</span></a> <a href="javascript:;"><span
-				class="me-1">Top Reviews</span><span class="text-secondary">(8)</span></a>
-		</div>
-
-		<div class="row g-3">
-			<div class="col-auto">
-				<div class="position-relative">
-					<input class="form-control px-5" type="search"
-						placeholder="Search Store"> <span
-						class="material-symbols-outlined position-absolute ms-3 translate-middle-y start-0 top-50 fs-5">search</span>
-				</div>
-			</div>
-			<div class="col-auto flex-grow-1 overflow-auto">
-				<div class="btn-group position-static">
-					<div class="btn-group position-static">
-						<button type="button"
-							class="btn border btn-light dropdown-toggle px-4"
-							data-bs-toggle="dropdown" aria-expanded="false">Country
-						</button>
-						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="javascript:;">Action</a></li>
-							<li><a class="dropdown-item" href="javascript:;">Another
-									action</a></li>
-							<li><hr class="dropdown-divider"></li>
-							<li><a class="dropdown-item" href="javascript:;">Something
-									else here</a></li>
-						</ul>
-					</div>
-					<div class="btn-group position-static">
-						<button type="button"
-							class="btn border btn-light dropdown-toggle px-4"
-							data-bs-toggle="dropdown" aria-expanded="false">Source</button>
-						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="javascript:;">Action</a></li>
-							<li><a class="dropdown-item" href="javascript:;">Another
-									action</a></li>
-							<li><hr class="dropdown-divider"></li>
-							<li><a class="dropdown-item" href="javascript:;">Something
-									else here</a></li>
-						</ul>
-					</div>
-					<div class="btn-group position-static">
-						<button type="button"
-							class="btn border btn-light dropdown-toggle px-4"
-							data-bs-toggle="dropdown" aria-expanded="false">More
-							Filters</button>
-						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="javascript:;">Action</a></li>
-							<li><a class="dropdown-item" href="javascript:;">Another
-									action</a></li>
-							<li><hr class="dropdown-divider"></li>
-							<li><a class="dropdown-item" href="javascript:;">Something
-									else here</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="col-auto">
-				<div class="d-flex align-items-center gap-2 justify-content-lg-end">
-					<button class="btn btn-light px-4">
-						<i class="bi bi-box-arrow-right me-2"></i>Export
-					</button>
-				</div>
-			</div>
 		</div>
 		<!--end row-->
 
@@ -155,12 +62,16 @@
 											<c:when test="${store.active }">
 												<td><span
 													class="lable-table bg-success-subtle text-success rounded border border-success-subtle font-text2 fw-bold">Activated</span></td>
-												<td><a href='<c:url value="/admin/store/edit-status/banning-${store.slug }"/>' class="font-text1">Banning</a></td>
+												<td><a
+													href='<c:url value="/admin/store/edit-status/banning-${store.slug }"/>'
+													class="font-text1">Banning</a></td>
 											</c:when>
 											<c:otherwise>
 												<td><span
 													class="lable-table bg-danger-subtle text-danger rounded border border-danger-subtle font-text2 fw-bold">Banned</span></td>
-												<td><a href='<c:url value="/admin/store/edit-status/liencing-${store.slug }"/>' class="font-text1">Licensing</a></td>
+												<td><a
+													href='<c:url value="/admin/store/edit-status/liencing-${store.slug }"/>'
+													class="font-text1">Licensing</a></td>
 											</c:otherwise>
 
 										</c:choose>

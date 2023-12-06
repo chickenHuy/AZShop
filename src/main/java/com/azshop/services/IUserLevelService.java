@@ -9,7 +9,7 @@ public interface IUserLevelService {
 
 	void update(UserLevelModel userLevel);
 
-	void delete(int id);
+	void delete(UserLevelModel userLevel);
 
 	UserLevelModel getById(int id);
 

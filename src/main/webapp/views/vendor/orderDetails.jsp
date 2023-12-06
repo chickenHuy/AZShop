@@ -1,10 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 	<%@ include file="/common/taglib.jsp" %>
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
 <body>
 <main class="page-content">
        <!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">eCommerce</div>
+					<div class="breadcrumb-title pe-3">Store</div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
@@ -36,6 +39,7 @@
                  <div class="flex-grow-1">
                    <h4 class="fw-bold">Order #${order.id}</h4>
                    <p class="mb-0">Customer ID : <a href="javascript:;">${order.userId}</a></p>
+                   <p class="mb-0">Date : ${order.createAt}</p>
                  </div>
                  <div class="overflow-auto">
                   <div class="btn-group position-static">
@@ -43,28 +47,6 @@
                       <button type="button" class="btn btn-outline-primary px-4">
                         <i class="bi bi-printer-fill me-2"></i>Print
                       </button>
-                    </div>
-                    <div class="btn-group position-static">
-                      <button type="button" class="btn btn-outline-primary px-4">
-                        <i class="bi bi-arrow-clockwise me-2"></i>Refund
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="javascript:;">Action</a></li>
-                        <li><a class="dropdown-item" href="javascript:;">Another action</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="javascript:;">Something else here</a></li>
-                      </ul>
-                    </div>
-                    <div class="btn-group position-static">
-                      <button type="button" class="btn btn-outline-primary dropdown-toggle px-4" data-bs-toggle="dropdown" aria-expanded="false">
-                        More Actions
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="javascript:;">Action</a></li>
-                        <li><a class="dropdown-item" href="javascript:;">Another action</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="javascript:;">Something else here</a></li>
-                      </ul>
                     </div>
                   </div>  
                 </div>
@@ -146,28 +128,11 @@
                   <div>
                     <div class="d-flex justify-content-between">
                       <p class="fw-semi-bold">Items subtotal :</p>
-                      <p class="fw-semi-bold">$891</p>
+                      <p class="fw-semi-bold">${subtotal} VNĐ</p>
                     </div>
-                    <div class="d-flex justify-content-between">
-                      <p class="fw-semi-bold">Discount :</p>
-                      <p class="text-danger fw-semi-bold">-$48</p>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                      <p class="fw-semi-bold">Tax :</p>
-                      <p class="fw-semi-bold">$156.70</p>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                      <p class="fw-semi-bold">Subtotal :</p>
-                      <p class="fw-semi-bold">$756</p>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                      <p class="fw-semi-bold">Shipping Cost :</p>
-                      <p class="fw-semi-bold">$50</p>
-                    </div>
-                  </div>
                   <div class="d-flex justify-content-between border-top pt-4">
-                    <h5 class="mb-0 fw-bold">Total :</h5>
-                    <h5 class="mb-0 fw-bold">$925.44</h5>
+                    <h5 class="mb-0 fw-bold">Total Receipts:</h5>
+                    <h5 class="mb-0 fw-bold">${order.amountToStore} VNĐ</h5>
                   </div>
                 </div>
               </div>
@@ -175,119 +140,84 @@
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title mb-4 fw-bold">Order Status</h4>
-                  <label class="form-label">Payment status</label>
-                  <select class="form-select mb-4">
-                    <option value="cod">Processing</option>
-                    <option value="card">Done</option>
-                    <option value="paypal">Pending</option>
-                  </select>
-                  <label class="form-label">Completed status</label>
-                  <select class="form-select">
-                    <option value="cod">Complete</option>
-                    <option value="card">Done</option>
-                    <option value="paypal">Pending</option>
+                  <label class="form-label" id="orderStatus">${order.status}</label>
+                  <select class="form-select" name="orderStatus" id="seletedStatus">
+                    <option value="" disabled selected>Change status</option>
+                    <c:if test = '${!(order.status eq "Cancelled") && !(order.status eq "Completed")}'>
+                    <c:forEach var = "st" items="${status}">
+                      <option value="${st}" >Change to ${st}</option>
+                    </c:forEach>
+                    </c:if>
                   </select>
                 </div>
               </div>
             </div>
            </div>
-         </div><!--end row-->
-
-
-         <h5 class="fw-bold mb-4">Billing Details</h5>
-         <div class="card">
-            <div class="card-body">
-              <div class="row g-3 row-cols-1 row-cols-lg-4">
-                <div class="col">
-                  <div class="d-flex align-items-start gap-3 border p-3 rounded">
-                    <div class="detail-icon fs-5">
-                      <i class="bi bi-person-circle"></i>
-                    </div>
-                    <div class="detail-info">
-                       <p class="fw-bold mb-1">Customer Name</p>
-                       <a href="javascript:;" class="mb-0">Jhon Maxwell</a>
-                    </div>
-                 </div>
-                </div>
-
-                <div class="col">
-                  <div class="d-flex align-items-start gap-3 border p-3 rounded">
-                    <div class="detail-icon fs-5">
-                      <i class="bi bi-envelope-fill"></i>
-                    </div>
-                    <div class="detail-info">
-                      <h6 class="fw-bold mb-1">Email</h6>
-                      <a href="javascript:;" class="mb-0">abc@example.com</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col">
-                  <div class="d-flex align-items-start gap-3 border p-3 rounded">
-                    <div class="detail-icon fs-5">
-                      <i class="bi bi-telephone-fill"></i>
-                    </div>
-                    <div class="detail-info">
-                      <h6 class="fw-bold mb-1">Phone</h6>
-                      <a href="javascript:;" class="mb-0">+01-585XXXXXXX</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col">
-                  <div class="d-flex align-items-start gap-3 border p-3 rounded">
-                    <div class="detail-icon fs-5">
-                      <i class="bi bi-calendar-check-fill"></i>
-                    </div>
-                    <div class="detail-info">
-                      <h6 class="fw-bold mb-1">Shipping Date</h6>
-                      <p class="mb-0">15 Dec, 2022</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col">
-                  <div class="d-flex align-items-start gap-3 border p-3 rounded">
-                    <div class="detail-icon fs-5">
-                      <i class="bi bi-gift-fill"></i>
-                    </div>
-                    <div class="detail-info">
-                      <h6 class="fw-bold mb-1">Gift Order</h6>
-                      <p  class="mb-0">Gift voucher has available</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col">
-                  <div class="d-flex align-items-start gap-3 border p-3 rounded">
-                    <div class="detail-icon fs-5">
-                      <i class="bi bi-house-door-fill"></i>
-                    </div>
-                    <div class="detail-info">
-                      <h6 class="fw-bold mb-1">Address 1</h6>
-                      <p  class="mb-0">123 Street Name, City, Australia</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col">
-                  <div class="d-flex align-items-start gap-3 border p-3 rounded">
-                    <div class="detail-icon fs-5">
-                      <i class="bi bi-house-fill"></i>
-                    </div>
-                    <div class="detail-info">
-                      <h6 class="fw-bold mb-1">Shipping Address</h6>
-                      <p  class="mb-0">198 Street Name, City, Inited States of America</p>
-                    </div>
-                  </div>
-                </div>
-                
-              </div><!--end row-->
-            </div>
          </div>
-
-
 
         
      </main>
+
+     <script>
+      $(document).ready(function() {
+          // Xử lý sự kiện khi chọn một trạng thái mới từ dropdown
+          $('select[name="orderStatus"]').change(function() {
+              var newStatus = $(this).val(); // Lấy giá trị mới từ dropdown
+      
+              // Gửi AJAX để cập nhật trạng thái
+              $.ajax({
+                  type: 'GET', // Hoặc 'GET' tùy thuộc vào cách bạn cấu hình server
+                  url: '/AZShop/vendor/order/status?id='+ encodeURIComponent("${order.id}") + '&status=' + encodeURIComponent(newStatus), // Thay đổi đường dẫn tới endpoint của server
+                  success: function(response) {
+                      // Cập nhật trạng thái trên trang
+                      $("#orderStatus").text(newStatus);
+                  },
+                  error: function(error) {
+                      // Xử lý lỗi nếu có
+                      console.error(error);
+                  }
+              });
+          });
+      });
+      $(document).ready(function() {
+      // Xử lý sự kiện khi nhấn nút in
+      $('button.btn-outline-primary:contains("Print")').click(function() {
+          // Gọi hàm in trang
+          printPage();
+      });
+
+      function printPage() {
+          // Tạo một chuỗi HTML chứa thông tin bạn muốn in
+          var printContent = "<h4>Order #" + "${order.id}" + "</h4>";
+          printContent += "<p>Items Subtotal: " + "${subtotal} VNĐ" + "</p>";
+
+          // Thêm thông tin Total Receipts vào chuỗi HTML
+          printContent += "<p>Total Receipts: " + "${order.amountToStore} VNĐ" + "</p>";
+
+          // Lặp qua sản phẩm để thêm thông tin sản phẩm
+          printContent += "<table>";
+          printContent += "<thead><tr><th>Product Name</th><th>Quantity</th><th>Price</th><th>Total</th></tr></thead>";
+          printContent += "<tbody>";
+          <c:forEach var="product" items="${products}">
+              <c:forEach var="orderItem" items="${orderItems}">
+                  <c:if test="${product.id eq orderItem.productId}">
+                      printContent += "<tr><td>" + "${product.name}" + "</td><td>" + "${orderItem.count}" + "</td><td>" + "${product.price} VNĐ" + "</td><td>" + "${product.price * orderItem.count} VNĐ" + "</td></tr>";
+                  </c:if>
+              </c:forEach>
+          </c:forEach>
+          printContent += "</tbody></table>";
+
+          // Tạo một cửa sổ in và hiển thị nội dung cần in
+          var printWindow = window.open('', '_blank');
+          printWindow.document.open();
+          printWindow.document.write('<html><head><title>Print</title></head><body>');
+          printWindow.document.write(printContent);
+          printWindow.document.write('</body></html>');
+          printWindow.document.close();
+
+          // In trang
+          printWindow.print();
+      }
+  });
+      </script>
 </body>

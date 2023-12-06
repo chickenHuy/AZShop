@@ -169,6 +169,7 @@ public class VenderController extends HttpServlet {
 	            	int countItem = orderItemService.countByOrder(orderModel.getId());
 	            	req.setAttribute("countItem", countItem);
 	            	req.setAttribute("order", orderModel);
+	            	req.setAttribute("status", orderService.statusForVendor());
 					List<OrderItemModel> orderItemModels = orderItemService.getByOrderId(id);
 					req.setAttribute("orderItems", orderItemModels);
 					List<ProductModel> productModels = productService.getByStoreId(storeId);
