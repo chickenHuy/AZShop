@@ -35,8 +35,10 @@ import com.azshop.services.*;
 		* 50)
 
 @WebServlet(urlPatterns = { "/admin/dashboard", "/admin/product", "/admin/customer", "/admin/store",
-		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit/*",
-		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory", "/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel" })
+		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit",
+		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory",
+		"/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel",
+		"/admin/category/delete/*" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -74,6 +76,8 @@ public class AdminController extends HttpServlet {
 			getAddCategory(req, resp);
 		} else if (url.contains("/admin/category/edit")) {
 			getEditCategory(req, resp);
+		} else if (url.contains("/admin/category/delete")) {
+			getDeleteCategory(req, resp);
 		} else if (url.contains("/admin/customer")) {
 			getAllUser(req, resp);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/customer.jsp");
@@ -106,7 +110,7 @@ public class AdminController extends HttpServlet {
 			String id = req.getParameter("id");
 			String message = req.getParameter("message");
 			req.setAttribute("message", message);
-			if (id!=null) {
+			if (id != null) {
 				UserLevelModel userLevel = userLevelService.getById(Integer.parseInt(id));
 				req.setAttribute("userlevel", userLevel);
 			}
@@ -115,26 +119,51 @@ public class AdminController extends HttpServlet {
 		}
 	}
 
-	private void editOrderStatus(HttpServletRequest req, HttpServletResponse resp) throws UnsupportedEncodingException, IOException, ServletException {
-		req.setCharacterEncoding("UTF-8");
-	    resp.setCharacterEncoding("UTF-8");
-	    String orderId = req.getParameter("orderId");
+	private void getDeleteCategory(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		String url = req.getRequestURL().toString();
+		URI uri;
+		try {
+			uri = new URI(url);
+			String path = uri.getPath();
+			String[] parts = path.split("/");
+			PrintWriter out = resp.getWriter();
+			if (parts.length > 0) {
+				if (url.contains("delete")) {
+					String slug = parts[parts.length - 1].replace("delete-", "");
+					CategoryModel category = categoryService.getCategoryBySlug(slug);
+					if (category == null) {
+						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+					} else {
+						categoryService.deleteBySlug(slug);
+					}
+				}
+				resp.sendRedirect("/AZShop/admin/categories");
+			}
+		} catch (Exception e) {
+			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+		}
+	}
 
-	    OrderModel order = orderService.getById(Integer.parseInt(orderId));
+	private void editOrderStatus(HttpServletRequest req, HttpServletResponse resp)
+			throws UnsupportedEncodingException, IOException, ServletException {
+		String orderId = req.getParameter("orderId");
 
-	    if ("pending Pickup".equals(order.getStatus())) {
-	        order.setStatus("shipping");
-	    } else if ("shipping".equals(order.getStatus())) {
-	        order.setStatus("delivered");
-	    } else if ("delivered".equals(order.getStatus())) {
-	        order.setStatus("completed");
-	    }
+		OrderModel order = orderService.getById(Integer.parseInt(orderId));
 
-	    // Update the order only once after processing all conditions
-	    orderService.update(order);
+		if ("pending Pickup".equals(order.getStatus())) {
+			order.setStatus("shipping");
+		} else if ("shipping".equals(order.getStatus())) {
+			order.setStatus("delivered");
+		} else if ("delivered".equals(order.getStatus())) {
+			order.setStatus("completed");
+		}
 
-	    // Redirect the user after updating the order status
-	    resp.sendRedirect("orders");
+		// Update the order only once after processing all conditions
+		orderService.update(order);
+
+		// Redirect the user after updating the order status
+		resp.sendRedirect("orders");
 	}
 
 	private void getProductByCategory(HttpServletRequest req, HttpServletResponse resp)
@@ -153,7 +182,7 @@ public class AdminController extends HttpServlet {
 
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
 			rDispatcher.forward(req, resp);
-			
+
 		} else {
 			List<ProductModel> listProduct = productService.getByCategoryId((categoryId));
 			req.setAttribute("listProduct", listProduct);
@@ -167,11 +196,11 @@ public class AdminController extends HttpServlet {
 		}
 	}
 
-
 	private void getAllUserLevel(HttpServletRequest req, HttpServletResponse resp) {
 		List<UserLevelModel> list = userLevelService.getAll();
 		req.setAttribute("listuserlevel", list);
 	}
+
 	private void editProductStatus(HttpServletRequest req, HttpServletResponse resp)
 			throws URISyntaxException, ServletException, IOException {
 
@@ -192,21 +221,19 @@ public class AdminController extends HttpServlet {
 					} else {
 						productModel.setActive(false);
 						productService.update(productModel);
-						getAllProduct(req, resp);
 					}
 				} else {
 					String slug = parts[parts.length - 1].replace("liencing-", "");
-
+					System.out.println(slug);
 					ProductModel productModel = productService.getBySlug(slug);
 					if (productModel == null) {
 						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 					} else {
 						productModel.setActive(true);
 						productService.update(productModel);
-						getAllProduct(req, resp);
 					}
 				}
-
+				resp.sendRedirect("/AZShop/admin/product");
 			}
 		} catch (Exception e) {
 			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
@@ -215,24 +242,19 @@ public class AdminController extends HttpServlet {
 
 	private void getEditCategory(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		List<CategoryModel> listCategory = categoryService.getAll();
-		req.setAttribute("listCategory", listCategory);
-
-		String url = req.getPathInfo();
-		if (url != null && url.startsWith("/")) {
-			url = url.substring(1);
-		}
-
-		String slug = url.substring(url.indexOf("edit-") + "edit-".length());
-		System.out.println("aaa" + slug);
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+		String slug = req.getParameter("slug");
 
 		CategoryModel category = categoryService.getCategoryBySlug(slug);
-		System.out.println("aaa" + category.getName());
 		req.setAttribute("category", category);
 
-		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/addCategory.jsp");
-		rDispatcher.forward(req, resp);
+		List<CategoryModel> listCategory = categoryService.getAll();
+		req.setAttribute("listCategory", listCategory);
+		System.out.println(category.getName());
 
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editCategory.jsp");
+		rDispatcher.forward(req, resp);
 	}
 
 	private void getAllOrder(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -343,7 +365,7 @@ public class AdminController extends HttpServlet {
 		String minPoint = req.getParameter("minpoint");
 		String discount = req.getParameter("discount");
 
-		if (name != null && minPoint!=null && discount!=null) {
+		if (name != null && minPoint != null && discount != null) {
 			try {
 				userLevel.setName(name);
 				userLevel.setMinPoint(Integer.parseInt(minPoint));
@@ -351,7 +373,7 @@ public class AdminController extends HttpServlet {
 
 				userLevelService.update(userLevel);
 				resp.sendRedirect("?message=Successfully");
-			} catch(Exception e) {
+			} catch (Exception e) {
 				resp.sendRedirect("?message=Failed to edit the user level");
 			}
 		} else {
@@ -368,7 +390,7 @@ public class AdminController extends HttpServlet {
 		String name = req.getParameter("userlevelname");
 		String minPoint = req.getParameter("minpoint");
 		String discount = req.getParameter("discount");
-		if (name != null && minPoint!=null && discount!=null) {
+		if (name != null && minPoint != null && discount != null) {
 			try {
 				userLevel.setName(name);
 				userLevel.setMinPoint(Integer.parseInt(minPoint));
@@ -376,7 +398,7 @@ public class AdminController extends HttpServlet {
 
 				userLevelService.insert(userLevel);
 				resp.sendRedirect("?message=Successfully");
-			} catch(Exception e) {
+			} catch (Exception e) {
 				resp.sendRedirect("?message=Failed to add the user level");
 			}
 		} else {

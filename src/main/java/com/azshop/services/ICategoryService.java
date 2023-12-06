@@ -19,6 +19,6 @@ public interface ICategoryService {
 
 	void update(CategoryModel category);
 
-	void delete(int id);
+	void deleteBySlug(String slug);
 	CategoryModel getCategoryBySlug(String slug);
 }

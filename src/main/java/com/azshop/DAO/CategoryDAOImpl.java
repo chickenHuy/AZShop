@@ -166,22 +166,22 @@ public class CategoryDAOImpl implements ICategoryDAO {
 		}
 	}
 
-	@Override
-	public void delete(int id) {
-		try {
-			String sql = "UPDATE Category SET  isDeleted = 1 , updateAt = GETDATE() WHERE id = ?";
-			conn = new DBConnection().getConnection();
+	public void deleteBySlug(String slug) {
+	    try {
+	        String sql = "UPDATE Category SET isDeleted = 1, updateAt = GETDATE() WHERE slug = ?";
+	        conn = new DBConnection().getConnection();
 
-			ps = conn.prepareStatement(sql);
-			ps.setInt(1, id);
+	        ps = conn.prepareStatement(sql);
+	        ps.setString(1, slug);
 
-			ps.executeUpdate();
+	        ps.executeUpdate();
 
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
+
 
 	@Override
 	public CategoryModel getCategoryBySlug(String slug) {
