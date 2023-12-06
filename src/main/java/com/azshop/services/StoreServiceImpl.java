@@ -45,4 +45,17 @@ public class StoreServiceImpl implements IStoreService {
 		return storeDAO.getBySlug(slug);
 	}
 
+	@Override
+	public boolean isUserStoreOwner(int userId) {
+		return storeDAO.isUserStoreOwner(userId);
+	}
+
+	@Override
+	public StoreModel getByOwnerId(int userId) {
+		if (storeDAO.isUserStoreOwner(userId)) {
+			return storeDAO.getByOwnerId(userId);
+		}
+		return null;
+	}
+
 }
