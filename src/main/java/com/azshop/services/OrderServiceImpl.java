@@ -59,12 +59,16 @@ public class OrderServiceImpl implements IOrderService {
 		List<String> staList = new ArrayList<String>();
 		staList.add("Processing");
 		staList.add("Pending pickup");
-		staList.add("Cancelced");
+		staList.add("Cancelled");
 		return staList;
 	}
 
 	@Override
 	public Boolean changeStatus(int id, String status) {
+		OrderModel orderModel = orderDAO.getById(id);
+		if (orderModel.getStatus().equals("Cancelled") || orderModel.getStatus().equals("Completed") ) {
+			return false;
+		}
 		return orderDAO.changeStatus(id, status);
 	}
 

@@ -42,8 +42,6 @@
 				<ul>
 					<li><a href="<c:url value="/vendor/order/all"/>"><span
 							class="material-symbols-outlined">arrow_right</span>All Order</a></li>
-					<li><a href="<c:url value="/vendor/order/processing"/>"><span
-							class="material-symbols-outlined">arrow_right</span>Processing Order</a></li>
 					<li><a href="<c:url value="/vendor/order/processed"/>"><span
 							class="material-symbols-outlined">arrow_right</span>Processed Order</a></li>
 					<li><a href="<c:url value="/vendor/order/cancelled"/>"><span

@@ -1,6 +1,7 @@
 package com.azshop.controllers.customer;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -141,7 +142,7 @@ public class CustomerController extends HttpServlet {
 		}
 	}
 	
-	private void addProductToCart(HttpServletRequest req, HttpServletResponse resp) {
+	private void addProductToCart(HttpServletRequest req, HttpServletResponse resp) throws UnsupportedEncodingException {
 		//ma hoa UTF-8
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
@@ -184,22 +185,23 @@ public class CustomerController extends HttpServlet {
 								cartItem.setCount(Integer.parseInt(req.getParameter("count")));
 								
 								cartItemService.insert(cartItem);
-								
+
 							} catch (Exception e) {
-								// TODO: handle exception
+								e.printStackTrace();
 							}
-							
 						}
+					} catch (URISyntaxException e) {
+						e.printStackTrace();
+					}
 				}
 			}
-			getInforCustomer(req, resp);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void getInforCustomer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.getRequestDispatcher("/views/customer/information.jsp").forward(req, resp);
+		req.getRequestDispatcher("/views/account/information.jsp").forward(req, resp);
 	}
 
 	private void getInforCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
