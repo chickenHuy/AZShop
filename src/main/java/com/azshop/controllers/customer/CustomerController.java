@@ -196,6 +196,8 @@ public class CustomerController extends HttpServlet {
 									newCart.setStoreId(product.getStoreId());
 									cartService.insert(newCart);
 									
+									cartList = cartService.getAll();
+									
 									for (CartModel cartModel : cartList) {										
 										if (product.getStoreId() == cartModel.getStoreId()) {
 											cart = cartModel;
