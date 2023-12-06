@@ -5,6 +5,7 @@ import java.util.List;
 import com.azshop.DAO.IStoreDAO;
 import com.azshop.DAO.StoreDAOImpl;
 import com.azshop.models.StoreModel;
+import com.azshop.utils.SlugUtil;
 
 public class StoreServiceImpl implements IStoreService {
 
@@ -12,6 +13,9 @@ public class StoreServiceImpl implements IStoreService {
 	
 	@Override
 	public void insert(StoreModel store) {
+		store.setActive(true);
+		store.setSlug(SlugUtil.toSlug(store.getName()));
+		store.setPoint(0);
 		storeDAO.insert(store);
 	}
 

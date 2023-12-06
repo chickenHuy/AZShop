@@ -78,22 +78,17 @@
       <form action="register-shop" id="register-form" method="post">
         <div class="form-group">
           <label for="shopName" class="required">Tên cửa hàng:</label>
-          <input type="text" id="shopName" name="shopName" required class="requiredInput">
+          <input type="text" id="shopName" name="name" required class="requiredInput">
         </div>
 
         <div class="form-group">
           <label for="email" class="required" class="requiredInput">Email:</label>
-          <input type="email" id="email" name="email" value="example@email.com" disabled class="requiredInput">
-        </div>
-
-        <div class="form-group">
-          <label for="address" class="required" class="requiredInput">Địa chỉ:</label>
-          <input type="text" id="address" name="address" value="123 Street, City" disabled class="requiredInput">
+          <input type="email" id="email" name="email" value="${user.email}" disabled class="requiredInput">
         </div>
 
         <div class="form-group">
           <label for="phoneNumber"  class="required" class="requiredInput">Số điện thoại:</label>
-          <input type="tel" id="phoneNumber" name="phoneNumber" value="123456789" disabled class="requiredInput">
+          <input type="tel" id="phoneNumber" name="phoneNumber" value="${user.phone}" disabled class="requiredInput">
         </div>
 
         <button type="submit" class="btnDangKy">Đăng ký</button>
