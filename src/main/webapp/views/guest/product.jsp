@@ -345,25 +345,27 @@
 					<!-- product -->
 					<div class="col-md-3 col-xs-6">
 						<div class="product">
-							<div class="product-img">
-								<c:set var="hasImages" value="false" />
-								<c:forEach var="image" items="${imageRelateds}">
-									<c:if test="${product.id eq image.productId}">
-										<img src="/AZShop/image?fname=${image.image}" alt="" />
-										<c:set var="hasImages" value="true" />
-									</c:if>
-								</c:forEach>
+							<a href='<c:url value="/guest/product/${product.slug}"/>'>
+								<div class="product-img">
+									<c:set var="hasImages" value="false" />
+									<c:forEach var="image" items="${imageRelateds}">
+										<c:if test="${product.id eq image.productId}">
+											<img src="/AZShop/image?fname=${image.image}" alt="" />
+											<c:set var="hasImages" value="true" />
+										</c:if>
+									</c:forEach>
 
-								<c:if test="${not hasImages}">
-									<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
-									<img
-										src="${pageContext.request.contextPath}/templates/static/none.png"
-										alt="" />
-								</c:if>
-								<div class="product-label">
-									<span class="sale">-30%</span>
+									<c:if test="${not hasImages}">
+										<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
+										<img
+											src="${pageContext.request.contextPath}/templates/static/none.png"
+											alt="" />
+									</c:if>
+									<div class="product-label">
+										<span class="sale">-30%</span>
+									</div>
 								</div>
-							</div>
+							</a>
 							<div class="product-body">
 								<c:forEach var="category" items="${categoryList}">
 									<c:if test="${product.categoryId eq category.id}">
