@@ -18,8 +18,7 @@ public class OrderServiceImpl implements IOrderService {
 
 	@Override
 	public OrderModel getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return orderDAO.getById(id);
 	}
 
 	@Override
@@ -47,8 +46,7 @@ public class OrderServiceImpl implements IOrderService {
 
 	@Override
 	public void update(OrderModel order) {
-		// TODO Auto-generated method stub
-		
+		orderDAO.update(order);
 	}
 
 	@Override

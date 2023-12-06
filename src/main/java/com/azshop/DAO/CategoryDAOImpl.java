@@ -194,7 +194,7 @@ public class CategoryDAOImpl implements ICategoryDAO {
 			ps.setString(1, slug);
 
 			rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				category.setId(rs.getInt("id"));
 				category.setCategoryId(rs.getInt("categoryId"));
 				category.setName(rs.getString("name"));

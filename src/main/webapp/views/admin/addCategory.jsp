@@ -52,7 +52,6 @@
 											</div>
 										</div>
 									</div>
-
 									<span id="fileSizeError" style="color: red;"></span>
 								</div>
 							</div>
