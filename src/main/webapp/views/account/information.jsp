@@ -8,6 +8,9 @@
 <meta charset="UTF-8">
  <!-- Vendor CSS Files -->
 
+</head>
+<body>
+
  <link rel="stylesheet" type="text/css" href="<c:url value="/templates/account/assets/vendor/bootstrap/css/bootstrap.min.css" />">
  <link rel="stylesheet" type="text/css" href="<c:url value="/templates/account/assets/vendor/bootstrap-icons/bootstrap-icons.css" />">
  <link rel="stylesheet" type="text/css" href="<c:url value="/templates/account/assets/vendor/boxicons/css/boxicons.min.css" />">
@@ -18,10 +21,6 @@
 
  <!-- Template Main CSS File -->
  <link rel="stylesheet" type="text/css" href="<c:url value="/templates/account/assets/css/style.css" />">
-
-
-</head>
-<body>
     <section class="section profile">
         <div class="row">
             <div class="col-xl-4">
@@ -134,7 +133,7 @@
                                         <label for="profileImage"
                                             class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <img src="assets/img/profile-img.jpg" alt="Profile">
+                                            <img src="templates/account/img/hinh.jpg" alt="Profile">
                                             <div class="pt-2">
                                                 <a href="#" class="btn btn-primary btn-sm"
                                                     title="Upload new profile image"><i class="bi bi-upload"></i></a>

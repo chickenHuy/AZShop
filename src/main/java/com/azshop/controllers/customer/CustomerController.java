@@ -17,17 +17,20 @@ import javax.servlet.http.HttpSession;
 import com.azshop.models.CategoryModel;
 import com.azshop.models.ImageModel;
 import com.azshop.models.ProductModel;
+import com.azshop.models.StoreModel;
 import com.azshop.models.StyleValueModel;
 import com.azshop.models.UserModel;
 import com.azshop.services.CategoryServiceImpl;
 import com.azshop.services.ICategoryService;
 import com.azshop.services.IImageService;
 import com.azshop.services.IProductService;
+import com.azshop.services.IStoreService;
 import com.azshop.services.IStyleService;
 import com.azshop.services.IStyleValueService;
 import com.azshop.services.IUserService;
 import com.azshop.services.ImageServiceImpl;
 import com.azshop.services.ProductServiceImpl;
+import com.azshop.services.StoreServiceImpl;
 import com.azshop.services.StyleServiceImpl;
 import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
@@ -43,6 +46,7 @@ public class CustomerController extends HttpServlet {
 	IStyleValueService styleValueService = new StyleValueImpl();
 	IImageService imageService = new ImageServiceImpl();
 	IUserService userService = new UserServiceImpl();
+	IStoreService storeService = new StoreServiceImpl();
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI().toString();
@@ -116,7 +120,7 @@ public class CustomerController extends HttpServlet {
 	}
 	
 	private void getInforCustomer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.getRequestDispatcher("/views/customer/information.jsp").forward(req, resp);
+		req.getRequestDispatcher("/views/account/information.jsp").forward(req, resp);
 	}
 
 	private void getInforCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -267,6 +271,7 @@ public class CustomerController extends HttpServlet {
 					CategoryModel category = categoryService.getById(product.getCategoryId());	
 					StyleValueModel styleValue = styleValueService.getById(product.getStyleValueId());
 					List<ImageModel> imageList = imageService.getByProductId(product.getId());
+					StoreModel store = storeService.getById(product.getStoreId());
 					
 					//san pham lien quan
 					List<ProductModel> productRelateds = productService.getByCategoryId(product.getCategoryId());
@@ -277,6 +282,7 @@ public class CustomerController extends HttpServlet {
 					}
 	                
 					req.setAttribute("product", product);
+					req.setAttribute("store", store);
 					req.setAttribute("productRelateds", productRelateds);
 					req.setAttribute("category", category);
 					req.setAttribute("styleValue", styleValue);

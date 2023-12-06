@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.mail.Session;
+import javax.mail.Store;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,6 +23,7 @@ import com.azshop.DAO.CategoryDAOImpl;
 import com.azshop.models.CategoryModel;
 import com.azshop.models.ImageModel;
 import com.azshop.models.ProductModel;
+import com.azshop.models.StoreModel;
 import com.azshop.models.StyleModel;
 import com.azshop.models.StyleValueModel;
 import com.azshop.models.UserModel;
@@ -30,11 +32,13 @@ import com.azshop.services.ICartService;
 import com.azshop.services.ICategoryService;
 import com.azshop.services.IImageService;
 import com.azshop.services.IProductService;
+import com.azshop.services.IStoreService;
 import com.azshop.services.IStyleService;
 import com.azshop.services.IStyleValueService;
 import com.azshop.services.IUserService;
 import com.azshop.services.ImageServiceImpl;
 import com.azshop.services.ProductServiceImpl;
+import com.azshop.services.StoreServiceImpl;
 import com.azshop.services.StyleServiceImpl;
 import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
@@ -52,6 +56,7 @@ public class GuestController extends HttpServlet{
 	IStyleValueService styleValueService = new StyleValueImpl();
 	IImageService imageService = new ImageServiceImpl();
 	IUserService userService = new UserServiceImpl();
+	IStoreService storeService = new StoreServiceImpl();
 	
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI().toString();
@@ -215,6 +220,7 @@ public class GuestController extends HttpServlet{
 					CategoryModel category = categoryService.getById(product.getCategoryId());	
 					StyleValueModel styleValue = styleValueService.getById(product.getStyleValueId());
 					List<ImageModel> imageList = imageService.getByProductId(product.getId());
+					StoreModel store = storeService.getById(product.getStoreId());
 					
 					//san pham lien quan
 					List<ProductModel> productRelateds = productService.getByCategoryId(product.getCategoryId());
@@ -225,6 +231,7 @@ public class GuestController extends HttpServlet{
 					}
 	                
 					req.setAttribute("product", product);
+					req.setAttribute("store", store);
 					req.setAttribute("productRelateds", productRelateds);
 					req.setAttribute("category", category);
 					req.setAttribute("styleValue", styleValue);
