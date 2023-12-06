@@ -87,8 +87,22 @@ s
 									</c:forEach>
 
 									<td>${order.status}</td>
-									<td>${order.createAt}</td>
-									<td>Action</td>
+									<td>${order.updateAt != null ? order.updateAt : order.createAt}</td>
+									<td><c:choose>
+											<c:when test="${order.status == 'pending Pickup'}">
+												<a class="dropdown-item"
+													href='<c:url value="/admin/order-edit-status?orderId=${order.id}"/>'>Shipping</a>
+											</c:when>
+											<c:when test="${order.status == 'shipping'}">
+												<a class="dropdown-item"
+													href='<c:url value="/admin/order-edit-status?orderId=${order.id}"/>'>Delivered</a>
+											</c:when>
+											<c:when test="${order.status == 'delivered'}">
+												<a class="dropdown-item"
+													href='<c:url value="/admin/order-edit-status?orderId=${order.id}"/>'>Completed</a>
+											</c:when>
+											
+										</c:choose></td>
 								</tr>
 							</c:forEach>
 						</tbody>

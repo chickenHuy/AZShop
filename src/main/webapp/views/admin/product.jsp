@@ -42,12 +42,14 @@
 				class="d-flex">
 				<select class="form-select" id="Category" name="categoryId"
 					style="width: 200px;">
-					<option value="-1">-- Select Category --</option> <!-- Lựa chọn với giá trị null -->
+					<option value="-1">-- Select Category --</option>
+					<!-- Lựa chọn với giá trị null -->
 					<c:forEach var="category" items="${listCategory}">
 						<option value="${category.id}">${category.name}</option>
 					</c:forEach>
 				</select>
-				<div class="mx-2"></div> <!-- Khoảng trắng giữa select và button -->
+				<div class="mx-2"></div>
+				<!-- Khoảng trắng giữa select và button -->
 				<button type="submit" class="btn btn-primary">Filter</button>
 			</form>
 		</div>
@@ -71,7 +73,7 @@
 								<th>Action</th>
 							</tr>
 						</thead>
-						<tbody id="productTableBody">
+						<tbody>
 							<c:forEach var="product" items="${listProduct}">
 								<tr>
 									<td>${product.name}</td>
@@ -98,5 +100,31 @@
 			</div>
 		</div>
 	</div>
-
 </main>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+	$(document).ready(function() {
+		$("#Category").change(function() {
+			loadProducts();
+		});
+
+		// Đảm bảo rằng hàm loadProducts được gọi khi trang được tải lần đầu
+		loadProducts();
+	});
+
+	function loadProducts() {
+		var categoryId = $("#Category").val();
+
+		$.ajax({
+			type : "GET",
+			url : "product?categoryId=" + categoryId,
+			success : function(data) {
+				$("#productTableBody").html(data);
+			},
+			error : function(error) {
+				console.log("Lỗi: " + error);
+			}
+		});
+	}
+</script>
