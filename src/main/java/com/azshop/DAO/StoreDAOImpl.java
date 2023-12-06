@@ -244,4 +244,61 @@ public class StoreDAOImpl implements IStoreDAO {
         }
         return store;
 	}
+
+	@Override
+	public boolean isUserStoreOwner(int userId) {
+        try {
+            String sql = "SELECT * FROM Store WHERE ownerId = ? AND isDeleted = 0";
+            conn = new DBConnection().getConnection();
+
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+            	conn.close();
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+	}
+
+	@Override
+	public StoreModel getByOwnerId(int userId) {
+		StoreModel store = new StoreModel();
+        try {
+            String sql = "SELECT * FROM Store WHERE ownerId = ? AND isDeleted = 0";
+            conn = new DBConnection().getConnection();
+
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                store.setId(rs.getInt("id"));
+                store.setName(rs.getString("name"));
+                store.setBio(rs.getString("bio"));
+                store.setSlug(rs.getString("slug"));
+                store.setOwnerId(rs.getInt("ownerId"));
+                store.setStoreLevelId(rs.getInt("storeLevelId"));
+                store.setActive(rs.getBoolean("isActive"));
+                store.setDeleted(rs.getBoolean("isDeleted"));
+                store.setAvatar(rs.getString("avatar"));
+                store.setCover(rs.getString("cover"));
+                store.setFeaturedImage(rs.getString("featuredImage"));
+                store.setPoint(rs.getInt("point"));
+                store.setRating(rs.getBigDecimal("rating"));
+                store.seteWallet(rs.getBigDecimal("eWallet"));
+                store.setCreateAt(rs.getDate("createAt"));
+                store.setUpdateAt(rs.getDate("updateAt"));
+            }
+
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return store;
+	}
 }

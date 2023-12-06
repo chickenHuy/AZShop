@@ -48,7 +48,7 @@ public class AccountController extends HttpServlet{
 
 	private void getLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		HttpSession session = req.getSession();
-		session.removeAttribute("account");
+		session.removeAttribute(Constant.userSession);
 		
 		resp.sendRedirect("./login-customer");
 	}
@@ -130,8 +130,7 @@ public class AccountController extends HttpServlet{
 		UserModel user = userService.login(username, password);
 		if (user != null) {
 			HttpSession session = req.getSession(true);
-			session.setAttribute("account", user);
-			Constant.SESSION = session;
+			session.setAttribute(Constant.userSession, user);
 			resp.sendRedirect(req.getContextPath() + "/customer-home");
 		} else {
 			// Đăng nhập không thành công, đặt thông báo lỗi vào request

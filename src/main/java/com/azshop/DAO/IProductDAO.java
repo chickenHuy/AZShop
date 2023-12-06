@@ -19,5 +19,4 @@ public interface IProductDAO {
     int countDraftByStore(int storeId);
     int countPublishByStore(int storeId);
     int countAllByStore(int storeId);
-    
 }
