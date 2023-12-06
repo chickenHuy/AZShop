@@ -47,9 +47,9 @@
             </div>
         </div>
     </div>
-<script src="<c:url value="/templates/account/js/jquery.min.js"></c:url>"></script>
-<script src="<c:url value="/templates/account/js/popper.min.js"></c:url>"></script>
-<script src="<c:url value="/templates/account/js/bootstrap.min.js"></c:url>"></script>
-<script src="<c:url value="/templates/account/js/main.js"></c:url>"></script>
+    <script src="<c:url value='/templates/account/js/jquery.min.js' />"></script>
+    <script src="<c:url value='/templates/account/js/popper.min.js' />"></script>
+    <script src="<c:url value='/templates/account/js/bootstrap.min.js' />"></script>
+    <script src="<c:url value='/templates/account/js/main.js' />"></script>
 </body>
 </html>

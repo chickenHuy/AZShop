@@ -2,6 +2,7 @@ package com.azshop.controllers.admin;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -34,7 +35,7 @@ import com.azshop.services.*;
 
 @WebServlet(urlPatterns = { "/admin/dashboard", "/admin/product", "/admin/customer", "/admin/store",
 		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit/*",
-		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory" })
+		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory", "/admin/order-edit-status" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -82,17 +83,40 @@ public class AdminController extends HttpServlet {
 			}
 		} else if (url.contains("/admin/store")) {
 			getAllStore(req, resp);
+		} else if (url.contains("/admin/order-edit-status")) {
+			editOrderStatus(req, resp);
 		} else if (url.contains("/admin/orders")) {
 			getAllOrder(req, resp);
 		}
 	}
 
-	private void getProductByCategory(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+	private void editOrderStatus(HttpServletRequest req, HttpServletResponse resp) throws UnsupportedEncodingException, IOException, ServletException {
+		req.setCharacterEncoding("UTF-8");
+	    resp.setCharacterEncoding("UTF-8");
+	    String orderId = req.getParameter("orderId");
+
+	    OrderModel order = orderService.getById(Integer.parseInt(orderId));
+
+	    if ("pending Pickup".equals(order.getStatus())) {
+	        order.setStatus("shipping");
+	    } else if ("shipping".equals(order.getStatus())) {
+	        order.setStatus("delivered");
+	    } else if ("delivered".equals(order.getStatus())) {
+	        order.setStatus("completed");
+	    }
+
+	    // Update the order only once after processing all conditions
+	    orderService.update(order);
+
+	    // Redirect the user after updating the order status
+	    resp.sendRedirect("orders");
+	}
+
+	private void getProductByCategory(HttpServletRequest req, HttpServletResponse resp)
+			throws IOException, ServletException {
 		int categoryId = Integer.parseInt(req.getParameter("categoryId"));
-		System.out.println("aaa" + categoryId);
-		if (categoryId == -1)
-		{
-			System.out.println("aaa" );
+		if (categoryId == -1) {
+
 			List<ProductModel> listProduct = productService.getAll();
 
 			List<CategoryModel> listCategory = categoryService.getAll();
@@ -104,15 +128,16 @@ public class AdminController extends HttpServlet {
 
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
 			rDispatcher.forward(req, resp);
-			
+
 		} else {
 			List<ProductModel> listProduct = productService.getByCategoryId((categoryId));
-	        req.setAttribute("listProduct", listProduct);
-	        
-	        List<CategoryModel> listCategory = categoryService.getAll();
-	        req.setAttribute("listCategory", listCategory);
-	        
-	        RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
+			req.setAttribute("listProduct", listProduct);
+			int countAllProduct = listProduct.size();
+			req.setAttribute("countAllProduct", countAllProduct);
+			List<CategoryModel> listCategory = categoryService.getAll();
+			req.setAttribute("listCategory", listCategory);
+
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
 			rDispatcher.forward(req, resp);
 		}
 	}
@@ -130,7 +155,6 @@ public class AdminController extends HttpServlet {
 			if (parts.length > 0) {
 				if (url.contains("banning")) {
 					String slug = parts[parts.length - 1].replace("banning-", "");
-					System.out.println(slug);
 					ProductModel productModel = productService.getBySlug(slug);
 					if (productModel == null) {
 						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
@@ -158,36 +182,25 @@ public class AdminController extends HttpServlet {
 		}
 	}
 
-	private void getEditCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private void getEditCategory(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		List<CategoryModel> listCategory = categoryService.getAll();
 		req.setAttribute("listCategory", listCategory);
 
-		String url = req.getRequestURL().toString();
-		URI uri;
-		try {
-			uri = new URI(url);
-			String path = uri.getPath();
-			String[] parts = path.split("/");
-			PrintWriter out = resp.getWriter();
-			if (parts.length > 0) {
-				if (url.contains("edit")) {
-					String slug = parts[parts.length - 1].replace("edit-", "");
-					System.out.println("aaa" + slug);
-					CategoryModel category = categoryService.getCategoryBySlug(slug);
-					
-					if (category == null) {
-						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-					} else {
-						req.setAttribute("category", category);
-						RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/addCategory.jsp");
-						rDispatcher.forward(req, resp);
-					}
-				}
-			}
-		} catch (Exception e) {
-			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+		String url = req.getPathInfo();
+		if (url != null && url.startsWith("/")) {
+			url = url.substring(1);
 		}
-		
+
+		String slug = url.substring(url.indexOf("edit-") + "edit-".length());
+		System.out.println("aaa" + slug);
+
+		CategoryModel category = categoryService.getCategoryBySlug(slug);
+		System.out.println("aaa" + category.getName());
+		req.setAttribute("category", category);
+
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/addCategory.jsp");
+		rDispatcher.forward(req, resp);
 
 	}
 
@@ -208,7 +221,6 @@ public class AdminController extends HttpServlet {
 	private void editStatus(HttpServletRequest req, HttpServletResponse resp)
 			throws URISyntaxException, IOException, ServletException {
 		String url = req.getRequestURL().toString();
-		System.out.println(url);
 		URI uri;
 		try {
 			uri = new URI(url);
@@ -322,17 +334,33 @@ public class AdminController extends HttpServlet {
 	}
 
 	private void getAllProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<ProductModel> listProduct = productService.getAll();
+		String categoryId = req.getParameter("categoryId");
 
-		List<CategoryModel> listCategory = categoryService.getAll();
+		if (categoryId == null || categoryId.isEmpty()) {
 
-		int countAllProduct = listProduct.size();
-		req.setAttribute("listProduct", listProduct);
-		req.setAttribute("countAllProduct", countAllProduct);
-		req.setAttribute("listCategory", listCategory);
+			List<ProductModel> listProduct = productService.getAll();
 
-		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
-		rDispatcher.forward(req, resp);
+			List<CategoryModel> listCategory = categoryService.getAll();
+
+			int countAllProduct = listProduct.size();
+			req.setAttribute("listProduct", listProduct);
+			req.setAttribute("countAllProduct", countAllProduct);
+			req.setAttribute("listCategory", listCategory);
+
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
+			rDispatcher.forward(req, resp);
+
+		} else {
+			List<ProductModel> listProduct = productService.getByCategoryId(Integer.parseInt(categoryId));
+			req.setAttribute("listProduct", listProduct);
+			int countAllProduct = listProduct.size();
+			req.setAttribute("countAllProduct", countAllProduct);
+			List<CategoryModel> listCategory = categoryService.getAll();
+			req.setAttribute("listCategory", listCategory);
+
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
+			rDispatcher.forward(req, resp);
+		}
 	}
 
 	private void getAllUser(HttpServletRequest req, HttpServletResponse resp) {

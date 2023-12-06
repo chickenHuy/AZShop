@@ -83,18 +83,20 @@
 						</div>
 						<p>${product.description}</p>
 
-						<div class="add-to-cart">
-							<div class="qty-label">
-								Qty
-								<div class="input-number">
-									<input type="number"> <span class="qty-up">+</span> <span
-										class="qty-down">-</span>
+						<a href="<c:url value='/login-customer' />">
+							<div class="add-to-cart">
+								<div class="qty-label">
+									Qty
+									<div class="input-number">
+										<input type="number"> <span class="qty-up">+</span> <span
+											class="qty-down">-</span>
+									</div>
 								</div>
+								<button class="add-to-cart-btn">
+									<i class="fa fa-shopping-cart"></i> add to cart
+								</button>
 							</div>
-							<button class="add-to-cart-btn">
-								<i class="fa fa-shopping-cart"></i> add to cart
-							</button>
-						</div>
+						</a>
 
 						<ul class="product-btns">
 							<li><a href="#"><i class="fa fa-heart-o"></i> add to
@@ -345,25 +347,27 @@
 					<!-- product -->
 					<div class="col-md-3 col-xs-6">
 						<div class="product">
-							<div class="product-img">
-								<c:set var="hasImages" value="false" />
-								<c:forEach var="image" items="${imageRelateds}">
-									<c:if test="${product.id eq image.productId}">
-										<img src="/AZShop/image?fname=${image.image}" alt="" />
-										<c:set var="hasImages" value="true" />
-									</c:if>
-								</c:forEach>
+							<a href='<c:url value="/guest/product/${product.slug}"/>'>
+								<div class="product-img">
+									<c:set var="hasImages" value="false" />
+									<c:forEach var="image" items="${imageRelateds}">
+										<c:if test="${product.id eq image.productId}">
+											<img src="/AZShop/image?fname=${image.image}" alt="" />
+											<c:set var="hasImages" value="true" />
+										</c:if>
+									</c:forEach>
 
-								<c:if test="${not hasImages}">
-									<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
-									<img
-										src="${pageContext.request.contextPath}/templates/static/none.png"
-										alt="" />
-								</c:if>
-								<div class="product-label">
-									<span class="sale">-30%</span>
+									<c:if test="${not hasImages}">
+										<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
+										<img
+											src="${pageContext.request.contextPath}/templates/static/none.png"
+											alt="" />
+									</c:if>
+									<div class="product-label">
+										<span class="sale">-30%</span>
+									</div>
 								</div>
-							</div>
+							</a>
 							<div class="product-body">
 								<c:forEach var="category" items="${categoryList}">
 									<c:if test="${product.categoryId eq category.id}">
@@ -394,11 +398,13 @@
 									</button>
 								</div>
 							</div>
-							<div class="add-to-cart">
-								<button class="add-to-cart-btn">
-									<i class="fa fa-shopping-cart"></i> add to cart
-								</button>
-							</div>
+							<a href="<c:url value='/login-customer' />">
+								<div class="add-to-cart">
+									<button class="add-to-cart-btn">
+										<i class="fa fa-shopping-cart"></i> add to cart
+									</button>
+								</div>
+							</a>
 						</div>
 					</div>
 					<!-- /product -->

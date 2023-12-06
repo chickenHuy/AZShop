@@ -91,12 +91,10 @@
 						<h3 class="title">Sản phẩm mới</h3>
 						<div class="section-nav">
 							<ul class="section-tab-nav tab-nav">
-								<li class="active"><a data-toggle="tab" href="#tab1">Thời trang nam</a></li>
-								<li><a data-toggle="tab" href="#tab1">Thời trang nữ</a></li>
-								<li><a data-toggle="tab" href="#tab1">Phụ kiện thời trang</a></li>
-								<li><a data-toggle="tab" href="#tab1">Điện thoại</a></li>
-								<li><a data-toggle="tab" href="#tab1">Latop</a></li>
-								<li><a data-toggle="tab" href="#tab1">Điện gia dụng</a></li>								
+								<c:forEach var="category" items="${categoryParentList}">
+									<li><a
+										href='<c:url value="/guest/category/${category.slug}"/>'>${category.name}</a></li>
+								</c:forEach>
 							</ul>
 						</div>
 					</div>
@@ -114,7 +112,7 @@
 									<c:forEach var="product" items="${productList}">
 										<!-- product -->
 										<div class="product">
-											<a href='<c:url value="/guest/product?id=${product.id}"/>'>
+											<a href='<c:url value="/guest/product/${product.slug}"/>'>
 												<div class="product-img">
 													<!-- Use product-specific information -->
 													<c:set var="hasImages" value="false" />
@@ -167,11 +165,13 @@
 													</button>
 												</div>
 											</div>
-											<div class="add-to-cart">
-												<button class="add-to-cart-btn">
-													<i class="fa fa-shopping-cart"></i> add to cart
-												</button>
-											</div>
+											<a href="<c:url value='/login-customer' />">
+												<div class="add-to-cart">
+													<button class="add-to-cart-btn">
+														<i class="fa fa-shopping-cart"></i> add to cart
+													</button>
+												</div>
+											</a>
 										</div>
 										<!-- /product -->
 									</c:forEach>

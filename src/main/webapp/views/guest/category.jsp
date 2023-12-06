@@ -18,12 +18,17 @@
 				<div id="aside" class="col-md-3">
 					<!-- aside Widget -->
 					<div class="aside">
-						<h3 class="aside-title">Categories</h3>
+						<h3 class="aside-title">Danh mục</h3>
 						<div class="checkbox-filter">
-							<c:forEach var="category" items="${categoryChildList}">
+							<a href='<c:url value="/guest/category/${categoryParent.slug}"/>'>
+								<div class="input-checkbox ${category.slug}">
+									<label><span>Tất cả</span></label>
+								</div>
+							</a>
+							<c:forEach var="category" items="${categoryChildList}">	
 								<a href='<c:url value="/guest/category/${categoryParent.slug}/${category.slug}"/>'>
 									<div class="input-checkbox ${category.slug}">
-										<label><span></span>${category.name}<small>
+										<label><span>${category.name}</span><small>
 												(${category.countProduct})</small></label>
 									</div>
 								</a>
@@ -54,38 +59,21 @@
 
 					<!-- aside Widget -->
 					<div class="aside">
-						<h3 class="aside-title">Brand</h3>
+						<h3 class="aside-title">Phong cách</h3>
 						<div class="checkbox-filter">
 							<div class="input-checkbox">
 								<input type="checkbox" id="brand-1"> <label
 									for="brand-1"> <span></span> SAMSUNG <small>(578)</small>
 								</label>
 							</div>
-							<div class="input-checkbox">
-								<input type="checkbox" id="brand-2"> <label
-									for="brand-2"> <span></span> LG <small>(125)</small>
-								</label>
-							</div>
-							<div class="input-checkbox">
-								<input type="checkbox" id="brand-3"> <label
-									for="brand-3"> <span></span> SONY <small>(755)</small>
-								</label>
-							</div>
-							<div class="input-checkbox">
-								<input type="checkbox" id="brand-4"> <label
-									for="brand-4"> <span></span> SAMSUNG <small>(578)</small>
-								</label>
-							</div>
-							<div class="input-checkbox">
-								<input type="checkbox" id="brand-5"> <label
-									for="brand-5"> <span></span> LG <small>(125)</small>
-								</label>
-							</div>
-							<div class="input-checkbox">
-								<input type="checkbox" id="brand-6"> <label
-									for="brand-6"> <span></span> SONY <small>(755)</small>
-								</label>
-							</div>
+							<c:forEach var="styleValue" items="${styleValueList}">	
+								<a href='<c:url value="/guest/category/${categoryParent.slug}/${category.slug}"/>'>
+									<div class="input-checkbox ${category.slug}">
+										<label><span>${category.name}</span><small>
+												(${category.countProduct})</small></label>
+									</div>
+								</a>
+							</c:forEach>
 						</div>
 					</div>
 					<!-- /aside Widget -->
@@ -171,62 +159,53 @@
 					<div class="row">
 					<c:forEach var="product" items="${productList}">
 						<!-- product -->
-							<div class="product">
-								<a href='<c:url value="/guest/product?id=${product.id}"/>'>
-									<div class="product-img">
-										<!-- Use product-specific information -->
-										<c:set var="hasImages" value="false" />
-										<c:forEach var="image" items="${imageList}">
-											<c:if test="${product.id eq image.productId}">
-												<img src="/AZShop/image?fname=${image.image}" alt="" />
-												<c:set var="hasImages" value="true" />
+							<div class="col-md-4 col-xs-6">
+								<div class="product">
+									<a href='<c:url value="/guest/product/${product.slug}"/>'>
+										<div class="product-img">
+											<c:set var="hasImages" value="false" />
+											<c:forEach var="image" items="${imageList}">
+												<c:if test="${product.id eq image.productId}">
+													<img src="/AZShop/image?fname=${image.image}" alt="" />
+													<c:set var="hasImages" value="true" />
+												</c:if>
+											</c:forEach>
+
+											<c:if test="${not hasImages}">
+												<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
+												<img
+													src="${pageContext.request.contextPath}/templates/static/none.png"
+													alt="" />
+											</c:if>
+											<div class="product-label">
+												<span class="sale">-30%</span> <span class="new">NEW</span>
+											</div>
+										</div>
+									</a>
+									<div class="product-body">
+										<c:forEach var="category" items="${categoryList}">
+											<c:if test="${product.categoryId eq category.id}">
+												<p class="product-category">${category.name}</p>
 											</c:if>
 										</c:forEach>
-
-										<c:if test="${not hasImages}">
-											<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
-											<img
-												src="${pageContext.request.contextPath}/templates/static/none.png"
-												alt="" />
-										</c:if>
-										<div class="product-label">
-											<span class="new">NEW</span>
+										<h3 class="product-name"><a href="#">${product.name}</a></h3>
+										<h4 class="product-price">${product.price}</h4>
+										<div class="product-rating">
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+										</div>
+										<div class="product-btns">
+											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
 										</div>
 									</div>
-								</a>
-								<div class="product-body">
-									<c:forEach var="category" items="${categoryList}">
-										<c:if test="${product.categoryId eq category.id}">
-											<p class="product-category">${category.name}</p>
-										</c:if>
-									</c:forEach>
-
-									<h3 class="product-name">
-										<a href="#">${product.name}</a>
-									</h3>
-									<h4 class="product-price">${product.price}</h4>
-									<div class="product-rating">
-										<!-- Your rating logic here -->
+									<div class="add-to-cart">
+										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
 									</div>
-									<div class="product-btns">
-										<button class="add-to-wishlist">
-											<i class="fa fa-heart-o"></i><span class="tooltipp">add
-												to wishlist</span>
-										</button>
-										<button class="add-to-compare">
-											<i class="fa fa-exchange"></i><span class="tooltipp">add
-												to compare</span>
-										</button>
-										<button class="quick-view">
-											<i class="fa fa-eye"></i><span class="tooltipp">quick
-												view</span>
-										</button>
-									</div>
-								</div>
-								<div class="add-to-cart">
-									<button class="add-to-cart-btn">
-										<i class="fa fa-shopping-cart"></i> add to cart
-									</button>
 								</div>
 							</div>
 							<!-- /product -->

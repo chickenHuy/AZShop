@@ -51,7 +51,7 @@ public class OrderDAOImpl implements IOrderDAO {
 	public OrderModel getById(int id) {
 		OrderModel order = new OrderModel();
 		try {
-			String sql = "Select *from [Order] where id = ? and isDeleted = 0";
+			String sql = "Select * from [Order] where id = ? and isDeleted = 0";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);

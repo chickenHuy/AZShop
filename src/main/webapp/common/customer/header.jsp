@@ -20,7 +20,7 @@
 					   <i class="fa fa-user-o"></i> ${user.email} <span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu" style="background-color: #1E1F29; border: 1px solid #1E1F29;">
-					   <li style="padding: 8px;"><a href="#">Tài khoản của tôi</a></li>
+					   <li style="padding: 8px;"><a href="<c:url value='/customer-information' />">Tài khoản của tôi</a></li>
 					   <li style="padding: 8px;"><a href="<c:url value='/store-check' />">Trang cửa hàng</a></li>
 					   <li style="padding: 8px;"><a href="<c:url value='/logout-customer' />">Đăng xuất</a></li>
 					</ul>
@@ -116,7 +116,7 @@
 									<h5>SUBTOTAL: $2940.00</h5>
 								</div>
 								<div class="cart-btns">
-									<a href="#">View Cart</a> <a href="#">Checkout <i
+									<a href='<c:url value="/customer/cart"/>'>View Cart</a> <a href='<c:url value="/customer/cart"/>'>Checkout <i
 										class="fa fa-arrow-circle-right"></i></a>
 								</div>
 							</div>
@@ -140,26 +140,24 @@
 </header>
 <!-- /HEADER -->
 <!-- NAVIGATION -->
-<nav id="navigation">
-	<!-- container -->
-	<div class="container">
-		<!-- responsive-nav -->
-		<div id="responsive-nav">
-			<!-- NAV -->
-			<ul class="main-nav nav navbar-nav">
-				<li class="active"><a href="#">Home</a></li>
-				<li><a href="#">Hot Deals</a></li>
-				<li><a href="#">Categories</a></li>
-				<li><a href="#">Laptops</a></li>
-				<li><a href="#">Smartphones</a></li>
-				<li><a href="#">Cameras</a></li>
-				<li><a href="#">Accessories</a></li>
-			</ul>
-			<!-- /NAV -->
+	<nav id="navigation">
+		<!-- container -->
+		<div class="container">
+			<!-- responsive-nav -->
+			<div id="responsive-nav">
+				<!-- NAV -->
+				<ul class="main-nav nav navbar-nav">
+					<li><a href='<c:url value="/customer-home"/>'>Trang chủ</a></li>
+					<li><a href='<c:url value="/customer-clothing"/>'>Sản phẩm hot</a></li>
+					<c:forEach var="category" items="${categoryParentList}">
+						<li><a href='<c:url value="/customer/category/${category.slug}"/>'>${category.name}</a></li>
+					</c:forEach>
+				</ul>
+				<!-- /NAV -->
+			</div>
+			<!-- /responsive-nav -->
 		</div>
-		<!-- /responsive-nav -->
-	</div>
-	<!-- /container -->
-</nav>
-<!-- /NAVIGATION -->
+		<!-- /container -->
+	</nav>
+	<!-- /NAVIGATION -->
 </header>
