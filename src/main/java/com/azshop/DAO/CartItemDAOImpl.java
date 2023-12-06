@@ -134,7 +134,7 @@ public class CartItemDAOImpl implements ICartItemDAO {
 	@Override
 	public void update(CartItemModel cartItem) {
 		try {
-			String sql = "UPDATE CartItem SET cartID = ?, productId = ?, styleValueIds = ?, count = ?, updateAt = GETDATE() where id=?";
+			String sql = "UPDATE CartItem SET cartId = ?, productId = ?, styleValueId = ?, count = ?, updateAt = GETDATE() where id=?";
 			
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
