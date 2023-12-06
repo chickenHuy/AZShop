@@ -81,7 +81,7 @@
 							</h3>
 							<span class="product-available">In Stock</span>
 						</div>
-						<p>${product.description}</p>
+						<p>Cửa hàng: ${store.name}</p>
 
 						<a href="<c:url value='/login-customer' />">
 							<div class="add-to-cart">
@@ -106,7 +106,7 @@
 						</ul>
 
 						<ul class="product-links">
-							<li>Category:</li>
+							<li>Danh mục:</li>
 							<li><a href="#">${category.name}</a></li>
 							<li><a href="#">${styleValue.name}</a></li>
 						</ul>
