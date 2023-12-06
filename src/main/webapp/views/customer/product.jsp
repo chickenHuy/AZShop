@@ -81,7 +81,7 @@
 							</h3>
 							<span class="product-available">In Stock</span>
 						</div>
-						<p>${product.description}</p>
+						<p>Cửa hàng: ${store.name}</p>
 
 						<div class="add-to-cart">
 							<div class="qty-label">
