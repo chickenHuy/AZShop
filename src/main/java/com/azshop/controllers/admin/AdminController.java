@@ -286,6 +286,9 @@ public class AdminController extends HttpServlet {
 
 	private void getAllOrder(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<OrderModel> listOrder = orderService.getAll();
+		for (OrderModel order : listOrder) {
+           order.setPrice(orderService.calculateOrderTotal(order.getId())); ;
+        }
 		req.setAttribute("listOrder", listOrder);
 
 		List<StoreModel> listStore = storeService.getAll();

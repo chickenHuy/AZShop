@@ -1,5 +1,6 @@
 package com.azshop.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.azshop.models.OrderModel;
@@ -25,4 +26,6 @@ public interface IOrderService {
 	List<OrderModel> getCancelled(int storeId);
 	List<OrderModel> getProcessing(int storeId);
 	List<OrderModel> getProcessed(int storeId);
+
+	BigDecimal calculateOrderTotal(int id);
 }

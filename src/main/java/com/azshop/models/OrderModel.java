@@ -24,6 +24,16 @@ public class OrderModel implements Serializable {
     private Date createAt;
     private Date updateAt;
     
+    private BigDecimal price;
+    
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
 	public OrderModel() {
 	}
 	

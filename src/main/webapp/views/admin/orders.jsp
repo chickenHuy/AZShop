@@ -62,6 +62,7 @@ s
 						<thead class="table-light">
 							<tr>
 								<th>Order ID</th>
+								<th>Price</th>
 								<th>Customer</th>
 								<th>Store</th>
 								<th>Status</th>
@@ -73,7 +74,7 @@ s
 							<c:forEach var="order" items="${listOrder}">
 								<tr>
 									<td>${order.id}</td>
-
+									<td>${order.price}</td>
 									<c:forEach var="user" items="${listUser}">
 										<c:if test="${user.id eq order.userId}">
 											<td>${user.lastName}</td>
