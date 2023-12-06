@@ -16,7 +16,7 @@ import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
 
-@WebServlet(urlPatterns = {"/login-customer", "/verify-customer", "/register-customer", "/forget-customer", "/logout-customer", "/reset-success-customer"})
+@WebServlet(urlPatterns = {"/login-customer", "/verify-customer", "/register-customer", "/forget-customer", "/logout-customer", "/reset-success-customer", "/information-customer"})
 public class AccountController extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
@@ -40,6 +40,13 @@ public class AccountController extends HttpServlet{
 		else if (url.contains("reset-success-customer")) {
 			getResetSuccess(req, resp);
 		}
+		else if (url.contains("information-customer")) {
+			getInfor(req, resp);
+		}
+	}
+
+	private void getInfor(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.getRequestDispatcher("/views/account/information.jsp").forward(req, resp);
 	}
 
 	private void getResetSuccess(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
