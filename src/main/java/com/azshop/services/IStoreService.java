@@ -18,4 +18,8 @@ public interface IStoreService {
 	void delete(int id);
 	
 	StoreModel getBySlug(String slug);
+	
+	boolean isUserStoreOwner(int userId);
+	
+    StoreModel getByOwnerId(int userId);
 }
