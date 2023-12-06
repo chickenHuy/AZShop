@@ -23,14 +23,11 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 <!-- Slick -->
-<link href="<c:url value="/templates/guest/css/slick.css" />"
-	rel="stylesheet" type="text/css">
-<link href="<c:url value="/templates/guest/css/slick-theme.css" />"
-	rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="<c:url value='/templates/guest/css/slick.css' />">
+<link rel="stylesheet" type="text/css" href="<c:url value='/templates/guest/css/slick-theme.css' />">
 
 <!-- nouislider -->
-<link href="<c:url value="/templates/guest/css/nouislider.min.css" />"
-	rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="<c:url value='/templates/guest/css/nouislider.min.css' />">
 
 <!-- Font Awesome Icon -->
 <link

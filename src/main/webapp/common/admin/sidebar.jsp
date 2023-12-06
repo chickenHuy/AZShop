@@ -33,6 +33,8 @@
             </li>
             <li> <a href='<c:url value="/admin/categories"/>'><span class="material-symbols-outlined">arrow_right</span>Categories</a>
             </li>
+            <li> <a href='<c:url value="/admin/styles"/>'><span class="material-symbols-outlined">arrow_right</span>Styles</a>
+            </li>
             <li> <a href="customer"><span class="material-symbols-outlined">arrow_right</span>Customers</a>
             </li>
             <li> <a href="store"><span class="material-symbols-outlined">arrow_right</span>Store</a>

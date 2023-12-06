@@ -17,11 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import com.azshop.models.StoreModel;
+import com.azshop.models.StyleModel;
 import com.azshop.models.UserLevelModel;
 import com.azshop.models.UserModel;
-import com.azshop.services.IStoreService;
-import com.azshop.services.IUserService;
-import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadUtils;
@@ -38,7 +36,7 @@ import com.azshop.services.*;
 		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit",
 		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory",
 		"/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel",
-		"/admin/category/delete/*", "/admin/category/restore/*" })
+		"/admin/category/delete/*", "/admin/category/restore/*", "/admin/styles", "/admin/style/delete", "/admin/style/restore"})
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -48,6 +46,7 @@ public class AdminController extends HttpServlet {
 	IProductService productService = new ProductServiceImpl();
 	ICategoryService categoryService = new CategoryServiceImpl();
 	IStyleValueService styleValueService = new StyleValueImpl();
+	IStyleService styleService = new StyleServiceImpl();
 
 	IUserLevelService userLevelService = new UserLevelServiceImpl();
 	IOrderService orderService = new OrderServiceImpl();
@@ -118,7 +117,41 @@ public class AdminController extends HttpServlet {
 			}
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/edituserlevel.jsp");
 			rDispatcher.forward(req, resp);
+		} else if (url.contains("/admin/style/delete")) {
+			getDeleteStyle(req, resp);
+		} else if (url.contains("/admin/style/restore")) {
+			getRestoreStyle(req, resp);
+		} else if (url.contains("/admin/styles")) {
+			getAllStyle(req, resp);
+		} 
+	}
+
+	private void getRestoreStyle(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String styleId = req.getParameter("id");
+		if (styleId != null) {
+			styleService.restore(Integer.parseInt(styleId));
 		}
+		resp.sendRedirect("/AZShop/admin/styles");
+	}
+
+	private void getDeleteStyle(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String styleId = req.getParameter("id");
+		if (styleId != null) {
+			styleService.delete(Integer.parseInt(styleId));
+		}
+		resp.sendRedirect("/AZShop/admin/styles");
+	}
+
+	private void getAllStyle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		List<StyleModel> listStyle = styleService.getAllAdmin();
+		req.setAttribute("listStyle", listStyle);
+		int countAllStyle = listStyle.size();
+		req.setAttribute("countAllStyle", countAllStyle);
+		List<CategoryModel> listCategory = categoryService.getAll();
+		req.setAttribute("listCategory", listCategory);
+		
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/styles.jsp");
+		rDispatcher.forward(req, resp);
 	}
 
 	private void getRestoreCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
