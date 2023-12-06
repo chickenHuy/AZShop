@@ -15,6 +15,11 @@ public class CategoryServiceImpl implements ICategoryService {
 	}
 
 	@Override
+	public List<CategoryModel> getAllAdmin() {
+		return categoryDAO.getAllAdmin();
+	}
+	
+	@Override
 	public CategoryModel getById(int id) {
 		return categoryDAO.getById(id);
 	}
@@ -52,6 +57,11 @@ public class CategoryServiceImpl implements ICategoryService {
 	@Override
 	public CategoryModel getParentCategory(int id) {
 		return categoryDAO.getParentCategory(id);
+	}
+	
+	@Override
+	public void restoreBySlug(String slug) {
+		categoryDAO.restoreBySlug(slug);
 	}
 
 }

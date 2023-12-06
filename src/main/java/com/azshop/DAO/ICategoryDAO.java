@@ -14,4 +14,6 @@ public interface ICategoryDAO {
 	    void update(CategoryModel category);
 	    void deleteBySlug(String slug);
 	    CategoryModel getCategoryBySlug(String slug);
+		List<CategoryModel> getAllAdmin();
+		void restoreBySlug(String slug);
 }

@@ -65,17 +65,27 @@ s
 						<tbody>
 							<c:forEach var="category" items="${listCategory}">
 								<tr>
-									<td><div class="customer-pic">
-											<img src="${category.image }" class="rounded-circle"
-												width="40" height="40" alt="">
-										</div>
-										<p class="mb-0 customer-name fw-bold">${category.name}</p>
-									</td>
+									<td><a class="d-flex align-items-center gap-3"
+										href="javascript:;">
+											<div class="customer-pic">
+												<img src="${category.image }" class="rounded-circle"
+													width="40" height="40" alt="">
+											</div>
+											<p class="mb-0 customer-name fw-bold">${category.name}</p>
+									</a></td>
 									<td>${category.slug}</td>
 									<td>${category.updateAt != null ? category.updateAt : category.createAt}</td>
-									<td>
-										<a class="dropdown-item" href='<c:url value="/admin/category/edit?slug=${category.slug}"/>'>Edit</a>
-										<a class="dropdown-item" href='<c:url value="/admin/category/delete/delete-${category.slug}"/>'>Delete</a>
+									<td><a class="dropdown-item"
+										href='<c:url value="/admin/category/edit?slug=${category.slug}"/>'>Edit</a>
+										<c:if test="${category.isDeleted() == true}">
+											<!-- Nếu isDeleted là true, hiển thị nút Restore -->
+											<a class="dropdown-item"
+												href='<c:url value="/admin/category/restore/restore-${category.slug}"/>'>Restore</a>
+										</c:if> <c:if test="${category.isDeleted() == false}">
+											<!-- Nếu isDeleted là false, hiển thị nút Delete -->
+											<a class="dropdown-item"
+												href='<c:url value="/admin/category/delete/delete-${category.slug}"/>'>Delete</a>
+										</c:if>
 									</td>
 								</tr>
 							</c:forEach>

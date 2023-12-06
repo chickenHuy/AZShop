@@ -38,7 +38,7 @@ import com.azshop.services.*;
 		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit",
 		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory",
 		"/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel",
-		"/admin/category/delete/*" })
+		"/admin/category/delete/*", "/admin/category/restore/*" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -78,6 +78,8 @@ public class AdminController extends HttpServlet {
 			getEditCategory(req, resp);
 		} else if (url.contains("/admin/category/delete")) {
 			getDeleteCategory(req, resp);
+		} else if (url.contains("/admin/category/restore")) {
+			getRestoreCategory(req, resp);
 		} else if (url.contains("/admin/customer")) {
 			getAllUser(req, resp);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/customer.jsp");
@@ -116,6 +118,31 @@ public class AdminController extends HttpServlet {
 			}
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/edituserlevel.jsp");
 			rDispatcher.forward(req, resp);
+		}
+	}
+
+	private void getRestoreCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String url = req.getRequestURL().toString();
+		URI uri;
+		try {
+			uri = new URI(url);
+			String path = uri.getPath();
+			String[] parts = path.split("/");
+			PrintWriter out = resp.getWriter();
+			if (parts.length > 0) {
+				if (url.contains("restore")) {
+					String slug = parts[parts.length - 1].replace("restore-", "");
+					CategoryModel category = categoryService.getCategoryBySlug(slug);
+					if (category == null) {
+						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+					} else {
+						categoryService.restoreBySlug(slug);
+					}
+				}
+				resp.sendRedirect("/AZShop/admin/categories");
+			}
+		} catch (Exception e) {
+			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 		}
 	}
 
@@ -324,7 +351,7 @@ public class AdminController extends HttpServlet {
 	}
 
 	private void getAllCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<CategoryModel> listCategory = categoryService.getAll();
+		List<CategoryModel> listCategory = categoryService.getAllAdmin();
 
 		int countAllCategory = listCategory.size();
 		req.setAttribute("countAllCategory", countAllCategory);

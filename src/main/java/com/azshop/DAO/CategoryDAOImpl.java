@@ -114,6 +114,36 @@ public class CategoryDAOImpl implements ICategoryDAO {
 	}
 
 	@Override
+	public List<CategoryModel> getAllAdmin() {
+		List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+		try {
+			String sql = "SELECT * FROM Category";
+			conn = new DBConnection().getConnection();
+
+			ps = conn.prepareStatement(sql);
+
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				CategoryModel category = new CategoryModel();
+				category.setId(rs.getInt("id"));
+				category.setCategoryId(rs.getInt("categoryId"));
+				category.setName(rs.getString("name"));
+				category.setSlug(rs.getString("slug"));
+				category.setImage(rs.getString("image"));
+				category.setDeleted(rs.getBoolean("isDeleted"));
+				category.setCreateAt(rs.getDate("createAt"));
+				category.setUpdateAt(rs.getDate("updateAt"));
+				categoryList.add(category);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return categoryList;
+	}
+	
+	@Override
 	public List<CategoryModel> getChildCategory(int parentId) {
 		List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
 		try {
@@ -270,6 +300,23 @@ public class CategoryDAOImpl implements ICategoryDAO {
 			e.printStackTrace();
 		}
 		return category;
+	}
+	
+	@Override
+	public void restoreBySlug(String slug) {
+		try {
+	        String sql = "UPDATE Category SET isDeleted = 0, updateAt = GETDATE() WHERE slug = ?";
+	        conn = new DBConnection().getConnection();
+
+	        ps = conn.prepareStatement(sql);
+	        ps.setString(1, slug);
+
+	        ps.executeUpdate();
+
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 
 }
