@@ -14,13 +14,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.azshop.DAO.CartItemDAOImpl;
+import com.azshop.models.CartItemModel;
+import com.azshop.models.CartModel;
 import com.azshop.models.CategoryModel;
 import com.azshop.models.ImageModel;
 import com.azshop.models.ProductModel;
 import com.azshop.models.StoreModel;
 import com.azshop.models.StyleValueModel;
 import com.azshop.models.UserModel;
+import com.azshop.services.CartItemServiceImpl;
+import com.azshop.services.CartServiceImpl;
 import com.azshop.services.CategoryServiceImpl;
+import com.azshop.services.ICartItemService;
+import com.azshop.services.ICartService;
 import com.azshop.services.ICategoryService;
 import com.azshop.services.IImageService;
 import com.azshop.services.IProductService;
@@ -36,7 +43,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/product/*", "/customer-search", "/customer/cart", "/customer-information"})
+@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/product/*", "/customer-search", "/customer/cart", "/customer-information", "/customer/add-to-cart/*"})
 public class CustomerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -47,6 +54,8 @@ public class CustomerController extends HttpServlet {
 	IImageService imageService = new ImageServiceImpl();
 	IUserService userService = new UserServiceImpl();
 	IStoreService storeService = new StoreServiceImpl();
+	ICartService cartService = new CartServiceImpl();
+	ICartItemService cartItemService = new CartItemServiceImpl();
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI().toString();
@@ -62,12 +71,13 @@ public class CustomerController extends HttpServlet {
 					Object sessionObject = session.getAttribute(Constant.userSession);
 					if (sessionObject instanceof UserModel) {
 						UserModel user = (UserModel) sessionObject;
+						List<CartModel> cartList = cartService.getByUserId(user.getId());
 						req.setAttribute("user", user);
 						// Sử dụng thông tin người dùng ở đây
 					}
 				}
 
-				getAllProduct(req, resp);
+				getAll(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -101,6 +111,10 @@ public class CustomerController extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		else if (url.contains("customer/add-to-cart")) {
+			RequestDispatcher rd = req.getRequestDispatcher("/views/customer/home.jsp");
+			rd.forward(req, resp);
+		}
 		else if (url.contains("customer-information")) {
 			try {
 				HttpSession session = req.getSession();
@@ -119,6 +133,71 @@ public class CustomerController extends HttpServlet {
 		}
 	}
 	
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String url = req.getRequestURI().toString();
+		
+		if (url.contains("customer/add-to-cart")) {
+			addProductToCart(req, resp);
+		}
+	}
+	
+	private void addProductToCart(HttpServletRequest req, HttpServletResponse resp) {
+		//ma hoa UTF-8
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+		try {
+			HttpSession session = req.getSession();
+			if (session != null) {
+				Object sessionObject = session.getAttribute(Constant.userSession);
+				if (sessionObject instanceof UserModel) {
+					UserModel user = (UserModel) sessionObject;
+					req.setAttribute("user", user);
+					// Sử dụng thông tin người dùng ở đây
+					String url = req.getRequestURL().toString();
+					String pageCurrent = "category";
+					URI uri;
+					try {
+
+						uri = new URI(url);
+						String path = uri.getPath();
+
+						String[] parts = path.split("/");
+
+						if (parts.length > 0) {
+							String slug = parts[parts.length - 1];
+							
+							try {
+								ProductModel product = productService.getBySlug(slug);
+								
+								//Thêm cart mới
+								CartModel cart = new CartModel();
+								cart.setUserId(user.getId());
+								cart.setStoreId(product.getStoreId());
+								
+								cartService.insert(cart);
+								
+								//Thêm item cho cart
+								CartItemModel cartItem = new CartItemModel();
+								cartItem.setCartId(cart.getId());
+								cartItem.setProductId(product.getId());
+								cartItem.setStyleValueId(product.getStyleValueId());
+								cartItem.setCount(Integer.parseInt(req.getParameter("count")));
+								
+								cartItemService.insert(cartItem);
+								
+							} catch (Exception e) {
+								// TODO: handle exception
+							}
+							
+						}
+				}
+			}
+			getInforCustomer(req, resp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void getInforCustomer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.getRequestDispatcher("/views/customer/information.jsp").forward(req, resp);
 	}
@@ -128,8 +207,7 @@ public class CustomerController extends HttpServlet {
 		rd.forward(req, resp);
 	}
 
-	private void getAllProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<CategoryModel> categoryList = categoryService.getAll();
+	private void getAll(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<ProductModel> productList = productService.getAll();
 		List<ImageModel> imageList = new ArrayList<ImageModel>();
 		
@@ -138,7 +216,6 @@ public class CustomerController extends HttpServlet {
 			imageList.add(image);
 		}
 		
-		req.setAttribute("categoryList", categoryList);
 		req.setAttribute("imageList", imageList);
 		req.setAttribute("productList",productList);
 		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/home.jsp");
