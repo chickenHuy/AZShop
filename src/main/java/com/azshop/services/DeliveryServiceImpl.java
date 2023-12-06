@@ -17,8 +17,7 @@ public class DeliveryServiceImpl implements IDeliveryService {
 
 	@Override
 	public DeliveryModel getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return deliveryDAO.getById(id);
 	}
 
 	@Override

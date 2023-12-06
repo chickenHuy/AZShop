@@ -17,10 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import com.azshop.models.StoreModel;
+import com.azshop.models.StyleModel;
+import com.azshop.models.UserLevelModel;
 import com.azshop.models.UserModel;
-import com.azshop.services.IStoreService;
-import com.azshop.services.IUserService;
-import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadUtils;
@@ -34,8 +33,10 @@ import com.azshop.services.*;
 		* 50)
 
 @WebServlet(urlPatterns = { "/admin/dashboard", "/admin/product", "/admin/customer", "/admin/store",
-		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit/*",
-		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory", "/admin/order-edit-status" })
+		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit",
+		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory",
+		"/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel",
+		"/admin/category/delete/*", "/admin/category/restore/*", "/admin/styles", "/admin/style/delete", "/admin/style/restore"})
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -44,6 +45,10 @@ public class AdminController extends HttpServlet {
 
 	IProductService productService = new ProductServiceImpl();
 	ICategoryService categoryService = new CategoryServiceImpl();
+	IStyleValueService styleValueService = new StyleValueImpl();
+	IStyleService styleService = new StyleServiceImpl();
+
+	IUserLevelService userLevelService = new UserLevelServiceImpl();
 	IOrderService orderService = new OrderServiceImpl();
 
 	@Override
@@ -70,6 +75,10 @@ public class AdminController extends HttpServlet {
 			getAddCategory(req, resp);
 		} else if (url.contains("/admin/category/edit")) {
 			getEditCategory(req, resp);
+		} else if (url.contains("/admin/category/delete")) {
+			getDeleteCategory(req, resp);
+		} else if (url.contains("/admin/category/restore")) {
+			getRestoreCategory(req, resp);
 		} else if (url.contains("/admin/customer")) {
 			getAllUser(req, resp);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/customer.jsp");
@@ -83,33 +92,138 @@ public class AdminController extends HttpServlet {
 			}
 		} else if (url.contains("/admin/store")) {
 			getAllStore(req, resp);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/store.jsp");
+			rDispatcher.forward(req, resp);
+		} else if (url.contains("/admin/userlevel")) {
+			getAllUserLevel(req, resp);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/userlevel.jsp");
+			rDispatcher.forward(req, resp);
+		} else if (url.contains("/admin/adduserlevel")) {
+			String message = req.getParameter("message");
+			req.setAttribute("message", message);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/adduserlevel.jsp");
+			rDispatcher.forward(req, resp);
 		} else if (url.contains("/admin/order-edit-status")) {
 			editOrderStatus(req, resp);
 		} else if (url.contains("/admin/orders")) {
 			getAllOrder(req, resp);
+		} else if (url.contains("/admin/edituserlevel")) {
+			String id = req.getParameter("id");
+			String message = req.getParameter("message");
+			req.setAttribute("message", message);
+			if (id != null) {
+				UserLevelModel userLevel = userLevelService.getById(Integer.parseInt(id));
+				req.setAttribute("userlevel", userLevel);
+			}
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/edituserlevel.jsp");
+			rDispatcher.forward(req, resp);
+		} else if (url.contains("/admin/style/delete")) {
+			getDeleteStyle(req, resp);
+		} else if (url.contains("/admin/style/restore")) {
+			getRestoreStyle(req, resp);
+		} else if (url.contains("/admin/styles")) {
+			getAllStyle(req, resp);
+		} 
+	}
+
+	private void getRestoreStyle(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String styleId = req.getParameter("id");
+		if (styleId != null) {
+			styleService.restore(Integer.parseInt(styleId));
+		}
+		resp.sendRedirect("/AZShop/admin/styles");
+	}
+
+	private void getDeleteStyle(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String styleId = req.getParameter("id");
+		if (styleId != null) {
+			styleService.delete(Integer.parseInt(styleId));
+		}
+		resp.sendRedirect("/AZShop/admin/styles");
+	}
+
+	private void getAllStyle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		List<StyleModel> listStyle = styleService.getAllAdmin();
+		req.setAttribute("listStyle", listStyle);
+		int countAllStyle = listStyle.size();
+		req.setAttribute("countAllStyle", countAllStyle);
+		List<CategoryModel> listCategory = categoryService.getAll();
+		req.setAttribute("listCategory", listCategory);
+		
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/styles.jsp");
+		rDispatcher.forward(req, resp);
+	}
+
+	private void getRestoreCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String url = req.getRequestURL().toString();
+		URI uri;
+		try {
+			uri = new URI(url);
+			String path = uri.getPath();
+			String[] parts = path.split("/");
+			PrintWriter out = resp.getWriter();
+			if (parts.length > 0) {
+				if (url.contains("restore")) {
+					String slug = parts[parts.length - 1].replace("restore-", "");
+					CategoryModel category = categoryService.getCategoryBySlug(slug);
+					if (category == null) {
+						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+					} else {
+						categoryService.restoreBySlug(slug);
+					}
+				}
+				resp.sendRedirect("/AZShop/admin/categories");
+			}
+		} catch (Exception e) {
+			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 		}
 	}
 
-	private void editOrderStatus(HttpServletRequest req, HttpServletResponse resp) throws UnsupportedEncodingException, IOException, ServletException {
-		req.setCharacterEncoding("UTF-8");
-	    resp.setCharacterEncoding("UTF-8");
-	    String orderId = req.getParameter("orderId");
+	private void getDeleteCategory(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		String url = req.getRequestURL().toString();
+		URI uri;
+		try {
+			uri = new URI(url);
+			String path = uri.getPath();
+			String[] parts = path.split("/");
+			PrintWriter out = resp.getWriter();
+			if (parts.length > 0) {
+				if (url.contains("delete")) {
+					String slug = parts[parts.length - 1].replace("delete-", "");
+					CategoryModel category = categoryService.getCategoryBySlug(slug);
+					if (category == null) {
+						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+					} else {
+						categoryService.deleteBySlug(slug);
+					}
+				}
+				resp.sendRedirect("/AZShop/admin/categories");
+			}
+		} catch (Exception e) {
+			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+		}
+	}
 
-	    OrderModel order = orderService.getById(Integer.parseInt(orderId));
+	private void editOrderStatus(HttpServletRequest req, HttpServletResponse resp)
+			throws UnsupportedEncodingException, IOException, ServletException {
+		String orderId = req.getParameter("orderId");
 
-	    if ("pending Pickup".equals(order.getStatus())) {
-	        order.setStatus("shipping");
-	    } else if ("shipping".equals(order.getStatus())) {
-	        order.setStatus("delivered");
-	    } else if ("delivered".equals(order.getStatus())) {
-	        order.setStatus("completed");
-	    }
+		OrderModel order = orderService.getById(Integer.parseInt(orderId));
 
-	    // Update the order only once after processing all conditions
-	    orderService.update(order);
+		if ("pending Pickup".equals(order.getStatus())) {
+			order.setStatus("shipping");
+		} else if ("shipping".equals(order.getStatus())) {
+			order.setStatus("delivered");
+		} else if ("delivered".equals(order.getStatus())) {
+			order.setStatus("completed");
+		}
 
-	    // Redirect the user after updating the order status
-	    resp.sendRedirect("orders");
+		// Update the order only once after processing all conditions
+		orderService.update(order);
+
+		// Redirect the user after updating the order status
+		resp.sendRedirect("orders");
 	}
 
 	private void getProductByCategory(HttpServletRequest req, HttpServletResponse resp)
@@ -142,6 +256,11 @@ public class AdminController extends HttpServlet {
 		}
 	}
 
+	private void getAllUserLevel(HttpServletRequest req, HttpServletResponse resp) {
+		List<UserLevelModel> list = userLevelService.getAll();
+		req.setAttribute("listuserlevel", list);
+	}
+
 	private void editProductStatus(HttpServletRequest req, HttpServletResponse resp)
 			throws URISyntaxException, ServletException, IOException {
 
@@ -155,27 +274,26 @@ public class AdminController extends HttpServlet {
 			if (parts.length > 0) {
 				if (url.contains("banning")) {
 					String slug = parts[parts.length - 1].replace("banning-", "");
+					System.out.println(slug);
 					ProductModel productModel = productService.getBySlug(slug);
 					if (productModel == null) {
 						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 					} else {
 						productModel.setActive(false);
 						productService.update(productModel);
-						getAllProduct(req, resp);
 					}
 				} else {
 					String slug = parts[parts.length - 1].replace("liencing-", "");
-
+					System.out.println(slug);
 					ProductModel productModel = productService.getBySlug(slug);
 					if (productModel == null) {
 						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 					} else {
 						productModel.setActive(true);
 						productService.update(productModel);
-						getAllProduct(req, resp);
 					}
 				}
-
+				resp.sendRedirect("/AZShop/admin/product");
 			}
 		} catch (Exception e) {
 			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
@@ -184,28 +302,26 @@ public class AdminController extends HttpServlet {
 
 	private void getEditCategory(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		List<CategoryModel> listCategory = categoryService.getAll();
-		req.setAttribute("listCategory", listCategory);
-
-		String url = req.getPathInfo();
-		if (url != null && url.startsWith("/")) {
-			url = url.substring(1);
-		}
-
-		String slug = url.substring(url.indexOf("edit-") + "edit-".length());
-		System.out.println("aaa" + slug);
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+		String slug = req.getParameter("slug");
 
 		CategoryModel category = categoryService.getCategoryBySlug(slug);
-		System.out.println("aaa" + category.getName());
 		req.setAttribute("category", category);
 
-		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/addCategory.jsp");
-		rDispatcher.forward(req, resp);
+		List<CategoryModel> listCategory = categoryService.getAll();
+		req.setAttribute("listCategory", listCategory);
+		System.out.println(category.getName());
 
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editCategory.jsp");
+		rDispatcher.forward(req, resp);
 	}
 
 	private void getAllOrder(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<OrderModel> listOrder = orderService.getAll();
+		for (OrderModel order : listOrder) {
+           order.setPrice(orderService.calculateOrderTotal(order.getId())); ;
+        }
 		req.setAttribute("listOrder", listOrder);
 
 		List<StoreModel> listStore = storeService.getAll();
@@ -221,6 +337,7 @@ public class AdminController extends HttpServlet {
 	private void editStatus(HttpServletRequest req, HttpServletResponse resp)
 			throws URISyntaxException, IOException, ServletException {
 		String url = req.getRequestURL().toString();
+		System.out.println(url);
 		URI uri;
 		try {
 			uri = new URI(url);
@@ -252,6 +369,7 @@ public class AdminController extends HttpServlet {
 						getAllStore(req, resp);
 					}
 				}
+				resp.sendRedirect("/AZShop/admin/store");
 
 			}
 		} catch (Exception e) {
@@ -269,7 +387,7 @@ public class AdminController extends HttpServlet {
 	}
 
 	private void getAllCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<CategoryModel> listCategory = categoryService.getAll();
+		List<CategoryModel> listCategory = categoryService.getAllAdmin();
 
 		int countAllCategory = listCategory.size();
 		req.setAttribute("countAllCategory", countAllCategory);
@@ -291,6 +409,63 @@ public class AdminController extends HttpServlet {
 		String url = req.getRequestURL().toString();
 		if (url.contains("/admin/addcategory")) {
 			postAddCategory(req, resp);
+		} else if (url.contains("/admin/adduserlevel")) {
+			postAddUserLevel(req, resp);
+		} else if (url.contains("/admin/edituserlevel")) {
+			postEditUserLevel(req, resp);
+		}
+
+	}
+
+	private void postEditUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		String id = req.getParameter("id");
+		UserLevelModel userLevel = userLevelService.getById(Integer.parseInt(id));
+
+		String name = req.getParameter("userlevelname");
+		String minPoint = req.getParameter("minpoint");
+		String discount = req.getParameter("discount");
+
+		if (name != null && minPoint != null && discount != null) {
+			try {
+				userLevel.setName(name);
+				userLevel.setMinPoint(Integer.parseInt(minPoint));
+				userLevel.setDiscount(Integer.parseInt(discount));
+
+				userLevelService.update(userLevel);
+				resp.sendRedirect("?message=Successfully");
+			} catch (Exception e) {
+				resp.sendRedirect("?message=Failed to edit the user level");
+			}
+		} else {
+			resp.sendRedirect("?message=You must fill out the form");
+		}
+	}
+
+	private void postAddUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		UserLevelModel userLevel = new UserLevelModel();
+
+		String name = req.getParameter("userlevelname");
+		String minPoint = req.getParameter("minpoint");
+		String discount = req.getParameter("discount");
+		if (name != null && minPoint != null && discount != null) {
+			try {
+				userLevel.setName(name);
+				userLevel.setMinPoint(Integer.parseInt(minPoint));
+				userLevel.setDiscount(Integer.parseInt(discount));
+
+				userLevelService.insert(userLevel);
+				resp.sendRedirect("?message=Successfully");
+			} catch (Exception e) {
+				resp.sendRedirect("?message=Failed to add the user level");
+			}
+		} else {
+			resp.sendRedirect("?message=You must fill out the form");
 		}
 	}
 

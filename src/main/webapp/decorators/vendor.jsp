@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="/common/taglib.jsp"%>
 <!doctype html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -95,28 +95,22 @@
 	<script src="<c:url value='/templates/assets/plugins/fancy-file-uploader/jquery.fileupload.js' />"></script>
 	<script src="<c:url value='/templates/assets/plugins/fancy-file-uploader/jquery.iframe-transport.js' />"></script>
 	<script src="<c:url value='/templates/assets/plugins/fancy-file-uploader/jquery.fancy-fileupload.js' />"></script>
-	
-	<script src="<c:url value='/templates/assets/plugins/datatable/js/jquery.dataTables.min.js' />"></script>
+		<script src="<c:url value='/templates/assets/plugins/datatable/js/jquery.dataTables.min.js' />"></script>
 	<script src="<c:url value='/templates/assets/plugins/datatable/js/dataTables.bootstrap5.min.js' />"></script>
 	<!--BS Scripts-->
 	<script
 		src="<c:url value="/templates/assets/js/bootstrap.bundle.min.js"></c:url>"></script>
 	<script src="<c:url value="/templates/assets/js/main.js"></c:url>"></script>
-	
-	<script>
+    	<script>
 		$(document).ready(function() {
 			var table = $('#example2').DataTable( {
 				lengthChange: false,
 				buttons: [ 'copy', 'excel', 'pdf', 'print']
 			} );
-		 
+		
 			table.buttons().container()
 				.appendTo( '#example2_wrapper .col-md-6:eq(0)' );
 		} );
-	 </script>
-	 
-	 
-    
-</body>
+	</script>
 </body>
 </html>

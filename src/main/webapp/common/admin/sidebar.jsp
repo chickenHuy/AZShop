@@ -33,9 +33,11 @@
             </li>
             <li> <a href='<c:url value="/admin/categories"/>'><span class="material-symbols-outlined">arrow_right</span>Categories</a>
             </li>
-            <li> <a href="ecommerce-customers.html"><span class="material-symbols-outlined">arrow_right</span>Customers</a>
+            <li> <a href='<c:url value="/admin/styles"/>'><span class="material-symbols-outlined">arrow_right</span>Styles</a>
             </li>
-            <li> <a href="ecommerce-customer-details.html"><span class="material-symbols-outlined">arrow_right</span>Customer Details</a>
+            <li> <a href="customer"><span class="material-symbols-outlined">arrow_right</span>Customers</a>
+            </li>
+            <li> <a href="store"><span class="material-symbols-outlined">arrow_right</span>Store</a>
             </li>
             <li> <a href='<c:url value="/admin/orders"/>'><span class="material-symbols-outlined">arrow_right</span>Orders</a>
             </li>

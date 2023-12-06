@@ -16,7 +16,7 @@
 				<ol class="breadcrumb mb-0 p-0">
 					<li class="breadcrumb-item"><a href="javascript:;"><i
 							class="bx bx-home-alt"></i></a></li>
-					<li class="breadcrumb-item active" aria-current="page">Categories</li>
+					<li class="breadcrumb-item active" aria-current="page">Styles</li>
 				</ol>
 			</nav>
 		</div>
@@ -28,7 +28,7 @@
 	<div
 		class="product-count d-flex align-items-center gap-3 gap-lg-4 mb-4 fw-bold flex-wrap font-text1">
 		<a href="javascript:;"><span class="me-1">All</span><span
-			class="text-secondary">( ${countAllCategory} )</span></a>
+			class="text-secondary">( ${countAllStyle} )</span></a>
 	</div>
 
 	<div class="row g-3">
@@ -41,8 +41,8 @@
 		</div>
 		<div class="col-auto">
 			<div class="d-flex align-items-center gap-2 justify-content-lg-end">
-				<a class="btn btn-primary px-4" href="addcategory"><i
-					class="bi bi-plus-lg me-2"></i>Add Category</a>
+				<a class="btn btn-primary px-4" href="addstyle"><i
+					class="bi bi-plus-lg me-2"></i>Add Style</a>
 			</div>
 		</div>
 	</div>
@@ -55,37 +55,37 @@
 					<table id="example2" class="table align-middle">
 						<thead class="table-light">
 							<tr>
-								<th>Category Name</th>
-								<th>Slug</th>
+								<th>Style Name</th>
+								<th>Category</th>
 								<th>Date</th>
 								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
-							<c:forEach var="category" items="${listCategory}">
+							<c:forEach var="style" items="${listStyle}">
 								<tr>
-									<td><a class="d-flex align-items-center gap-3"
-										href="javascript:;">
-											<div class="customer-pic">
-												<img src="${category.image }" class="rounded-circle"
-													width="40" height="40" alt="">
-											</div>
-											<p class="mb-0 customer-name fw-bold">${category.name}</p>
-									</a></td>
-									<td>${category.slug}</td>
-									<td>${category.updateAt != null ? category.updateAt : category.createAt}</td>
+									<td>${style.name}</td>
+									<c:forEach var="category" items="${listCategory}">
+										<c:if test="${category.id eq style.categoryId}">
+											<td>${category.name}</td>
+										</c:if>
+									</c:forEach>
+									<td>${style.updateAt != null ? style.updateAt : style.createAt}</td>
 									<td><a class="dropdown-item"
-										href='<c:url value="/admin/category/edit?slug=${category.slug}"/>'>Edit</a>
-										<c:if test="${category.isDeleted() == true}">
+										href='<c:url value="/admin/style/edit?id=${style.id}"/>'>Edit</a>
+										<c:if test="${style.isDeleted() == true}">
 											<!-- Nếu isDeleted là true, hiển thị nút Restore -->
 											<a class="dropdown-item"
-												href='<c:url value="/admin/category/restore/restore-${category.slug}"/>'>Restore</a>
-										</c:if> <c:if test="${category.isDeleted() == false}">
+												href='<c:url value="/admin/style/restore?id=${style.id}"/>'>Restore</a>
+										</c:if> <c:if test="${style.isDeleted() == false}">
 											<!-- Nếu isDeleted là false, hiển thị nút Delete -->
 											<a class="dropdown-item"
-												href='<c:url value="/admin/category/delete/delete-${category.slug}"/>'>Delete</a>
+												href='<c:url value="/admin/style/delete?id=${style.id}"/>'>Delete</a>
 										</c:if>
 									</td>
+									<td>
+										<a class="dropdown-item"
+										href='<c:url value="/admin/style/stylevalue?styleid=${style.id}"/>'>Detail</a></td>
 								</tr>
 							</c:forEach>
 						</tbody>

@@ -103,7 +103,7 @@ public class StoreDAOImpl implements IStoreDAO {
             ps.setInt(1, id);
 
             rs = ps.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 store.setId(rs.getInt("id"));
                 store.setName(rs.getString("name"));
                 store.setBio(rs.getString("bio"));

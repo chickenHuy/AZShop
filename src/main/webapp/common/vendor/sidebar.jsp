@@ -4,7 +4,7 @@
 			<img src="assets/images/logo-icon.png" class="logo-img" alt="">
 		</div>
 		<div class="logo-name flex-grow-1">
-			<h5 class="mb-0">Roksyn</h5>
+			<h5 class="mb-0">AZSHOP</h5>
 		</div>
 		<div class="sidebar-close ">
 			<span class="material-symbols-outlined">close</span>
@@ -14,7 +14,7 @@
 
 		<!--navigation-->
 		<ul class="metismenu" id="menu">
-			<li><a href="index.html">
+			<li><a href="/AZShop/vendor/dashboard">
 					<div class="parent-icon">
 						<span class="material-symbols-outlined">home</span>
 					</div>
@@ -42,8 +42,6 @@
 				<ul>
 					<li><a href="<c:url value="/vendor/order/all"/>"><span
 							class="material-symbols-outlined">arrow_right</span>All Order</a></li>
-					<li><a href="<c:url value="/vendor/order/processing"/>"><span
-							class="material-symbols-outlined">arrow_right</span>Processing Order</a></li>
 					<li><a href="<c:url value="/vendor/order/processed"/>"><span
 							class="material-symbols-outlined">arrow_right</span>Processed Order</a></li>
 					<li><a href="<c:url value="/vendor/order/cancelled"/>"><span
