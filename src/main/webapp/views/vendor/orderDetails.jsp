@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+	<%@ include file="/common/taglib.jsp" %>
+<body>
 <main class="page-content">
        <!--breadcrumb-->
 				<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -31,8 +34,8 @@
           <div class="card-body">
               <div class="d-flex flex-lg-row flex-column align-items-start align-items-lg-center justify-content-between gap-3">
                  <div class="flex-grow-1">
-                   <h4 class="fw-bold">Order #849</h4>
-                   <p class="mb-0">Customer ID : <a href="javascript:;">6589743</a></p>
+                   <h4 class="fw-bold">Order #${order.id}</h4>
+                   <p class="mb-0">Customer ID : <a href="javascript:;">${order.userId}</a></p>
                  </div>
                  <div class="overflow-auto">
                   <div class="btn-group position-static">
@@ -73,7 +76,7 @@
             <div class="col-12 col-lg-8 d-flex">
                <div class="card w-100">
                 <div class="card-body">
-                  <h5 class="mb-3 fw-bold">Wishlist<span class="fw-light ms-2">(46)</span></h5>
+                  <h5 class="mb-3 fw-bold">Wishlist<span class="fw-light ms-2">(${countItem})</span></h5>
                   <div class="product-table">
                     <div class="table-responsive white-space-nowrap">
                        <table class="table align-middle">
@@ -81,129 +84,56 @@
                     <tr>
                      
                       <th>Product Name</th>
-                      <th>Color</th>
-                      <th>Size</th>
                       <th>Quantity</th>
                       <th>Price</th>
                       <th>Total</th>
                     </tr>
                    </thead>
                    <tbody>
-                     <tr>
-                       <td>
-					    <div class="d-flex align-items-center gap-3">
-						   <div class="product-box">
-                            <img src="assets/images/products/05.webp" alt="">
-                            </div>
-						   <div class="product-info">
-						    <a href="javascript:;" class="product-title">Women Pink Floral Printed</a>
-						    <p class="mb-0 product-category">Category : Fashion</p>
-						   </div>
-						 </div>
-                       </td>
-                       <td>Blue</td>
-                       <td>Large</td>
-                       <td>2</td>
-                       <td>$59</td>
-                       <td>189</td>
-                     </tr>
-                     <tr>
-                      <td>
-					    <div class="d-flex align-items-center gap-3">
-						   <div class="product-box">
-                            <img src="assets/images/products/06.webp" alt="">
-                            </div>
-						   <div class="product-info">
-						    <a href="javascript:;" class="product-title">Women Pink Floral Printed</a>
-						    <p class="mb-0 product-category">Category : Fashion</p>
-						   </div>
-						 </div>
-                       </td>
-                      <td>Blue</td>
-                      <td>Large</td>
-                      <td>2</td>
-                      <td>$59</td>
-                      <td>189</td>
-                    </tr>
-                    <tr>
-                      <td>
-					    <div class="d-flex align-items-center gap-3">
-						   <div class="product-box">
-                            <img src="assets/images/products/07.webp" alt="">
-                            </div>
-						   <div class="product-info">
-						    <a href="javascript:;" class="product-title">Women Pink Floral Printed</a>
-						    <p class="mb-0 product-category">Category : Fashion</p>
-						   </div>
-						 </div>
-                       </td>
-                      <td>Blue</td>
-                      <td>Large</td>
-                      <td>2</td>
-                      <td>$59</td>
-                      <td>189</td>
-                    </tr>
-                    <tr>
-                      <td>
-					    <div class="d-flex align-items-center gap-3">
-						   <div class="product-box">
-                            <img src="assets/images/products/08.webp" alt="">
-                            </div>
-						   <div class="product-info">
-						    <a href="javascript:;" class="product-title">Women Pink Floral Printed</a>
-						    <p class="mb-0 product-category">Category : Fashion</p>
-						   </div>
-						 </div>
-                       </td>
-                      <td>Blue</td>
-                      <td>Large</td>
-                      <td>2</td>
-                      <td>$59</td>
-                      <td>189</td>
-                    </tr>
-                    <tr>
-                      <td>
-					    <div class="d-flex align-items-center gap-3">
-						   <div class="product-box">
-                            <img src="assets/images/products/05.webp" alt="">
-                            </div>
-						   <div class="product-info">
-						    <a href="javascript:;" class="product-title">Women Pink Floral Printed</a>
-						    <p class="mb-0 product-category">Category : Fashion</p>
-						   </div>
-						 </div>
-                       </td>
-                      <td>Blue</td>
-                      <td>Large</td>
-                      <td>2</td>
-                      <td>$59</td>
-                      <td>189</td>
-                    </tr>
-					<tr>
-                      <td>
-					    <div class="d-flex align-items-center gap-3">
-						   <div class="product-box">
-                            <img src="assets/images/products/06.webp" alt="">
-                            </div>
-						   <div class="product-info">
-						    <a href="javascript:;" class="product-title">Women Pink Floral Printed</a>
-						    <p class="mb-0 product-category">Category : Fashion</p>
-						   </div>
-						 </div>
-                       </td>
-                      <td>Blue</td>
-                      <td>Large</td>
-                      <td>2</td>
-                      <td>$59</td>
-                      <td>189</td>
-                    </tr>
+                    <c:set var="subtotal" value="0" />
+                    <c:forEach var = "product" items = "${products}">
+                      <c:forEach var = "orderItem" items = "${orderItems}">
+                        <c:if test="${product.id eq orderItem.productId}">
+                          <tr>
+                            <td>
+                              <div class="d-flex align-items-center gap-3">
+                                <div class="product-box">
+                                  <c:set var="hasImages" value="false" />
+                                   <c:forEach var = "image" items="${images}">
+                                        <c:if test="${image.productId eq product.id}"> 
+                                          <img src="/AZShop/image?fname=${image.image}" alt="">
+                                          <c:set var="hasImages" value="true" />
+                                        </c:if>
+                                  </c:forEach>
+                                  <c:if test="${not hasImages}">
+                                    <img src="${pageContext.request.contextPath}/templates/static/none.png" alt=""/>
+                                  </c:if>
+                                  </div>
+                                <div class="product-info">
+                                <a href="/AZShop/vendor/product/edit/${product.slug}" class="product-title">${product.name}</a>
+                                <c:forEach var = "category" items = "${categorys}">
+                                  <c:if test="${category.id eq product.categoryId}">
+                                    <p class="mb-0 product-category">Category : ${category.name}</p>
+                                  </c:if>
+                                </c:forEach>
+                                </div>
+                              </div>
+                            </td>
+                            <td>${orderItem.count}</td>
+                            <td>${product.price} VNĐ</td>
+                            <td>${product.price * orderItem.count} VNĐ</td>
+                            <c:set var="subtotal" value="${subtotal + (product.price * orderItem.count)}" />
+                          </tr>
+                        </c:if>
+                      </c:forEach>
+                    </c:forEach>
                    </tbody>
                  </table>
                     </div>
                   </div>
                   <div class="d-flex align-items-center justify-content-between">
                     <p class="mb-0 fw-bold">Items subtotal :</p>
-                    <p class="mb-0 fw-bold">$8495</p>
+                    <p class="mb-0 fw-bold">${subtotal} VNĐ</p>
                   </div>
                 </div>
                </div>
@@ -360,3 +290,4 @@
 
         
      </main>
+</body>

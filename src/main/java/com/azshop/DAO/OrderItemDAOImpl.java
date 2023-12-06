@@ -196,4 +196,23 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 		}
 	}
 
+	@Override
+	public int countByOrder(int orderId) {
+		try {
+			String sql = "Select COUNT(*) as sumItem from OrderItem where isDeleted = 0 AND orderId = ?";
+			conn = new DBConnection().getConnection();			
+			ps = conn.prepareStatement(sql);		
+			ps.setInt(1, orderId);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				return rs.getInt("sumItem");
+			}
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return -1;
+	}
+
 }

@@ -18,4 +18,5 @@ public interface IOrderItemService {
 	void update(OrderItemModel orderItem);
 
 	void delete(int id);
+	int countByOrder(int orderId);
 }
