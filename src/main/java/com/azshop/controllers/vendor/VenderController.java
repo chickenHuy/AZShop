@@ -63,7 +63,7 @@ import com.google.gson.Gson;
 		* 50)
 @WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/vendor/product/new",
 		"/vendor/product/all", "/vendor/product/error404", "/vendor/product/edit/*", "/vendor/order/detail/*",
-		"/vendor/order/cancelled","/vendor/order/all","/vendor/order/processing", "/vendor/order/processed", "/vendor/order/details" , "/vendor/product/delete/*","/vendor/logout", "/vendor/order/status"})
+		"/vendor/order/cancelled","/vendor/order/all", "/vendor/order/processed", "/vendor/order/details" , "/vendor/product/delete/*","/vendor/logout", "/vendor/order/status"})
 public class VenderController extends HttpServlet {
 
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -121,18 +121,19 @@ public class VenderController extends HttpServlet {
 		}
 		if (url.contains("/vendor/order")) {
 			if (url.contains("/all")) {
-				getOrderList(req, resp, storeModel.getId());
-			} else if (url.contains("/processing")) {
-				getOrderList(req, resp, storeModel.getId());
-			} 
+				List<OrderModel> orderModels = orderService.getByStoreId(storeModel.getId());
+				getOrderList(req, resp, orderModels);
+			}
 			 else if (url.contains("/processed")) {
-				 getOrderList(req, resp, storeModel.getId());
+				 List<OrderModel> orderModels = orderService.getProcessed(storeModel.getId());
+				 getOrderList(req, resp, orderModels);
 			}
 			 else if (url.contains("/cancelled")) {
-				 getOrderList(req, resp, storeModel.getId());
+				 List<OrderModel> orderModels = orderService.getCancelled(storeModel.getId());
+				 getOrderList(req, resp, orderModels);
 			}
 			 else if (url.contains("/detail")) {
-				 getOrderList(req, resp, storeModel.getId());
+				return;
 			}
 		}
 		if (url.contains("vendor/logout")) {
@@ -149,7 +150,7 @@ public class VenderController extends HttpServlet {
 		}
 	}
 
-	private void getOrderList(HttpServletRequest req, HttpServletResponse resp, int storeId) throws ServletException, IOException {
+	private void getOrderList(HttpServletRequest req, HttpServletResponse resp, List<OrderModel> orderModels) throws ServletException, IOException {
 		String message = req.getParameter("message");
 		String error = req.getParameter("error");
 		if (message!= null)
@@ -160,7 +161,6 @@ public class VenderController extends HttpServlet {
 		{
 			req.setAttribute("error", error);
 		}
-		List<OrderModel> orderModels = orderService.getByStoreId(storeId);
 		List<DeliveryModel> deliveryModels = deliveryService.getAll();
 		req.setAttribute("status", orderService.statusForVendor());
 		req.setAttribute("orders", orderModels);
@@ -380,11 +380,11 @@ public class VenderController extends HttpServlet {
 			int id = Integer.parseInt(req.getParameter("id"));
 			String status = req.getParameter("status");
 			orderService.changeStatus(id, status);
-			resp.sendRedirect(req.getContextPath() + "/vendor/order/processing?message=The status has been updated.");
+			resp.sendRedirect(req.getContextPath() + "/vendor/order/all?message=The status has been updated.");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			resp.sendRedirect(req.getContextPath() + "/vendor/order/processing?error=The update has failed.");
+			resp.sendRedirect(req.getContextPath() + "/vendor/order/all?error=The update has failed.");
 			
 		}
 		
