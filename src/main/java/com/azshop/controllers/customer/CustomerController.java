@@ -44,7 +44,8 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/product/*", "/customer-search", "/customer/cart", "/customer-information", "/customer/add-to-cart/*"})
+@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/product/*", "/customer-search", "/customer/cart", 
+"/customer-information", "/customer/add-to-cart/*"})
 public class CustomerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -113,8 +114,11 @@ public class CustomerController extends HttpServlet {
 			}
 		}
 		else if (url.contains("customer/add-to-cart")) {
-			RequestDispatcher rd = req.getRequestDispatcher("/views/customer/home.jsp");
-			rd.forward(req, resp);
+			try {
+				addProductToCart(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
 		}
 		else if (url.contains("customer-information")) {
 			try {
@@ -134,14 +138,6 @@ public class CustomerController extends HttpServlet {
 		}
 	}
 	
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String url = req.getRequestURI().toString();
-		
-		if (url.contains("customer/add-to-cart")) {
-			addProductToCart(req, resp);
-		}
-	}
-	
 	private void addProductToCart(HttpServletRequest req, HttpServletResponse resp) throws UnsupportedEncodingException {
 		//ma hoa UTF-8
 		req.setCharacterEncoding("UTF-8");
@@ -153,9 +149,9 @@ public class CustomerController extends HttpServlet {
 				if (sessionObject instanceof UserModel) {
 					UserModel user = (UserModel) sessionObject;
 					req.setAttribute("user", user);
-					// Sử dụng thông tin người dùng ở đây
+					
+					//Sử dụng thông tin người dùng ở đây
 					String url = req.getRequestURL().toString();
-					String pageCurrent = "category";
 					URI uri;
 					try {
 
@@ -166,25 +162,55 @@ public class CustomerController extends HttpServlet {
 
 						if (parts.length > 0) {
 							String slug = parts[parts.length - 1];
-							
 							try {
-								ProductModel product = productService.getBySlug(slug);
 								
-								//Thêm cart mới
+								ProductModel product = productService.getBySlug(slug);														
+								
+								//Lấy thử danh sách cart
+								List<CartModel> cartList = cartService.getAll();
+								boolean isExistCart = false;
 								CartModel cart = new CartModel();
-								cart.setUserId(user.getId());
-								cart.setStoreId(product.getStoreId());
+								for (CartModel cartModel : cartList) {
+									//Kiểm tra xem store id của product được thêm vào có trong cart nào chưa
+									if (product.getStoreId() == cartModel.getStoreId()) {
+										isExistCart = true;
+										cart = cartModel;
+									}
+								}
 								
-								cartService.insert(cart);
+								//nếu đã có thì sẽ tiếp tục thêm sản phẩm vào
+								if (isExistCart == true) {
+									//Thêm item cho cart
+									CartItemModel cartItem = new CartItemModel();
+									cartItem.setCartId(cart.getId());
+									cartItem.setProductId(product.getId());
+									cartItem.setStyleValueId(product.getStyleValueId());
+									cartItem.setCount(Integer.parseInt(req.getParameter("count")));
+									cartItemService.insert(cartItem);
+								}
 								
-								//Thêm item cho cart
-								CartItemModel cartItem = new CartItemModel();
-								cartItem.setCartId(cart.getId());
-								cartItem.setProductId(product.getId());
-								cartItem.setStyleValueId(product.getStyleValueId());
-								cartItem.setCount(Integer.parseInt(req.getParameter("count")));
+								//nếu chưa có thì tạo cart mới cho store id này
+								else {
+									CartModel newCart = new CartModel();
+									newCart.setUserId(user.getId());
+									newCart.setStoreId(product.getStoreId());
+									cartService.insert(newCart);
+									
+									for (CartModel cartModel : cartList) {										
+										if (product.getStoreId() == cartModel.getStoreId()) {
+											cart = cartModel;
+										}
+									}
+									
+									//Thêm item cho cart
+									CartItemModel cartItem = new CartItemModel();
+									cartItem.setCartId(cart.getId());
+									cartItem.setProductId(product.getId());
+									cartItem.setStyleValueId(product.getStyleValueId());
+									cartItem.setCount(Integer.parseInt(req.getParameter("count")));
+									cartItemService.insert(cartItem);
+								}
 								
-								cartItemService.insert(cartItem);
 
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -192,9 +218,12 @@ public class CustomerController extends HttpServlet {
 						}
 					} catch (URISyntaxException e) {
 						e.printStackTrace();
-					}
+					}				
 				}
 			}
+			
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
