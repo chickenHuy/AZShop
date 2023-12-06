@@ -20,13 +20,13 @@
 					<div class="aside">
 						<h3 class="aside-title">Danh mục</h3>
 						<div class="checkbox-filter">
-							<a href='<c:url value="/guest/category/${categoryParent.slug}"/>'>
+							<a href='<c:url value="/customer/category/${categoryParent.slug}"/>'>
 								<div class="input-checkbox ${category.slug}">
 									<label><span>Tất cả</span></label>
 								</div>
 							</a>
 							<c:forEach var="category" items="${categoryChildList}">	
-								<a href='<c:url value="/guest/category/${categoryParent.slug}/${category.slug}"/>'>
+								<a href='<c:url value="/customer/category/${categoryParent.slug}/${category.slug}"/>'>
 									<div class="input-checkbox ${category.slug}">
 										<label><span>${category.name}</span><small>
 												(${category.countProduct})</small></label>
@@ -67,7 +67,7 @@
 								</label>
 							</div>
 							<c:forEach var="styleValue" items="${styleValueList}">	
-								<a href='<c:url value="/guest/category/${categoryParent.slug}/${category.slug}"/>'>
+								<a href='<c:url value="/customer/category/${categoryParent.slug}/${category.slug}"/>'>
 									<div class="input-checkbox ${category.slug}">
 										<label><span>${category.name}</span><small>
 												(${category.countProduct})</small></label>
@@ -161,7 +161,7 @@
 						<!-- product -->
 							<div class="col-md-4 col-xs-6">
 								<div class="product">
-									<a href='<c:url value="/guest/product/${product.slug}"/>'>
+									<a href='<c:url value="/customer/product/${product.slug}"/>'>
 										<div class="product-img">
 											<c:set var="hasImages" value="false" />
 											<c:forEach var="image" items="${imageList}">

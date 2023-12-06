@@ -83,20 +83,20 @@
 						</div>
 						<p>${product.description}</p>
 
-						<a href="<c:url value='/login-customer' />">
-							<div class="add-to-cart">
-								<div class="qty-label">
-									Qty
-									<div class="input-number">
-										<input type="number"> <span class="qty-up">+</span> <span
-											class="qty-down">-</span>
-									</div>
+						<div class="add-to-cart">
+							<div class="qty-label">
+								Qty
+								<div class="input-number">
+									<input type="number"> <span class="qty-up">+</span> <span
+										class="qty-down">-</span>
 								</div>
+							</div>
+							<a href="<c:url value='/customer/add-to-cart'/>">
 								<button class="add-to-cart-btn">
 									<i class="fa fa-shopping-cart"></i> add to cart
 								</button>
-							</div>
-						</a>
+							</a>
+						</div>
 
 						<ul class="product-btns">
 							<li><a href="#"><i class="fa fa-heart-o"></i> add to
@@ -347,7 +347,7 @@
 					<!-- product -->
 					<div class="col-md-3 col-xs-6">
 						<div class="product">
-							<a href='<c:url value="/guest/product/${product.slug}"/>'>
+							<a href='<c:url value="/customer/product/${product.slug}"/>'>
 								<div class="product-img">
 									<c:set var="hasImages" value="false" />
 									<c:forEach var="image" items="${imageRelateds}">
@@ -398,7 +398,7 @@
 									</button>
 								</div>
 							</div>
-							<a href="<c:url value='/login-customer' />">
+							<a href="<c:url value='/customer/add-to-cart'/>">
 								<div class="add-to-cart">
 									<button class="add-to-cart-btn">
 										<i class="fa fa-shopping-cart"></i> add to cart
