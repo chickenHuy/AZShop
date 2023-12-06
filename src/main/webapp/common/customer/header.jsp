@@ -21,6 +21,7 @@
 					</a>
 					<ul class="dropdown-menu" style="background-color: #1E1F29; border: 1px solid #1E1F29;">
 					   <li style="padding: 8px;"><a href="#">Tài khoản của tôi</a></li>
+					   <li style="padding: 8px;"><a href="<c:url value='/store-check' />">Trang cửa hàng</a></li>
 					   <li style="padding: 8px;"><a href="<c:url value='/logout-customer' />">Đăng xuất</a></li>
 					</ul>
 				 </li>

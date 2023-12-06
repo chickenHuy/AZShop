@@ -21,9 +21,9 @@ public class CustomerController extends HttpServlet {
 		String url = req.getRequestURI().toString();
 		if (url.contains("customer-home")) {
 			try {
-				HttpSession session = Constant.SESSION;
+				HttpSession session = req.getSession();
 				if (session != null) {
-					Object sessionObject = session.getAttribute("account");
+					Object sessionObject = session.getAttribute(Constant.userSession);
 					if (sessionObject instanceof UserModel) {
 						UserModel user = (UserModel) sessionObject;
 						req.setAttribute("user", user);
