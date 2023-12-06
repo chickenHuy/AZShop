@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import com.azshop.models.StoreModel;
+import com.azshop.models.UserLevelModel;
 import com.azshop.models.UserModel;
 import com.azshop.services.IStoreService;
 import com.azshop.services.IUserService;
@@ -35,7 +36,7 @@ import com.azshop.services.*;
 
 @WebServlet(urlPatterns = { "/admin/dashboard", "/admin/product", "/admin/customer", "/admin/store",
 		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit/*",
-		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory", "/admin/order-edit-status" })
+		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory", "/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -44,6 +45,9 @@ public class AdminController extends HttpServlet {
 
 	IProductService productService = new ProductServiceImpl();
 	ICategoryService categoryService = new CategoryServiceImpl();
+	IStyleValueService styleValueService = new StyleValueImpl();
+
+	IUserLevelService userLevelService = new UserLevelServiceImpl();
 	IOrderService orderService = new OrderServiceImpl();
 
 	@Override
@@ -83,10 +87,31 @@ public class AdminController extends HttpServlet {
 			}
 		} else if (url.contains("/admin/store")) {
 			getAllStore(req, resp);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/store.jsp");
+			rDispatcher.forward(req, resp);
+		} else if (url.contains("/admin/userlevel")) {
+			getAllUserLevel(req, resp);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/userlevel.jsp");
+			rDispatcher.forward(req, resp);
+		} else if (url.contains("/admin/adduserlevel")) {
+			String message = req.getParameter("message");
+			req.setAttribute("message", message);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/adduserlevel.jsp");
+			rDispatcher.forward(req, resp);
 		} else if (url.contains("/admin/order-edit-status")) {
 			editOrderStatus(req, resp);
 		} else if (url.contains("/admin/orders")) {
 			getAllOrder(req, resp);
+		} else if (url.contains("/admin/edituserlevel")) {
+			String id = req.getParameter("id");
+			String message = req.getParameter("message");
+			req.setAttribute("message", message);
+			if (id!=null) {
+				UserLevelModel userLevel = userLevelService.getById(Integer.parseInt(id));
+				req.setAttribute("userlevel", userLevel);
+			}
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/edituserlevel.jsp");
+			rDispatcher.forward(req, resp);
 		}
 	}
 
@@ -128,7 +153,7 @@ public class AdminController extends HttpServlet {
 
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
 			rDispatcher.forward(req, resp);
-
+			
 		} else {
 			List<ProductModel> listProduct = productService.getByCategoryId((categoryId));
 			req.setAttribute("listProduct", listProduct);
@@ -142,6 +167,11 @@ public class AdminController extends HttpServlet {
 		}
 	}
 
+
+	private void getAllUserLevel(HttpServletRequest req, HttpServletResponse resp) {
+		List<UserLevelModel> list = userLevelService.getAll();
+		req.setAttribute("listuserlevel", list);
+	}
 	private void editProductStatus(HttpServletRequest req, HttpServletResponse resp)
 			throws URISyntaxException, ServletException, IOException {
 
@@ -155,6 +185,7 @@ public class AdminController extends HttpServlet {
 			if (parts.length > 0) {
 				if (url.contains("banning")) {
 					String slug = parts[parts.length - 1].replace("banning-", "");
+					System.out.println(slug);
 					ProductModel productModel = productService.getBySlug(slug);
 					if (productModel == null) {
 						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
@@ -221,6 +252,7 @@ public class AdminController extends HttpServlet {
 	private void editStatus(HttpServletRequest req, HttpServletResponse resp)
 			throws URISyntaxException, IOException, ServletException {
 		String url = req.getRequestURL().toString();
+		System.out.println(url);
 		URI uri;
 		try {
 			uri = new URI(url);
@@ -252,6 +284,7 @@ public class AdminController extends HttpServlet {
 						getAllStore(req, resp);
 					}
 				}
+				resp.sendRedirect("/AZShop/admin/store");
 
 			}
 		} catch (Exception e) {
@@ -291,6 +324,63 @@ public class AdminController extends HttpServlet {
 		String url = req.getRequestURL().toString();
 		if (url.contains("/admin/addcategory")) {
 			postAddCategory(req, resp);
+		} else if (url.contains("/admin/adduserlevel")) {
+			postAddUserLevel(req, resp);
+		} else if (url.contains("/admin/edituserlevel")) {
+			postEditUserLevel(req, resp);
+		}
+
+	}
+
+	private void postEditUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		String id = req.getParameter("id");
+		UserLevelModel userLevel = userLevelService.getById(Integer.parseInt(id));
+
+		String name = req.getParameter("userlevelname");
+		String minPoint = req.getParameter("minpoint");
+		String discount = req.getParameter("discount");
+
+		if (name != null && minPoint!=null && discount!=null) {
+			try {
+				userLevel.setName(name);
+				userLevel.setMinPoint(Integer.parseInt(minPoint));
+				userLevel.setDiscount(Integer.parseInt(discount));
+
+				userLevelService.update(userLevel);
+				resp.sendRedirect("?message=Successfully");
+			} catch(Exception e) {
+				resp.sendRedirect("?message=Failed to edit the user level");
+			}
+		} else {
+			resp.sendRedirect("?message=You must fill out the form");
+		}
+	}
+
+	private void postAddUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		UserLevelModel userLevel = new UserLevelModel();
+
+		String name = req.getParameter("userlevelname");
+		String minPoint = req.getParameter("minpoint");
+		String discount = req.getParameter("discount");
+		if (name != null && minPoint!=null && discount!=null) {
+			try {
+				userLevel.setName(name);
+				userLevel.setMinPoint(Integer.parseInt(minPoint));
+				userLevel.setDiscount(Integer.parseInt(discount));
+
+				userLevelService.insert(userLevel);
+				resp.sendRedirect("?message=Successfully");
+			} catch(Exception e) {
+				resp.sendRedirect("?message=Failed to add the user level");
+			}
+		} else {
+			resp.sendRedirect("?message=You must fill out the form");
 		}
 	}
 

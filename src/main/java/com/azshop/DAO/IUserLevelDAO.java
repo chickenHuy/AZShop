@@ -7,7 +7,7 @@ import com.azshop.models.UserLevelModel;
 public interface IUserLevelDAO {
 	void insert(UserLevelModel userLevel);
 	void update(UserLevelModel userLevel);
-	void delete(int id);
+	void delete(UserLevelModel userLevel);
 	UserLevelModel getById(int id);
 	List<UserLevelModel> getAll();
 }
