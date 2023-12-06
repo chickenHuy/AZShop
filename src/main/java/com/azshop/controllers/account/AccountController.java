@@ -2,6 +2,7 @@ package com.azshop.controllers.account;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,13 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.azshop.models.CartModel;
 import com.azshop.models.UserModel;
 import com.azshop.services.IUserService;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
 
-@WebServlet(urlPatterns = {"/login-customer", "/verify-customer", "/register-customer", "/forget-customer", "/logout-customer", "/reset-success-customer", "/information-customer"})
+@WebServlet(urlPatterns = {"/login-customer", "/verify-customer", "/register-customer", "/forget-customer", "/logout-customer", "/reset-success-customer", "/information-customer", "/update-infor", "/update-password"})
 public class AccountController extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
@@ -33,19 +35,24 @@ public class AccountController extends HttpServlet{
 			getLogin(req, resp);
 		} else if (url.contains("forget-customer")) {
 			getForget(req, resp);
-		}
-		else if (url.contains("logout-customer")) {
+		} else if (url.contains("logout-customer")) {
 			getLogout(req, resp);
-		}
-		else if (url.contains("reset-success-customer")) {
+		} else if (url.contains("reset-success-customer")) {
 			getResetSuccess(req, resp);
-		}
-		else if (url.contains("information-customer")) {
+		} else if (url.contains("information-customer")) {
 			getInfor(req, resp);
 		}
 	}
 
 	private void getInfor(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		if (session != null) {
+			Object sessionObject = session.getAttribute(Constant.userSession);
+			if (sessionObject instanceof UserModel) {
+				UserModel user = (UserModel) sessionObject;
+				req.setAttribute("user", user);
+			}
+		}
 		req.getRequestDispatcher("/views/account/information.jsp").forward(req, resp);
 	}
 
@@ -96,7 +103,55 @@ public class AccountController extends HttpServlet{
 			postLogin(req, resp);
 		} else if (url.contains("forget-customer")) {
 			postForget(req, resp);
+		} else if (url.contains("update-infor")) {
+			postUpdateInfor(req, resp);
+		} else if (url.contains("update-password")) {
+			postUpdatePassword(req, resp);
 		}
+	}
+
+	private void postUpdatePassword(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		resp.setContentType("text/html;charset=UTF-8");
+		req.setCharacterEncoding("UTF-8");
+		
+		UserModel user = new UserModel();
+		String currentPass = req.getParameter("currentPassword");
+		String newPassword = req.getParameter("newPassword");
+		String renewPassword = req.getParameter("renewPassword");
+		HttpSession session = req.getSession();
+		if (session != null) {
+			Object sessionObject = session.getAttribute(Constant.userSession);
+			if (sessionObject instanceof UserModel) {
+				user = (UserModel) sessionObject;
+			}
+		}
+		String hasePassword = currentPass + "-" + user.getSalt();
+		if ((hasePassword).equals(user.getHashedPassword()) && newPassword.equals(renewPassword)) {
+			userService.updatePassword(user, newPassword);
+			resp.sendRedirect(req.getContextPath() + "/guest-home");
+		} else {
+			resp.sendRedirect(req.getContextPath() + "/information-customer");
+		}
+	}
+
+	private void postUpdateInfor(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		resp.setContentType("text/html;charset=UTF-8");
+		req.setCharacterEncoding("UTF-8");
+		UserModel user = new UserModel();
+		HttpSession session = req.getSession();
+		if (session != null) {
+			Object sessionObject = session.getAttribute(Constant.userSession);
+			if (sessionObject instanceof UserModel) {
+				user = (UserModel) sessionObject;
+			}
+		}
+		user.setFirstName(req.getParameter("firstName"));
+		user.setLastName(req.getParameter("lastName"));
+		user.setEmail(user.getEmail());
+		user.setPhone(req.getParameter("phone"));
+		user.setAddress(req.getParameter("address"));
+		userService.update(user);
+		resp.sendRedirect(req.getContextPath() + "/information-customer");
 	}
 
 	private void postForget(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
