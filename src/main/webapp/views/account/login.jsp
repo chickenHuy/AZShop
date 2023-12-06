@@ -40,7 +40,7 @@
                             <input class="form-control" type="password" name="password" placeholder="Password" required>
                             <div class="form-button">
                                 <button id="submit" type="submit" class="ibtn">Login</button>
-                                <a href="${pageContext.request.contextPath}/forget-customer" />Forget password?</a>
+                                <a href="${pageContext.request.contextPath}/forget-customer">Forget password?</a>
                             </div>
                         </form>
                         <div class="other-links">
@@ -50,16 +50,18 @@
                             <a href="#"><i class="fab fa-linkedin-in"></i>Linkedin</a>
                         </div>
                         <div class="page-links">
-                            <a href="${pageContext.request.contextPath}/register-customer" />Register new account</a>
+                            <a href="${pageContext.request.contextPath}/register-customer">Register new account</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="<c:url value="/templates/account/js/jquery.min.js"></c:url>"></script>
-    <script src="<c:url value="/templates/account/js/popper.min.js"></c:url>"></script>
-    <script src="<c:url value="/templates/account/js/bootstrap.min.js"></c:url>"></script>
-    <script src="<c:url value="/templates/account/js/main.js"></c:url>"></script>
+    
+    <script src="<c:url value='/templates/account/js/jquery.min.js' />"></script>
+    <script src="<c:url value='/templates/account/js/popper.min.js' />"></script>
+    <script src="<c:url value='/templates/account/js/bootstrap.min.js' />"></script>
+    <script src="<c:url value='/templates/account/js/main.js' />"></script>
+
 </body>
 </html>

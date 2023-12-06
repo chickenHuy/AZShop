@@ -13,4 +13,6 @@ public interface IOrderDAO {
     List<OrderModel> getByDeliveryId(int deliveryId);
     void update(OrderModel order);
     void delete(int id);
+    Boolean changeStatus(int id, String status);
+    List<OrderModel> getByStatusAndStore(String status, int storeId );
 }

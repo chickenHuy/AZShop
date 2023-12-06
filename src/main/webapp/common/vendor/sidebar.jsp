@@ -40,12 +40,14 @@
 					<div class="menu-title">Order</div>
 			</a>
 				<ul>
+					<li><a href="<c:url value="/vendor/order/all"/>"><span
+							class="material-symbols-outlined">arrow_right</span>All Order</a></li>
 					<li><a href="<c:url value="/vendor/order/processing"/>"><span
 							class="material-symbols-outlined">arrow_right</span>Processing Order</a></li>
 					<li><a href="<c:url value="/vendor/order/processed"/>"><span
 							class="material-symbols-outlined">arrow_right</span>Processed Order</a></li>
-					<li><a href="ecommerce-customers.html"><span
-							class="material-symbols-outlined">arrow_right</span>Cancel Order</a></li>
+					<li><a href="<c:url value="/vendor/order/cancelled"/>"><span
+							class="material-symbols-outlined">arrow_right</span>Cancelled Order</a></li>
 				</ul></li>
 			<li class="menu-label">Pages</li>
 			<li><a href="user-profile.html">

@@ -33,7 +33,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/product/*", "/customer-search", "/customer/cart"})
+@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/product/*", "/customer-search", "/customer/cart", "/customer-information"})
 public class CustomerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -97,8 +97,28 @@ public class CustomerController extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		else if (url.contains("customer-information")) {
+			try {
+				HttpSession session = req.getSession();
+				if (session != null) {
+					Object sessionObject = session.getAttribute(Constant.userSession);
+					if (sessionObject instanceof UserModel) {
+						UserModel user = (UserModel) sessionObject;
+						req.setAttribute("user", user);
+						// Sử dụng thông tin người dùng ở đây
+					}
+				}
+				getInforCustomer(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
+	private void getInforCustomer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.getRequestDispatcher("/views/customer/information.jsp").forward(req, resp);
+	}
+
 	private void getInforCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/checkout.jsp");
 		rd.forward(req, resp);
