@@ -178,10 +178,10 @@
 											</td>
 											<td>${product.price}</td>
 											<td>
-												<c:if test="${product.isActive() == true}">
+												<c:if test="${product.getIsActive() == true}">
 												    <span class="lable-table bg-primary-subtle text-primary rounded border border-primary-subtle font-text2 fw-bold">Publish<i class="bi bi-check2-all ms-2"></i></span>
 												</c:if>
-												<c:if test="${product.isActive() == false}">
+												<c:if test="${product.getIsActive() == false}">
 												    <span class="lable-table bg-warning-subtle text-warning rounded border border-warning-subtle font-text2 fw-bold">Draft<i class="bi bi-info-circle ms-2"></i></span>
 												</c:if>
 											</td>
@@ -193,9 +193,14 @@
 												</c:forEach>
 											</td>
 											<td>
-												<div class="product-rating">
-													<i class="fa-solid fa-star-half-stroke"></i><span>4.8</span>
-												</div>
+												<c:if test="${product.rating != null}">
+													<div class="product-rating">
+														<i class="fa-solid fa-star-half-stroke"></i><span>${product.rating}</span>
+													</div>
+												</c:if>
+												<c:if test="${product.rating == null}">
+													Currently unrated
+												</c:if>
 											</td>
 											<td>${product.quantity}</td>
 											<td>${product.sold}</td>
