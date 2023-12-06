@@ -38,8 +38,8 @@
 	rel="stylesheet" type="text/css">
 
 <!-- Custom stlylesheet -->
-<link href="<c:url value="/templates/guest/css/style.css" />"
-	rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="<c:url value='/templates/guest/css/style.css' />">
+	
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -57,20 +57,17 @@
 
 
 	<!-- jQuery Plugins -->
-	<script src="<c:url value="/templates/guest/js/jquery.min.js"></c:url>"></script>
-	<<<<<<< HEAD
-	<!-- JQuery phải được load trước do các tệp js khác có dùng đến nó -->
+	<script src="<c:url value='/templates/guest/js/jquery.min.js' />"></script>
 
-	<script src="<c:url value="/templates/guest/js/slick.min.js"></c:url>"></script>
-	======= >>>>>>> 22ec7a95aea185bd99bf846c71de3cd41a08e75f
+	<script src="<c:url value='/templates/guest/js/slick.min.js' />"></script>
 	<script
-		src="<c:url value="/templates/guest/js/bootstrap.min.js"></c:url>"></script>
-	<script src="<c:url value="/templates/guest/js/slick.min.js"></c:url>"></script>
+		src="<c:url value='/templates/guest/js/bootstrap.min.js' />"></script>
+	<script src="<c:url value='/templates/guest/js/slick.min.js' />"></script>
 	<script
-		src="<c:url value="/templates/guest/js/nouislider.min.js"></c:url>"></script>
+		src="<c:url value='/templates/guest/js/nouislider.min.js' />"></script>
 	<script
-		src="<c:url value="/templates/guest/js/jquery.zoom.min.js"></c:url>"></script>
-	<script src="<c:url value="/templates/guest/js/main.js"></c:url>"></script>
+		src="<c:url value='/templates/guest/js/jquery.zoom.min.js' />"></script>
+	<script src="<c:url value='/templates/guest/js/main.js' />"></script>
 
 </body>
 </html>

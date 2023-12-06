@@ -116,7 +116,7 @@ public class CustomerController extends HttpServlet {
 	}
 	
 	private void getInforCustomer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.getRequestDispatcher("/views/customer/information.jsp").forward(req, resp);
+		req.getRequestDispatcher("/views/account/information.jsp").forward(req, resp);
 	}
 
 	private void getInforCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
