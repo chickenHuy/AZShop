@@ -26,4 +26,5 @@ public interface IUserService {
 	UserModel login(String email, String password);
 	
 	void updatePassword(UserModel user, String newPassword);
+	void updateVendor(UserModel userModel);
 }
