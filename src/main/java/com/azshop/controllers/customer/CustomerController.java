@@ -67,50 +67,55 @@ public class CustomerController extends HttpServlet {
 		List<CategoryModel> categoryParentList = categoryService.getParentCategory();
 		req.setAttribute("categoryParentList", categoryParentList);				
 		
+		try {
+			HttpSession session = req.getSession();
+			if (session != null) {
+				Object sessionObject = session.getAttribute(Constant.userSession);
+				if (sessionObject instanceof UserModel) {
+					UserModel user = (UserModel) sessionObject;
+					List<CartModel> cartList = cartService.getByUserId(user.getId());
+					List<CartItemModel> cartItemList = new ArrayList<CartItemModel>();
+					
+					//Hiển thị item trong giỏ hàng
+					for (CartModel cart : cartList) {
+						List<CartItemModel> itemList = cartItemService.getByCartId(cart.getId());
+						cartItemList.addAll(itemList);
+					}										
+					
+					//Lấy thông tin danh sách product có trong giỏ hàng
+					List<ProductModel> productsInCart = new ArrayList<ProductModel>();
+					
+					for (CartItemModel cartItem : cartItemList) {
+						ProductModel  productInCart = productService.getById(cartItem.getProductId());
+						productsInCart.add(productInCart);
+					}
+					
+					List<ImageModel> imageProductsInCart = new ArrayList<ImageModel>();
+
+					for (ProductModel productModel : productsInCart) {
+						ImageModel image = imageService.getImage(productModel.getId());
+						imageProductsInCart.add(image);
+					}
+					
+					req.setAttribute("quantity", cartItemList.size());
+					req.setAttribute("user", user);
+					req.setAttribute("imageProductsInCart", imageProductsInCart);	
+					req.setAttribute("cartItemList", cartItemList);
+					req.setAttribute("productsInCart", productsInCart);						
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		if (url.contains("customer-home")) {
 			try {
-				HttpSession session = req.getSession();
-				if (session != null) {
-					Object sessionObject = session.getAttribute(Constant.userSession);
-					if (sessionObject instanceof UserModel) {
-						UserModel user = (UserModel) sessionObject;
-						List<CartModel> cartList = cartService.getByUserId(user.getId());
-						List<CartItemModel> cartItemList = new ArrayList<CartItemModel>();
-						
-						//Hiển thị item trong giỏ hàng
-						for (CartModel cart : cartList) {
-							List<CartItemModel> itemList = cartItemService.getByCartId(cart.getId());
-							cartItemList.addAll(itemList);
-						}						
-						
-						//Lấy thông tin danh sách product có trong giỏ hàng
-						List<ProductModel> productsInCart = new ArrayList<ProductModel>();
-						
-						for (CartItemModel cartItem : cartItemList) {
-							ProductModel  productInCart = productService.getById(cartItem.getProductId());
-							productsInCart.add(productInCart);
-						}
-						
-						List<ImageModel> imageProductsInCart = new ArrayList<ImageModel>();
-
-						for (ProductModel productModel : productsInCart) {
-							ImageModel image = imageService.getImage(productModel.getId());
-							imageProductsInCart.add(image);
-						}
-						
-						req.setAttribute("user", user);
-						req.setAttribute("imageProductsInCart", imageProductsInCart);	
-						req.setAttribute("cartItemList", cartItemList);
-						req.setAttribute("productsInCart", productsInCart);						
-					}
-				}
-
 				getAll(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-
+		
 		else if (url.contains("customer/category")) {
 			try {
 				getCategory(req, resp);

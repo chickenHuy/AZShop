@@ -88,7 +88,7 @@
 				<!-- section title -->
 				<div class="col-md-12">
 					<div class="section-title">
-						<h3 class="title">Sản phẩm mới</h3>
+						<h3 class="title">Tất cả sản phẩm</h3>
 						<div class="section-nav">
 							<ul class="section-tab-nav tab-nav">
 								<c:forEach var="category" items="${categoryParentList}">
@@ -192,7 +192,7 @@
 	</div>
 	<!-- /SECTION -->
 
-	<!-- SẢN PHẨM BÁN CHẠY -->
+	<!-- SẢN PHẨM MỚI -->
 	<!-- SECTION -->
 	<div class="section">
 		<!-- container -->
@@ -203,7 +203,7 @@
 				<!-- section title -->
 				<div class="col-md-12">
 					<div class="section-title">
-						<h3 class="title">Sản phẩm bán chạy</h3>
+						<h3 class="title">Sản phẩm mớiy</h3>
 						<div class="section-nav">
 							<ul class="section-tab-nav tab-nav">
 								<c:forEach var="category" items="${categoryParentList}">
