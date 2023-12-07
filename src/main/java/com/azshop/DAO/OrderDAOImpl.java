@@ -1,5 +1,6 @@
 package com.azshop.DAO;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -363,6 +364,43 @@ List<OrderModel> oderModelList = new ArrayList<OrderModel>();
 		}
 		
 		return oderModelList;
+	}
+
+	@Override
+	public List<BigDecimal> GetRevenueLast10Days(int storeId) {
+		List<BigDecimal> revenueList = new ArrayList<BigDecimal>();
+		
+		try {
+			String sql = "WITH AllDates AS (\r\n"
+					+ "    SELECT TOP 10\r\n"
+					+ "        DATEADD(DAY, -ROW_NUMBER() OVER (ORDER BY (SELECT NULL)), CONVERT(DATE, GETDATE())) AS RecentDate\r\n"
+					+ "    FROM master.dbo.spt_values\r\n"
+					+ ")\r\n"
+					+ "\r\n"
+					+ "SELECT \r\n"
+					+ "    AllDates.RecentDate AS OrderDate,\r\n"
+					+ "    ISNULL(SUM(amountToStore), 0) AS TotalAmount\r\n"
+					+ "FROM AllDates\r\n"
+					+ "LEFT JOIN [Order] ON AllDates.RecentDate = CONVERT(DATE, [Order].createAt) AND storeId = ? AND status = 'Completed'\r\n"
+					+ "GROUP BY AllDates.RecentDate\r\n"
+					+ "ORDER BY AllDates.RecentDate DESC;";
+			conn = new DBConnection().getConnection();
+			
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			
+			rs = ps.executeQuery();
+		    while (rs.next()) {
+		            BigDecimal totalAmount = rs.getBigDecimal("TotalAmount");
+		            revenueList.add(totalAmount);
+		        }
+
+		        conn.close();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		return revenueList;
+		
 	}
 	
 }

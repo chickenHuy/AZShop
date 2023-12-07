@@ -36,6 +36,7 @@ import com.azshop.models.ImageModel;
 import com.azshop.models.OrderItemModel;
 import com.azshop.models.OrderModel;
 import com.azshop.models.ProductModel;
+import com.azshop.models.RevenueData;
 import com.azshop.models.ReviewModel;
 import com.azshop.models.StoreModel;
 import com.azshop.models.StyleModel;
@@ -76,7 +77,7 @@ import com.google.gson.Gson;
 @WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/vendor/product/new",
 		"/vendor/product/all", "/vendor/product/error404", "/vendor/product/edit/*", "/vendor/order/detail/*",
 		"/vendor/order/cancelled","/vendor/order/all", "/vendor/order/processed", "/vendor/order/details" , "/vendor/product/delete/*","/vendor/logout", "/vendor/order/status"
-		,"/vendor/pickup-address", "/vendor/review"})
+		,"/vendor/pickup-address", "/vendor/review", "/vendor/product/error403", "/vendor/statistics-revenue","/vendor/statistics-product"})
 public class VenderController extends HttpServlet {
 
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -99,7 +100,7 @@ public class VenderController extends HttpServlet {
 		HttpSession session = req.getSession();
 		UserModel userModel = (UserModel) session.getAttribute(Constant.userSession);
 		StoreModel storeModel = (StoreModel) session.getAttribute(Constant.storeSession);
-		if (userModel == null || storeModel == null)
+		if (storeModel == null || userModel == null)
 		{
 			resp.sendRedirect(req.getContextPath() + "/login-customer");
 			return;
@@ -171,6 +172,25 @@ public class VenderController extends HttpServlet {
 		else if (url.contains("/vendor/review")) {
 			GetReview(req, resp, storeModel);
 		}
+		else if (url.contains("vendor/statistics-revenue")) {
+			req.setAttribute("eWallet", storeModel.geteWallet());
+			List<BigDecimal> revenue10Day = orderService.GetRevenueLast10Days(storeModel.getId());
+			req.setAttribute("revenueList", RevenueData.generateRevenueDataList(revenue10Day));
+			GetRevenue(req, resp, storeModel);
+		}
+		else if (url.contains("vendor/statistics-product")) {
+			GetStatisticsProduct(req, resp, storeModel);
+		}
+	}
+
+	private void GetStatisticsProduct(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel) throws ServletException, IOException {
+		req.getRequestDispatcher("/views/vendor/statisticsProduct.jsp").forward(req, resp);
+		
+	}
+
+	private void GetRevenue(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel) throws ServletException, IOException {
+		req.getRequestDispatcher("/views/vendor/statisticsRevenue.jsp").forward(req, resp);
+		
 	}
 
 	private void GetReview(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel) throws ServletException, IOException  {

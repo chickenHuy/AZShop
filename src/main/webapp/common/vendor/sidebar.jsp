@@ -66,18 +66,25 @@
 					</div>
 					<div class="menu-title">Pickup address</div>
 			</a></li>
-			
-			<li><a class="has-arrow" href="javascript:;">
+			<li>
+				<a href="<c:url value='/information-customer' />">
+                    <div class="parent-icon">
+                    	<span class="material-symbols-outlined">lock_open</span>
+                    </div>
+                    <div class="menu-title">Authentication</div>
+                  </a>
+			</li>
+			<li><a class="has-arrow" >
 					<div class="parent-icon">
 						<span class="material-symbols-outlined">monitoring</span>
 					</div>
-					<div class="menu-title">statistics</div>
+					<div class="menu-title">Statistics</div>
 			</a>
 				<ul>
-					<li><a href="charts-apex.html"><span
-							class="material-symbols-outlined">arrow_right</span>Apex</a></li>
-					<li><a href="charts-chartjs.html"><span
-							class="material-symbols-outlined">arrow_right</span>Chartjs</a></li>
+					<li><a href="/AZShop/vendor/statistics-revenue"><span
+							class="material-symbols-outlined">arrow_right</span>Revenue</a></li>
+					<li><a href="/AZShop/vendor/statistics-revenue"><span
+							class="material-symbols-outlined">arrow_right</span>Product</a></li>
 				</ul></li>
 		</ul>
 
