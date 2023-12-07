@@ -11,4 +11,5 @@ public interface IUserLevelDAO {
 	UserLevelModel getById(int id);
 	List<UserLevelModel> getAll();
 	boolean checkName(String name);
+	List<UserLevelModel> getAllDeleted();
 }
