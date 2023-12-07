@@ -35,9 +35,11 @@
             </li>
             <li> <a href='<c:url value="/admin/styles"/>'><span class="material-symbols-outlined">arrow_right</span>Styles</a>
             </li>
-            <li> <a href="customer"><span class="material-symbols-outlined">arrow_right</span>Customers</a>
+            <li> <a href='<c:url value="/admin/customer"/>'><span class="material-symbols-outlined">arrow_right</span>Customers</a>
             </li>
-            <li> <a href="store"><span class="material-symbols-outlined">arrow_right</span>Store</a>
+            <li> <a href='<c:url value="/admin/userlevel"/>'><span class="material-symbols-outlined">arrow_right</span>User levels</a>
+            </li>
+            <li> <a href='<c:url value="/admin/store"/>'><span class="material-symbols-outlined">arrow_right</span>Store</a>
             </li>
             <li> <a href='<c:url value="/admin/orders"/>'><span class="material-symbols-outlined">arrow_right</span>Orders</a>
             </li>

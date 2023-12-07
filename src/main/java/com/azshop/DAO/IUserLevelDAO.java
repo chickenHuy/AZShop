@@ -10,4 +10,5 @@ public interface IUserLevelDAO {
 	void delete(UserLevelModel userLevel);
 	UserLevelModel getById(int id);
 	List<UserLevelModel> getAll();
+	boolean checkName(String name);
 }
