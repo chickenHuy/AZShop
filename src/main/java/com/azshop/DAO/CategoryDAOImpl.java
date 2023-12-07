@@ -324,7 +324,7 @@ public class CategoryDAOImpl implements ICategoryDAO {
 	public List<CategoryModel> FindCategory(String keyword) {
 		List<CategoryModel> listCategory = new ArrayList<CategoryModel>();
 		try {
-			String sql = "Select * from Category where  Category.name LIKE '%" + keyword + "%' or Category.slug LIKE '%" + keyword + "%' AND isDeleted = 0";			
+			String sql = "Select * from Category where  (Category.name LIKE '%" + keyword + "%' or Category.slug LIKE '%" + keyword + "%') AND isDeleted = 0";			
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
