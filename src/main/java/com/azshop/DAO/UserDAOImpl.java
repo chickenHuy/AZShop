@@ -291,4 +291,24 @@ public class UserDAOImpl implements IUserDAO {
 		}
 	}
 
+	@Override
+	public void updateRole(String role, int userId) {
+		try {
+			String sql = "UPDATE [User] SET  role = ? ,updateAt = GetDate() WHERE id = ?";
+			conn = new DBConnection().getConnection();
+
+			ps = conn.prepareStatement(sql);
+
+			ps.setString(1, role);
+			ps.setInt(2, userId);
+
+			ps.executeUpdate();
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 }
