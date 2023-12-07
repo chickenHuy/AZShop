@@ -25,7 +25,7 @@ public class RevenueData {
     public static List<RevenueData> generateRevenueDataList(List<BigDecimal> revenueList) {
         List<RevenueData> revenueDataList = new ArrayList<RevenueData>();
         LocalDate currentDate = LocalDate.now().minusDays(1);
-
+       
         for (BigDecimal revenue : revenueList) {
             revenueDataList.add(new RevenueData(currentDate, revenue));
             currentDate = currentDate.minusDays(1);

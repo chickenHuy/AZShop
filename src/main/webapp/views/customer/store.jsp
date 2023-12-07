@@ -20,13 +20,13 @@
 					<div class="aside">
 						<h3 class="aside-title">Danh mục</h3>
 						<div class="checkbox-filter">
-							<a href='<c:url value="/guest/category/${categoryParent.slug}"/>'>
+							<a href='<c:url value="/guest/store/${categoryParent.slug}"/>'>
 								<div class="input-checkbox ${category.slug}">
 									<label><span>Tất cả</span></label>
 								</div>
 							</a>
-							<c:forEach var="category" items="${categoryChildList}">	
-								<a href='<c:url value="/guest/category/${categoryParent.slug}/${category.slug}"/>'>
+							<c:forEach var="category" items="${categoryList}">	
+								<a href='<c:url value="/guest/store/${categoryParent.slug}/${category.slug}"/>'>
 									<div class="input-checkbox ${category.slug}">
 										<label><span>${category.name}</span><small>
 												(${category.countProduct})</small></label>

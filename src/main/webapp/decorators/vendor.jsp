@@ -104,6 +104,7 @@
 	<script
 		src="<c:url value="/templates/assets/js/bootstrap.bundle.min.js"></c:url>"></script>
 	<script src="<c:url value="/templates/assets/js/main.js"></c:url>"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     	<script>
 		$(document).ready(function() {
 			var table = $('#example2').DataTable( {
