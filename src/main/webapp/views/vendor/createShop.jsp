@@ -8,15 +8,15 @@
   <title>Đăng ký cửa hàng</title>
   <style>
    	.BodyRegister {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+  font-family: Arial, sans-serif;
+  background-color: #d21737; /* Đổi màu nền thành #d21737 */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
 
     .registration-form {
       background-color: #fff;
@@ -67,7 +67,7 @@
     }
 
     .btnDangKy:hover {
-      background-color: #45a049;
+      background-color: #15161d;
     }
   </style>
 </head>
@@ -93,7 +93,7 @@
 
         <div class="form-group">
           <label for="phoneNumber"  class="required" class="requiredInput">Địa chỉ:</label>
-          <input type="tel" id="address" name="address" value="${user.address}" disabled class="requiredInput">
+          <input type="tel" id="ad" name="address" value="${user.address}" disabled class="requiredInput">
         </div>
 
         <button type="submit" class="btnDangKy">Đăng ký</button>

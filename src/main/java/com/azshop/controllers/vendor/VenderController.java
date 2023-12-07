@@ -39,8 +39,10 @@ import com.azshop.models.StoreModel;
 import com.azshop.models.StyleModel;
 import com.azshop.models.StyleValueModel;
 import com.azshop.models.UserModel;
+import com.azshop.services.AddressShippingServiceImpl;
 import com.azshop.services.CategoryServiceImpl;
 import com.azshop.services.DeliveryServiceImpl;
+import com.azshop.services.IAddressShippingService;
 import com.azshop.services.ICategoryService;
 import com.azshop.services.IDeliveryService;
 import com.azshop.services.IImageService;
@@ -49,12 +51,15 @@ import com.azshop.services.IOrderService;
 import com.azshop.services.IProductService;
 import com.azshop.services.IStyleService;
 import com.azshop.services.IStyleValueService;
+import com.azshop.services.IUserService;
 import com.azshop.services.ImageServiceImpl;
 import com.azshop.services.OrderItemServiceImpl;
 import com.azshop.services.OrderServiceImpl;
 import com.azshop.services.ProductServiceImpl;
 import com.azshop.services.StyleServiceImpl;
 import com.azshop.services.StyleValueImpl;
+import com.azshop.services.UserServiceImpl;
+import com.azshop.utils.CheckValid;
 import com.azshop.utils.Constant;
 import com.azshop.utils.ImageUtil;
 import com.azshop.utils.SlugUtil;
@@ -66,7 +71,8 @@ import com.google.gson.Gson;
 		* 50)
 @WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/vendor/product/new",
 		"/vendor/product/all", "/vendor/product/error404", "/vendor/product/edit/*", "/vendor/order/detail/*",
-		"/vendor/order/cancelled","/vendor/order/all", "/vendor/order/processed", "/vendor/order/details" , "/vendor/product/delete/*","/vendor/logout", "/vendor/order/status"})
+		"/vendor/order/cancelled","/vendor/order/all", "/vendor/order/processed", "/vendor/order/details" , "/vendor/product/delete/*","/vendor/logout", "/vendor/order/status"
+		,"/vendor/pickup-address"})
 public class VenderController extends HttpServlet {
 
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -77,6 +83,8 @@ public class VenderController extends HttpServlet {
 	IOrderService orderService = new OrderServiceImpl();
 	IDeliveryService deliveryService = new DeliveryServiceImpl();
 	IOrderItemService orderItemService =  new OrderItemServiceImpl();
+	IAddressShippingService addressShippingService = new AddressShippingServiceImpl();
+	IUserService userService = new UserServiceImpl();
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -151,6 +159,28 @@ public class VenderController extends HttpServlet {
 		if (url.contains("vendor/order/status")) {
 			ChangeStatusOrder(req, resp);
 		}
+		else if (url.contains("vendor/pickup-address"))
+		{
+			GetPickupAddress(req,resp, userModel, storeModel);
+		}
+	}
+
+	private void GetPickupAddress(HttpServletRequest req, HttpServletResponse resp, UserModel userModel, StoreModel storeModel) throws ServletException, IOException {
+		String message = req.getParameter("message");
+		String error = req.getParameter("error");
+		if (message!= null)
+		{
+			req.setAttribute("message", message);
+		}
+		if (error!= null)
+		{
+			req.setAttribute("error", error);
+		}
+		
+		req.setAttribute("user", userModel);
+		req.setAttribute("optionAddress", addressShippingService.getByUserId(userModel.getId()));
+		req.getRequestDispatcher("/views/vendor/pickupAddress.jsp").forward(req, resp);
+		
 	}
 
 	private void DetailOrder(HttpServletRequest req, HttpServletResponse resp, String url, int storeId) throws ServletException, IOException{
@@ -397,7 +427,7 @@ public class VenderController extends HttpServlet {
 		resp.setCharacterEncoding("UTF-8");
 		HttpSession session = req.getSession();
 		StoreModel storeModel = (StoreModel) session.getAttribute(Constant.storeSession);
-		
+		UserModel userModel = (UserModel) session.getAttribute(Constant.userSession);
 		if (url.contains("register-shop")) {
 			RegisterShop(req, resp);
 			return;
@@ -413,6 +443,32 @@ public class VenderController extends HttpServlet {
 		if (url.contains("vendor/product/edit"))
 		{
 			EditProduct(req,resp, url, storeModel.getId());
+		}
+		if (url.contains("/vendor/pickup-address"))
+		{
+			EditPickupAddress(req, resp, userModel);
+		}
+		
+	}
+
+	private void EditPickupAddress(HttpServletRequest req, HttpServletResponse resp, UserModel userModel) throws ServletException, IOException {
+		try {
+			UserModel userModel2 = userService.getById(userModel.getId());
+			String newAddress = req.getParameter("address");
+			String newPhone = req.getParameter("phone");
+			userModel2.setAddress(newAddress);
+			userModel2.setPhone(newPhone);
+			if (CheckValid.isValidPhoneNumber(newPhone)) {
+				userService.update(userModel2);
+				HttpSession session = req.getSession(false);
+				session.setAttribute(Constant.userSession,userModel2);
+				resp.sendRedirect("?message=The pickup address has been updated.");
+			}
+			else {
+				resp.sendRedirect("?error=The update has been failed: Invalid phone number.");
+			}
+		} catch (Exception e) {
+			resp.sendRedirect("?error=The update has been failed.");
 		}
 		
 	}
@@ -507,7 +563,6 @@ public class VenderController extends HttpServlet {
 				imageName = "image";
 				
 			}
-			req.setAttribute("message", "The product has been updated.");
 			resp.sendRedirect(req.getContextPath() + "/vendor/product/all?message=The product has been updated.");
 			
 		}
