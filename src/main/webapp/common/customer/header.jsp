@@ -108,9 +108,11 @@
 													</c:if>
 												</c:forEach>												
 											</div>
-											<button class="delete">
-												<i class="fa fa-close"></i>
-											</button>
+											<a href="<c:url value='/customer/delete-item-cart?id=${cartItem.id}'/>">
+												<button class="delete">
+													<i class="fa fa-close"></i>
+												</button>
+											</a>
 										</div>
 									</c:forEach>
 								</div>

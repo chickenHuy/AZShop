@@ -40,7 +40,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer/add-to-cart/*", "/customer/checkout"})
+@WebServlet(urlPatterns = {"/customer/add-to-cart/*", "/customer/delete-item-cart", "/customer/checkout"})
 public class CartController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -98,8 +98,27 @@ public class CartController extends HttpServlet{
 				e.printStackTrace();
 			}
 		}
+		else if (url.contains("customer/delete-item-cart")) {
+			try {
+				deleteCartItem(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
+	private void deleteCartItem(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		// ma hoa UTF-8
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+		int cartItemId = Integer.parseInt(req.getParameter("id"));
+		
+		cartItemService.delete(cartItemId);
+		
+		//chuyển tới trang trước đó
+		resp.sendRedirect(req.getHeader("Referer"));
+	}
+
 	private void getInforCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<CartItemModel> cartItemList = cartItemService.getAll();
 		req.setAttribute("cartItemList", cartItemList);
@@ -215,8 +234,9 @@ public class CartController extends HttpServlet{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/home.jsp");
-		rd.forward(req, resp);
+		
+		//chuyển tới trang trước đó
+		resp.sendRedirect(req.getHeader("Referer"));
 	}
 
 }

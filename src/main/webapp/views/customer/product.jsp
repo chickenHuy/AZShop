@@ -83,20 +83,26 @@
 						</div>
 						<p>Cửa hàng: ${store.name}</p>
 
-						<div class="add-to-cart">
-							<div class="qty-label">
-								Số lượng
-								<div class="input-number">
-									<input type="number" name="quantity">  <span class="qty-up">+</span> <span
-										class="qty-down">-</span>
+						
+
+						<form
+							action="<c:url value='/customer/add-to-cart/${product.slug}'/>"
+							method="get">
+							<div class="add-to-cart">
+								<div class="qty-label">
+									Số lượng
+									<div class="input-number">
+										<input type="number" name="count" id="count" value="1"
+											min="1"> <span class="qty-up"
+											onclick="increaseValue()">+</span> <span class="qty-down"
+											onclick="decreaseValue()">-</span>
+									</div>
 								</div>
-							</div>
-							<a href="<c:url value='/customer/add-to-cart/${product.slug}?count=${1}'/>">
-								<button class="add-to-cart-btn">
+								<button class="add-to-cart-btn" type="submit">
 									<i class="fa fa-shopping-cart"></i> add to cart
 								</button>
-							</a>
-						</div>
+							</div>
+						</form>
 
 						<ul class="product-btns">
 							<li><a href="#"><i class="fa fa-heart-o"></i> add to
@@ -416,6 +422,24 @@
 		<!-- /container -->
 	</div>
 	<!-- /Section -->
+
+	<script>
+		// Lấy đối tượng input
+		var count = document.getElementById('count');
+
+		// Hàm tăng giá trị
+		function increaseValue() {
+			count.value = parseInt(count.value) + 1;
+		}
+
+		// Hàm giảm giá trị
+		function decreaseValue() {
+			// Đảm bảo giá trị không âm
+			if (parseInt(count.value) > 0) {
+				count.value = parseInt(count.value) - 1;
+			}
+		}
+	</script>
 
 </body>
 </html>
