@@ -22,7 +22,7 @@ public class UserDAOImpl implements IUserDAO {
 	@Override
 	public void insert(UserModel user) {
 		try {
-			String sql = "INSERT INTO [User](firstName, lastName, slug, cartId, email, phone, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, avatar, coverImage, point, eWallet, createAt) VALUES (?, ?, ?, ?, ?, ?, 'false', 'false', ?, ?, ?, ?, ?, ?, 0, 0, GetDate())";
+			String sql = "INSERT INTO [User](firstName, lastName, slug, cartId, email, phone, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, avatar, coverImage, point, eWallet, createAt, address) VALUES (?, ?, ?, ?, ?, ?, 'false', 'false', ?, ?, ?, ?, ?, ?, 0, 0, GetDate(), ?)";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
@@ -39,7 +39,7 @@ public class UserDAOImpl implements IUserDAO {
 			ps.setInt(10, user.getUserLevelId());
 			ps.setString(11, user.getAvatar());
 			ps.setString(12, user.getCoverImage());
-
+			ps.setString(13, user.getAddress());
 			ps.executeUpdate();
 
 			conn.close();
@@ -120,7 +120,7 @@ public class UserDAOImpl implements IUserDAO {
 				userModel.seteWallet(rs.getBigDecimal("eWallet"));
 				userModel.setCreateAt(rs.getDate("createAt"));
 				userModel.setUpdateAt(rs.getDate("updateAt"));
-
+				userModel.setAddress(rs.getString("address"));
 				userModelList.add(userModel);
 			}
 
@@ -162,6 +162,7 @@ public class UserDAOImpl implements IUserDAO {
 				userModel.seteWallet(rs.getBigDecimal("eWallet"));
 				userModel.setCreateAt(rs.getDate("createAt"));
 				userModel.setUpdateAt(rs.getDate("updateAt"));
+				userModel.setAddress(rs.getString("address"));
 			}
 
 			conn.close();
@@ -266,6 +267,7 @@ public class UserDAOImpl implements IUserDAO {
 				userModel.seteWallet(rs.getBigDecimal("eWallet"));
 				userModel.setCreateAt(rs.getDate("createAt"));
 				userModel.setUpdateAt(rs.getDate("updateAt"));
+				userModel.setAddress(rs.getString("address"));
 			}
 
 			conn.close();

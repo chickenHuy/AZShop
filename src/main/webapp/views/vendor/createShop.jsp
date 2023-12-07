@@ -91,6 +91,11 @@
           <input type="tel" id="phoneNumber" name="phoneNumber" value="${user.phone}" disabled class="requiredInput">
         </div>
 
+        <div class="form-group">
+          <label for="phoneNumber"  class="required" class="requiredInput">Địa chỉ:</label>
+          <input type="tel" id="address" name="address" value="${user.address}" disabled class="requiredInput">
+        </div>
+
         <button type="submit" class="btnDangKy">Đăng ký</button>
       </form>
     </div>
