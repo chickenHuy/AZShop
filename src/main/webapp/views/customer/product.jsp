@@ -17,7 +17,7 @@
 			<div class="row">
 				<div class="col-md-12">
 					<ul class="breadcrumb-tree">
-						<li><a href="#">Home</a></li>
+						<li><a href="<c:url value='/customer-home' />">Home</a></li>
 						<li><a href="#">All Categories</a></li>
 						<li><a href="#">Accessories</a></li>
 						<li><a href="#">Headphones</a></li>
@@ -236,54 +236,26 @@
 									<div class="col-md-6">
 										<div id="reviews">
 											<ul class="reviews">
-												<li>
-													<div class="review-heading">
-														<h5 class="name">John</h5>
-														<p class="date">27 DEC 2018, 8:0 PM</p>
-														<div class="review-rating">
-															<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-																class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-																class="fa fa-star-o empty"></i>
+												<c:forEach var="review" items="${review}">
+													<li>
+														<div class="review-heading">
+															<c:forEach var="user" items="${userList}">
+																<c:if test="${review.userId eq user.id}">
+																	<h5 class="name">${user.firstName} ${user.lastName}</h5>
+																</c:if>
+															</c:forEach>
+															<p class="date">${review.createAt}</p>
+															<div class="review-rating">
+																<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+																	class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+																	class="fa fa-star-o empty"></i>
+															</div>
 														</div>
-													</div>
-													<div class="review-body">
-														<p>Lorem ipsum dolor sit amet, consectetur adipisicing
-															elit, sed do eiusmod tempor incididunt ut labore et
-															dolore magna aliqua</p>
-													</div>
-												</li>
-												<li>
-													<div class="review-heading">
-														<h5 class="name">John</h5>
-														<p class="date">27 DEC 2018, 8:0 PM</p>
-														<div class="review-rating">
-															<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-																class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-																class="fa fa-star-o empty"></i>
+														<div class="review-body">
+															<p>${review.content}</p>
 														</div>
-													</div>
-													<div class="review-body">
-														<p>Lorem ipsum dolor sit amet, consectetur adipisicing
-															elit, sed do eiusmod tempor incididunt ut labore et
-															dolore magna aliqua</p>
-													</div>
-												</li>
-												<li>
-													<div class="review-heading">
-														<h5 class="name">John</h5>
-														<p class="date">27 DEC 2018, 8:0 PM</p>
-														<div class="review-rating">
-															<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-																class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-																class="fa fa-star-o empty"></i>
-														</div>
-													</div>
-													<div class="review-body">
-														<p>Lorem ipsum dolor sit amet, consectetur adipisicing
-															elit, sed do eiusmod tempor incididunt ut labore et
-															dolore magna aliqua</p>
-													</div>
-												</li>
+													</li>
+												</c:forEach>
 											</ul>
 											<ul class="reviews-pagination">
 												<li class="active">1</li>

@@ -74,8 +74,7 @@ public class CheckStoreController extends HttpServlet{
 				storeModel.setOwnerId(ownerId);
 				storeService.insert(storeModel);
 				storeModel = storeService.getByOwnerId(ownerId);
-				userModel.setRole("vendor");
-				userService.update(userModel);
+				userService.updateRole("vendor", ownerId);
 				session.setAttribute(Constant.storeSession, storeModel);
 		        resp.sendRedirect("vendor/dashboard");
 

@@ -72,6 +72,12 @@ public class UserServiceImpl implements IUserService{
 	public void updatePassword(UserModel user, String newPassword) {
 		userDAO.updatePassword(user, newPassword);
 	}
+
+	@Override
+	public void updateRole(String role, int userId) {
+		userDAO.updateRole(role, userId);
+		
+	}
 	
 	
 

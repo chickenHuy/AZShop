@@ -159,6 +159,7 @@ public class UserDAOImpl implements IUserDAO {
 				userModel.setUserLevelId(rs.getInt("userLevelId"));
 				userModel.setAvatar(rs.getString("avatar"));
 				userModel.setCoverImage(rs.getString("coverImage"));
+				userModel.setAddress(rs.getString("address"));
 				userModel.setPoint(rs.getInt("point"));
 				userModel.seteWallet(rs.getBigDecimal("eWallet"));
 				userModel.setCreateAt(rs.getDate("createAt"));
@@ -289,6 +290,26 @@ public class UserDAOImpl implements IUserDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void updateRole(String role, int userId) {
+		try {
+			String sql = "UPDATE [User] SET  role = ? ,updateAt = GetDate() WHERE id = ?";
+			conn = new DBConnection().getConnection();
+
+			ps = conn.prepareStatement(sql);
+
+			ps.setString(1, role);
+			ps.setInt(2, userId);
+
+			ps.executeUpdate();
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

@@ -19,6 +19,7 @@ import com.azshop.models.CartModel;
 import com.azshop.models.CategoryModel;
 import com.azshop.models.ImageModel;
 import com.azshop.models.ProductModel;
+import com.azshop.models.ReviewModel;
 import com.azshop.models.StoreModel;
 import com.azshop.models.StyleValueModel;
 import com.azshop.models.UserModel;
@@ -30,20 +31,22 @@ import com.azshop.services.ICartService;
 import com.azshop.services.ICategoryService;
 import com.azshop.services.IImageService;
 import com.azshop.services.IProductService;
+import com.azshop.services.IReviewService;
 import com.azshop.services.IStoreService;
 import com.azshop.services.IStyleService;
 import com.azshop.services.IStyleValueService;
 import com.azshop.services.IUserService;
 import com.azshop.services.ImageServiceImpl;
 import com.azshop.services.ProductServiceImpl;
+import com.azshop.services.ReviewServiceImpl;
 import com.azshop.services.StoreServiceImpl;
 import com.azshop.services.StyleServiceImpl;
 import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer/product/*"})
-public class ProductController extends HttpServlet{
+@WebServlet(urlPatterns = { "/customer/product/*" })
+public class ProductController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -55,9 +58,10 @@ public class ProductController extends HttpServlet{
 	IStoreService storeService = new StoreServiceImpl();
 	ICartService cartService = new CartServiceImpl();
 	ICartItemService cartItemService = new CartItemServiceImpl();
-	
+	IReviewService reviewService = new ReviewServiceImpl();
+
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String url = req.getRequestURI().toString();
+String url = req.getRequestURI().toString();
 		
 		//Hiển thị menu danh mục
 		List<CategoryModel> categoryParentList = categoryService.getParentCategory();
@@ -103,14 +107,15 @@ public class ProductController extends HttpServlet{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		if (url.contains("customer/product")) {
-			try {
-				getProduct(req, resp);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+
+	if(url.contains("customer/product"))
+	{
+		try {
+			getProduct(req, resp);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+	}
 
 	}
 
@@ -136,6 +141,8 @@ public class ProductController extends HttpServlet{
 					StyleValueModel styleValue = styleValueService.getById(product.getStyleValueId());
 					List<ImageModel> imageList = imageService.getByProductId(product.getId());
 					StoreModel store = storeService.getById(product.getStoreId());
+					List<ReviewModel> reviewModels = reviewService.getByProductId(product.getId());
+					List<UserModel> userList = new ArrayList<UserModel>();
 					
 					//san pham lien quan
 					List<ProductModel> productRelateds = productService.getByCategoryId(product.getCategoryId());
@@ -152,6 +159,14 @@ public class ProductController extends HttpServlet{
 					req.setAttribute("styleValue", styleValue);
 					req.setAttribute("imageList", imageList);
 					req.setAttribute("imageRelateds", imageRelateds);
+					req.setAttribute("review", reviewModels);
+					
+					for (ReviewModel reviewModel : reviewModels) {
+						UserModel userModel = userService.getById(reviewModel.getUserId());
+						userList.add(userModel);
+					}
+					req.setAttribute("userList", userList);
+					
 	            } catch (Exception e) {
 	                e.printStackTrace();
 	            }
