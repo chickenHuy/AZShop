@@ -45,7 +45,7 @@ import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
 
-@WebServlet(urlPatterns = {"/guest-home", "/guest/category/*", "/guest/product/*", "/guest-search"})
+@WebServlet(urlPatterns = {"/guest-home", "/guest/category/*", "/guest/style/*", "/guest/product/*", "/guest-search"})
 public class GuestController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -61,12 +61,13 @@ public class GuestController extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI().toString();
 		
+		//Hiển thị menu danh mục
 		List<CategoryModel> categoryParentList = categoryService.getParentCategory();
 		req.setAttribute("categoryParentList", categoryParentList);
 		
 		if (url.contains("guest-home")) {
 			try {
-				getAllProduct(req, resp);
+				getAll(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -74,6 +75,13 @@ public class GuestController extends HttpServlet{
 		else if (url.contains("guest/category")) {
 			try {
 				getCategory(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		else if (url.contains("guest/style")) {
+			try {
+				getStyle(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -94,6 +102,74 @@ public class GuestController extends HttpServlet{
 		}
 	}
 	
+	private void getStyle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String url = req.getRequestURL().toString();
+		URI uri;
+		try {
+
+			uri = new URI(url);
+			String path = uri.getPath();
+
+			String[] parts = path.split("/");
+
+			if (parts.length > 0) {
+				String slug = parts[parts.length - 1];
+				
+				try {
+					//Lấy category từ slug
+	                CategoryModel category = categoryService.getCategoryBySlug(slug);	                	                
+	                
+	                CategoryModel categoryParent = categoryService.getById(category.getCategoryId());		                		                
+	                List<CategoryModel> categoryChildList = categoryService.getChildCategory(category.getCategoryId());
+	              //đếm số lượng product trong mỗi category
+	                for (CategoryModel categoryChild : categoryChildList) {
+						int countProduct = countProductsInCategory(categoryChild.getId());
+						
+						categoryChild.setCountProduct(countProduct);
+					}
+	                
+	                List<ProductModel> productList = new ArrayList<ProductModel>();
+	                List<ImageModel> imageList = new ArrayList<ImageModel>();
+	                
+//	              //Lấy danh sách style từ category parent
+	                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
+	                req.setAttribute("styleList", styleList);  
+	                req.setAttribute("category", category);
+	                
+	                int styleId = Integer.parseInt(req.getParameter("styleId"));
+	                List<StyleValueModel> styleValueList = styleValueService.getByStyleId(styleId);	              
+	                
+	                for (StyleValueModel styleValue : styleValueList) {
+	                	List<ProductModel> productsInStyle = productService.getByStyleValueId(styleValue.getId());
+	                	productList.addAll(productsInStyle);
+					}	                	     	                
+	                
+	                
+	                for (ProductModel productModel : productList) {
+	        			ImageModel image = imageService.getImage(productModel.getId());
+	        			imageList.add(image);
+	        		}	                
+	                
+	                req.setAttribute("categoryChildList", categoryChildList);
+	                req.setAttribute("categoryList", categoryChildList);
+	                req.setAttribute("productList", productList);
+	                req.setAttribute("imageList", imageList);
+	                req.setAttribute("categoryParent", categoryParent);
+	               	                
+	                
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+				
+			}
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
+		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/category.jsp");
+        rd.forward(req, resp);
+	}
+
 	public int countProductsInCategory(int categoryId) {
         // Get products by category
         List<ProductModel> productList = productService.getByCategoryId(categoryId);
@@ -106,7 +182,6 @@ public class GuestController extends HttpServlet{
 	
 	private void getCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURL().toString();
-		String pageCurrent = "category";
 		URI uri;
 		try {
 
@@ -117,8 +192,6 @@ public class GuestController extends HttpServlet{
 
 			if (parts.length > 0) {
 				String slug = parts[parts.length - 1];
-				req.setAttribute("slug", slug);
-				pageCurrent = pageCurrent + slug;
 				
 				try {
 					//Lấy category từ slug
@@ -151,6 +224,12 @@ public class GuestController extends HttpServlet{
 	                	categoryChildList = categoryService.getChildCategory(category.getCategoryId());
 	                	categoryParent = categoryService.getById(category.getCategoryId());
 	                	productList = productService.getByCategoryId(category.getId());
+	                	
+	                	//Lấy danh sách style value từ category parent
+		                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
+		                req.setAttribute("styleList", styleList);
+		                
+		                req.setAttribute("categoryStyle", category);
 	                }
 	                
 	                //đếm số lượng product trong mỗi category
@@ -165,11 +244,15 @@ public class GuestController extends HttpServlet{
 	        			imageList.add(image);
 	        		}
 	                
+	                
+	                req.setAttribute("category", category);
 	                req.setAttribute("categoryChildList", categoryChildList);
 	                req.setAttribute("categoryList", categoryChildList);
 	                req.setAttribute("productList", productList);
 	                req.setAttribute("imageList", imageList);
 	                req.setAttribute("categoryParent", categoryParent);
+	               	                
+	                
 	            } catch (Exception e) {
 	                e.printStackTrace();
 	            }
@@ -255,7 +338,7 @@ public class GuestController extends HttpServlet{
 	}
 
 
-	private void getAllProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private void getAll(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		List<CategoryModel> categoryList = categoryService.getAll();
 		List<ProductModel> productList = productService.getAll();

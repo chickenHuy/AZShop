@@ -45,7 +45,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/category/style/*", "/customer/product/*", "/customer-search", 
+@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/style/*", "/customer/product/*", "/customer-search", 
 "/customer-information"})
 public class CustomerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -124,7 +124,7 @@ public class CustomerController extends HttpServlet {
 			}
 		}
 		
-		else if (url.contains("customer/category/style")) {
+		else if (url.contains("customer/style")) {
 			try {
 				getStyle(req, resp);
 			} catch (Exception e) {
@@ -192,20 +192,19 @@ public class CustomerController extends HttpServlet {
 	                List<ProductModel> productList = new ArrayList<ProductModel>();
 	                List<ImageModel> imageList = new ArrayList<ImageModel>();
 	                
-	              //Lấy danh sách style value từ category parent
+//	              //Lấy danh sách style từ category parent
 	                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
 	                req.setAttribute("styleList", styleList);  
 	                req.setAttribute("category", category);
 	                
-	                int styleId = Integer.parseInt(req.getParameter("id"));
+	                int styleId = Integer.parseInt(req.getParameter("styleId"));
 	                List<StyleValueModel> styleValueList = styleValueService.getByStyleId(styleId);	              
 	                
 	                for (StyleValueModel styleValue : styleValueList) {
 	                	List<ProductModel> productsInStyle = productService.getByStyleValueId(styleValue.getId());
 	                	productList.addAll(productsInStyle);
-					}	                	     
+					}	                	     	                
 	                
-//	                productList = productService.getByStyleValueId(8);
 	                
 	                for (ProductModel productModel : productList) {
 	        			ImageModel image = imageService.getImage(productModel.getId());

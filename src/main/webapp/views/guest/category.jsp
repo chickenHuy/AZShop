@@ -22,13 +22,13 @@
 						<div class="checkbox-filter">
 							<a href='<c:url value="/guest/category/${categoryParent.slug}"/>'>
 								<div class="input-checkbox ${category.slug}">
-									<label><span>Tất cả</span></label>
+									<label>Tất cả</label>
 								</div>
 							</a>
 							<c:forEach var="category" items="${categoryChildList}">	
 								<a href='<c:url value="/guest/category/${categoryParent.slug}/${category.slug}"/>'>
 									<div class="input-checkbox ${category.slug}">
-										<label><span>${category.name}</span><small>
+										<label>${category.name}<small>
 												(${category.countProduct})</small></label>
 									</div>
 								</a>
@@ -61,16 +61,12 @@
 					<div class="aside">
 						<h3 class="aside-title">Phong cách</h3>
 						<div class="checkbox-filter">
-							<div class="input-checkbox">
-								<input type="checkbox" id="brand-1"> <label
-									for="brand-1"> <span></span> SAMSUNG <small>(578)</small>
-								</label>
-							</div>
-							<c:forEach var="styleValue" items="${styleValueList}">	
-								<a href='<c:url value="/guest/category/${categoryParent.slug}/${category.slug}"/>'>
-									<div class="input-checkbox ${category.slug}">
-										<label><span>${category.name}</span><small>
-												(${category.countProduct})</small></label>
+							<c:forEach var="style" items="${styleList}">	
+								<a href='<c:url value="/guest/style/${category.slug}?styleId=${style.id}"/>'>
+									<div class="input-checkbox">
+										<div class="input-checkbox ${category.slug}">
+											<label>${style.name}</label>
+										</div>
 									</div>
 								</a>
 							</c:forEach>

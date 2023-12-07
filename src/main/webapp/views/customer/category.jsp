@@ -62,11 +62,11 @@
 						<h3 class="aside-title">Phong cách</h3>
 						<div class="checkbox-filter">
 							<c:forEach var="style" items="${styleList}">	
-								<a href='<c:url value="/customer/category/style/${category.slug}?id=${style.id}"/>'>
+								<a href='<c:url value="/customer/style/${category.slug}?styleId=${style.id}"/>'>
 									<div class="input-checkbox">
-										<input type="checkbox" id="brand-1"> <label
-											for="brand-1"> ${style.name} <small>(578)</small>
-										</label>
+										<div class="input-checkbox ${category.slug}">
+											<label>${style.name}</label>
+										</div>
 									</div>
 								</a>
 							</c:forEach>
