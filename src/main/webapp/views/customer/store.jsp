@@ -16,6 +16,19 @@
 			<div class="row">
 				<!-- ASIDE -->
 				<div id="aside" class="col-md-3">
+
+					<div style="display: flex; align-items: center;">
+						<div
+							style="border-radius: 50%; overflow: hidden; width: 80px; height: 80px; border: 2px solid #000">
+							<img src="/AZShop/image?fname=${store.avatar}"
+								style="width: 100%; height: 100%; object-fit: cover;">
+						</div>
+						<div>
+							<h2 style="font-size: 20px; margin: 0px 0px 0px 20px;">${store.name}</h2>
+							<p style="font-size: 16px; margin: 10px 0px 0px 20px;">${store.bio}</p>
+						</div>
+					</div>
+
 					<!-- aside Widget -->
 					<div class="aside">
 						<h3 class="aside-title">Danh mục</h3>
@@ -26,6 +39,22 @@
 								</div>
 							</a>
 							<c:forEach var="category" items="${categoryList}">	
+								<a href='<c:url value="/guest/store/${categoryParent.slug}"/>'>
+									<div class="input-checkbox ${category.slug}">
+										<label><span>${category.name}</span><small>
+												(${category.countProduct})</small></label>
+									</div>
+								</a>
+							</c:forEach>
+						</div>						
+					</div>
+					<!-- /aside Widget -->
+					
+					<!-- aside Widget -->
+					<div class="aside">
+						<h3 class="aside-title">Danh mục sản phẩm</h3>
+						<div class="checkbox-filter">
+							<c:forEach var="category" items="${categoryChildList}">	
 								<a href='<c:url value="/guest/store/${categoryParent.slug}/${category.slug}"/>'>
 									<div class="input-checkbox ${category.slug}">
 										<label><span>${category.name}</span><small>
@@ -34,8 +63,6 @@
 								</a>
 							</c:forEach>
 						</div>
-						
-
 					</div>
 					<!-- /aside Widget -->
 
@@ -55,28 +82,7 @@
 							</div>
 						</div>
 					</div>
-					<!-- /aside Widget -->
-
-					<!-- aside Widget -->
-					<div class="aside">
-						<h3 class="aside-title">Phong cách</h3>
-						<div class="checkbox-filter">
-							<div class="input-checkbox">
-								<input type="checkbox" id="brand-1"> <label
-									for="brand-1"> <span></span> SAMSUNG <small>(578)</small>
-								</label>
-							</div>
-							<c:forEach var="styleValue" items="${styleValueList}">	
-								<a href='<c:url value="/guest/category/${categoryParent.slug}/${category.slug}"/>'>
-									<div class="input-checkbox ${category.slug}">
-										<label><span>${category.name}</span><small>
-												(${category.countProduct})</small></label>
-									</div>
-								</a>
-							</c:forEach>
-						</div>
-					</div>
-					<!-- /aside Widget -->
+					<!-- /aside Widget -->					
 
 					<!-- aside Widget -->
 					<div class="aside">
