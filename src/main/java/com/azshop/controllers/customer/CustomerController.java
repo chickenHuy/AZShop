@@ -65,29 +65,7 @@ public class CustomerController extends HttpServlet {
 		
 		//Hiển thị menu danh mục
 		List<CategoryModel> categoryParentList = categoryService.getParentCategory();
-		req.setAttribute("categoryParentList", categoryParentList);
-		
-		//Hiển thị item trong giỏ hàng
-		List<CartItemModel> cartItemList = cartItemService.getAll();
-		
-		//Lấy thông tin danh sách product có trong giỏ hàng
-		List<ProductModel> productsInCart = new ArrayList<ProductModel>();
-		
-		for (CartItemModel cartItem : cartItemList) {
-			ProductModel  productInCart = productService.getById(cartItem.getProductId());
-			productsInCart.add(productInCart);
-		}
-		
-		List<ImageModel> imageProductsInCart = new ArrayList<ImageModel>();
-
-		for (ProductModel productModel : productsInCart) {
-			ImageModel image = imageService.getImage(productModel.getId());
-			imageProductsInCart.add(image);
-		}
-
-		req.setAttribute("imageProductsInCart", imageProductsInCart);	
-		req.setAttribute("cartItemList", cartItemList);
-		req.setAttribute("productsInCart", productsInCart);
+		req.setAttribute("categoryParentList", categoryParentList);				
 		
 		if (url.contains("customer-home")) {
 			try {
@@ -97,8 +75,33 @@ public class CustomerController extends HttpServlet {
 					if (sessionObject instanceof UserModel) {
 						UserModel user = (UserModel) sessionObject;
 						List<CartModel> cartList = cartService.getByUserId(user.getId());
+						List<CartItemModel> cartItemList = new ArrayList<CartItemModel>();
+						
+						//Hiển thị item trong giỏ hàng
+						for (CartModel cart : cartList) {
+							List<CartItemModel> itemList = cartItemService.getByCartId(cart.getId());
+							cartItemList.addAll(itemList);
+						}						
+						
+						//Lấy thông tin danh sách product có trong giỏ hàng
+						List<ProductModel> productsInCart = new ArrayList<ProductModel>();
+						
+						for (CartItemModel cartItem : cartItemList) {
+							ProductModel  productInCart = productService.getById(cartItem.getProductId());
+							productsInCart.add(productInCart);
+						}
+						
+						List<ImageModel> imageProductsInCart = new ArrayList<ImageModel>();
+
+						for (ProductModel productModel : productsInCart) {
+							ImageModel image = imageService.getImage(productModel.getId());
+							imageProductsInCart.add(image);
+						}
+						
 						req.setAttribute("user", user);
-						// Sử dụng thông tin người dùng ở đây
+						req.setAttribute("imageProductsInCart", imageProductsInCart);	
+						req.setAttribute("cartItemList", cartItemList);
+						req.setAttribute("productsInCart", productsInCart);						
 					}
 				}
 
