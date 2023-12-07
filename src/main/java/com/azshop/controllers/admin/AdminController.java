@@ -36,7 +36,8 @@ import com.azshop.services.*;
 		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit",
 		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory",
 		"/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel",
-		"/admin/category/delete/*", "/admin/category/restore/*", "/admin/styles", "/admin/style/delete", "/admin/style/restore"})
+		"/admin/category/delete/*", "/admin/category/restore/*", "/admin/styles", "/admin/style/delete",
+		"/admin/style/restore" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -123,7 +124,7 @@ public class AdminController extends HttpServlet {
 			getRestoreStyle(req, resp);
 		} else if (url.contains("/admin/styles")) {
 			getAllStyle(req, resp);
-		} 
+		}
 	}
 
 	private void getRestoreStyle(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -149,12 +150,13 @@ public class AdminController extends HttpServlet {
 		req.setAttribute("countAllStyle", countAllStyle);
 		List<CategoryModel> listCategory = categoryService.getAll();
 		req.setAttribute("listCategory", listCategory);
-		
+
 		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/styles.jsp");
 		rDispatcher.forward(req, resp);
 	}
 
-	private void getRestoreCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private void getRestoreCategory(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		String url = req.getRequestURL().toString();
 		URI uri;
 		try {
@@ -320,8 +322,9 @@ public class AdminController extends HttpServlet {
 	private void getAllOrder(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<OrderModel> listOrder = orderService.getAll();
 		for (OrderModel order : listOrder) {
-           order.setPrice(orderService.calculateOrderTotal(order.getId())); ;
-        }
+			order.setPrice(orderService.calculateOrderTotal(order.getId()));
+			;
+		}
 		req.setAttribute("listOrder", listOrder);
 
 		List<StoreModel> listStore = storeService.getAll();
@@ -454,15 +457,20 @@ public class AdminController extends HttpServlet {
 		String minPoint = req.getParameter("minpoint");
 		String discount = req.getParameter("discount");
 		if (name != null && minPoint != null && discount != null) {
-			try {
-				userLevel.setName(name);
-				userLevel.setMinPoint(Integer.parseInt(minPoint));
-				userLevel.setDiscount(Integer.parseInt(discount));
+			
+			if (!userLevelService.checkName(name)) {
+				try {
+					userLevel.setName(name);
+					userLevel.setMinPoint(Integer.parseInt(minPoint));
+					userLevel.setDiscount(Integer.parseInt(discount));
 
-				userLevelService.insert(userLevel);
-				resp.sendRedirect("?message=Successfully");
-			} catch (Exception e) {
-				resp.sendRedirect("?message=Failed to add the user level");
+					userLevelService.insert(userLevel);
+					resp.sendRedirect("?message=Successfully");
+				} catch (Exception e) {
+					resp.sendRedirect("?message=Failed to add the user level");
+				}
+			} else {
+				resp.sendRedirect("?message=Name already exists");
 			}
 		} else {
 			resp.sendRedirect("?message=You must fill out the form");

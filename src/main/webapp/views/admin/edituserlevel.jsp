@@ -36,7 +36,7 @@
 								<div class="col-sm-9">
 									<input type="hidden" name="id" value="${userlevel.id }">
 									<input type="text" class="form-control" id="input35"
-										placeholder="Enter name of user level" name="userlevelname" value="${userlevel.name }" required>
+										placeholder="Enter name of user level" name="userlevelname" value="${userlevel.name }" readonly="readonly" required>
 								</div>
 							</div>
 							<div class="row mb-3">
