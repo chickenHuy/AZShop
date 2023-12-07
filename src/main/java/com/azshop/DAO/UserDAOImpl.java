@@ -159,6 +159,7 @@ public class UserDAOImpl implements IUserDAO {
 				userModel.setUserLevelId(rs.getInt("userLevelId"));
 				userModel.setAvatar(rs.getString("avatar"));
 				userModel.setCoverImage(rs.getString("coverImage"));
+				userModel.setAddress(rs.getString("address"));
 				userModel.setPoint(rs.getInt("point"));
 				userModel.seteWallet(rs.getBigDecimal("eWallet"));
 				userModel.setCreateAt(rs.getDate("createAt"));
