@@ -33,13 +33,6 @@
 
 	<div class="row g-3">
 		<div class="col-auto">
-			<div class="position-relative">
-				<input class="form-control px-5" type="search"
-					placeholder="Search Products"> <span
-					class="material-symbols-outlined position-absolute ms-3 translate-middle-y start-0 top-50 fs-5">search</span>
-			</div>
-		</div>
-		<div class="col-auto">
 			<div class="d-flex align-items-center gap-2 justify-content-lg-end">
 				<a class="btn btn-primary px-4" href="addcategory"><i
 					class="bi bi-plus-lg me-2"></i>Add Category</a>
@@ -79,11 +72,11 @@
 										<c:if test="${category.isDeleted() == true}">
 											<!-- Nếu isDeleted là true, hiển thị nút Restore -->
 											<a class="dropdown-item"
-												href='<c:url value="/admin/category/restore/restore-${category.slug}"/>'>Restore</a>
+												href='<c:url value="/admin/category/restore-${category.slug}"/>'>Restore</a>
 										</c:if> <c:if test="${category.isDeleted() == false}">
 											<!-- Nếu isDeleted là false, hiển thị nút Delete -->
 											<a class="dropdown-item"
-												href='<c:url value="/admin/category/delete/delete-${category.slug}"/>'>Delete</a>
+												href='<c:url value="/admin/category/delete-${category.slug}"/>'>Delete</a>
 										</c:if>
 									</td>
 								</tr>

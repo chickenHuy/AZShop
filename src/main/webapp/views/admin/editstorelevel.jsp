@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Edit user level</title>
+<title>Edit store level</title>
 </head>
 <body>
 	<main class="page-content">
@@ -13,33 +13,33 @@
 			<div class="ps-3">
 				<nav aria-label="breadcrumb">
 					<ol class="breadcrumb mb-0 p-0">
-						<li class="breadcrumb-item"><a href="userlevel">User
+						<li class="breadcrumb-item"><a href="storelevel">Store
 								level</a></li>
 						<li class="breadcrumb-item active" aria-current="page">Edit
-							user level</li>
+							store level</li>
 					</ol>
 				</nav>
 			</div>
 
 		</div>
 		<div>
-			<a href="userlevel"><span class="material-symbols-outlined"
+			<a href="storelevel"><span class="material-symbols-outlined"
 				style="font-size: 24px;"> arrow_back </span></a>
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="card">
-					<form action="edituserlevel" method="post">
+					<form action="editstorelevel" method="post">
 						<div class="card-body p-4">
-							<h5 class="mb-4">Edit user level</h5>
+							<h5 class="mb-4">Edit store level</h5>
 							<div class="row mb-3">
 								<label for="input35" class="col-sm-3 col-form-label">Enter
-									name of user level</label>
+									name of store level</label>
 								<div class="col-sm-9">
-									<input type="hidden" name="id" value="${userlevel.id }">
+									<input type="hidden" name="id" value="${storelevel.id }">
 									<input type="text" class="form-control" id="input35"
-										placeholder="Enter name of user level" name="userlevelname"
-										value="${userlevel.name }" readonly="readonly" required>
+										placeholder="Enter name of user level" name="storelevelname"
+										value="${storelevel.name }" readonly="readonly" required>
 								</div>
 							</div>
 							<div class="row mb-3">
@@ -48,7 +48,7 @@
 								<div class="col-sm-9">
 									<input type="number" class="form-control" id="input36"
 										placeholder="Min point" name="minpoint"
-										value="${userlevel.minPoint }" required>
+										value="${storelevel.minPoint }" required>
 								</div>
 							</div>
 							<div class="row mb-3">
@@ -56,7 +56,7 @@
 								<div class="col-sm-9">
 									<input type="number" class="form-control" id="input37"
 										placeholder="Enter discount" name="discount"
-										value="${userlevel.discount }" required>
+										value="${storelevel.discount }" required>
 								</div>
 							</div>
 
@@ -88,13 +88,13 @@
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<p>Are you sure you want to delete this user level?</p>
+					<p>Are you sure you want to delete this store level?</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
 						data-bs-dismiss="modal">Cancel</button>
-					<form action="deleteuserlevel" method="post">
-						<input type="hidden" name="id" value="${userlevel.id}">
+					<form action="deletestorelevel" method="post">
+						<input type="hidden" name="id" value="${storelevel.id}">
 						<button type="submit" class="btn btn-danger">Delete</button>
 					</form>
 				</div>

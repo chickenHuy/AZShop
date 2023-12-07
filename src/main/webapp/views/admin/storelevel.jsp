@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>User Level</title>
+<title>Store Level</title>
 </head>
 <body>
 	<!--start main content-->
@@ -18,7 +18,7 @@
 					<ol class="breadcrumb mb-0 p-0">
 						<li class="breadcrumb-item"><a href="javascript:;"><i
 								class="bx bx-home-alt"></i></a></li>
-						<li class="breadcrumb-item active" aria-current="page">User
+						<li class="breadcrumb-item active" aria-current="page">Store
 							Level</li>
 					</ol>
 				</nav>
@@ -27,11 +27,10 @@
 
 		<div class="col-auto">
 			<div class="d-flex align-items-center gap-2 justify-content-lg-end">
-				<a class="btn btn-primary px-4" href="adduserlevel"><i
+				<a class="btn btn-primary px-4" href="addstorelevel"><i
 					class="bi bi-plus-lg me-2"></i>New level</a>
 			</div>
 		</div>
-
 
 		<div class="card mt-4">
 			<div class="card-body">
@@ -47,16 +46,16 @@
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="level" items="${listuserlevel}">
+								<c:forEach var="store" items="${liststorelevel}">
 									<tr>
 										<td><a class="d-flex align-items-center gap-3"
 											href="javascript:;">
-												<p class="mb-0 customer-name fw-bold">${level.name }</p>
+												<p class="mb-0 customer-name fw-bold">${store.name }</p>
 										</a></td>
-										<td>${level.minPoint }</td>
-										<td>${level.discount }</td>
+										<td>${store.minPoint }</td>
+										<td>${store.discount }</td>
 										<td><a
-											href='<c:url value="/admin/edituserlevel?id=${level.id }"/>'>Edit</a></td>
+											href='<c:url value="/admin/editstorelevel?id=${store.id }"/>'>Edit</a></td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -65,7 +64,6 @@
 				</div>
 			</div>
 		</div>
-		
 		<h3>Level deleted</h3>
 		<div class="card mt-4">
 			<div class="card-body">
@@ -81,16 +79,16 @@
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="level" items="${listdeleted}">
+								<c:forEach var="store" items="${listdeleted}">
 									<tr>
 										<td><a class="d-flex align-items-center gap-3"
 											href="javascript:;">
-												<p class="mb-0 customer-name fw-bold">${level.name }</p>
+												<p class="mb-0 customer-name fw-bold">${store.name }</p>
 										</a></td>
-										<td>${level.minPoint }</td>
-										<td>${level.discount }</td>
+										<td>${store.minPoint }</td>
+										<td>${store.discount }</td>
 										<td><a
-											href='<c:url value="/admin/restoreuserlevel?id=${level.id }"/>'>Restore</a></td>
+											href='<c:url value="/admin/restorestorelevel?id=${store.id }"/>'>Restore</a></td>
 									</tr>
 								</c:forEach>
 							</tbody>

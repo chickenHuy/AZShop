@@ -54,17 +54,17 @@
 					</div>
 					<div class="menu-title">Profile</div>
 			</a></li>
-			<li><a href="timeline.html">
+			<li><a href="/AZShop/vendor/review">
 					<div class="parent-icon">
 						<span class="material-symbols-outlined">hotel_class</span>
 					</div>
 					<div class="menu-title">Customer Reviews</div>
 			</a></li>
-			<li><a href="faq.html">
+			<li><a href="/AZShop/vendor/pickup-address">
 					<div class="parent-icon">
 						<span class="material-symbols-outlined">call</span>
 					</div>
-					<div class="menu-title">Shipping address</div>
+					<div class="menu-title">Pickup address</div>
 			</a></li>
 			
 			<li><a class="has-arrow" href="javascript:;">
