@@ -45,8 +45,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/style/*", "/customer/product/*", "/customer-search", 
-"/customer-information"})
+@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/style/*", "/customer-search", "/customer-information"})
 public class CustomerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
