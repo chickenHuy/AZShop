@@ -18,6 +18,7 @@ import com.azshop.services.IUserService;
 import com.azshop.services.StoreLevelServiceImpl;
 import com.azshop.services.StoreServiceImpl;
 import com.azshop.services.UserServiceImpl;
+import com.azshop.utils.CheckValid;
 import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
 
@@ -31,6 +32,11 @@ public class CheckStoreController extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
+		String error = req.getParameter("error");
+		if (error != null)
+		{
+			req.setAttribute("error", error);
+		}
 		String url = req.getRequestURL().toString();
 		HttpSession session = req.getSession();
 		UserModel userModel = (UserModel) session.getAttribute(Constant.userSession);
@@ -51,6 +57,10 @@ public class CheckStoreController extends HttpServlet{
 			}
 		}
 		if (url.contains("/register-shop")) {
+			if (storeService.getByOwnerId(userModel.getId()) != null)
+			{	resp.sendRedirect("vendor/dashboard");
+				return;
+			}
 			req.setAttribute("user", userModel);
 			req.getRequestDispatcher("/views/vendor/createShop.jsp").forward(req, resp);
 		}
@@ -72,14 +82,21 @@ public class CheckStoreController extends HttpServlet{
 				storeModel.setName(name);
 				storeModel.setStoreLevelId(storeLevel);
 				storeModel.setOwnerId(ownerId);
+				userModel = userService.getById(userModel.getId());
+				String phone = req.getParameter("phoneNumber");
+				String address = req.getParameter("address");
+				if (phone != null && address != null) {
+					userModel.setPhone(phone);
+					userModel.setAddress(address);
+				}
+				userService.updateVendor(userModel);
 				storeService.insert(storeModel);
-				storeModel = storeService.getByOwnerId(ownerId);
-				userService.updateRole("vendor", ownerId);
 				session.setAttribute(Constant.storeSession, storeModel);
-		        resp.sendRedirect("vendor/dashboard");
+				resp.sendRedirect("vendor/dashboard");
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				resp.sendRedirect("login-customer");
 			}
 		}
 	}

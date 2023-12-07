@@ -74,8 +74,8 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public void updateRole(String role, int userId) {
-		userDAO.updateRole(role, userId);
+	public void updateVendor(UserModel userModel) {
+		userDAO.updateVendor(userModel);
 		
 	}
 	

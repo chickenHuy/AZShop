@@ -293,15 +293,16 @@ public class UserDAOImpl implements IUserDAO {
 	}
 
 	@Override
-	public void updateRole(String role, int userId) {
+	public void updateVendor(UserModel userModel) {
 		try {
-			String sql = "UPDATE [User] SET  role = ? ,updateAt = GetDate() WHERE id = ?";
+			String sql = "UPDATE [User] SET  role = 'vendor', phone = ?, address = ? ,updateAt = GetDate() WHERE id = ?";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
 
-			ps.setString(1, role);
-			ps.setInt(2, userId);
+			ps.setString(1, userModel.getPhone());
+			ps.setString(2, userModel.getAddress());
+			ps.setInt(3, userModel.getId());
 
 			ps.executeUpdate();
 
