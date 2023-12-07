@@ -109,7 +109,7 @@
 									</c:forEach>
 								</div>
 								<div class="cart-summary">
-									<small>3 Item(s) selected</small>
+									<small>${quantity} Item(s) selected</small>
 									<h5>SUBTOTAL: $2940.00</h5>
 								</div>
 								<div class="cart-btns">
