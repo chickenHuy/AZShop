@@ -20,7 +20,7 @@
 					   <i class="fa fa-user-o"></i> ${user.email} <span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu" style="background-color: #1E1F29; border: 1px solid #1E1F29;">
-					   <li style="padding: 8px;"><a href="<c:url value='/information-customer' />">Tài khoản của tôi</a></li>
+					   <li style="padding: 8px;"><a href="<c:url value='/information' />">Tài khoản của tôi</a></li>
 					   <li style="padding: 8px;"><a href="<c:url value='/store-check' />">Trang cửa hàng</a></li>
 					   <li style="padding: 8px;"><a href="<c:url value='/logout-customer' />">Đăng xuất</a></li>
 					</ul>
@@ -60,20 +60,12 @@
 				<!-- ACCOUNT -->
 				<div class="col-md-3 clearfix">
 					<div class="header-ctn">
-						<!-- Wishlist -->
-						<div>
-							<a href="#"> <i class="fa fa-heart-o"></i> <span>Your
-									Wishlist</span>
-								<div class="qty">2</div>
-							</a>
-						</div>
-						<!-- /Wishlist -->
 						<!-- Cart -->
 						<div class="dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown"
 								aria-expanded="true"> <i class="fa fa-shopping-cart"></i> <span>Your
 									Cart</span>
-								<div class="qty">3</div>
+								<div class="qty">${quantity}</div>
 							</a>
 							<div class="cart-dropdown">
 								<div class="cart-list">
@@ -117,7 +109,7 @@
 									</c:forEach>
 								</div>
 								<div class="cart-summary">
-									<small>3 Item(s) selected</small>
+									<small>${quantity} Item(s) selected</small>
 									<h5>SUBTOTAL: $2940.00</h5>
 								</div>
 								<div class="cart-btns">

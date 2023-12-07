@@ -20,7 +20,7 @@ import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
 import com.azshop.utils.UploadUtils;
 
-@WebServlet(urlPatterns = {"/login-customer", "/verify-customer", "/register-customer", "/forget-customer", "/logout-customer", "/reset-success-customer", "/information-customer", "/update-infor", "/update-password"})
+@WebServlet(urlPatterns = {"/login-customer", "/verify-customer", "/register-customer", "/forget-customer", "/logout-customer", "/reset-success-customer", "/information", "/update-infor", "/update-password", "/waiting"})
 @MultipartConfig(fileSizeThreshold = 1024*1024*10, maxFileSize = 1024*1024*50, maxRequestSize = 1024*1024*50)
 
 public class AccountController extends HttpServlet{
@@ -43,8 +43,26 @@ public class AccountController extends HttpServlet{
 			getLogout(req, resp);
 		} else if (url.contains("reset-success-customer")) {
 			getResetSuccess(req, resp);
-		} else if (url.contains("information-customer")) {
+		} else if (url.contains("information")) {
 			getInfor(req, resp);
+		} else if (url.contains("waiting")) {
+			getWaiting(req, resp);
+		}
+	}
+
+	private void getWaiting(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		HttpSession session = req.getSession();
+		if (session != null && session.getAttribute(Constant.userSession) != null) {
+			UserModel user = (UserModel) session.getAttribute(Constant.userSession);
+			if ("customer".equals(user.getRole())) {
+				resp.sendRedirect(req.getContextPath() + "/customer-home");
+			} else if ("vendor".equals(user.getRole())) {
+				resp.sendRedirect(req.getContextPath() + "/vendor/dashboard");
+			} else if ("admin".equals(user.getRole())) {
+				resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
+			}
+		} else {
+			resp.sendRedirect(req.getContextPath() + "login-customer");
 		}
 	}
 
@@ -77,12 +95,8 @@ public class AccountController extends HttpServlet{
 
 	private void getLogin(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(false);
-		if (session != null && session.getAttribute("account") != null) {
-			UserModel user = (UserModel) session.getAttribute("account");
-			req.setAttribute("username", user.getEmail());
-			String result = user.getHashedPassword().split("-")[0];
-			req.setAttribute("password", result);
-			req.getRequestDispatcher("/views/account/login.jsp").forward(req, resp);
+		if (session != null && session.getAttribute(Constant.userSession) != null) {
+			resp.sendRedirect(req.getContextPath() + "/waiting");
 			return;
 		}
 		req.getRequestDispatcher("/views/account/login.jsp").forward(req, resp);
@@ -99,7 +113,7 @@ public class AccountController extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI().toString();
-		if (url.contains("register-customer")) {
+		if (url.contains("register-customer")) { 
 			postRegister(req, resp);
 		} else if (url.contains("verify-customer")) {
 			postVerify(req, resp);
@@ -134,7 +148,7 @@ public class AccountController extends HttpServlet{
 			userService.updatePassword(user, newPassword);
 			resp.sendRedirect(req.getContextPath() + "/guest-home");
 		} else {
-			resp.sendRedirect(req.getContextPath() + "/information-customer");
+			resp.sendRedirect(req.getContextPath() + "/information");
 		}
 	}
 
@@ -163,7 +177,7 @@ public class AccountController extends HttpServlet{
 		user.setAddress(req.getParameter("address"));
 		user.setAvatar(image);
 		userService.update(user);
-		resp.sendRedirect(req.getContextPath() + "/information-customer");
+		resp.sendRedirect(req.getContextPath() + "/information");
 	}
 
 	private void postForget(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
@@ -205,7 +219,7 @@ public class AccountController extends HttpServlet{
 		if (user != null) {
 			HttpSession session = req.getSession(true);
 			session.setAttribute(Constant.userSession, user);
-			resp.sendRedirect(req.getContextPath() + "/customer-home");
+			resp.sendRedirect(req.getContextPath() + "/waiting");
 		} else {
 			// Đăng nhập không thành công, đặt thông báo lỗi vào request
 	        req.setAttribute("loginError", "Thông tin đăng nhập không chính xác!");

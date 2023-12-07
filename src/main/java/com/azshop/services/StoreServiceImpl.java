@@ -62,4 +62,9 @@ public class StoreServiceImpl implements IStoreService {
 		return null;
 	}
 
+	@Override
+	public List<StoreModel> FindStore(String keyword) {
+		return storeDAO.FindStore(keyword);
+	}
+
 }

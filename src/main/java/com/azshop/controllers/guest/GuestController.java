@@ -87,7 +87,7 @@ public class GuestController extends HttpServlet{
 		}
 		else if (url.contains("guest-search")) {
 			try {
-				findProduct(req, resp);
+				search(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -183,7 +183,7 @@ public class GuestController extends HttpServlet{
         rd.forward(req, resp);
 	}
 
-	private void findProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private void search(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// ma hoa UTF-8
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
@@ -193,10 +193,14 @@ public class GuestController extends HttpServlet{
 		
 		List<ProductModel> productList = productService.FindProduct(keyword);
 		
-		req.setAttribute("productList",productList);
+		if (productList != null){
+			req.setAttribute("productList",productList);
+			RequestDispatcher rd = req.getRequestDispatcher("/views/guest/home.jsp");
+			rd.forward(req, resp);
+		}
 		
-		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/home.jsp");
-		rd.forward(req, resp);
+		
+		
 	}
 
 	private void getProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

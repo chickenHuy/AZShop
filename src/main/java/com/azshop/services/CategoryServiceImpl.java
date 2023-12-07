@@ -64,4 +64,9 @@ public class CategoryServiceImpl implements ICategoryService {
 		categoryDAO.restoreBySlug(slug);
 	}
 
+	@Override
+	public List<CategoryModel> FindCategory(String keyword) {
+		return categoryDAO.FindCategory(keyword);
+	}
+
 }
