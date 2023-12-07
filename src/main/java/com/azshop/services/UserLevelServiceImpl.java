@@ -45,4 +45,10 @@ public class UserLevelServiceImpl implements IUserLevelService {
 		return userLevelDAO.checkName(name);
 	}
 
+	@Override
+	public List<UserLevelModel> getAllDeleted() {
+		// TODO Auto-generated method stub
+		return userLevelDAO.getAllDeleted();
+	}
+
 }

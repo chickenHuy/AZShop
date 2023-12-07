@@ -165,4 +165,34 @@ public class UserLevelDAOImpl implements IUserLevelDAO {
 		return false;
 	}
 
+	@Override
+	public List<UserLevelModel> getAllDeleted() {
+		List<UserLevelModel> userLevelList = new ArrayList<UserLevelModel>();
+		try {
+		    String sql = "SELECT * FROM UserLevel WHERE isDeleted = 1";
+		    conn = new DBConnection().getConnection();
+
+		    ps = conn.prepareStatement(sql);
+
+		    rs = ps.executeQuery();
+		    while (rs.next()) {
+		    	UserLevelModel userLevel = new UserLevelModel();
+		        userLevel.setId(rs.getInt("id"));
+		        userLevel.setName(rs.getString("name"));
+		        userLevel.setMinPoint(rs.getInt("minPoint"));
+		        userLevel.setDiscount(rs.getInt("discount"));
+		        userLevel.setDeleted(rs.getBoolean("isDeleted"));
+		        userLevel.setCreatedAt(rs.getDate("createdAt"));
+		        userLevel.setUpdatedAt(rs.getDate("updatedAt"));
+
+		        userLevelList.add(userLevel);
+		    }
+
+		    conn.close();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		return userLevelList;
+	}
+
 }

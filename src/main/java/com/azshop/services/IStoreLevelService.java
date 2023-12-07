@@ -15,4 +15,6 @@ public interface IStoreLevelService {
 
 	void delete(int id);
 	int getDefaultLevel();
+	boolean checkName(String name);
+	List<StoreLevelModel> getAllDeleted();
 }

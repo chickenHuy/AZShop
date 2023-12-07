@@ -41,4 +41,15 @@ public class StoreLevelServiceImpl implements IStoreLevelService{
 		return storeLevelDAO.getDefaultLevel();
 	}
 
+	@Override
+	public boolean checkName(String name) {
+		return storeLevelDAO.checkName(name);
+	}
+
+	@Override
+	public List<StoreLevelModel> getAllDeleted() {
+		// TODO Auto-generated method stub
+		return storeLevelDAO.getAllDeleted();
+	}
+
 }

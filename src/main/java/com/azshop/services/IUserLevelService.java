@@ -15,4 +15,5 @@ public interface IUserLevelService {
 
 	List<UserLevelModel> getAll();
 	boolean checkName(String name);
+	List<UserLevelModel> getAllDeleted();
 }
