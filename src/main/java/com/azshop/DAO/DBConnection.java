@@ -9,7 +9,7 @@ public class DBConnection {
     private final String portNumber = "1433";
     private final String username = "admin";
     private final String password = "Nth250603";
-
+    
     public Connection getConnection() throws Exception {
         String url = "jdbc:sqlserver://" + serverName + ":" + portNumber + ";databaseName=" + dbName;
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");

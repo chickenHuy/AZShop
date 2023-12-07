@@ -173,9 +173,6 @@ public class VenderController extends HttpServlet {
 			GetReview(req, resp, storeModel);
 		}
 		else if (url.contains("vendor/statistics-revenue")) {
-			req.setAttribute("eWallet", storeModel.geteWallet());
-			List<BigDecimal> revenue10Day = orderService.GetRevenueLast10Days(storeModel.getId());
-			req.setAttribute("revenueList", RevenueData.generateRevenueDataList(revenue10Day));
 			GetRevenue(req, resp, storeModel);
 		}
 		else if (url.contains("vendor/statistics-product")) {
@@ -189,10 +186,22 @@ public class VenderController extends HttpServlet {
 	}
 
 	private void GetRevenue(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel) throws ServletException, IOException {
+		String nDay = req.getParameter("nDay");
+		List<BigDecimal> revenueNDay = null;
+		if (nDay != null) {
+			int intNDay = Integer.parseInt(nDay);
+			revenueNDay = orderService.GetRevenueLastNDays(intNDay, storeModel.getId());
+			req.setAttribute("nDay", intNDay);
+		}
+		else {
+			req.setAttribute("nDay", 10);
+			revenueNDay = orderService.GetRevenueLastNDays(10, storeModel.getId());
+		}
+		req.setAttribute("revenues", RevenueData.generateRevenueDataList(revenueNDay));
+		req.setAttribute("totalRevenue", orderService.getSumRevenueByStore(storeModel.getId()));
 		req.getRequestDispatcher("/views/vendor/statisticsRevenue.jsp").forward(req, resp);
 		
 	}
-
 	private void GetReview(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel) throws ServletException, IOException  {
 		List<ProductModel> productModels = productService.getByStoreId(storeModel.getId());
 		List<ReviewModel> reviewModels = reviewService.getByStoreId(storeModel.getId());

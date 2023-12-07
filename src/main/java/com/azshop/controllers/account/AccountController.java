@@ -13,8 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.azshop.models.CartModel;
+import com.azshop.models.StoreModel;
 import com.azshop.models.UserModel;
+import com.azshop.services.IStoreService;
 import com.azshop.services.IUserService;
+import com.azshop.services.StoreServiceImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
@@ -57,6 +60,9 @@ public class AccountController extends HttpServlet{
 			if ("customer".equals(user.getRole())) {
 				resp.sendRedirect(req.getContextPath() + "/customer-home");
 			} else if ("vendor".equals(user.getRole())) {
+				IStoreService storeService = new StoreServiceImpl();
+				StoreModel storeModel = storeService.getByOwnerId(user.getId());
+				session.setAttribute(Constant.storeSession, storeModel);
 				resp.sendRedirect(req.getContextPath() + "/vendor/dashboard");
 			} else if ("admin".equals(user.getRole())) {
 				resp.sendRedirect(req.getContextPath() + "/admin/dashboard");

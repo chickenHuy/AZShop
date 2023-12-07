@@ -67,7 +67,7 @@
 					<div class="menu-title">Pickup address</div>
 			</a></li>
 			<li>
-				<a href="<c:url value='/information-customer' />">
+				<a href="<c:url value='/information' />">
                     <div class="parent-icon">
                     	<span class="material-symbols-outlined">lock_open</span>
                     </div>
@@ -83,7 +83,7 @@
 				<ul>
 					<li><a href="/AZShop/vendor/statistics-revenue"><span
 							class="material-symbols-outlined">arrow_right</span>Revenue</a></li>
-					<li><a href="/AZShop/vendor/statistics-revenue"><span
+					<li><a href="/AZShop/vendor/statistics-product"><span
 							class="material-symbols-outlined">arrow_right</span>Product</a></li>
 				</ul></li>
 		</ul>
