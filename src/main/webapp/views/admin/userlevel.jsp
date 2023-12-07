@@ -52,7 +52,7 @@
 										</a></td>
 										<td>${level.minPoint }</td>
 										<td>${level.discount }</td>
-										<td><a href='<c:url value="/admin/edituserlevel?id=${level.id }"/>'>Edit</a>/Delete</td>
+										<td><a href='<c:url value="/admin/edituserlevel?id=${level.id }"/>'>Edit</a></td>
 									</tr>
 								</c:forEach>
 							</tbody>

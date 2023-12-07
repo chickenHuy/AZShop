@@ -35,7 +35,7 @@ import com.azshop.services.*;
 @WebServlet(urlPatterns = { "/admin/dashboard", "/admin/product", "/admin/customer", "/admin/store",
 		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit",
 		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory",
-		"/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel",
+		"/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel", "/admin/deleteuserlevel",
 		"/admin/category/delete/*", "/admin/category/restore/*", "/admin/styles", "/admin/style/delete",
 		"/admin/style/restore" })
 
@@ -416,8 +416,24 @@ public class AdminController extends HttpServlet {
 			postAddUserLevel(req, resp);
 		} else if (url.contains("/admin/edituserlevel")) {
 			postEditUserLevel(req, resp);
+		} else if (url.contains("/admin/deleteuserlevel")) {
+			postDeleteUserLevel(req, resp);
 		}
+	}
 
+	private void postDeleteUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		String id = req.getParameter("id");
+		UserLevelModel userLevel = userLevelService.getById(Integer.parseInt(id));
+		try {
+			userLevel.setDeleted(true);
+			userLevelService.update(userLevel);
+			resp.sendRedirect("edituserlevel?message=Sucessfully");
+		} catch (Exception e) {
+			resp.sendRedirect("edituserlevel?message=Failed to delete the user level");
+		}
 	}
 
 	private void postEditUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
