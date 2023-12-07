@@ -85,13 +85,13 @@
 
 						<div class="add-to-cart">
 							<div class="qty-label">
-								Qty
+								Số lượng
 								<div class="input-number">
-									<input type="number"> <span class="qty-up">+</span> <span
+									<input type="number" name="quantity">  <span class="qty-up">+</span> <span
 										class="qty-down">-</span>
 								</div>
 							</div>
-							<a href="<c:url value='/customer/add-to-cart'/>">
+							<a href="<c:url value='/customer/add-to-cart/${product.slug}?count=${1}'/>">
 								<button class="add-to-cart-btn">
 									<i class="fa fa-shopping-cart"></i> add to cart
 								</button>

@@ -91,6 +91,35 @@ public class StyleDAOImpl implements IStyleDAO{
 		}
 		return styleModels;
 	}
+	
+	@Override
+	public List<StyleModel> getAllAdmin() {
+		List<StyleModel> styleModels = new ArrayList<StyleModel>();
+		try {
+			 String sql = "SELECT * FROM Style";
+		        conn = new DBConnection().getConnection();
+		        
+		        ps = conn.prepareStatement(sql);
+		        
+		        rs = ps.executeQuery();
+		        while (rs.next()) {
+		        	StyleModel styleModel = new StyleModel();
+		        	styleModel.setId(rs.getInt("id"));
+		        	styleModel.setName(rs.getString("name"));
+		        	styleModel.setCategoryId(rs.getInt("categoryId"));
+		        	styleModel.setDeleted(rs.getBoolean("isDeleted"));
+		            styleModel.setCreateAt(rs.getDate("createAt"));
+		            styleModel.setUpdateAt(rs.getDate("updateAt"));
+		            
+		            styleModels.add(styleModel);
+		        }
+		        
+		        conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return styleModels;
+	}
 
 	@Override
 	public List<StyleModel> getByCategoryId(int categoryId) {
@@ -146,6 +175,24 @@ public class StyleDAOImpl implements IStyleDAO{
 	public void delete(int id) {
 		try {
 		    String sql = "UPDATE Style SET isDeleted = 1, updateAt = GETDATE() WHERE id = ?";
+		    conn = new DBConnection().getConnection();
+		    
+		    ps = conn.prepareStatement(sql);
+		    
+		    ps.setInt(1, id);
+		    ps.executeUpdate();
+		    
+		    conn.close();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		
+	}
+	
+	@Override
+	public void restore(int id) {
+		try {
+		    String sql = "UPDATE Style SET isDeleted = 0, updateAt = GETDATE() WHERE id = ?";
 		    conn = new DBConnection().getConnection();
 		    
 		    ps = conn.prepareStatement(sql);

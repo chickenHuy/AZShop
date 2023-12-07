@@ -16,8 +16,7 @@ public class CartDAOImpl implements ICartDAO {
 	@Override
 	public void insert(CartModel cart) {
 		try {
-			String sql = "INSERT INTO [Cart] (userId, storeId, createAt) "
-					+ "VALUES (?, ?, GETDATE())";
+			String sql = "INSERT INTO [Cart] (userId, storeId, createAt) VALUES (?, ?, GETDATE())";
 			
 			conn = new DBConnection().getConnection();
 			

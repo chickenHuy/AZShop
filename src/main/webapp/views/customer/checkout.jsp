@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="/common/taglib.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -156,14 +157,16 @@
 							</div>
 						</div>
 						<div class="order-products">
-							<div class="order-col">
-								<div>1x Product Name Goes Here</div>
-								<div>$980.00</div>
-							</div>
-							<div class="order-col">
-								<div>2x Product Name Goes Here</div>
-								<div>$980.00</div>
-							</div>
+							<c:forEach var="cartItem" items="${cartItemList}">
+								<div class="order-col">
+									<c:forEach var="product" items="${productsInCart}">
+										<c:if test="${product.id eq cartItem.productId}">
+											<div>${product.name}</div>
+											<div>${product.price}</div>
+										</c:if>
+									</c:forEach>
+								</div>
+							</c:forEach>
 						</div>
 						<div class="order-col">
 							<div>Shiping</div>

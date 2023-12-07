@@ -7,10 +7,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" type="text/css" href="<c:url value="/templates/account/css/bootstrap.min.css" />">
-    <link rel="stylesheet" type="text/css" href="<c:url value="/templates/account/css/fontawesome-all.min.css" />">
-    <link rel="stylesheet" type="text/css" href="<c:url value="/templates/account/css/iofrm-style.css" />">
-    <link rel="stylesheet" type="text/css" href="<c:url value="/templates/account/css/iofrm-theme22.css" />">
+    <link rel="stylesheet" type="text/css" href="<c:url value='/templates/account/css/bootstrap.min.css' />">
+    <link rel="stylesheet" type="text/css" href="<c:url value='/templates/account/css/fontawesome-all.min.css' />">
+    <link rel="stylesheet" type="text/css" href="<c:url value='/templates/account/css/iofrm-style.css' />">
+    <link rel="stylesheet" type="text/css" href="<c:url value='/templates/account/css/iofrm-theme22.css' />">
 </head>
 <body>
     <div class="form-body without-side">
@@ -19,7 +19,7 @@
             <div class="img-holder">
                 <div class="bg"></div>
                 <div class="info-holder">
-                    <img src="<c:url value="/templates/account/img/graphic3.svg"></c:url>" alt="">
+                    <img src="<c:url value='/templates/account/img/graphic3.svg'></c:url>" alt="">
                 </div>
             </div>
             <div class="form-holder">

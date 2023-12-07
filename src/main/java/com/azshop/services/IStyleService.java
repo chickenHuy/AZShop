@@ -16,4 +16,8 @@ public interface IStyleService {
 	void update(StyleModel style);
 
 	void delete(int id);
+
+	List<StyleModel> getAllAdmin();
+
+	void restore(int id);
 }
