@@ -48,7 +48,7 @@
 							class="material-symbols-outlined">arrow_right</span>Cancelled Order</a></li>
 				</ul></li>
 			<li class="menu-label">Pages</li>
-			<li><a href="user-profile.html">
+			<li><a href="view-shop-info">
 					<div class="parent-icon">
 						<span class="material-symbols-outlined">account_circle</span>
 					</div>
