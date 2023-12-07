@@ -318,7 +318,7 @@ public class ProductDAOImpl implements IProductDAO {
 	public List<ProductModel> FindProduct(String keyword) {
 		List<ProductModel> listProduct = new ArrayList<ProductModel>();
 		try {
-			String sql = "Select * from Product where  Product.name LIKE '%" + keyword + "%' or Product.slug LIKE '%" + keyword + "%' AND isDeleted = 0";			
+			String sql = "SELECT * FROM Product WHERE (Product.name LIKE N'%" + keyword + "%' OR N'Product.slug' LIKE N'%" + keyword + "%') AND isDeleted = 0";
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
