@@ -48,7 +48,7 @@
 				<li class="nav-item dropdown pe-3"><a
 					class="nav-link nav-profile d-flex align-items-center pe-0"
 					href="#" data-bs-toggle="dropdown"> <img
-						src="<c:url value='/templates/account/assets/img/hinh.jpg' />" alt="Profile"
+					src = "/AZShop/image?fname=${user.avatar}" alt="Profile"
 						class="rounded-circle"> <span
 						class="d-none d-md-block dropdown-toggle ps-2">${user.email}</span>
 				</a>
@@ -101,7 +101,7 @@
 						<div
 							class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-							<img src="<c:url value='/templates/account/assets/img/hinh.jpg' />" alt="Profile"
+							<img src = "/AZShop/image?fname=${user.avatar}" alt="Profile"
 								class="rounded-circle">
 							<h2>${user.firstName} ${user.lastName}</h2>
 						</div>
@@ -185,19 +185,15 @@
 								<div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
 									<!-- Profile Edit Form -->
-									<form action="update-infor" method="post">
+									<form action="update-infor" method="post" enctype="multipart/form-data">
 										<div class="row mb-3">
 											<label for="profileImage"
 												class="col-md-4 col-lg-3 col-form-label">Profile
 												Image</label>
 											<div class="col-md-8 col-lg-9">
-												<img src="<c:url value='/templates/account/assets/img/hinh.jpg' />" alt="Profile">
+												<img src = "/AZShop/image?fname=${user.avatar}" alt="Profile" alt="Profile">
 												<div class="pt-2">
-													<a href="#" class="btn btn-primary btn-sm"
-														title="Upload new profile image"><i
-														class="bi bi-upload"></i></a> <a href="#"
-														class="btn btn-danger btn-sm"
-														title="Remove my profile image"><i class="bi bi-trash"></i></a>
+													<input type="file" name="Image" class="btn btn-primary"></input>
 												</div>
 											</div>
 										</div>

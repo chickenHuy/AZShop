@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +18,11 @@ import com.azshop.services.IUserService;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
+import com.azshop.utils.UploadUtils;
 
 @WebServlet(urlPatterns = {"/login-customer", "/verify-customer", "/register-customer", "/forget-customer", "/logout-customer", "/reset-success-customer", "/information-customer", "/update-infor", "/update-password"})
+@MultipartConfig(fileSizeThreshold = 1024*1024*10, maxFileSize = 1024*1024*50, maxRequestSize = 1024*1024*50)
+
 public class AccountController extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
@@ -134,7 +138,7 @@ public class AccountController extends HttpServlet{
 		}
 	}
 
-	private void postUpdateInfor(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	private void postUpdateInfor(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		resp.setContentType("text/html;charset=UTF-8");
 		req.setCharacterEncoding("UTF-8");
 		UserModel user = new UserModel();
@@ -145,11 +149,19 @@ public class AccountController extends HttpServlet{
 				user = (UserModel) sessionObject;
 			}
 		}
+		String image = null;
+		if (req.getPart("Image").getSize() != 0)
+		{
+			String fileName = "" + System.currentTimeMillis();
+			image = UploadUtils.processUpload("Image", req, Constant.DIR, fileName);
+		}
+		
 		user.setFirstName(req.getParameter("firstName"));
 		user.setLastName(req.getParameter("lastName"));
 		user.setEmail(user.getEmail());
 		user.setPhone(req.getParameter("phone"));
 		user.setAddress(req.getParameter("address"));
+		user.setAvatar(image);
 		userService.update(user);
 		resp.sendRedirect(req.getContextPath() + "/information-customer");
 	}
