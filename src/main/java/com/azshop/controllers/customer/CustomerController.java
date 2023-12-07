@@ -306,7 +306,7 @@ public class CustomerController extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/category.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/store.jsp");
         rd.forward(req, resp);
 	}
 

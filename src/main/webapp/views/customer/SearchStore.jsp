@@ -24,7 +24,7 @@
 								</div>
 								<div class="shop-body">
 									<h3>
-										${store.avatar}<br>Store
+										${store.name}<br>Store
 									</h3>
 									<a href="#" class="cta-btn">Shop now <i
 										class="fa fa-arrow-circle-right"></i></a>
