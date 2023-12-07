@@ -367,12 +367,12 @@ List<OrderModel> oderModelList = new ArrayList<OrderModel>();
 	}
 
 	@Override
-	public List<BigDecimal> GetRevenueLast10Days(int storeId) {
+	public List<BigDecimal> GetRevenueLastNDays(int nDay, int storeId) {
 		List<BigDecimal> revenueList = new ArrayList<BigDecimal>();
-		
+		String nDayString = String.valueOf(nDay);
 		try {
 			String sql = "WITH AllDates AS (\r\n"
-					+ "    SELECT TOP 10\r\n"
+					+ "    SELECT TOP " + nDayString + " "
 					+ "        DATEADD(DAY, -ROW_NUMBER() OVER (ORDER BY (SELECT NULL)), CONVERT(DATE, GETDATE())) AS RecentDate\r\n"
 					+ "    FROM master.dbo.spt_values\r\n"
 					+ ")\r\n"
@@ -402,5 +402,31 @@ List<OrderModel> oderModelList = new ArrayList<OrderModel>();
 		return revenueList;
 		
 	}
+
+	@Override
+	public BigDecimal getSumRevenueByStore(int storeId) {
+		BigDecimal resultBigDecimal = null; 
+		try {	
+			String sql = "SELECT SUM(amountToStore) AS TotalAmountToStore FROM [Order] WHERE isDeleted = 0 and storeId = ? and status='Completed'";
+			conn = new DBConnection().getConnection();
+			
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			
+			rs = ps.executeQuery();
+		    if (rs.next()) {
+		           resultBigDecimal  = rs.getBigDecimal("TotalAmountToStore");
+		        }
+		    conn.close();
+		    
+		    } 
+		catch (Exception e) {
+		        e.printStackTrace();
+		        
+		    }
+		return resultBigDecimal ;
+	}
+
+
 	
 }

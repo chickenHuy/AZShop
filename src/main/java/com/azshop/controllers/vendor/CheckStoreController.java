@@ -14,8 +14,10 @@ import com.azshop.models.StoreModel;
 import com.azshop.models.UserModel;
 import com.azshop.services.IStoreLevelService;
 import com.azshop.services.IStoreService;
+import com.azshop.services.IUserService;
 import com.azshop.services.StoreLevelServiceImpl;
 import com.azshop.services.StoreServiceImpl;
+import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
 
@@ -24,6 +26,7 @@ public class CheckStoreController extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	IStoreService storeService = new StoreServiceImpl();
 	IStoreLevelService storeLevelService = new StoreLevelServiceImpl();
+	IUserService userService = new UserServiceImpl();
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
@@ -71,6 +74,8 @@ public class CheckStoreController extends HttpServlet{
 				storeModel.setOwnerId(ownerId);
 				storeService.insert(storeModel);
 				storeModel = storeService.getByOwnerId(ownerId);
+				userModel.setRole("vendor");
+				userService.update(userModel);
 				session.setAttribute(Constant.storeSession, storeModel);
 		        resp.sendRedirect("vendor/dashboard");
 
