@@ -22,6 +22,7 @@ import com.azshop.models.CategoryModel;
 import com.azshop.models.ImageModel;
 import com.azshop.models.ProductModel;
 import com.azshop.models.StoreModel;
+import com.azshop.models.StyleModel;
 import com.azshop.models.StyleValueModel;
 import com.azshop.models.UserModel;
 import com.azshop.services.CartItemServiceImpl;
@@ -44,7 +45,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/product/*", "/customer-search", 
+@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/category/style/*", "/customer/product/*", "/customer-search", 
 "/customer-information"})
 public class CustomerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -114,6 +115,14 @@ public class CustomerController extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		
+		else if (url.contains("customer/category/style")) {
+			try {
+				getStyle(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		else if (url.contains("customer/product")) {
 			try {
 				getProduct(req, resp);
@@ -144,6 +153,75 @@ public class CustomerController extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private void getStyle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String url = req.getRequestURL().toString();
+		URI uri;
+		try {
+
+			uri = new URI(url);
+			String path = uri.getPath();
+
+			String[] parts = path.split("/");
+
+			if (parts.length > 0) {
+				String slug = parts[parts.length - 1];
+				
+				try {
+					//Lấy category từ slug
+	                CategoryModel category = categoryService.getCategoryBySlug(slug);	                	                
+	                
+	                CategoryModel categoryParent = categoryService.getById(category.getCategoryId());		                		                
+	                List<CategoryModel> categoryChildList = categoryService.getChildCategory(category.getCategoryId());
+	              //đếm số lượng product trong mỗi category
+	                for (CategoryModel categoryChild : categoryChildList) {
+						int countProduct = countProductsInCategory(categoryChild.getId());
+						
+						categoryChild.setCountProduct(countProduct);
+					}
+	                
+	                List<ProductModel> productList = new ArrayList<ProductModel>();
+	                List<ImageModel> imageList = new ArrayList<ImageModel>();
+	                
+	              //Lấy danh sách style value từ category parent
+	                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
+	                req.setAttribute("styleList", styleList);  
+	                req.setAttribute("category", category);
+	                
+	                int styleId = Integer.parseInt(req.getParameter("id"));
+	                List<StyleValueModel> styleValueList = styleValueService.getByStyleId(styleId);	              
+	                
+	                for (StyleValueModel styleValue : styleValueList) {
+	                	List<ProductModel> productsInStyle = productService.getByStyleValueId(styleValue.getId());
+	                	productList.addAll(productsInStyle);
+					}	                	     
+	                
+//	                productList = productService.getByStyleValueId(8);
+	                
+	                for (ProductModel productModel : productList) {
+	        			ImageModel image = imageService.getImage(productModel.getId());
+	        			imageList.add(image);
+	        		}	                
+	                
+	                req.setAttribute("categoryChildList", categoryChildList);
+	                req.setAttribute("categoryList", categoryChildList);
+	                req.setAttribute("productList", productList);
+	                req.setAttribute("imageList", imageList);
+	                req.setAttribute("categoryParent", categoryParent);
+	               	                
+	                
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+				
+			}
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
+		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/category.jsp");
+        rd.forward(req, resp);
 	}
 
 	private void getInforCustomer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -183,7 +261,6 @@ public class CustomerController extends HttpServlet {
 
 	private void getCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURL().toString();
-		String pageCurrent = "category";
 		URI uri;
 		try {
 
@@ -194,8 +271,6 @@ public class CustomerController extends HttpServlet {
 
 			if (parts.length > 0) {
 				String slug = parts[parts.length - 1];
-				req.setAttribute("slug", slug);
-				pageCurrent = pageCurrent + slug;
 				
 				try {
 					//Lấy category từ slug
@@ -228,6 +303,12 @@ public class CustomerController extends HttpServlet {
 	                	categoryChildList = categoryService.getChildCategory(category.getCategoryId());
 	                	categoryParent = categoryService.getById(category.getCategoryId());
 	                	productList = productService.getByCategoryId(category.getId());
+	                	
+	                	//Lấy danh sách style value từ category parent
+		                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
+		                req.setAttribute("styleList", styleList);
+		                
+		                req.setAttribute("categoryStyle", category);
 	                }
 	                
 	                //đếm số lượng product trong mỗi category
@@ -242,11 +323,15 @@ public class CustomerController extends HttpServlet {
 	        			imageList.add(image);
 	        		}
 	                
+	                
+	                req.setAttribute("category", category);
 	                req.setAttribute("categoryChildList", categoryChildList);
 	                req.setAttribute("categoryList", categoryChildList);
 	                req.setAttribute("productList", productList);
 	                req.setAttribute("imageList", imageList);
 	                req.setAttribute("categoryParent", categoryParent);
+	               	                
+	                
 	            } catch (Exception e) {
 	                e.printStackTrace();
 	            }
