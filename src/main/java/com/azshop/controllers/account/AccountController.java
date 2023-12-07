@@ -92,7 +92,7 @@ public class AccountController extends HttpServlet{
 		HttpSession session = req.getSession();
 		session.removeAttribute(Constant.userSession);
 		
-		resp.sendRedirect("./login-customer");
+		resp.sendRedirect("./guest-home");
 	}
 
 	private void getForget(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
