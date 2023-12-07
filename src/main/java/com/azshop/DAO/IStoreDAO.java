@@ -2,6 +2,7 @@ package com.azshop.DAO;
 
 import java.util.List;
 
+import com.azshop.models.ProductModel;
 import com.azshop.models.StoreModel;
 
 public interface IStoreDAO {
@@ -9,6 +10,7 @@ public interface IStoreDAO {
 	StoreModel getById(int id);
 	List<StoreModel> getAll();
 	List<StoreModel> getByStoreLevelId(int storeLevelId);
+	List<StoreModel> FindStore(String keyword);
 	void update(StoreModel store);
 	void delete(int id);
 	StoreModel getBySlug(String slug);

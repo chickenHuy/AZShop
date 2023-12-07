@@ -8,7 +8,7 @@ public interface ICategoryService {
 	void insert(CategoryModel category);
 
 	CategoryModel getById(int id);
-
+	List<CategoryModel> FindCategory(String keyword);
 	List<CategoryModel> getAll();
 
 	List<CategoryModel> getChildCategory(int parentId);

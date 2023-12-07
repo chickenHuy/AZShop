@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.azshop.models.ProductModel;
 import com.azshop.models.StoreModel;
 
 public class StoreDAOImpl implements IStoreDAO {
@@ -300,5 +301,44 @@ public class StoreDAOImpl implements IStoreDAO {
             e.printStackTrace();
         }
         return store;
+	}
+
+	@Override
+	public List<StoreModel> FindStore(String keyword) {
+		List<StoreModel> listStore = new ArrayList<StoreModel>();
+		try {
+			String sql = "Select * from Store where  Store.name LIKE '%" + keyword + "%' or Store.slug LIKE '%" + keyword + "%' AND isDeleted = 0";			
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				
+				StoreModel store = new StoreModel();
+				store.setId(rs.getInt("id"));
+                store.setName(rs.getString("name"));
+                store.setBio(rs.getString("bio"));
+                store.setSlug(rs.getString("slug"));
+                store.setOwnerId(rs.getInt("ownerId"));
+                store.setStoreLevelId(rs.getInt("storeLevelId"));
+                store.setActive(rs.getBoolean("isActive"));
+                store.setDeleted(rs.getBoolean("isDeleted"));
+                store.setAvatar(rs.getString("avatar"));
+                store.setCover(rs.getString("cover"));
+                store.setFeaturedImage(rs.getString("featuredImage"));
+                store.setPoint(rs.getInt("point"));
+                store.setRating(rs.getBigDecimal("rating"));
+                store.seteWallet(rs.getBigDecimal("eWallet"));
+                store.setCreateAt(rs.getDate("createAt"));
+                store.setUpdateAt(rs.getDate("updateAt"));
+
+                listStore.add(store);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listStore;
 	}
 }
