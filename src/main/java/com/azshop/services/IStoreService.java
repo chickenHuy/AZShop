@@ -2,12 +2,15 @@ package com.azshop.services;
 
 import java.util.List;
 
+import com.azshop.models.ProductModel;
 import com.azshop.models.StoreModel;
 
 public interface IStoreService {
 	void insert(StoreModel store);
 
 	StoreModel getById(int id);
+	
+	List<StoreModel> FindStore(String keyword);
 
 	List<StoreModel> getAll();
 

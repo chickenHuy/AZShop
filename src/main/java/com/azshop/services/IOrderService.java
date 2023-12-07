@@ -28,4 +28,5 @@ public interface IOrderService {
 	List<OrderModel> getProcessed(int storeId);
 
 	BigDecimal calculateOrderTotal(int id);
+	List<BigDecimal> GetRevenueLast10Days(int storeId);
 }

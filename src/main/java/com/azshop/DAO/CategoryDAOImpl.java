@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.azshop.models.CategoryModel;
+import com.azshop.models.ProductModel;
 
 public class CategoryDAOImpl implements ICategoryDAO {
 
@@ -317,6 +318,37 @@ public class CategoryDAOImpl implements ICategoryDAO {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
+	}
+
+	@Override
+	public List<CategoryModel> FindCategory(String keyword) {
+		List<CategoryModel> listCategory = new ArrayList<CategoryModel>();
+		try {
+			String sql = "Select * from Category where  Category.name LIKE '%" + keyword + "%' or Category.slug LIKE '%" + keyword + "%' AND isDeleted = 0";			
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				CategoryModel category = new CategoryModel();
+
+				category.setId(rs.getInt("id"));
+				category.setCategoryId(rs.getInt("categoryId"));
+				category.setName(rs.getString("name"));
+				category.setSlug(rs.getString("slug"));
+				category.setImage(rs.getString("image"));
+				category.setDeleted(rs.getBoolean("isDeleted"));
+				category.setCreateAt(rs.getDate("createAt"));
+				category.setUpdateAt(rs.getDate("updateAt"));
+
+				listCategory.add(category);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listCategory;
 	}
 
 }

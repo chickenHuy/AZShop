@@ -116,4 +116,9 @@ public class OrderServiceImpl implements IOrderService {
 		}
         return orderTotal;
 	}
+
+	@Override
+	public List<BigDecimal> GetRevenueLast10Days(int storeId) {
+		return orderDAO.GetRevenueLast10Days(storeId);
+	}
 }
