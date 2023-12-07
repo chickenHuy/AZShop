@@ -307,7 +307,7 @@ public class StoreDAOImpl implements IStoreDAO {
 	public List<StoreModel> FindStore(String keyword) {
 		List<StoreModel> listStore = new ArrayList<StoreModel>();
 		try {
-			String sql = "Select * from Store where  Store.name LIKE '%" + keyword + "%' or Store.slug LIKE '%" + keyword + "%' AND isDeleted = 0";			
+			String sql = "Select * from Store where  (Store.name LIKE '%" + keyword + "%' or Store.slug LIKE '%" + keyword + "%') AND isDeleted = 0";			
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
