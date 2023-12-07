@@ -23,9 +23,8 @@ public class StoreLevelDAOImpl implements IStoreLevelDAO {
             ps = conn.prepareStatement(sql);
 
             ps.setString(1, storeLevel.getName());
-            ps.setBoolean(2,storeLevel.isDeleted());
-            ps.setInt(3, storeLevel.getMinPoint());
-            ps.setInt(4, storeLevel.getDiscount());
+            ps.setInt(2, storeLevel.getMinPoint());
+            ps.setInt(3, storeLevel.getDiscount());
 
             ps.executeUpdate();
 
@@ -85,7 +84,7 @@ public class StoreLevelDAOImpl implements IStoreLevelDAO {
             ps.setInt(1, id);
 
             rs = ps.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 storeLevel.setId(rs.getInt("id"));
                 storeLevel.setName(rs.getString("name"));
                 storeLevel.setMinPoint(rs.getInt("minPoint"));
@@ -106,7 +105,7 @@ public class StoreLevelDAOImpl implements IStoreLevelDAO {
     public List<StoreLevelModel> getAll() {
         List<StoreLevelModel> storeLevelList = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM StoreLevel";
+            String sql = "SELECT * FROM StoreLevel WHERE isDeleted = 0";
             conn = new DBConnection().getConnection();
 
             ps = conn.prepareStatement(sql);
@@ -150,5 +149,57 @@ public class StoreLevelDAOImpl implements IStoreLevelDAO {
             e.printStackTrace();
         }
         return -1;
+	}
+
+	@Override
+	public boolean checkName(String name) {
+		try {
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement("SELECT * from StoreLevel WHERE name = ?");
+			ps.setString(1, name);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				String temp = rs.getString("name");
+				if (temp.equals(name)) {
+					return true;
+				}
+			}
+			
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+
+	@Override
+	public List<StoreLevelModel> getAllDeleted() {
+		List<StoreLevelModel> storeLevelList = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM StoreLevel WHERE isDeleted = 1";
+            conn = new DBConnection().getConnection();
+
+            ps = conn.prepareStatement(sql);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                StoreLevelModel storeLevel = new StoreLevelModel();
+                storeLevel.setId(rs.getInt("id"));
+                storeLevel.setName(rs.getString("name"));
+                storeLevel.setMinPoint(rs.getInt("minPoint"));
+                storeLevel.setDiscount(rs.getInt("discount"));
+                storeLevel.setDeleted(rs.getBoolean("isDeleted"));
+                storeLevel.setCreateAt(rs.getDate("createAt"));
+                storeLevel.setUpdateAt(rs.getDate("updateAt"));
+
+                storeLevelList.add(storeLevel);
+            }
+
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return storeLevelList;
 	}
 }

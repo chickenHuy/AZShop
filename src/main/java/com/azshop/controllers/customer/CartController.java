@@ -40,7 +40,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer/add-to-cart/*", "/customer/checkout"})
+@WebServlet(urlPatterns = {"/customer/add-to-cart/*", "/customer/delete-item-cart", "/customer/checkout"})
 public class CartController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -98,8 +98,27 @@ public class CartController extends HttpServlet{
 				e.printStackTrace();
 			}
 		}
+		else if (url.contains("customer/delete-item-cart")) {
+			try {
+				deleteCartItem(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
+	private void deleteCartItem(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		// ma hoa UTF-8
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+		int cartItemId = Integer.parseInt(req.getParameter("id"));
+		
+		cartItemService.delete(cartItemId);
+		
+		//chuyển tới trang trước đó
+		resp.sendRedirect(req.getHeader("Referer"));
+	}
+
 	private void getInforCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<CartItemModel> cartItemList = cartItemService.getAll();
 		req.setAttribute("cartItemList", cartItemList);
@@ -150,13 +169,33 @@ public class CartController extends HttpServlet{
 								
 								//nếu đã có thì sẽ tiếp tục thêm sản phẩm vào
 								if (isExistCart == true) {
-									//Thêm item cho cart
-									CartItemModel cartItem = new CartItemModel();
-									cartItem.setCartId(cart.getId());
-									cartItem.setProductId(product.getId());
-									cartItem.setStyleValueId(product.getStyleValueId());
-									cartItem.setCount(Integer.parseInt(req.getParameter("count")));
-									cartItemService.insert(cartItem);
+									//Kiểm tra có item trong giỏ hàng chưa
+									boolean isExistItemCart = false;
+									List<CartItemModel> cartItems = cartItemService.getAll();
+									CartItemModel itemInCart = new CartItemModel();
+									for (CartItemModel item : cartItems) {
+										if(product.getId() == item.getProductId()) {
+											isExistItemCart = true;
+											itemInCart = item;
+										}
+									}
+									//Nếu chưa có item trong cart
+									if (isExistItemCart == false) {
+										//Thêm item mới vào cart
+										CartItemModel newItem = new CartItemModel();
+										newItem.setCartId(cart.getId());
+										newItem.setProductId(product.getId());
+										newItem.setStyleValueId(product.getStyleValueId());
+										newItem.setCount(Integer.parseInt(req.getParameter("count")));
+										cartItemService.insert(newItem);
+									}
+									//Nếu đã có thì tăng thêm số lượng
+									else {
+										int count = Integer.parseInt(req.getParameter("count"));
+										
+										itemInCart.setCount(itemInCart.getCount() + count);
+										cartItemService.update(itemInCart);
+									}
 								}
 								
 								//nếu chưa có thì tạo cart mới cho store id này
@@ -195,8 +234,9 @@ public class CartController extends HttpServlet{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/home.jsp");
-		rd.forward(req, resp);
+		
+		//chuyển tới trang trước đó
+		resp.sendRedirect(req.getHeader("Referer"));
 	}
 
 }

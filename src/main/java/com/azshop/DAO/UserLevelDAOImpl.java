@@ -105,12 +105,12 @@ public class UserLevelDAOImpl implements IUserLevelDAO {
 		        userLevel.setCreatedAt(rs.getDate("createdAt"));
 		        userLevel.setUpdatedAt(rs.getDate("updatedAt"));
 		    }
-
 		    conn.close();
+		    return userLevel;
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
-		return userLevel;
+		return null;
 	}
 
 	@Override
@@ -118,6 +118,58 @@ public class UserLevelDAOImpl implements IUserLevelDAO {
 		List<UserLevelModel> userLevelList = new ArrayList<UserLevelModel>();
 		try {
 		    String sql = "SELECT * FROM UserLevel WHERE isDeleted = 0";
+		    conn = new DBConnection().getConnection();
+
+		    ps = conn.prepareStatement(sql);
+
+		    rs = ps.executeQuery();
+		    while (rs.next()) {
+		    	UserLevelModel userLevel = new UserLevelModel();
+		        userLevel.setId(rs.getInt("id"));
+		        userLevel.setName(rs.getString("name"));
+		        userLevel.setMinPoint(rs.getInt("minPoint"));
+		        userLevel.setDiscount(rs.getInt("discount"));
+		        userLevel.setDeleted(rs.getBoolean("isDeleted"));
+		        userLevel.setCreatedAt(rs.getDate("createdAt"));
+		        userLevel.setUpdatedAt(rs.getDate("updatedAt"));
+
+		        userLevelList.add(userLevel);
+		    }
+
+		    conn.close();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		return userLevelList;
+	}
+
+	@Override
+	public boolean checkName(String name) {
+		try {
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement("SELECT * from UserLevel WHERE name = ?");
+			ps.setString(1, name);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				String temp = rs.getString("name");
+				if (temp.equals(name)) {
+					return true;
+				}
+			}
+			
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+
+	@Override
+	public List<UserLevelModel> getAllDeleted() {
+		List<UserLevelModel> userLevelList = new ArrayList<UserLevelModel>();
+		try {
+		    String sql = "SELECT * FROM UserLevel WHERE isDeleted = 1";
 		    conn = new DBConnection().getConnection();
 
 		    ps = conn.prepareStatement(sql);

@@ -11,5 +11,6 @@ public interface IStoreLevelDAO {
 	void update(StoreLevelModel storeLevel);
 	void delete(int id);
 	int getDefaultLevel();
-	
+	boolean checkName(String name);
+	List<StoreLevelModel> getAllDeleted();
 }

@@ -11,8 +11,7 @@ public class StyleServiceImpl implements IStyleService {
 	IStyleDAO styleDAO = new StyleDAOImpl();
 	@Override
 	public void insert(StyleModel style) {
-		// TODO Auto-generated method stub
-		
+		styleDAO.insert(style);
 	}
 
 	@Override
