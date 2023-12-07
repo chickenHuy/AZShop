@@ -54,7 +54,7 @@
 					</div>
 					<div class="menu-title">Profile</div>
 			</a></li>
-			<li><a href="timeline.html">
+			<li><a href="/AZShop/vendor/review">
 					<div class="parent-icon">
 						<span class="material-symbols-outlined">hotel_class</span>
 					</div>

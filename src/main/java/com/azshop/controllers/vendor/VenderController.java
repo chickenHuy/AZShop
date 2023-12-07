@@ -29,12 +29,14 @@ import javax.servlet.http.HttpSession;
 import javax.swing.tree.DefaultTreeCellEditor.EditorContainer;
 
 import com.azshop.DAO.IOrderDAO;
+import com.azshop.DAO.IReviewDAO;
 import com.azshop.models.CategoryModel;
 import com.azshop.models.DeliveryModel;
 import com.azshop.models.ImageModel;
 import com.azshop.models.OrderItemModel;
 import com.azshop.models.OrderModel;
 import com.azshop.models.ProductModel;
+import com.azshop.models.ReviewModel;
 import com.azshop.models.StoreModel;
 import com.azshop.models.StyleModel;
 import com.azshop.models.StyleValueModel;
@@ -49,6 +51,7 @@ import com.azshop.services.IImageService;
 import com.azshop.services.IOrderItemService;
 import com.azshop.services.IOrderService;
 import com.azshop.services.IProductService;
+import com.azshop.services.IReviewService;
 import com.azshop.services.IStyleService;
 import com.azshop.services.IStyleValueService;
 import com.azshop.services.IUserService;
@@ -56,6 +59,7 @@ import com.azshop.services.ImageServiceImpl;
 import com.azshop.services.OrderItemServiceImpl;
 import com.azshop.services.OrderServiceImpl;
 import com.azshop.services.ProductServiceImpl;
+import com.azshop.services.ReviewServiceImpl;
 import com.azshop.services.StyleServiceImpl;
 import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
@@ -72,7 +76,7 @@ import com.google.gson.Gson;
 @WebServlet(urlPatterns = { "/vendor/dashboard", "/vendor/update-shop-info", "/vendor/product/new",
 		"/vendor/product/all", "/vendor/product/error404", "/vendor/product/edit/*", "/vendor/order/detail/*",
 		"/vendor/order/cancelled","/vendor/order/all", "/vendor/order/processed", "/vendor/order/details" , "/vendor/product/delete/*","/vendor/logout", "/vendor/order/status"
-		,"/vendor/pickup-address"})
+		,"/vendor/pickup-address", "/vendor/review"})
 public class VenderController extends HttpServlet {
 
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -85,6 +89,7 @@ public class VenderController extends HttpServlet {
 	IOrderItemService orderItemService =  new OrderItemServiceImpl();
 	IAddressShippingService addressShippingService = new AddressShippingServiceImpl();
 	IUserService userService = new UserServiceImpl();
+	IReviewService reviewService = new ReviewServiceImpl();
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -163,6 +168,25 @@ public class VenderController extends HttpServlet {
 		{
 			GetPickupAddress(req,resp, userModel, storeModel);
 		}
+		else if (url.contains("/vendor/review")) {
+			GetReview(req, resp, storeModel);
+		}
+	}
+
+	private void GetReview(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel) throws ServletException, IOException  {
+		List<ProductModel> productModels = productService.getByStoreId(storeModel.getId());
+		List<ReviewModel> reviewModels = reviewService.getByStoreId(storeModel.getId());
+		if (reviewModels != null)
+		{
+			req.setAttribute("count", reviewModels.size());
+		}
+		else {
+			req.setAttribute("count",0);
+		}
+		req.setAttribute("reviews", reviewModels);
+		req.setAttribute("products", productModels);
+		req.getRequestDispatcher("/views/vendor/reviews.jsp").forward(req, resp);
+		
 	}
 
 	private void GetPickupAddress(HttpServletRequest req, HttpServletResponse resp, UserModel userModel, StoreModel storeModel) throws ServletException, IOException {
