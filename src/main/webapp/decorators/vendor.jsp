@@ -63,6 +63,9 @@
 <link rel="stylesheet"
 	href="<c:url value="/templates/assets/css/shadow-theme.css"></c:url>"
 	type="text/css">
+<link rel="stylesheet"
+	href="<c:url value="/templatesassets/css/extra-icons.css" ></c:url>" 
+	type="text/css">
 <decorator:head></decorator:head>
 </head>
 <body>
@@ -98,7 +101,6 @@
 	<script src="<c:url value='/templates/assets/plugins/fancy-file-uploader/jquery.fancy-fileupload.js' />"></script>
 		<script src="<c:url value='/templates/assets/plugins/datatable/js/jquery.dataTables.min.js' />"></script>
 	<script src="<c:url value='/templates/assets/plugins/datatable/js/dataTables.bootstrap5.min.js' />"></script>
-	<!--BS Scripts-->
 	<script
 		src="<c:url value="/templates/assets/js/bootstrap.bundle.min.js"></c:url>"></script>
 	<script src="<c:url value="/templates/assets/js/main.js"></c:url>"></script>

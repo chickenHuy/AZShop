@@ -114,9 +114,9 @@ public class CartItemDAOImpl implements ICartItemDAO {
 			while (rs.next()) {
 				CartItemModel cartItemModel = new CartItemModel();
 				cartItemModel.setId(rs.getInt("id"));
-				cartItemModel.setCartId(rs.getInt("cartID"));
+				cartItemModel.setCartId(rs.getInt("cartId"));
 				cartItemModel.setProductId(rs.getInt("productId"));
-				cartItemModel.setStyleValueId(rs.getInt("styleValueIds"));
+				cartItemModel.setStyleValueId(rs.getInt("styleValueId"));
 				cartItemModel.setCount(rs.getInt("count"));
 				cartItemModel.setCreateAt(rs.getDate("createAt"));
 				cartItemModel.setUpdateAt(rs.getDate("updateAt"));

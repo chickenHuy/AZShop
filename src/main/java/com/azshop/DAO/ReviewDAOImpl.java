@@ -166,7 +166,7 @@ public class ReviewDAOImpl implements IReviewDAO {
 	public List<ReviewModel> getByStoreId(int storeId) {
 		List<ReviewModel> reviewModelList = new ArrayList<ReviewModel>();
 		try {
-			String sql = "Select * from Review where storeId = ?";
+			String sql = "Select * from Review where storeId = ? ORDER BY updateAt DESC, createAt DESC ";
 
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
@@ -269,5 +269,6 @@ public class ReviewDAOImpl implements IReviewDAO {
 			e.printStackTrace();
 		}
 	}
+
 
 }
