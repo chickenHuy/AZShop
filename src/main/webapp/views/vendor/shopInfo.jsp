@@ -26,7 +26,7 @@
 		</div>
 		<div style="display: flex; flex-direction: row; align-items: center">
 			<h4 class="mb-3">${!isView?"Edit Shop Information":"Shop Information"}</h4>
-			<a href="update-shop-info" ${!isView? 'style="display: none;"' : '' }>
+			<a href="/AZShop/vendor/update-shop-info" ${!isView? 'style="display: none;"' : '' }>
 				<button class="button__edit-shop-info"
 					style="width: auto; height: auto; padding: 5px 30px; margin: 0 70px; border: none; border-radius: 3px; background-color: #383d42; color: #fff; transform: translateY(-5px);"
 					onmouseover="this.style.color = '#d10024'"
@@ -123,7 +123,7 @@
 									style="background-color: #15161d; color: #fff; bottom: 10px; right: 20px;"
 									onmouseover="this.style.color='#d10024'"
 									onmouseleave="this.style.color='#fff'">Save changes</button>
-								<a href="view-shop-info">
+								<a href="/AZShop/vendor/view-shop-info">
 									<button type="button" class="btn btn-md radius-30 px-4"
 										${isView? 'style="display: none;"' : '' }
 										style="background-color: #15161d; color: #aaa; bottom: 10px; right: 20px;"

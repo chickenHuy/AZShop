@@ -61,6 +61,7 @@
 				</div>
 				<!-- /Product thumb imgs -->
 
+
 				<!-- Product details -->
 				<div class="col-md-5">
 					<div class="product-details">
@@ -125,6 +126,22 @@
 							<li><a href="#"><i class="fa fa-envelope"></i></a></li>
 						</ul>
 
+						<!-- Hiển thị thông báo thành công -->
+						<c:if test="${not empty message}">
+							<div class="alert alert-success border-0 bg-success alert-dismissible fade show">
+								<div class="text-white">${message}</div>
+								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+						</c:if>
+					
+						<!-- Hiển thị thông báo lỗi -->
+						<c:if test="${not empty error}">
+							<div class="alert alert-danger border-0 bg-danger alert-dismissible fade show">
+								<div class="text-white">${error}</div>
+								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							</div>
+						</c:if>
+
 					</div>
 				</div>
 				<!-- /Product details -->
@@ -169,7 +186,7 @@
 									<div class="col-md-3">
 										<div id="rating">
 											<div class="rating-avg">
-												<span>4.5</span>
+												<span>${product.rating}</span>
 												<div class="rating-stars">
 													<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
 														class="fa fa-star"></i> <i class="fa fa-star"></i> <i
@@ -281,8 +298,6 @@
 									<div class="col-md-3">
 										<div id="review-form">
 											<form class="review-form" action="review-product" method="post">
-												<input class="input" type="text" placeholder="Your Name">
-												<input class="input" type="email" placeholder="Your Email">
 												<textarea class="input" name="review" placeholder="Your Review"></textarea>
 												<div class="input-rating">
 													<span>Your Rating: </span>

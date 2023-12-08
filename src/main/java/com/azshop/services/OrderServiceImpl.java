@@ -115,9 +115,11 @@ public class OrderServiceImpl implements IOrderService {
 			BigDecimal orderItemTotal = orderItemService.calculateOrderItemTotal(orderItem.getId());
 	        orderTotal = orderTotal.add(orderItemTotal);
         }
+		
 		orderTotal = orderTotal.add(delivery.getPrice());
 		if (userLevel.getDiscount() != 0) {
-			orderTotal = orderTotal.subtract(BigDecimal.valueOf(userLevel.getDiscount()/100.00).multiply(orderTotal));
+			BigDecimal discount = BigDecimal.valueOf(userLevel.getDiscount()/100.0).multiply(orderTotal);
+			orderTotal = orderTotal.subtract(discount);
 		}
         return orderTotal;
 	}

@@ -1,5 +1,6 @@
 package com.azshop.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.azshop.DAO.IReviewDAO;
@@ -57,6 +58,9 @@ public class ReviewServiceImpl implements IReviewService{
 	}
 
 	@Override
+	public BigDecimal avgRating(int productId) {
+		return reviewDAO.avgRating(productId);
+	}
 	public int countByStore(int storeId) {
 		 return reviewDAO.countByStore(storeId);
 	}
@@ -65,5 +69,6 @@ public class ReviewServiceImpl implements IReviewService{
 	public int countNewByStore(int storeId) {
 		return reviewDAO.countNewByStore(storeId);
 	}
+
 
 }

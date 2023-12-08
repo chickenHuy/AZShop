@@ -127,7 +127,7 @@
 							</div>
 							<div class="d-flex justify-content-between border-top pt-4">
 								<h5 class="mb-0 fw-bold">Total :</h5>
-								<h5 class="mb-0 fw-bold">$925.44</h5>
+								<h5 class="mb-0 fw-bold">${order.price}</h5>
 							</div>
 						</div>
 					</div>
