@@ -1,6 +1,7 @@
 package com.azshop.controllers.customer;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -171,6 +172,8 @@ public class ProductController extends HttpServlet {
 				reviewModel.setContent(content);
 				reviewModel.setRating(rating);
 				reviewService.insert(reviewModel);
+				product.setRating(reviewService.avgRating(product.getId()));
+				productService.update(product);
 				resp.sendRedirect(req.getContextPath() + "/customer-home");
 				return;
 			} else {

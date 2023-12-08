@@ -89,7 +89,7 @@ import com.google.gson.JsonObject;
 		"/vendor/order/detail/*", "/vendor/order/cancelled", "/vendor/order/all", "/vendor/order/processed",
 		"/vendor/order/details", "/vendor/product/delete/*", "/vendor/logout", "/vendor/order/status",
 		"/vendor/pickup-address", "/vendor/review", "/vendor/product/error403", "/vendor/statistics-revenue",
-		"/vendor/statistics-product" })
+		"/vendor/statistics-product", "/vendor/review/detail" })
 public class VenderController extends HttpServlet {
 
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -205,7 +205,11 @@ public class VenderController extends HttpServlet {
 			ChangeStatusOrder(req, resp);
 		} else if (url.contains("vendor/pickup-address")) {
 			GetPickupAddress(req, resp, userModel, storeModel);
-		} else if (url.contains("/vendor/review")) {
+		}
+		else if (url.contains("/vendor/review/detail")) {
+			GetDetailReview(req, resp, storeModel);
+		}
+		else if (url.contains("/vendor/review")) {
 			GetReview(req, resp, storeModel);
 		} else if (url.contains("vendor/statistics-revenue")) {
 			GetRevenue(req, resp, storeModel);
@@ -213,6 +217,34 @@ public class VenderController extends HttpServlet {
 			GetStatisticsProduct(req, resp, storeModel);
 		}
 	}
+
+
+
+	private void GetDetailReview(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel) throws ServletException, IOException {
+		try {
+			String slug = req.getParameter("slug");
+			String idReview = req.getParameter("id");
+			ProductModel productModel = productService.getBySlug(slug);
+			if (productModel == null) {
+				resp.sendRedirect("/views/vendor/404.jsp");
+				return;
+			}
+			List<ReviewModel> reviewModels = reviewService.getByProductId(productModel.getId());
+			req.setAttribute("name", productModel.getName());
+			req.setAttribute("reviews", reviewModels);
+			req.setAttribute("id", idReview);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/detailReview.jsp");
+			rDispatcher.forward(req, resp);
+			
+		}
+		catch (Exception e) {
+			resp.sendRedirect("/views/vendor/404.jsp");
+		}
+		return;
+		
+	}
+
+
 
 	private void GetDashBoard(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel) throws ServletException, IOException {
 		req.setAttribute("store", storeModel); //eWallet, rating, name
@@ -354,6 +386,7 @@ public class VenderController extends HttpServlet {
 			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 			e.printStackTrace();
 		}
+		System.out.println("aa check commit");
 
 	}
 
