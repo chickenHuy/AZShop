@@ -178,34 +178,34 @@ public class AdminController extends HttpServlet {
 		if (orderId != null) {
 			List<OrderItemModel> listOrderItem = orderItemService.getByOrderId(Integer.parseInt(orderId));
 			req.setAttribute("listOrderItem", listOrderItem);
-			
+
 			BigDecimal totalOrder = BigDecimal.ZERO;
-			
+
 			for (OrderItemModel orderItem : listOrderItem) {
 				totalOrder = totalOrder.add(orderItemService.calculateOrderItemTotal(orderItem.getId()));
 			}
 			req.setAttribute("totalOrder", totalOrder);
-			
+
 			OrderModel order = orderService.getById(Integer.parseInt(orderId));
 			req.setAttribute("order", order);
 			req.setAttribute("orderId", orderId);
-			
+
 			List<ProductModel> listProduct = productService.getAll();
 			req.setAttribute("listProduct", listProduct);
-			
+
 			DeliveryModel delivery = deliveryService.getById(order.getDeliveryId());
 			req.setAttribute("shipping_cost", delivery.getPrice());
-			
+
 			UserModel user = userService.getById(order.getUserId());
 			req.setAttribute("user", user);
-			
+
 			order.setPrice(orderService.calculateOrderTotal(order.getId()));
-			
+
 			totalOrder = totalOrder.add(delivery.getPrice());
-			
+
 			UserLevelModel userLevel = userLevelService.getById(user.getUserLevelId());
 			req.setAttribute("discount", BigDecimal.valueOf(userLevel.getDiscount() / 100.0).multiply(totalOrder));
-			
+
 
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/orderDetail.jsp");
 			rDispatcher.forward(req, resp);
@@ -794,20 +794,18 @@ public class AdminController extends HttpServlet {
 		String discount = req.getParameter("discount");
 
 		if (name != null && minPoint != null && discount != null) {
-			if (!userLevelService.checkName(name)) {
-				try {
-					userLevel.setName(name);
-					userLevel.setMinPoint(Integer.parseInt(minPoint));
-					userLevel.setDiscount(Integer.parseInt(discount));
+			try {
+				userLevel.setName(name);
+				userLevel.setMinPoint(Integer.parseInt(minPoint));
+				userLevel.setDiscount(Integer.parseInt(discount));
 
-					userLevelService.update(userLevel);
-					resp.sendRedirect("?message=Successfully");
-				} catch (Exception e) {
-					resp.sendRedirect("?message=Failed to edit the user level");
-				}
-			} else {
-				resp.sendRedirect("?message=You must fill out the form");
+				userLevelService.update(userLevel);
+				resp.sendRedirect("?message=Successfully");
+			} catch (Exception e) {
+				resp.sendRedirect("?message=Failed to edit the user level");
 			}
+		} else {
+			resp.sendRedirect("?message=You must fill out the form");
 		}
 	}
 
