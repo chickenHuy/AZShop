@@ -500,6 +500,7 @@ public class ProductDAOImpl implements IProductDAO {
             String sql = "SELECT * FROM dbo.[Product] WHERE categoryId = ? and isDeleted = 0 ORDER BY price ASC";
             conn = new DBConnection().getConnection();
             ps = conn.prepareStatement(sql);
+            ps.setInt(1, categoryId);
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -538,6 +539,7 @@ public class ProductDAOImpl implements IProductDAO {
             String sql = "SELECT * FROM dbo.[Product] WHERE categoryId = ? and isDeleted = 0 ORDER BY price DESC";
             conn = new DBConnection().getConnection();
             ps = conn.prepareStatement(sql);
+            ps.setInt(1, categoryId);
             rs = ps.executeQuery();
 
             while (rs.next()) {

@@ -533,7 +533,7 @@ public class CustomerController extends HttpServlet {
 					}
 	                
 	                //Hiển thị tất cả thì sắp xếp theo mặc định
-//	                productList = productService.SortingProductbyPriceAscending(productList);
+	                productList = productService.SortingProductbyPriceAscending(productList, category.getId());
 //	                productList = productService.GetTopSellerProduct(productList, 3);
 	                int sortBy = 0; int showCount = 0;
 	                
