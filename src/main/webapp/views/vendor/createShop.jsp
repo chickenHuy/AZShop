@@ -8,15 +8,15 @@
   <title>Đăng ký cửa hàng</title>
   <style>
    	.BodyRegister {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+  font-family: Arial, sans-serif;
+  background-color: #d21737; /* Đổi màu nền thành #d21737 */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
 
     .registration-form {
       background-color: #fff;
@@ -67,7 +67,7 @@
     }
 
     .btnDangKy:hover {
-      background-color: #45a049;
+      background-color: #15161d;
     }
   </style>
 </head>
@@ -88,12 +88,42 @@
 
         <div class="form-group">
           <label for="phoneNumber"  class="required" class="requiredInput">Số điện thoại:</label>
+        <c:if test="${user.phone != null}">
           <input type="tel" id="phoneNumber" name="phoneNumber" value="${user.phone}" disabled class="requiredInput">
+          </c:if>
+          <c:if test="${user.phone == null}">
+          <input type="tel" id="phoneNumber" name="phoneNumber" value="" required class="requiredInput">
+          </c:if>
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber"  class="required" class="requiredInput">Địa chỉ:</label>
+          <c:if test="${user.address != null}"> 
+          	<input type="tel" id="ad" name="address" value="${user.address}" disabled class="requiredInput">
+          </c:if>
+          <c:if test="${user.address == null}"> 
+          	<input type="tel" id="ad" name="address" value="" required class="requiredInput">
+          </c:if>
         </div>
 
         <button type="submit" class="btnDangKy">Đăng ký</button>
       </form>
     </div>
   </div>
+  
+  <%
+    // Lấy thông báo lỗi từ request
+    String error = (String) request.getAttribute("error");
+
+    // Kiểm tra xem có thông báo lỗi không và hiển thị cửa sổ alert
+    if (error != null && !error.isEmpty()) {
+%>
+    <script>
+        alert("Lỗi: <%= error %>");
+    </script>
+<%
+    }
+%>
+
 </body>
 </html>

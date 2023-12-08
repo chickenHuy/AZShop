@@ -17,7 +17,7 @@
 			<div class="row">
 				<div class="col-md-12">
 					<ul class="breadcrumb-tree">
-						<li><a href="#">Home</a></li>
+						<li><a href="<c:url value='/customer-home' />">Home</a></li>
 						<li><a href="#">All Categories</a></li>
 						<li><a href="#">Accessories</a></li>
 						<li><a href="#">Headphones</a></li>
@@ -83,20 +83,26 @@
 						</div>
 						<p>Cửa hàng: ${store.name}</p>
 
-						<div class="add-to-cart">
-							<div class="qty-label">
-								Qty
-								<div class="input-number">
-									<input type="number"> <span class="qty-up">+</span> <span
-										class="qty-down">-</span>
+						
+
+						<form
+							action="<c:url value='/customer/add-to-cart/${product.slug}'/>"
+							method="get">
+							<div class="add-to-cart">
+								<div class="qty-label">
+									Số lượng
+									<div class="input-number">
+										<input type="number" name="count" id="count" value="1"
+											min="1"> <span class="qty-up"
+											onclick="increaseValue()">+</span> <span class="qty-down"
+											onclick="decreaseValue()">-</span>
+									</div>
 								</div>
-							</div>
-							<a href="<c:url value='/customer/add-to-cart'/>">
-								<button class="add-to-cart-btn">
+								<button class="add-to-cart-btn" type="submit">
 									<i class="fa fa-shopping-cart"></i> add to cart
 								</button>
-							</a>
-						</div>
+							</div>
+						</form>
 
 						<ul class="product-btns">
 							<li><a href="#"><i class="fa fa-heart-o"></i> add to
@@ -230,54 +236,26 @@
 									<div class="col-md-6">
 										<div id="reviews">
 											<ul class="reviews">
-												<li>
-													<div class="review-heading">
-														<h5 class="name">John</h5>
-														<p class="date">27 DEC 2018, 8:0 PM</p>
-														<div class="review-rating">
-															<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-																class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-																class="fa fa-star-o empty"></i>
+												<c:forEach var="review" items="${review}">
+													<li>
+														<div class="review-heading">
+															<c:forEach var="user" items="${userList}">
+																<c:if test="${review.userId eq user.id}">
+																	<h5 class="name">${user.firstName} ${user.lastName}</h5>
+																</c:if>
+															</c:forEach>
+															<p class="date">${review.createAt}</p>
+															<div class="review-rating">
+																<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+																	class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+																	class="fa fa-star-o empty"></i>
+															</div>
 														</div>
-													</div>
-													<div class="review-body">
-														<p>Lorem ipsum dolor sit amet, consectetur adipisicing
-															elit, sed do eiusmod tempor incididunt ut labore et
-															dolore magna aliqua</p>
-													</div>
-												</li>
-												<li>
-													<div class="review-heading">
-														<h5 class="name">John</h5>
-														<p class="date">27 DEC 2018, 8:0 PM</p>
-														<div class="review-rating">
-															<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-																class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-																class="fa fa-star-o empty"></i>
+														<div class="review-body">
+															<p>${review.content}</p>
 														</div>
-													</div>
-													<div class="review-body">
-														<p>Lorem ipsum dolor sit amet, consectetur adipisicing
-															elit, sed do eiusmod tempor incididunt ut labore et
-															dolore magna aliqua</p>
-													</div>
-												</li>
-												<li>
-													<div class="review-heading">
-														<h5 class="name">John</h5>
-														<p class="date">27 DEC 2018, 8:0 PM</p>
-														<div class="review-rating">
-															<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-																class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-																class="fa fa-star-o empty"></i>
-														</div>
-													</div>
-													<div class="review-body">
-														<p>Lorem ipsum dolor sit amet, consectetur adipisicing
-															elit, sed do eiusmod tempor incididunt ut labore et
-															dolore magna aliqua</p>
-													</div>
-												</li>
+													</li>
+												</c:forEach>
 											</ul>
 											<ul class="reviews-pagination">
 												<li class="active">1</li>
@@ -416,6 +394,24 @@
 		<!-- /container -->
 	</div>
 	<!-- /Section -->
+
+	<script>
+		// Lấy đối tượng input
+		var count = document.getElementById('count');
+
+		// Hàm tăng giá trị
+		function increaseValue() {
+			count.value = parseInt(count.value) + 1;
+		}
+
+		// Hàm giảm giá trị
+		function decreaseValue() {
+			// Đảm bảo giá trị không âm
+			if (parseInt(count.value) > 0) {
+				count.value = parseInt(count.value) - 1;
+			}
+		}
+	</script>
 
 </body>
 </html>

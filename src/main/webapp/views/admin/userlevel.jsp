@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ include file="/common/taglib.jsp"%>
+<%@ include file="/common/taglib.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,18 +18,21 @@
 					<ol class="breadcrumb mb-0 p-0">
 						<li class="breadcrumb-item"><a href="javascript:;"><i
 								class="bx bx-home-alt"></i></a></li>
-						<li class="breadcrumb-item active" aria-current="page">User Level</li>
+						<li class="breadcrumb-item active" aria-current="page">User
+							Level</li>
 					</ol>
 				</nav>
 			</div>
 		</div>
-		
+
 		<div class="col-auto">
 			<div class="d-flex align-items-center gap-2 justify-content-lg-end">
-				<a class="btn btn-primary px-4" href="adduserlevel"><i class="bi bi-plus-lg me-2"></i>New user level</a>
+				<a class="btn btn-primary px-4" href="adduserlevel"><i
+					class="bi bi-plus-lg me-2"></i>New level</a>
 			</div>
 		</div>
-		
+
+
 		<div class="card mt-4">
 			<div class="card-body">
 				<div class="customer-table">
@@ -52,7 +55,8 @@
 										</a></td>
 										<td>${level.minPoint }</td>
 										<td>${level.discount }</td>
-										<td><a href='<c:url value="/admin/edituserlevel?id=${level.id }"/>'>Edit</a>/Delete</td>
+										<td><a
+											href='<c:url value="/admin/edituserlevel?id=${level.id }"/>'>Edit</a></td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -61,7 +65,40 @@
 				</div>
 			</div>
 		</div>
-
+		
+		<h3>Level deleted</h3>
+		<div class="card mt-4">
+			<div class="card-body">
+				<div class="customer-table">
+					<div class="table-responsive white-space-nowrap">
+						<table class="table align-middle">
+							<thead class="table-light">
+								<tr>
+									<th>Name</th>
+									<th>Min point</th>
+									<th>Discount</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach var="level" items="${listdeleted}">
+									<tr>
+										<td><a class="d-flex align-items-center gap-3"
+											href="javascript:;">
+												<p class="mb-0 customer-name fw-bold">${level.name }</p>
+										</a></td>
+										<td>${level.minPoint }</td>
+										<td>${level.discount }</td>
+										<td><a
+											href='<c:url value="/admin/restoreuserlevel?id=${level.id }"/>'>Restore</a></td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
 	</main>
 	<!--end main content-->
 </body>

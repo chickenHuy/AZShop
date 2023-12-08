@@ -48,36 +48,43 @@
 							class="material-symbols-outlined">arrow_right</span>Cancelled Order</a></li>
 				</ul></li>
 			<li class="menu-label">Pages</li>
-			<li><a href="user-profile.html">
+			<li><a href="view-shop-info">
 					<div class="parent-icon">
 						<span class="material-symbols-outlined">account_circle</span>
 					</div>
 					<div class="menu-title">Profile</div>
 			</a></li>
-			<li><a href="timeline.html">
+			<li><a href="/AZShop/vendor/review">
 					<div class="parent-icon">
 						<span class="material-symbols-outlined">hotel_class</span>
 					</div>
 					<div class="menu-title">Customer Reviews</div>
 			</a></li>
-			<li><a href="faq.html">
+			<li><a href="/AZShop/vendor/pickup-address">
 					<div class="parent-icon">
 						<span class="material-symbols-outlined">call</span>
 					</div>
-					<div class="menu-title">Shipping address</div>
+					<div class="menu-title">Pickup address</div>
 			</a></li>
-			
-			<li><a class="has-arrow" href="javascript:;">
+			<li>
+				<a href="<c:url value='/information' />">
+                    <div class="parent-icon">
+                    	<span class="material-symbols-outlined">lock_open</span>
+                    </div>
+                    <div class="menu-title">Authentication</div>
+                  </a>
+			</li>
+			<li><a class="has-arrow" >
 					<div class="parent-icon">
 						<span class="material-symbols-outlined">monitoring</span>
 					</div>
-					<div class="menu-title">statistics</div>
+					<div class="menu-title">Statistics</div>
 			</a>
 				<ul>
-					<li><a href="charts-apex.html"><span
-							class="material-symbols-outlined">arrow_right</span>Apex</a></li>
-					<li><a href="charts-chartjs.html"><span
-							class="material-symbols-outlined">arrow_right</span>Chartjs</a></li>
+					<li><a href="/AZShop/vendor/statistics-revenue"><span
+							class="material-symbols-outlined">arrow_right</span>Revenue</a></li>
+					<li><a href="/AZShop/vendor/statistics-product"><span
+							class="material-symbols-outlined">arrow_right</span>Product</a></li>
 				</ul></li>
 		</ul>
 

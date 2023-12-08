@@ -318,19 +318,7 @@ public class ProductDAOImpl implements IProductDAO {
 	public List<ProductModel> FindProduct(String keyword) {
 		List<ProductModel> listProduct = new ArrayList<ProductModel>();
 		try {
-			String sql = "SELECT \r\n"
-					+ "	Product.id, Product.name, Product.slug, Product.description, Product.price, Product.quantiny, Product.sold, Product.isActive, Product.isDeleted, Product.video,\r\n"
-					+ "	Product.categoryId, Product.styleValueId, Product.storeId, Product.rating, Product.createAt, Product.updateAt\r\n"
-					+ "FROM \r\n"
-					+ "    Product\r\n"
-					+ "JOIN \r\n"
-					+ "    Category ON Product.categoryId = Category.id\r\n"
-					+ "JOIN \r\n"
-					+ "    Style ON Product.styleValueId = Style.id\r\n"
-					+ "JOIN \r\n"
-					+ "    StyleValue ON Style.id = StyleValue.id\r\n"
-					+ "WHERE  \r\n"
-					+ "    Product.name LIKE '%" + keyword + "%' or Product.slug LIKE '%" + keyword + "%' or Category.name LIKE '%" + keyword + "%' or Style.name LIKE '%" + keyword + "%' or StyleValue.name LIKE '%" + keyword + "%'";
+			String sql = "SELECT * FROM Product WHERE (Product.name LIKE N'%" + keyword + "%' OR N'Product.slug' LIKE N'%" + keyword + "%') AND isDeleted = 0";
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();

@@ -1,5 +1,6 @@
 package com.azshop.DAO;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -364,5 +365,68 @@ List<OrderModel> oderModelList = new ArrayList<OrderModel>();
 		
 		return oderModelList;
 	}
+
+	@Override
+	public List<BigDecimal> GetRevenueLastNDays(int nDay, int storeId) {
+		List<BigDecimal> revenueList = new ArrayList<BigDecimal>();
+		String nDayString = String.valueOf(nDay);
+		try {
+			String sql = "WITH AllDates AS (\r\n"
+					+ "    SELECT TOP " + nDayString + " "
+					+ "        DATEADD(DAY, -ROW_NUMBER() OVER (ORDER BY (SELECT NULL)), CONVERT(DATE, GETDATE())) AS RecentDate\r\n"
+					+ "    FROM master.dbo.spt_values\r\n"
+					+ ")\r\n"
+					+ "\r\n"
+					+ "SELECT \r\n"
+					+ "    AllDates.RecentDate AS OrderDate,\r\n"
+					+ "    ISNULL(SUM(amountToStore), 0) AS TotalAmount\r\n"
+					+ "FROM AllDates\r\n"
+					+ "LEFT JOIN [Order] ON AllDates.RecentDate = CONVERT(DATE, [Order].createAt) AND storeId = ? AND status = 'Completed'\r\n"
+					+ "GROUP BY AllDates.RecentDate\r\n"
+					+ "ORDER BY AllDates.RecentDate DESC;";
+			conn = new DBConnection().getConnection();
+			
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			
+			rs = ps.executeQuery();
+		    while (rs.next()) {
+		            BigDecimal totalAmount = rs.getBigDecimal("TotalAmount");
+		            revenueList.add(totalAmount);
+		        }
+
+		        conn.close();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		return revenueList;
+		
+	}
+
+	@Override
+	public BigDecimal getSumRevenueByStore(int storeId) {
+		BigDecimal resultBigDecimal = null; 
+		try {	
+			String sql = "SELECT SUM(amountToStore) AS TotalAmountToStore FROM [Order] WHERE isDeleted = 0 and storeId = ? and status='Completed'";
+			conn = new DBConnection().getConnection();
+			
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			
+			rs = ps.executeQuery();
+		    if (rs.next()) {
+		           resultBigDecimal  = rs.getBigDecimal("TotalAmountToStore");
+		        }
+		    conn.close();
+		    
+		    } 
+		catch (Exception e) {
+		        e.printStackTrace();
+		        
+		    }
+		return resultBigDecimal ;
+	}
+
+
 	
 }

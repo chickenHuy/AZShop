@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -16,12 +17,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.azshop.DAO.CartItemDAOImpl;
+import com.azshop.DAO.CategoryDAOImpl;
 import com.azshop.models.CartItemModel;
 import com.azshop.models.CartModel;
 import com.azshop.models.CategoryModel;
 import com.azshop.models.ImageModel;
 import com.azshop.models.ProductModel;
 import com.azshop.models.StoreModel;
+import com.azshop.models.StyleModel;
 import com.azshop.models.StyleValueModel;
 import com.azshop.models.UserModel;
 import com.azshop.services.CartItemServiceImpl;
@@ -44,8 +47,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/product/*", "/customer-search", "/customer/cart", 
-"/customer-information", "/customer/add-to-cart/*"})
+@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/store/*", "/customer/style/*", "/customer-search", "/customer-information"})
 public class CustomerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -64,30 +66,84 @@ public class CustomerController extends HttpServlet {
 		
 		//Hiển thị menu danh mục
 		List<CategoryModel> categoryParentList = categoryService.getParentCategory();
-		req.setAttribute("categoryParentList", categoryParentList);
+		req.setAttribute("categoryParentList", categoryParentList);				
+		
+		try {
+			HttpSession session = req.getSession();
+			if (session != null) {
+				Object sessionObject = session.getAttribute(Constant.userSession);
+				if (sessionObject instanceof UserModel) {
+					UserModel user = (UserModel) sessionObject;
+					List<CartModel> cartList = cartService.getByUserId(user.getId());
+					List<CartItemModel> cartItemList = new ArrayList<CartItemModel>();
+					
+					//Hiển thị item trong giỏ hàng
+					for (CartModel cart : cartList) {
+						List<CartItemModel> itemList = cartItemService.getByCartId(cart.getId());
+						cartItemList.addAll(itemList);
+					}										
+					
+					//Lấy thông tin danh sách product có trong giỏ hàng
+					List<ProductModel> productsInCart = new ArrayList<ProductModel>();
+					
+					for (CartItemModel cartItem : cartItemList) {
+						ProductModel  productInCart = productService.getById(cartItem.getProductId());
+						productsInCart.add(productInCart);
+					}
+					
+					List<ImageModel> imageProductsInCart = new ArrayList<ImageModel>();
+
+					for (ProductModel productModel : productsInCart) {
+						ImageModel image = imageService.getImage(productModel.getId());
+						imageProductsInCart.add(image);
+					}
+					
+					req.setAttribute("quantity", cartItemList.size());
+					req.setAttribute("user", user);
+					req.setAttribute("imageProductsInCart", imageProductsInCart);	
+					req.setAttribute("cartItemList", cartItemList);
+					req.setAttribute("productsInCart", productsInCart);						
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		if (url.contains("customer-home")) {
 			try {
-				HttpSession session = req.getSession();
-				if (session != null) {
-					Object sessionObject = session.getAttribute(Constant.userSession);
-					if (sessionObject instanceof UserModel) {
-						UserModel user = (UserModel) sessionObject;
-						List<CartModel> cartList = cartService.getByUserId(user.getId());
-						req.setAttribute("user", user);
-						// Sử dụng thông tin người dùng ở đây
-					}
-				}
-
 				getAll(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-
+		
 		else if (url.contains("customer/category")) {
 			try {
 				getCategory(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		else if (url.contains("customer/store")) {
+			try {
+				getStore(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		else if (url.contains("customer-search")) {
+			try {
+				search(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		else if (url.contains("customer/style")) {
+			try {
+				getStyle(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -106,20 +162,6 @@ public class CustomerController extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-		else if (url.contains("customer/cart")) {
-			try {
-				getInforCart(req, resp);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		else if (url.contains("customer/add-to-cart")) {
-			try {
-				addProductToCart(req, resp);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}			
-		}
 		else if (url.contains("customer-information")) {
 			try {
 				HttpSession session = req.getSession();
@@ -137,107 +179,228 @@ public class CustomerController extends HttpServlet {
 			}
 		}
 	}
-	
-	private void addProductToCart(HttpServletRequest req, HttpServletResponse resp) throws UnsupportedEncodingException {
-		//ma hoa UTF-8
+
+	private void search(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// ma hoa UTF-8
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-		try {
-			HttpSession session = req.getSession();
-			if (session != null) {
-				Object sessionObject = session.getAttribute(Constant.userSession);
-				if (sessionObject instanceof UserModel) {
-					UserModel user = (UserModel) sessionObject;
-					req.setAttribute("user", user);
-					
-					//Sử dụng thông tin người dùng ở đây
-					String url = req.getRequestURL().toString();
-					URI uri;
-					try {
 
-						uri = new URI(url);
-						String path = uri.getPath();
+		// nhan du lieu tu form
+		String keyword = req.getParameter("keyword");
 
-						String[] parts = path.split("/");
+		List<ProductModel> productList = productService.FindProduct(keyword);
+		List<StoreModel> storeList = storeService.FindStore(keyword);
+		List<CategoryModel> categoryList = categoryService.FindCategory(keyword);
 
-						if (parts.length > 0) {
-							String slug = parts[parts.length - 1];
-							try {
-								
-								ProductModel product = productService.getBySlug(slug);														
-								
-								//Lấy thử danh sách cart
-								List<CartModel> cartList = cartService.getAll();
-								boolean isExistCart = false;
-								CartModel cart = new CartModel();
-								for (CartModel cartModel : cartList) {
-									//Kiểm tra xem store id của product được thêm vào có trong cart nào chưa
-									if (product.getStoreId() == cartModel.getStoreId()) {
-										isExistCart = true;
-										cart = cartModel;
-									}
-								}
-								
-								//nếu đã có thì sẽ tiếp tục thêm sản phẩm vào
-								if (isExistCart == true) {
-									//Thêm item cho cart
-									CartItemModel cartItem = new CartItemModel();
-									cartItem.setCartId(cart.getId());
-									cartItem.setProductId(product.getId());
-									cartItem.setStyleValueId(product.getStyleValueId());
-									cartItem.setCount(Integer.parseInt(req.getParameter("count")));
-									cartItemService.insert(cartItem);
-								}
-								
-								//nếu chưa có thì tạo cart mới cho store id này
-								else {
-									CartModel newCart = new CartModel();
-									newCart.setUserId(user.getId());
-									newCart.setStoreId(product.getStoreId());
-									cartService.insert(newCart);
-									
-									cartList = cartService.getAll();
-									
-									for (CartModel cartModel : cartList) {										
-										if (product.getStoreId() == cartModel.getStoreId()) {
-											cart = cartModel;
-										}
-									}
-									
-									//Thêm item cho cart
-									CartItemModel cartItem = new CartItemModel();
-									cartItem.setCartId(cart.getId());
-									cartItem.setProductId(product.getId());
-									cartItem.setStyleValueId(product.getStyleValueId());
-									cartItem.setCount(Integer.parseInt(req.getParameter("count")));
-									cartItemService.insert(cartItem);
-								}
-								
+		if (productList.size() != 0) {
+			List<CategoryModel> categorys = categoryService.getAll();
+			List<ImageModel> imageList = new ArrayList<ImageModel>();
 
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					} catch (URISyntaxException e) {
-						e.printStackTrace();
-					}				
+			for (ProductModel productModel : productList) {
+				ImageModel image = imageService.getImage(productModel.getId());
+				imageList.add(image);
+			}
+
+			req.setAttribute("productList", productList);
+			req.setAttribute("categoryList", categorys);
+			req.setAttribute("imageList", imageList);
+			RequestDispatcher rd = req.getRequestDispatcher("/views/customer/SearchProduct.jsp");
+			rd.forward(req, resp);
+		}
+
+		else {
+			// Tìm danh mục
+			if (storeList.size() != 0) {
+				req.setAttribute("storeList", storeList);
+				RequestDispatcher rd = req.getRequestDispatcher("/views/customer/SearchStore.jsp");
+				rd.forward(req, resp);
+			} else {
+				// Tìm danh mục
+				if (categoryList.size() != 0) {
+					req.setAttribute("categoryList", categoryList);
+					RequestDispatcher rd = req.getRequestDispatcher("/views/customer/SearchCategory.jsp");
+					rd.forward(req, resp);
 				}
 			}
-			
-			
-			
-		} catch (Exception e) {
+		}
+
+	}
+
+	private void getStore(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String url = req.getRequestURL().toString();
+		URI uri;
+		try {
+
+			uri = new URI(url);
+			String path = uri.getPath();
+
+			String[] parts = path.split("/");
+
+			if (parts.length > 0) {
+				String slug = parts[parts.length - 1];
+				
+				try {
+
+					StoreModel store = storeService.getBySlug(slug);
+					req.setAttribute("store", store);
+	                
+//	                Boolean isCategoryOrigin = false;
+//	                
+//	                //Kiếm tra category có phải là một caetgory gốc
+//	                List<CategoryModel> categoryParentList = categoryService.getParentCategory();
+//	                for (CategoryModel categoryModel : categoryParentList) {
+//						if (category.getId() == categoryModel.getId()) {
+//							isCategoryOrigin = true;
+//						}
+//					}
+	                
+//	                //Khai báo trong trường hợp nó là category gốc
+//	                CategoryModel categoryParent = categoryService.getParentCategory(category.getId());		                		                
+//	                List<CategoryModel> categoryChildList = categoryService.getChildCategory(category.getId());
+	                List<ProductModel> productList = new ArrayList<ProductModel>();
+	                List<ImageModel> imageList = new ArrayList<ImageModel>();
+	                
+//	                //Lấy ra tất cả sản phẩm
+//	                for (CategoryModel categoryChild : categoryChildList) {
+//	                	List<ProductModel> productCategoryChilds = productService.getByCategoryId(categoryChild.getId());
+//	                	productList.addAll(productCategoryChilds);
+//					}
+	                
+	                productList = productService.getByStoreId(store.getId());
+	                
+	                List<CategoryModel> categoryChildList = new ArrayList<CategoryModel>();
+	                for (ProductModel productModel : productList) {
+						CategoryModel category = categoryService.getById(productModel.getCategoryId());
+						categoryChildList.add(category);
+					}
+	                
+	                List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+	                for (CategoryModel categoryModel : categoryChildList) {
+						CategoryModel category = categoryService.getById(categoryModel.getCategoryId());
+						Boolean isExistCategory = false;
+						for (CategoryModel categoryExist : categoryList) {
+							if (category.getId() == categoryExist.getId()) isExistCategory = true;
+						}
+						if (isExistCategory == false) categoryList.add(category);
+					}
+	                
+//	                //nếu không phải
+//	                if (isCategoryOrigin == false) {
+//	                	categoryChildList = categoryService.getChildCategory(category.getCategoryId());
+//	                	categoryParent = categoryService.getById(category.getCategoryId());
+//	                	productList = productService.getByCategoryId(category.getId());
+//	                	
+//	                	//Lấy danh sách style value từ category parent
+//		                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
+//		                req.setAttribute("styleList", styleList);
+//		                
+//		                req.setAttribute("categoryStyle", category);
+//	                }
+	                
+//	                //đếm số lượng product trong mỗi category
+//	                for (CategoryModel categoryChild : categoryChildList) {
+//						int countProduct = countProductsInCategory(categoryChild.getId());
+//						
+//						categoryChild.setCountProduct(countProduct);
+//					}	
+	                
+	                for (ProductModel productModel : productList) {
+	        			ImageModel image = imageService.getImage(productModel.getId());
+	        			imageList.add(image);
+	        		}
+	                
+	                
+//	                req.setAttribute("category", category);
+	                req.setAttribute("categoryChildList", categoryChildList);
+	                req.setAttribute("categoryList", categoryList);
+	                req.setAttribute("productList", productList);
+	                req.setAttribute("imageList", imageList);
+//	                req.setAttribute("categoryParent", categoryParent);
+	               	                
+	                
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+				
+			}
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
+		
+		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/store.jsp");
+        rd.forward(req, resp);
+	}
+
+	private void getStyle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String url = req.getRequestURL().toString();
+		URI uri;
+		try {
+
+			uri = new URI(url);
+			String path = uri.getPath();
+
+			String[] parts = path.split("/");
+
+			if (parts.length > 0) {
+				String slug = parts[parts.length - 1];
+				
+				try {
+					//Lấy category từ slug
+	                CategoryModel category = categoryService.getCategoryBySlug(slug);	                	                
+	                
+	                CategoryModel categoryParent = categoryService.getById(category.getCategoryId());		                		                
+	                List<CategoryModel> categoryChildList = categoryService.getChildCategory(category.getCategoryId());
+	              //đếm số lượng product trong mỗi category
+	                for (CategoryModel categoryChild : categoryChildList) {
+						int countProduct = countProductsInCategory(categoryChild.getId());
+						
+						categoryChild.setCountProduct(countProduct);
+					}
+	                
+	                List<ProductModel> productList = new ArrayList<ProductModel>();
+	                List<ImageModel> imageList = new ArrayList<ImageModel>();
+	                
+//	              //Lấy danh sách style từ category parent
+	                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
+	                req.setAttribute("styleList", styleList);  
+	                req.setAttribute("category", category);
+	                
+	                int styleId = Integer.parseInt(req.getParameter("styleId"));
+	                List<StyleValueModel> styleValueList = styleValueService.getByStyleId(styleId);	              
+	                
+	                for (StyleValueModel styleValue : styleValueList) {
+	                	List<ProductModel> productsInStyle = productService.getByStyleValueId(styleValue.getId());
+	                	productList.addAll(productsInStyle);
+					}	                	     	                
+	                
+	                
+	                for (ProductModel productModel : productList) {
+	        			ImageModel image = imageService.getImage(productModel.getId());
+	        			imageList.add(image);
+	        		}	                
+	                
+	                req.setAttribute("categoryChildList", categoryChildList);
+	                req.setAttribute("categoryList", categoryChildList);
+	                req.setAttribute("productList", productList);
+	                req.setAttribute("imageList", imageList);
+	                req.setAttribute("categoryParent", categoryParent);
+	               	                
+	                
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+				
+			}
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
+		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/category.jsp");
+        rd.forward(req, resp);
 	}
 
 	private void getInforCustomer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.getRequestDispatcher("/views/account/information.jsp").forward(req, resp);
-	}
-
-	private void getInforCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/checkout.jsp");
-		rd.forward(req, resp);
 	}
 
 	private void getAll(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -273,7 +436,6 @@ public class CustomerController extends HttpServlet {
 
 	private void getCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURL().toString();
-		String pageCurrent = "category";
 		URI uri;
 		try {
 
@@ -284,8 +446,6 @@ public class CustomerController extends HttpServlet {
 
 			if (parts.length > 0) {
 				String slug = parts[parts.length - 1];
-				req.setAttribute("slug", slug);
-				pageCurrent = pageCurrent + slug;
 				
 				try {
 					//Lấy category từ slug
@@ -318,6 +478,12 @@ public class CustomerController extends HttpServlet {
 	                	categoryChildList = categoryService.getChildCategory(category.getCategoryId());
 	                	categoryParent = categoryService.getById(category.getCategoryId());
 	                	productList = productService.getByCategoryId(category.getId());
+	                	
+	                	//Lấy danh sách style value từ category parent
+		                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
+		                req.setAttribute("styleList", styleList);
+		                
+		                req.setAttribute("categoryStyle", category);
 	                }
 	                
 	                //đếm số lượng product trong mỗi category
@@ -332,11 +498,15 @@ public class CustomerController extends HttpServlet {
 	        			imageList.add(image);
 	        		}
 	                
+	                
+	                req.setAttribute("category", category);
 	                req.setAttribute("categoryChildList", categoryChildList);
 	                req.setAttribute("categoryList", categoryChildList);
 	                req.setAttribute("productList", productList);
 	                req.setAttribute("imageList", imageList);
 	                req.setAttribute("categoryParent", categoryParent);
+	               	                
+	                
 	            } catch (Exception e) {
 	                e.printStackTrace();
 	            }

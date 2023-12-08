@@ -11,8 +11,7 @@ public class StyleServiceImpl implements IStyleService {
 	IStyleDAO styleDAO = new StyleDAOImpl();
 	@Override
 	public void insert(StyleModel style) {
-		// TODO Auto-generated method stub
-		
+		styleDAO.insert(style);
 	}
 
 	@Override
@@ -24,6 +23,11 @@ public class StyleServiceImpl implements IStyleService {
 	public List<StyleModel> getAll() {
 		return styleDAO.getAll();
 	}
+	
+	@Override
+	public List<StyleModel> getAllAdmin() {
+		return styleDAO.getAllAdmin();
+	}
 
 	@Override
 	public List<StyleModel> getByCategoryId(int categoryId) {
@@ -32,14 +36,16 @@ public class StyleServiceImpl implements IStyleService {
 
 	@Override
 	public void update(StyleModel style) {
-		// TODO Auto-generated method stub
-		
+		styleDAO.update(style);
 	}
 
 	@Override
 	public void delete(int id) {
-		// TODO Auto-generated method stub
-		
+		styleDAO.delete(id);
 	}
 
+	@Override
+	public void restore(int id) {
+		styleDAO.restore(id);
+	}
 }

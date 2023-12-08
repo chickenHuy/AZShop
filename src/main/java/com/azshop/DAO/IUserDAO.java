@@ -25,6 +25,10 @@ public interface IUserDAO {
 	UserModel getByEmail(String email);
 	
 	void updatePassword(UserModel user, String newPassword);
+<<<<<<< HEAD
 	
 	int countUser(Date datetime);
+=======
+	void updateVendor(UserModel userModel);
+>>>>>>> branch 'master' of https://github.com/chickenHuy/AZShop
 }

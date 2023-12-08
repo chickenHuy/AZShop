@@ -1,14 +1,17 @@
 package com.azshop.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.azshop.DAO.IOrderItemDAO;
 import com.azshop.DAO.OrderItemDAOImpl;
 import com.azshop.models.OrderItemModel;
+import com.azshop.models.ProductModel;
 
 public class OrderItemServiceImpl implements IOrderItemService {
 
 	IOrderItemDAO orderItemDAO = new OrderItemDAOImpl();
+	IProductService productService = new ProductServiceImpl();
 	
 	@Override
 	public void insert(OrderItemModel orderItem) {
@@ -56,4 +59,13 @@ public class OrderItemServiceImpl implements IOrderItemService {
 		return orderItemDAO.countByOrder(orderId);
 	}
 
+	@Override
+	public BigDecimal calculateOrderItemTotal(int id) {
+		OrderItemModel orderItem = orderItemDAO.getById(id);
+		ProductModel product = productService.getById(orderItem.getProductId());
+		BigDecimal orderItemTotal = BigDecimal.valueOf(orderItem.getCount())
+		        .multiply(product.getPrice());
+
+		return orderItemTotal;
+	}
 }

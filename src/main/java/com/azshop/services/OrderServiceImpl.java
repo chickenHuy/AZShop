@@ -1,15 +1,24 @@
 package com.azshop.services;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.azshop.DAO.IOrderDAO;
 import com.azshop.DAO.OrderDAOImpl;
+import com.azshop.models.DeliveryModel;
+import com.azshop.models.OrderItemModel;
 import com.azshop.models.OrderModel;
+import com.azshop.models.UserLevelModel;
+import com.azshop.models.UserModel;
 
 public class OrderServiceImpl implements IOrderService {
 
 	IOrderDAO orderDAO = new OrderDAOImpl();
+	IOrderItemService orderItemService = new OrderItemServiceImpl();
+	IUserService userService = new UserServiceImpl();
+	IUserLevelService userLevelService = new UserLevelServiceImpl();
+	IDeliveryService deliveryService = new DeliveryServiceImpl();
 	
 	@Override
 	public void insert(OrderModel order) {
@@ -87,4 +96,34 @@ public class OrderServiceImpl implements IOrderService {
 		return orderDAO.getByStatusAndStore("Completed", storeId);
 	}
 
+	@Override
+	public BigDecimal calculateOrderTotal(int id) {
+		OrderModel order = orderDAO.getById(id);
+		List<OrderItemModel> orderItems = orderItemService.getByOrderId(id);
+		UserModel user = userService.getById(order.getUserId());
+		UserLevelModel userLevel = userLevelService.getById(user.getUserLevelId());
+		DeliveryModel delivery = deliveryService.getById(order.getDeliveryId());
+		
+		BigDecimal orderTotal = BigDecimal.ZERO;
+		
+		for (OrderItemModel orderItem : orderItems) {
+			BigDecimal orderItemTotal = orderItemService.calculateOrderItemTotal(orderItem.getId());
+	        orderTotal = orderTotal.add(orderItemTotal);
+        }
+		orderTotal = orderTotal.add(delivery.getPrice());
+		if (userLevel.getDiscount() != 0) {
+			orderTotal = orderTotal.subtract(BigDecimal.valueOf(userLevel.getDiscount()/100.00).multiply(orderTotal));
+		}
+        return orderTotal;
+	}
+
+	@Override
+	public List<BigDecimal> GetRevenueLastNDays(int nDay,int storeId) {
+		return orderDAO.GetRevenueLastNDays(nDay, storeId);
+	}
+
+	@Override
+	public BigDecimal getSumRevenueByStore(int storeId) {
+		return orderDAO.getSumRevenueByStore(storeId);
+	}
 }

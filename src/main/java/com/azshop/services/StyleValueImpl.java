@@ -11,8 +11,7 @@ public class StyleValueImpl implements IStyleValueService {
 	IStyleValueDAO styleValueDAO = new StyleValueDAOImpl();
 	@Override
 	public void insert(StyleValueModel styleValue) {
-		// TODO Auto-generated method stub
-		
+		styleValueDAO.insert(styleValue);
 	}
 
 	@Override
@@ -32,16 +31,22 @@ public class StyleValueImpl implements IStyleValueService {
 
 	@Override
 	public void update(StyleValueModel styleValue) {
-		// TODO Auto-generated method stub
-		
+		styleValueDAO.update(styleValue);
 	}
 
 	@Override
 	public void delete(int id) {
-		// TODO Auto-generated method stub
-		
+		styleValueDAO.delete(id);
+	}
+	
+	@Override
+	public void restore(int id) {
+		styleValueDAO.restore(id);
 	}
 
-	
+	@Override
+	public List<StyleValueModel> getByStyleIdAmin(int id) {
+		return styleValueDAO.getByStyleIdAmin(id);
+	}
 
 }

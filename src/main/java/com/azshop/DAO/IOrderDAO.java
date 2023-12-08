@@ -1,5 +1,6 @@
 package com.azshop.DAO;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.azshop.models.OrderModel;
@@ -15,4 +16,6 @@ public interface IOrderDAO {
     void delete(int id);
     Boolean changeStatus(int id, String status);
     List<OrderModel> getByStatusAndStore(String status, int storeId );
+    List<BigDecimal> GetRevenueLastNDays(int nDay,int storeId);
+    BigDecimal getSumRevenueByStore( int storeId);
 }
