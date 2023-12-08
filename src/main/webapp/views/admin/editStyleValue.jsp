@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+
 <main class="page-content">
 	<!--breadcrumb-->
 	<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -14,10 +15,10 @@
 		<div class="ps-3">
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb mb-0 p-0">
-					<li class="breadcrumb-item"><a href="javascript:;"><i
-							class="bx bx-home-alt"></i></a></li>
-					<li class="breadcrumb-item active" aria-current="page">Style
-						Value</li>
+					<li class="breadcrumb-item" id="breadcrumbItem"><a href="/AZShop/admin/style/stylevalues?styleid=${styleValue.styleId}">Style
+							Value</a></li>
+					<li class="breadcrumb-item active" aria-current="page">Edit
+						Style Value</li>
 				</ol>
 			</nav>
 		</div>
@@ -26,7 +27,7 @@
 	<!--end breadcrumb-->
 
 
-	
+
 
 	<div class="row g-3">
 		<div class="col-auto">
@@ -39,19 +40,33 @@
 						</div>
 					</div>
 					<div class="d-flex">
-						<input type="hidden" name="id" id="styleIdInput" value="${styleValue.id }">
-						<input type="text" class="form-control" style="width: 300px;"
-						name="styleValueName" value="${styleValue.name}">
-						<input type="submit" value="SAVE"
-							class="btn btn-primary px-4 ms-2">
+						<input type="hidden" name="id" id="styleIdInput"
+							value="${styleValue.id }"> <input type="text"
+							class="form-control" style="width: 300px;" name="styleValueName"
+							value="${styleValue.name}"> <input type="submit"
+							value="SAVE" class="btn btn-primary px-4 ms-2">
 					</div>
+					<p>${message}</p>
 				</div>
 
 			</form>
 		</div>
 	</div>
 	<!--end row-->
+	<script>
+		// Lấy phần tử <a> bên trong phần tử <li> thông qua ID của <li>
+		var breadcrumbItem = document.getElementById("breadcrumbItem");
+		var anchorElement = breadcrumbItem.querySelector("a");
 
-	
+		// Lấy giá trị của styleId (giả sử bạn đã có nó từ đâu đó)
+		var styleId = styleValue.styleId;
+
+		// Tạo đường dẫn mới
+		var newHref = "/AZShop/admin/style/stylevalue?styleid=" + styleId;
+
+		// Gán giá trị mới cho thuộc tính href của phần tử <a>
+		anchorElement.href = newHref;
+	</script>
+
 
 </main>
