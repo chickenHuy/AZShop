@@ -131,4 +131,14 @@ public class OrderServiceImpl implements IOrderService {
 	public List<OrderModel> getByUserIdAndStoreId(int userId, int storeId) {
 		return orderDAO.getByUserIdAndStoreId(userId, storeId);
 	}
+
+	@Override
+	public int countCompletedByStore(int storeId) {
+		return orderDAO.countCompletedByStore(storeId);
+	}
+
+	@Override
+	public int countOrderByStore(int storeId) {
+		return orderDAO.countOrderByStore(storeId);
+	}
 }

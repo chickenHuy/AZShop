@@ -14,4 +14,6 @@ public interface IReviewDAO {
     List<ReviewModel> getByOrderId(int orderId);
     void update(ReviewModel review);
     void delete(int id);
+    int countByStore(int storeId);
+    int countNewByStore(int storeId);
 }
