@@ -169,7 +169,7 @@
 									<div class="col-md-3">
 										<div id="rating">
 											<div class="rating-avg">
-												<span>4.5</span>
+												<span>${product.rating}</span>
 												<div class="rating-stars">
 													<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
 														class="fa fa-star"></i> <i class="fa fa-star"></i> <i
@@ -281,8 +281,6 @@
 									<div class="col-md-3">
 										<div id="review-form">
 											<form class="review-form" action="review-product" method="post">
-												<input class="input" type="text" placeholder="Your Name">
-												<input class="input" type="email" placeholder="Your Email">
 												<textarea class="input" name="review" placeholder="Your Review"></textarea>
 												<div class="input-rating">
 													<span>Your Rating: </span>
