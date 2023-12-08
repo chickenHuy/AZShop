@@ -3,6 +3,7 @@ package com.azshop.controllers.admin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
@@ -19,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import com.azshop.models.StoreModel;
+import com.azshop.models.StyleModel;
+import com.azshop.models.StyleValueModel;
 import com.azshop.models.UserLevelModel;
 import com.azshop.models.UserModel;
 import com.azshop.services.IStoreService;
@@ -28,8 +31,9 @@ import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadUtils;
 import com.google.gson.Gson;
-
 import com.azshop.models.CategoryModel;
+import com.azshop.models.DeliveryModel;
+import com.azshop.models.OrderItemModel;
 import com.azshop.models.OrderModel;
 import com.azshop.models.ProductModel;
 import com.azshop.models.StoreLevelModel;
@@ -41,10 +45,11 @@ import com.azshop.services.*;
 @WebServlet(urlPatterns = { "/admin/dashboard", "/admin/product", "/admin/customer", "/admin/store",
 		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit",
 		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory",
-		"/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel",
-		"/admin/deleteuserlevel", "/admin/restoreuserlevel", "/admin/storelevel", "/admin/addstorelevel",
-		"/admin/editstorelevel", "/admin/deletestorelevel", "/admin/restorestorelevel", "/admin/category/delete/*",
-		"/admin/category/restore/*" })
+		"/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel", "/admin/deleteuserlevel", 
+		"/admin/restoreuserlevel", "/admin/storelevel", "/admin/addstorelevel", "/admin/editstorelevel", "/admin/deletestorelevel",
+		"/admin/restorestorelevel", "/admin/category/*", "/admin/styles", "/admin/style/delete", "/admin/style/restore", "/admin/addstyle",
+		"/admin/style/stylevalues", "/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
+        "/admin/order-detail"})
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -54,9 +59,13 @@ public class AdminController extends HttpServlet {
 	IProductService productService = new ProductServiceImpl();
 	ICategoryService categoryService = new CategoryServiceImpl();
 	IStyleValueService styleValueService = new StyleValueImpl();
-	IStoreLevelService storeLevelService = new StoreLevelServiceImpl();
+	IStyleService styleService = new StyleServiceImpl();
+
 	IUserLevelService userLevelService = new UserLevelServiceImpl();
+	IStoreLevelService storeLevelService = new StoreLevelServiceImpl();
 	IOrderService orderService = new OrderServiceImpl();
+	IOrderItemService orderItemService = new OrderItemServiceImpl();
+	IDeliveryService deliveryService = new DeliveryServiceImpl();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -81,10 +90,8 @@ public class AdminController extends HttpServlet {
 			getAddCategory(req, resp);
 		} else if (url.contains("/admin/category/edit")) {
 			getEditCategory(req, resp);
-		} else if (url.contains("/admin/category/delete")) {
-			getDeleteCategory(req, resp);
-		} else if (url.contains("/admin/category/restore")) {
-			getRestoreCategory(req, resp);
+		} else if (url.contains("/admin/category")) {
+			editCategoryStatus(req, resp);
 		} else if (url.contains("/admin/customer")) {
 			getAllUser(req, resp);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/customer.jsp");
@@ -144,12 +151,54 @@ public class AdminController extends HttpServlet {
 			}
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/edituserlevel.jsp");
 			rDispatcher.forward(req, resp);
-		} else if (url.contains("/admin/restorestorelevel")) {
+		} else if (url.contains("/admin/style/delete")) {
+			getDeleteStyle(req, resp);
+		} else if (url.contains("/admin/style/restore")) {
+			getRestoreStyle(req, resp);
+		} else if (url.contains("/admin/styles")) {
+			getAllStyle(req, resp);
+		} else if (url.contains("/admin/style/stylevalues")) {
+			getAllStyleValueByStyle(req, resp);
+		} else if (url.contains("/admin/style/stylevalue/edit")) {
+			getEditStylValue(req, resp);
+		} else if (url.contains("/admin/style/stylevalue")) {
+			editStylValueStatus(req, resp);
+		}  else if (url.contains("/admin/restorestorelevel")) {
             restoreStoreLevel(req, resp);
         } else if (url.contains("/admin/restoreuserlevel")) {
             restoreUserLevel(req, resp);
+        } else if (url.contains("/admin/order-detail")) {
+            getOrderDetail(req, resp);
         }
 	}
+
+	private void getOrderDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String orderId = req.getParameter("orderId");
+		if (orderId != null) {
+			List<OrderItemModel> listOrderItem = orderItemService.getByOrderId(Integer.parseInt(orderId));
+			req.setAttribute("listOrderItem", listOrderItem);
+			BigDecimal totalOrder = BigDecimal.ZERO;
+			for (OrderItemModel orderItem : listOrderItem) {
+				totalOrder = totalOrder.add(orderItemService.calculateOrderItemTotal(orderItem.getId()));
+			}
+			req.setAttribute("totalOrder", totalOrder);
+			OrderModel order = orderService.getById(Integer.parseInt(orderId));
+			req.setAttribute("order", order);
+			req.setAttribute("orderId", orderId);
+			List<ProductModel> listProduct = productService.getAll();
+			req.setAttribute("listProduct", listProduct);
+			DeliveryModel delivery = deliveryService.getById(order.getDeliveryId());
+			req.setAttribute("shipping_cost", delivery.getPrice());
+			UserLevelModel userLevel = userLevelService.getById(order.getUserId());
+			req.setAttribute("discount", BigDecimal.valueOf(userLevel.getDiscount()/100.0).multiply(totalOrder));
+			UserModel user = userService.getById(order.getUserId());
+			req.setAttribute("user", user);
+
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/orderDetail.jsp");
+			rDispatcher.forward(req, resp);
+		}
+	}
+
 	private void getAllStoreLevelDeleted(HttpServletRequest req, HttpServletResponse resp) {
 		List<StoreLevelModel> list = storeLevelService.getAllDeleted();
 		req.setAttribute("listdeleted", list);
@@ -164,9 +213,13 @@ public class AdminController extends HttpServlet {
 		List<StoreLevelModel> list = storeLevelService.getAll();
 		req.setAttribute("liststorelevel", list);
 	}
+<<<<<<< HEAD
 	private void GetStatisticsUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Date currentDate = new Date();
+=======
+>>>>>>> branch 'master' of https://github.com/chickenHuy/AZShop
 
+<<<<<<< HEAD
 		// Count users based on the formatted date and time
 		int count = userService.countUser(currentDate);
 		// day du lieu ra view
@@ -176,9 +229,105 @@ public class AdminController extends HttpServlet {
 		// view nhan du lieu
 		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
 		rd.forward(req, resp);
+=======
+    private void getInUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Date currentDate = new Date();
+
+        // Count users based on the formatted date and time
+        int count = userService.countUser(currentDate);
+        // day du lieu ra view
+        req.setAttribute("count", count);
+        // view nhan du lieu
+        RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
+        rd.forward(req, resp);
+    }
+
+	private void getEditStylValue(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String id = req.getParameter("id");
+
+		if (id != null) {
+			StyleValueModel styleValue = styleValueService.getById(Integer.parseInt(id));
+			req.setAttribute("styleValue", styleValue);
+
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editStyleValue.jsp");
+			rDispatcher.forward(req, resp);
+		}
+>>>>>>> branch 'master' of https://github.com/chickenHuy/AZShop
 	}
 
-	private void getRestoreCategory(HttpServletRequest req, HttpServletResponse resp)
+	private void editStylValueStatus(HttpServletRequest req, HttpServletResponse resp)
+			throws IOException, ServletException {
+		String url = req.getRequestURL().toString();
+		String id = req.getParameter("id");
+		if (url.contains("restore")) {
+			if (id != null) {
+				styleValueService.restore(Integer.parseInt(id));
+			}
+		} else if (url.contains("delete")) {
+			if (id != null) {
+				styleValueService.delete(Integer.parseInt(id));
+			}
+		}
+		String referer = req.getHeader("Referer");
+
+		// Kiểm tra xem có địa chỉ URL trước đó không và không phải là địa chỉ gốc
+		if (referer != null && !referer.isEmpty() && !referer.equals(req.getRequestURL().toString())) {
+			// Chuyển hướng về trang trước đó
+			resp.sendRedirect(referer);
+		}
+	}
+
+	private void getAllStyleValueByStyle(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		String styleId = req.getParameter("styleid");
+
+		if (styleId != null) {
+			List<StyleValueModel> listStyleValue = styleValueService.getByStyleIdAmin(Integer.parseInt(styleId));
+			req.setAttribute("listStyleValue", listStyleValue);
+			req.setAttribute("styleId", styleId);
+			List<StyleModel> listStyle = styleService.getAllAdmin();
+			req.setAttribute("listStyle", listStyle);
+
+			int countAllStyleValue = listStyleValue.size();
+			req.setAttribute("countAllStyleValue", countAllStyleValue);
+
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/stylevalues.jsp");
+			rDispatcher.forward(req, resp);
+		} else {
+			resp.sendRedirect("/AZShop/admin/styles");
+		}
+
+	}
+
+	private void getRestoreStyle(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String styleId = req.getParameter("id");
+		if (styleId != null) {
+			styleService.restore(Integer.parseInt(styleId));
+		}
+		resp.sendRedirect("/AZShop/admin/styles");
+	}
+
+	private void getDeleteStyle(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String styleId = req.getParameter("id");
+		if (styleId != null) {
+			styleService.delete(Integer.parseInt(styleId));
+		}
+		resp.sendRedirect("/AZShop/admin/styles");
+	}
+
+	private void getAllStyle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		List<StyleModel> listStyle = styleService.getAllAdmin();
+		req.setAttribute("listStyle", listStyle);
+		int countAllStyle = listStyle.size();
+		req.setAttribute("countAllStyle", countAllStyle);
+		List<CategoryModel> listCategory = categoryService.getAll();
+		req.setAttribute("listCategory", listCategory);
+		
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/styles.jsp");
+		rDispatcher.forward(req, resp);
+	}
+
+	private void editCategoryStatus(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String url = req.getRequestURL().toString();
 		URI uri;
@@ -196,25 +345,7 @@ public class AdminController extends HttpServlet {
 					} else {
 						categoryService.restoreBySlug(slug);
 					}
-				}
-				resp.sendRedirect("/AZShop/admin/categories");
-			}
-		} catch (Exception e) {
-			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-		}
-	}
-
-	private void getDeleteCategory(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		String url = req.getRequestURL().toString();
-		URI uri;
-		try {
-			uri = new URI(url);
-			String path = uri.getPath();
-			String[] parts = path.split("/");
-			PrintWriter out = resp.getWriter();
-			if (parts.length > 0) {
-				if (url.contains("delete")) {
+				} else {
 					String slug = parts[parts.length - 1].replace("delete-", "");
 					CategoryModel category = categoryService.getCategoryBySlug(slug);
 					if (category == null) {
@@ -242,6 +373,9 @@ public class AdminController extends HttpServlet {
 			order.setStatus("delivered");
 		} else if ("delivered".equals(order.getStatus())) {
 			order.setStatus("completed");
+			StoreModel storeModel = storeService.getById(order.getStoreId());
+			storeModel.seteWallet(order.getAmountToStore());
+			storeService.update(storeModel);
 		}
 
 		// Update the order only once after processing all conditions
@@ -309,7 +443,6 @@ public class AdminController extends HttpServlet {
 					}
 				} else {
 					String slug = parts[parts.length - 1].replace("liencing-", "");
-					System.out.println(slug);
 					ProductModel productModel = productService.getBySlug(slug);
 					if (productModel == null) {
 						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
@@ -336,7 +469,6 @@ public class AdminController extends HttpServlet {
 
 		List<CategoryModel> listCategory = categoryService.getAll();
 		req.setAttribute("listCategory", listCategory);
-		System.out.println(category.getName());
 
 		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editCategory.jsp");
 		rDispatcher.forward(req, resp);
@@ -344,6 +476,9 @@ public class AdminController extends HttpServlet {
 
 	private void getAllOrder(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<OrderModel> listOrder = orderService.getAll();
+		for (OrderModel order : listOrder) {
+           order.setPrice(orderService.calculateOrderTotal(order.getId())); ;
+        }
 		req.setAttribute("listOrder", listOrder);
 
 		List<StoreModel> listStore = storeService.getAll();
@@ -351,6 +486,10 @@ public class AdminController extends HttpServlet {
 
 		List<UserModel> listUser = userService.getAll();
 		req.setAttribute("listUser", listUser);
+
+		List<OrderModel> listOrderAdmin = orderService.getAllAdmin();
+		int countAllOrderAdmin = listOrderAdmin.size();
+		req.setAttribute("countAllOrderAdmin", countAllOrderAdmin);
 
 		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/orders.jsp");
 		rDispatcher.forward(req, resp);
@@ -435,9 +574,15 @@ public class AdminController extends HttpServlet {
 			postAddUserLevel(req, resp);
 		} else if (url.contains("/admin/edituserlevel")) {
 			postEditUserLevel(req, resp);
+		} else if (url.contains("/admin/addstyle")) {
+			postAddStyle(req, resp);
 		} else if (url.contains("/admin/deleteuserlevel")) {
             postDeleteUserLevel(req, resp);
-        } else if (url.contains("/admin/addstorelevel")) {
+        } else if (url.contains("/admin/style/addstylevalue")) {
+			postAddStyleValue(req, resp);
+		} else if (url.contains("/admin/style/stylevalue/edit")) {
+			postEditStylValue(req, resp);
+		} else if (url.contains("/admin/addstorelevel")) {
 			postAddStoreLevel(req, resp);
 		} else if (url.contains("/admin/editstorelevel")) {
 			postEditStoreLevel(req, resp);
@@ -446,6 +591,7 @@ public class AdminController extends HttpServlet {
         }
 
 	}
+
 	private void restoreUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
@@ -547,7 +693,56 @@ public class AdminController extends HttpServlet {
 			resp.sendRedirect("?message=You must fill out the form");
 		}
 	}
-	private void postDeleteUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+	private void postEditStylValue(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		String id = req.getParameter("id");
+		StyleValueModel styleValue = styleValueService.getById(Integer.parseInt(id));
+
+		String name = req.getParameter("styleValueName");
+		styleValue.setName(name);
+
+		styleValueService.update(styleValue);
+
+		List<StyleValueModel> listStyleValue = styleValueService.getByStyleIdAmin(styleValue.getStyleId());
+		req.setAttribute("listStyleValue", listStyleValue);
+		req.setAttribute("styleId", styleValue.getStyleId());
+		List<StyleModel> listStyle = styleService.getAllAdmin();
+		req.setAttribute("listStyle", listStyle);
+
+		int countAllStyleValue = listStyleValue.size();
+		req.setAttribute("countAllStyleValue", countAllStyleValue);
+
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/stylevalues.jsp");
+		rDispatcher.forward(req, resp);
+
+	}
+
+	private void postAddStyleValue(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		String name = req.getParameter("styleValueName");
+		String styleId = req.getParameter("styleId");
+
+		StyleValueModel styleValue = new StyleValueModel();
+		styleValue.setName(name);
+		styleValue.setStyleId(Integer.parseInt(styleId));
+
+		styleValueService.insert(styleValue);
+
+		String referer = req.getHeader("Referer");
+
+		// Kiểm tra xem có địa chỉ URL trước đó không và không phải là địa chỉ gốc
+		if (referer != null && !referer.isEmpty() && !referer.equals(req.getRequestURL().toString())) {
+			// Chuyển hướng về trang trước đó
+			resp.sendRedirect(referer);
+		}
+	}
+
+    private void postDeleteUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
 
@@ -561,6 +756,22 @@ public class AdminController extends HttpServlet {
             resp.sendRedirect("edituserlevel?message=Failed to delete the user level");
         }
     }
+
+	private void postAddStyle(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		String name = req.getParameter("styleName");
+		String categoryId = req.getParameter("categoryId");
+
+		StyleModel style = new StyleModel();
+		style.setName(name);
+		style.setCategoryId(Integer.parseInt(categoryId));
+		styleService.insert(style);
+
+		resp.sendRedirect("styles");
+	}
+
 	private void postEditUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
@@ -579,13 +790,10 @@ public class AdminController extends HttpServlet {
 					userLevel.setMinPoint(Integer.parseInt(minPoint));
 					userLevel.setDiscount(Integer.parseInt(discount));
 
-					userLevelService.insert(userLevel);
-					resp.sendRedirect("?message=Successfully");
-				} catch (Exception e) {
-					resp.sendRedirect("?message=Failed to add the user level");
-				}
-			} else {
-				resp.sendRedirect("?message=Name already exists");
+				userLevelService.update(userLevel);
+				resp.sendRedirect("?message=Successfully");
+			} catch (Exception e) {
+				resp.sendRedirect("?message=Failed to edit the user level");
 			}
 		} else {
 			resp.sendRedirect("?message=You must fill out the form");
@@ -602,15 +810,20 @@ public class AdminController extends HttpServlet {
 		String minPoint = req.getParameter("minpoint");
 		String discount = req.getParameter("discount");
 		if (name != null && minPoint != null && discount != null) {
-			try {
-				userLevel.setName(name);
-				userLevel.setMinPoint(Integer.parseInt(minPoint));
-				userLevel.setDiscount(Integer.parseInt(discount));
 
-				userLevelService.insert(userLevel);
-				resp.sendRedirect("?message=Successfully");
-			} catch (Exception e) {
-				resp.sendRedirect("?message=Failed to add the user level");
+			if (!userLevelService.checkName(name)) {
+				try {
+					userLevel.setName(name);
+					userLevel.setMinPoint(Integer.parseInt(minPoint));
+					userLevel.setDiscount(Integer.parseInt(discount));
+
+					userLevelService.insert(userLevel);
+					resp.sendRedirect("?message=Successfully");
+				} catch (Exception e) {
+					resp.sendRedirect("?message=Failed to add the user level");
+				}
+			} else {
+				resp.sendRedirect("?message=Name already exists");
 			}
 		} else {
 			resp.sendRedirect("?message=You must fill out the form");

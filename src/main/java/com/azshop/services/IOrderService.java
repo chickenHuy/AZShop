@@ -39,4 +39,6 @@ public interface IOrderService {
 	BigDecimal getSumRevenueByStore(int storeId);
 
 	List<OrderModel> getByUserIdAndStoreId(int userId, int storeId);
+
+    List<OrderModel> getAllAdmin();
 }
