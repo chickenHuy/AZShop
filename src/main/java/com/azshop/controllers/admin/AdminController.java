@@ -72,7 +72,7 @@ public class AdminController extends HttpServlet {
 
 		String url = req.getRequestURL().toString();
 		if (url.contains("/admin/dashboard")) {
-			getInUser(req, resp);
+			GetStatisticsUser(req, resp);
 		} else if (url.contains("/admin/product/edit-status")) {
 			try {
 				editProductStatus(req, resp);
@@ -213,7 +213,19 @@ public class AdminController extends HttpServlet {
 		List<StoreLevelModel> list = storeLevelService.getAll();
 		req.setAttribute("liststorelevel", list);
 	}
+	private void GetStatisticsUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		Date currentDate = new Date();
 
+		// Count users based on the formatted date and time
+		int count = userService.countUser(currentDate);
+		// day du lieu ra view
+		int total = userService.getTotalUsers();
+		req.setAttribute("total",total);
+		req.setAttribute("count", count);
+		// view nhan du lieu
+		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
+		rd.forward(req, resp);
+	}
     private void getInUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Date currentDate = new Date();
 
@@ -781,6 +793,7 @@ public class AdminController extends HttpServlet {
 		} else {
 			resp.sendRedirect("?message=You must fill out the form");
 		}
+	}
 	}
 
 	private void postAddUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {

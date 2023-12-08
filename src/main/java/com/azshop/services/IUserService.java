@@ -30,7 +30,9 @@ public interface IUserService {
 
 	
 	int countUser(Date datetime);
-
+	
+	int getTotalUsers();
 	void updateVendor(UserModel userModel);
+	
 
 }
