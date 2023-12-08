@@ -493,6 +493,10 @@ public class CustomerController extends HttpServlet {
 	}
 
 	private void getCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		int sortBy = Integer.parseInt(req.getParameter("sortBy"));
+		int showCount = Integer.parseInt(req.getParameter("showCount"));
+		
 		String url = req.getRequestURL().toString();
 		URI uri;
 		try {

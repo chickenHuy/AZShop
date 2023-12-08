@@ -134,21 +134,27 @@
 					<!-- store top filter -->
 					<div class="store-filter clearfix">
 						<div class="store-sort">
-							<label> Sort By: <select class="input-select">
+							<label>Sort By: <select class="input-select"
+								name="sortBy" id="sortBy" onchange="handleChange()">
 									<option value="0">Popular</option>
 									<option value="1">Position</option>
 							</select>
-							</label> <label> Show: <select class="input-select">
+							</label> <label>Show: <select class="input-select"
+								name="showCount" id="showCount" onchange="handleChange()">
 									<option value="0">20</option>
 									<option value="1">50</option>
 							</select>
 							</label>
 						</div>
 						<ul class="store-grid">
-							<li class="active"><i class="fa fa-th"></i></li>
-							<li><a href="#"><i class="fa fa-th-list"></i></a></li>
+							<li class="active"><a
+								href="/your_controller_url?sortBy=0&showValue=0"><i
+									class="fa fa-th"></i></a></li>
+							<li><a href="/your_controller_url?sortBy=1&showValue=0"><i
+									class="fa fa-th-list"></i></a></li>
 						</ul>
 					</div>
+
 					<!-- /store top filter -->
 
 					<!-- store products -->
