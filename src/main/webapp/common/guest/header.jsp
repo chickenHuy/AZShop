@@ -38,16 +38,26 @@
 				</div>
 				<!-- /LOGO -->
 
-				<!-- SEARCH BAR -->
 				<div class="col-md-6">
 					<div class="header-search">
-						<form action='<c:url value="/guest-search"/>' method="GET">
-							<select class="input-select">
-								<option value="0">All Categories</option>
-								<option value="1">Category 01</option>
-								<option value="1">Category 02</option>
-							</select> <input class="input" name="keyword" placeholder="Search here"> 
-							<button type="submit" class="search-btn">Search</button>
+						<form action='<c:url value="/guest/search"/>' method="POST"  accept-charset="UTF-8">
+							<select class="input-select" name = "categoryId">
+							<c:if test="${categoryId != null}">  
+								<option value="-1" >All Categories </option>
+							</c:if>
+							<c:if test="${categoryId == null}">  
+								<option value="-1" selected>All Categories </option>
+							</c:if>
+							<c:forEach var = "category" items ="${categoryParentList}">
+								<c:if test="${categoryId != null && categoryId eq category.id}">  
+									<option value="${category.id}" selected>${category.name}</option>
+								</c:if>
+								<c:if test="${categoryId == null || !(categoryId eq category.id)}">
+									<option value="${category.id}">${category.name}</option>
+								</c:if>
+							</c:forEach>
+							</select> <input class="input" name="searchTerm" placeholder="Search here" value=${searchTerm == null ? '' : searchTerm}> 
+							<button type="submit" class="search-btn">Tìm kiếm</button>
 						</form>
 					</div>
 				</div>
