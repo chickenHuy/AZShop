@@ -26,6 +26,8 @@ public interface IProductService {
     
     List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList);
 
+    List<ProductModel> GetTopSellerProduct(List<ProductModel> productList, int k);
+
 	void update(ProductModel product);
 
 	void delete(int id);

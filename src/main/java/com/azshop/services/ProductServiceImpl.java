@@ -97,4 +97,9 @@ public class ProductServiceImpl implements IProductService{
 		return productDAO.SortingProductbyPriceDecending(productList);
 	}
 
+	@Override
+	public List<ProductModel> GetTopSellerProduct(List<ProductModel> productList, int k) {
+		return productDAO.GetTopSellerProduct(productList, k);
+	}
+
 }
