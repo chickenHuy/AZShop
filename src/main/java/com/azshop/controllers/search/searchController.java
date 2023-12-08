@@ -38,6 +38,9 @@ public class searchController extends HttpServlet {
 	        for (ProductModel productModel : productModels) {
 				System.out.println(productModel.getName());
 			}
+	        
+	        List<StoreModel> storeModels = storeService.searchByKey(keyword, -1);
+	        request.setAttribute("stores", storeModels);
 	        request.setAttribute("products", productModels);
 	        request.setAttribute("searchTerm", keyword);
 	        request.setAttribute("categoryId", categoryId);

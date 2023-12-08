@@ -341,4 +341,59 @@ public class StoreDAOImpl implements IStoreDAO {
 		}
 		return listStore;
 	}
+
+	@Override
+	public List<StoreModel> searchByKey(String key, int storeLevelId) {
+		 List<StoreModel> storeList = new ArrayList<StoreModel>();
+	        try {
+	            String sql = "  SELECT \r\n"
+	            		+ "    Store.*\r\n"
+	            		+ "FROM Store\r\n"
+	            		+ "WHERE \r\n"
+	            		+ "    (LOWER(Store.name) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' \r\n"
+	            		+ "    OR LOWER(Store.bio) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' \r\n"
+	            		+ "    OR LOWER(Store.slug) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%')\r\n"
+	            		+ "  AND Store.isActive = 1 \r\n"
+	            		+ "  AND Store.isDeleted = 0 \r\n";
+	            String storeLevelIdString =  "  AND Store.storeLevelId = ?";
+	            if (storeLevelId != -1)
+	            	sql += storeLevelIdString;
+	            conn = new DBConnection().getConnection();
+	            ps = conn.prepareStatement(sql);
+	            ps.setString(1, key);
+	            ps.setString(2, key);
+	            ps.setString(3, key);
+	            if (storeLevelId != -1) {
+					ps.setInt(4, storeLevelId);
+				}
+
+	            rs = ps.executeQuery();
+	            while (rs.next()) {
+	                StoreModel store = new StoreModel();
+	                store.setId(rs.getInt("id"));
+	                store.setName(rs.getString("name"));
+	                store.setBio(rs.getString("bio"));
+	                store.setSlug(rs.getString("slug"));
+	                store.setOwnerId(rs.getInt("ownerId"));
+	                store.setStoreLevelId(rs.getInt("storeLevelId"));
+	                store.setActive(rs.getBoolean("isActive"));
+	                store.setDeleted(rs.getBoolean("isDeleted"));
+	                store.setAvatar(rs.getString("avatar"));
+	                store.setCover(rs.getString("cover"));
+	                store.setFeaturedImage(rs.getString("featuredImage"));
+	                store.setPoint(rs.getInt("point"));
+	                store.setRating(rs.getBigDecimal("rating"));
+	                store.seteWallet(rs.getBigDecimal("eWallet"));
+	                store.setCreateAt(rs.getDate("createAt"));
+	                store.setUpdateAt(rs.getDate("updateAt"));
+
+	                storeList.add(store);
+	            }
+
+	            conn.close();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return storeList;
+	}
 }

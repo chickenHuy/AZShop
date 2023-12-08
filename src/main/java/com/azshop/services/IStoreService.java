@@ -25,4 +25,5 @@ public interface IStoreService {
 	boolean isUserStoreOwner(int userId);
 	
     StoreModel getByOwnerId(int userId);
+    List<StoreModel> searchByKey(String key, int storeLevelId);
 }

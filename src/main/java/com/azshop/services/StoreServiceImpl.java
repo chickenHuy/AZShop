@@ -67,4 +67,9 @@ public class StoreServiceImpl implements IStoreService {
 		return storeDAO.FindStore(keyword);
 	}
 
+	@Override
+	public List<StoreModel> searchByKey(String key, int storeLevelId) {
+		return storeDAO.searchByKey(key, storeLevelId);
+	}
+
 }
