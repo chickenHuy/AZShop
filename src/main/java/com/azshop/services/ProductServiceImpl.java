@@ -108,13 +108,13 @@ public class ProductServiceImpl implements IProductService{
 	}
 
 	@Override
-	public List<ProductModel> SortingProductbyPriceAscending(List<ProductModel> productList, int categoryId) {
-		return productDAO.SortingProductbyPriceAscending(productList, categoryId);
+	public List<ProductModel> SortingProductbyPriceAscending(List<ProductModel> productList) {
+		return productDAO.SortingProductbyPriceAscending(productList);
 	}
 
 	@Override
-	public List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList, int categoryId) {
-		return productDAO.SortingProductbyPriceDecending(productList, categoryId);
+	public List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList) {
+		return productDAO.SortingProductbyPriceDecending(productList);
 	}
 
 	@Override

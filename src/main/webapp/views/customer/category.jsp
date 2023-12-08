@@ -26,7 +26,7 @@
 								</div>
 							</a>
 							<c:forEach var="category" items="${categoryChildList}">	
-								<a href='<c:url value="/customer/category/${categoryParent.slug}?sortBy=${sortBy}&showCount=${showCount}"/>'>
+								<a href='<c:url value="/customer/category/${categoryParent.slug}/${category.slug}?sortBy=${sortBy}&showCount=${showCount}"/>'>
 									<div class="input-checkbox ${category.slug}">
 										<label>${category.name}<small>
 												(${category.countProduct})</small></label>

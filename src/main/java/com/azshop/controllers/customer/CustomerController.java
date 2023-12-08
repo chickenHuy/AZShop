@@ -533,7 +533,9 @@ public class CustomerController extends HttpServlet {
 					}
 	                
 	                //Hiển thị tất cả thì sắp xếp theo mặc định
-	                productList = productService.SortingProductbyPriceAscending(productList, category.getId());
+	                List<ProductModel> productListSort = productService.SortingProductbyPriceAscending(productList);
+	                List<ProductModel> productListByQuantity = productService.getProductbyQuantity(productListSort, 3);
+	                
 //	                productList = productService.GetTopSellerProduct(productList, 3);
 	                int sortBy = 0; int showCount = 0;
 	                
@@ -542,6 +544,7 @@ public class CustomerController extends HttpServlet {
 	                	categoryChildList = categoryService.getChildCategory(category.getCategoryId());
 	                	categoryParent = categoryService.getById(category.getCategoryId());
 	                	productList = productService.getByCategoryId(category.getId());
+	                	productListSort = productService.SortingProductbyPriceAscending(productList);
 	                	
 	                	//Lấy danh sách style value từ category parent
 		                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
@@ -567,7 +570,7 @@ public class CustomerController extends HttpServlet {
 	                req.setAttribute("category", category);
 	                req.setAttribute("categoryChildList", categoryChildList);
 	                req.setAttribute("categoryList", categoryChildList);
-	                req.setAttribute("productList", productList);
+	                req.setAttribute("productList", productListByQuantity);
 	                req.setAttribute("imageList", imageList);
 	                req.setAttribute("categoryParent", categoryParent);
 	               	                
