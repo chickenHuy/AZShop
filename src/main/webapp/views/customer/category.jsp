@@ -20,7 +20,7 @@
 					<div class="aside">
 						<h3 class="aside-title">Danh mục</h3>
 						<div class="checkbox-filter">
-							<a href='<c:url value="/customer/category/${categoryParent.slug}?sortBy=${sortBy}&showCount=${showCount}"/>'>
+							<a href='<c:url value="/customer/category/${categoryParent.slug}?sortBy=${0}&showCount=${0}"/>'>
 								<div class="input-checkbox ${category.slug}">
 									<label>Tất cả</label>
 								</div>
@@ -35,7 +35,7 @@
 							</c:forEach>
 						</div>
 						
-
+						
 					</div>
 					<!-- /aside Widget -->					
 
@@ -132,26 +132,24 @@
 				<!-- STORE -->
 				<div id="store" class="col-md-9">
 					<!-- store top filter -->
+
 					<div class="store-filter clearfix">
-						<div class="store-sort">
-							<label>Sắp xếp: <select class="input-select"
-								name="sortBy" id="sortBy" onchange="handleChange()">
-									<option value="0">Giá tăng dần</option>
-									<option value="1">Giá giảm dần</option>
-							</select>
-							</label> <label>Hiển thị: <select class="input-select"
-								name="showCount" id="showCount" onchange="handleChange()">
-									<option value="0">20</option>
-									<option value="1">50</option>
-							</select>
+
+						<div class="radio-container">
+							<input type="radio" id="radioAscending" class="radio-input"
+								name="sortDirection" value="ascending"> <label
+								for="radioAscending" class="radio-label"> <span
+								class="radio-custom"></span> Tăng dần
+							</label> <input type="radio" id="radioDescending" class="radio-input"
+								name="sortDirection" value="descending"> <label
+								for="radioDescending" class="radio-label"> <span
+								class="radio-custom"></span> Giảm dần
 							</label>
 						</div>
+
 						<ul class="store-grid">
-							<li class="active"><a
-								href="/your_controller_url?sortBy=0&showValue=0"><i
-									class="fa fa-th"></i></a></li>
-							<li><a href="/your_controller_url?sortBy=1&showValue=0"><i
-									class="fa fa-th-list"></i></a></li>
+							<li class="active"><i class="fa fa-th"></i></li>
+							<li><a href="#"><i class="fa fa-th-list"></i></a></li>
 						</ul>
 					</div>
 
@@ -239,6 +237,61 @@
 		<!-- /container -->
 	</div>
 	<!-- /SECTION -->
+
+<style>
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+/* Style radio container */
+.radio-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Style radio label */
+.radio-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+/* Style radio input */
+.radio-input {
+    display: none; /* Ẩn input radio mặc định */
+}
+
+/* Style custom radio button */
+.radio-custom {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #ccc; /* Màu viền mặc định */
+    margin-right: 8px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Hover effect */
+.radio-label:hover .radio-custom {
+    background-color: #f5f5f5;
+}
+
+/* Style when radio is checked */
+.radio-input:checked + .radio-label .radio-custom {
+    background-color: #D10024; /* Màu nền khi được chọn */
+    border-color: #D10024; /* Màu viền khi được chọn */
+}
+
+    </style>
 
 </body>
 </html>

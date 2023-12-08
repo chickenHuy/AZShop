@@ -72,4 +72,9 @@ public class ReviewServiceImpl implements IReviewService{
 >>>>>>> fe47ff8323fadbad2fba660ee85ea76466e65e70
 	}
 
+	@Override
+	public BigDecimal avgRating(int productId) {
+		return reviewDAO.avgRating(productId);
+	}
+
 }

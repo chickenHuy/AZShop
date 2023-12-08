@@ -186,7 +186,7 @@
 									<div class="col-md-3">
 										<div id="rating">
 											<div class="rating-avg">
-												<span>4.5</span>
+												<span>${product.rating}</span>
 												<div class="rating-stars">
 													<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
 														class="fa fa-star"></i> <i class="fa fa-star"></i> <i

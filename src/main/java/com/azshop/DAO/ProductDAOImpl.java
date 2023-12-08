@@ -697,5 +697,32 @@ public class ProductDAOImpl implements IProductDAO {
 		return topSellerList;
 	}
 
+	@Override
+	public void updateRating(ProductModel product) {
+		try {
+			String sql = "UPDATE dbo.Product SET name = ?, slug = ?, description = ?, price = ?, quantiny = ?, sold = ?, isActive = ?, video = ?, categoryId = ?, styleValueId = ?, storeId = ?, rating = ?, updateAt = GETDATE() WHERE id = ?";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+
+			ps.setString(1, product.getName());
+			ps.setString(2, product.getSlug());
+			ps.setString(3, product.getDescription());
+			ps.setBigDecimal(4, product.getPrice());
+			ps.setInt(5, product.getQuantity());
+			ps.setInt(6, product.getSold());
+			ps.setBoolean(7, product.getIsActive());
+			ps.setString(8, product.getVideo());
+			ps.setInt(9, product.getCategoryId());
+			ps.setInt(10, product.getStyleValueId());
+			ps.setInt(11, product.getStoreId());
+			ps.setBigDecimal(12, product.getRating());
+			ps.setInt(13, product.getId());
+			ps.executeUpdate();
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 }

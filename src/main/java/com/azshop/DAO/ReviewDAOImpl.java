@@ -269,26 +269,6 @@ public class ReviewDAOImpl implements IReviewDAO {
 	}
 
 	@Override
-<<<<<<< HEAD
-	public BigDecimal avgRating(int productId) {
-		try {
-			String sql = "SELECT AVG(CAST(rating AS FLOAT)) AS averageRating FROM Review WHERE productId = ?";
-			conn = new DBConnection().getConnection();
-			ps = conn.prepareStatement(sql);
-			ps.setInt(1, productId); 
-			rs = ps.executeQuery();
-
-			if (rs.next()) {
-				return rs.getBigDecimal("averageRating");
-			}
-
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return BigDecimal.ZERO;
-	}
-=======
 	public int countByStore(int storeId) {
 		int review = 0;
 		try {
@@ -299,10 +279,10 @@ public class ReviewDAOImpl implements IReviewDAO {
 			ps.setInt(1, storeId);
 			rs = ps.executeQuery();
 			if (rs.next()) {
-				review =  rs.getInt("cntReview");
+				review = rs.getInt("cntReview");
 			}
 			conn.close();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return review;
@@ -319,14 +299,33 @@ public class ReviewDAOImpl implements IReviewDAO {
 			ps.setInt(1, storeId);
 			rs = ps.executeQuery();
 			if (rs.next()) {
-				review =  rs.getInt("cntReview");
+				review = rs.getInt("cntReview");
 			}
 			conn.close();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return review;
 	}
- 
->>>>>>> fe47ff8323fadbad2fba660ee85ea76466e65e70
+
+	@Override
+	public BigDecimal avgRating(int productId) {
+		try {
+			String sql = "SELECT AVG(CAST(rating AS FLOAT)) AS averageRating FROM Review WHERE productId = ?";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, productId);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				return rs.getBigDecimal("averageRating");
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return BigDecimal.ZERO;
+	}
+
 }

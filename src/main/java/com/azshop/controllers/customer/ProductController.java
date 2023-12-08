@@ -1,6 +1,7 @@
 package com.azshop.controllers.customer;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -172,14 +173,14 @@ public class ProductController extends HttpServlet {
 				reviewModel.setRating(rating);
 				reviewService.insert(reviewModel);
 				product.setRating(reviewService.avgRating(product.getId()));
-				
-				req.setAttribute("message", "Review submitted successfully!");
-				resp.sendRedirect(req.getContextPath() + "/customer/product/" + product.getSlug());
+				productService.update(product);
+				resp.sendRedirect(req.getContextPath() + "/customer-home");
 				return;
+			} else {
+				resp.sendRedirect(req.getContextPath() + "/guest-home");
 			}
 		}
-		req.setAttribute("error", "Review submission failed!");
-		resp.sendRedirect(req.getContextPath() + "/customer/product/" + product.getSlug());
+
 	}
 
 	private void getProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
