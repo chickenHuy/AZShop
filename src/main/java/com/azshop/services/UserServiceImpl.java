@@ -1,5 +1,6 @@
 package com.azshop.services;
 
+import java.util.Date;
 import java.util.List;
 
 import com.azshop.DAO.IUserDAO;
@@ -74,9 +75,20 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public void updateRole(String role, int userId) {
-		userDAO.updateRole(role, userId);
+
+	public int countUser(Date datetime) {
 		
+		return userDAO.countUser(datetime);
+	}
+	public void updateVendor(UserModel userModel) {
+		userDAO.updateVendor(userModel);
+		
+
+	}
+
+	@Override
+	public int getTotalUsers() {
+		return userDAO.getTotalUsers();
 	}
 	
 	

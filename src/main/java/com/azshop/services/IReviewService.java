@@ -22,4 +22,6 @@ public interface IReviewService {
 	void update(ReviewModel review);
 
 	void delete(int id);
+	int countByStore(int storeId);
+	int countNewByStore(int storeId);
 }

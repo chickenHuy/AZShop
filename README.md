@@ -25,6 +25,8 @@ AZShop là một website thương mại điện tử đa chức năng, được 
 
 8. **MSSV:** 21110637
    - **Họ tên:** Nguyễn Thiện Tâm
+9. **MSSV:** 21110424
+   - **Họ tên:** Hồ Phương Đông
 
 ## Môi trường phát triển
 - **Máy chủ web:** Apache Tomcat

@@ -1,5 +1,6 @@
 package com.azshop.DAO;
 
+import java.util.Date;
 import java.util.List;
 
 import com.azshop.models.UserModel;
@@ -24,5 +25,12 @@ public interface IUserDAO {
 	UserModel getByEmail(String email);
 	
 	void updatePassword(UserModel user, String newPassword);
-	void updateRole(String role, int userId);
+
+	
+	int countUser(Date datetime);
+	int getTotalUsers();
+
+	void updateVendor(UserModel userModel);
+	
+	
 }

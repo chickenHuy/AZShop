@@ -3,8 +3,11 @@ package com.azshop.controllers.admin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -21,11 +24,16 @@ import com.azshop.models.StyleModel;
 import com.azshop.models.StyleValueModel;
 import com.azshop.models.UserLevelModel;
 import com.azshop.models.UserModel;
+import com.azshop.services.IStoreService;
+import com.azshop.services.IUserService;
+import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadUtils;
 import com.google.gson.Gson;
 import com.azshop.models.CategoryModel;
+import com.azshop.models.DeliveryModel;
+import com.azshop.models.OrderItemModel;
 import com.azshop.models.OrderModel;
 import com.azshop.models.ProductModel;
 import com.azshop.models.StoreLevelModel;
@@ -40,7 +48,8 @@ import com.azshop.services.*;
 		"/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel", "/admin/deleteuserlevel", 
 		"/admin/restoreuserlevel", "/admin/storelevel", "/admin/addstorelevel", "/admin/editstorelevel", "/admin/deletestorelevel",
 		"/admin/restorestorelevel", "/admin/category/*", "/admin/styles", "/admin/style/delete", "/admin/style/restore", "/admin/addstyle",
-		"/admin/style/stylevalues", "/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit" })
+		"/admin/style/stylevalues", "/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
+        "/admin/order-detail"})
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -55,14 +64,15 @@ public class AdminController extends HttpServlet {
 	IUserLevelService userLevelService = new UserLevelServiceImpl();
 	IStoreLevelService storeLevelService = new StoreLevelServiceImpl();
 	IOrderService orderService = new OrderServiceImpl();
+	IOrderItemService orderItemService = new OrderItemServiceImpl();
+	IDeliveryService deliveryService = new DeliveryServiceImpl();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		String url = req.getRequestURL().toString();
 		if (url.contains("/admin/dashboard")) {
-			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/dashboard.jsp");
-			rDispatcher.forward(req, resp);
+			GetStatisticsUser(req, resp);
 		} else if (url.contains("/admin/product/edit-status")) {
 			try {
 				editProductStatus(req, resp);
@@ -157,7 +167,36 @@ public class AdminController extends HttpServlet {
             restoreStoreLevel(req, resp);
         } else if (url.contains("/admin/restoreuserlevel")) {
             restoreUserLevel(req, resp);
+        } else if (url.contains("/admin/order-detail")) {
+            getOrderDetail(req, resp);
         }
+	}
+
+	private void getOrderDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String orderId = req.getParameter("orderId");
+		if (orderId != null) {
+			List<OrderItemModel> listOrderItem = orderItemService.getByOrderId(Integer.parseInt(orderId));
+			req.setAttribute("listOrderItem", listOrderItem);
+			BigDecimal totalOrder = BigDecimal.ZERO;
+			for (OrderItemModel orderItem : listOrderItem) {
+				totalOrder = totalOrder.add(orderItemService.calculateOrderItemTotal(orderItem.getId()));
+			}
+			req.setAttribute("totalOrder", totalOrder);
+			OrderModel order = orderService.getById(Integer.parseInt(orderId));
+			req.setAttribute("order", order);
+			req.setAttribute("orderId", orderId);
+			List<ProductModel> listProduct = productService.getAll();
+			req.setAttribute("listProduct", listProduct);
+			DeliveryModel delivery = deliveryService.getById(order.getDeliveryId());
+			req.setAttribute("shipping_cost", delivery.getPrice());
+			UserLevelModel userLevel = userLevelService.getById(order.getUserId());
+			req.setAttribute("discount", BigDecimal.valueOf(userLevel.getDiscount()/100.0).multiply(totalOrder));
+			UserModel user = userService.getById(order.getUserId());
+			req.setAttribute("user", user);
+
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/orderDetail.jsp");
+			rDispatcher.forward(req, resp);
+		}
 	}
 
 	private void getAllStoreLevelDeleted(HttpServletRequest req, HttpServletResponse resp) {
@@ -174,6 +213,30 @@ public class AdminController extends HttpServlet {
 		List<StoreLevelModel> list = storeLevelService.getAll();
 		req.setAttribute("liststorelevel", list);
 	}
+	private void GetStatisticsUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		Date currentDate = new Date();
+
+		// Count users based on the formatted date and time
+		int count = userService.countUser(currentDate);
+		// day du lieu ra view
+		int total = userService.getTotalUsers();
+		req.setAttribute("total",total);
+		req.setAttribute("count", count);
+		// view nhan du lieu
+		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
+		rd.forward(req, resp);
+	}
+    private void getInUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Date currentDate = new Date();
+
+        // Count users based on the formatted date and time
+        int count = userService.countUser(currentDate);
+        // day du lieu ra view
+        req.setAttribute("count", count);
+        // view nhan du lieu
+        RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
+        rd.forward(req, resp);
+    }
 
 	private void getEditStylValue(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String id = req.getParameter("id");
@@ -305,6 +368,9 @@ public class AdminController extends HttpServlet {
 			order.setStatus("delivered");
 		} else if ("delivered".equals(order.getStatus())) {
 			order.setStatus("completed");
+			StoreModel storeModel = storeService.getById(order.getStoreId());
+			storeModel.seteWallet(order.getAmountToStore());
+			storeService.update(storeModel);
 		}
 
 		// Update the order only once after processing all conditions
@@ -415,6 +481,10 @@ public class AdminController extends HttpServlet {
 
 		List<UserModel> listUser = userService.getAll();
 		req.setAttribute("listUser", listUser);
+
+		List<OrderModel> listOrderAdmin = orderService.getAllAdmin();
+		int countAllOrderAdmin = listOrderAdmin.size();
+		req.setAttribute("countAllOrderAdmin", countAllOrderAdmin);
 
 		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/orders.jsp");
 		rDispatcher.forward(req, resp);
@@ -709,10 +779,11 @@ public class AdminController extends HttpServlet {
 		String discount = req.getParameter("discount");
 
 		if (name != null && minPoint != null && discount != null) {
-			try {
-				userLevel.setName(name);
-				userLevel.setMinPoint(Integer.parseInt(minPoint));
-				userLevel.setDiscount(Integer.parseInt(discount));
+			if (!userLevelService.checkName(name)) {
+				try {
+					userLevel.setName(name);
+					userLevel.setMinPoint(Integer.parseInt(minPoint));
+					userLevel.setDiscount(Integer.parseInt(discount));
 
 				userLevelService.update(userLevel);
 				resp.sendRedirect("?message=Successfully");
@@ -722,6 +793,7 @@ public class AdminController extends HttpServlet {
 		} else {
 			resp.sendRedirect("?message=You must fill out the form");
 		}
+	}
 	}
 
 	private void postAddUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {

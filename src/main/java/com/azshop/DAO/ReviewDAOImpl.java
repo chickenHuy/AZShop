@@ -270,5 +270,44 @@ public class ReviewDAOImpl implements IReviewDAO {
 		}
 	}
 
+	@Override
+	public int countByStore(int storeId) {
+		int review = 0;
+		try {
+			String sql = "Select count(*) as cntReview from Review where storeId = ? ";
 
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				review =  rs.getInt("cntReview");
+			}
+			conn.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return review;
+	}
+
+	@Override
+	public int countNewByStore(int storeId) {
+		int review = 0;
+		try {
+			String sql = "SELECT COUNT(*) AS cntReview FROM Review WHERE storeId = ? AND CONVERT(DATE, createAt) = CONVERT(DATE, GETDATE())";
+
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				review =  rs.getInt("cntReview");
+			}
+			conn.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return review;
+	}
+ 
 }

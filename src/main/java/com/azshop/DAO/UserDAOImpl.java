@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -293,15 +294,38 @@ public class UserDAOImpl implements IUserDAO {
 	}
 
 	@Override
-	public void updateRole(String role, int userId) {
+
+	public int countUser(Date datetime) {
+		int count = 0;
+	    try {
+	        String sql = "SELECT COUNT(*) AS UserCount FROM [User] WHERE [createAt] >= ?";
+	        conn = new DBConnection().getConnection();
+
+	        ps = conn.prepareStatement(sql);
+	        ps.setDate(1, new java.sql.Date(datetime.getTime())); // Chuyển đổi từ Java Date sang SQL Date
+
+	        rs = ps.executeQuery();
+	        if (rs.next()) {
+	            count = rs.getInt("UserCount");
+	        }
+
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return count;
+	}
+
+	public void updateVendor(UserModel userModel) {
 		try {
-			String sql = "UPDATE [User] SET  role = ? ,updateAt = GetDate() WHERE id = ?";
+			String sql = "UPDATE [User] SET  role = 'vendor', phone = ?, address = ? ,updateAt = GetDate() WHERE id = ?";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
 
-			ps.setString(1, role);
-			ps.setInt(2, userId);
+			ps.setString(1, userModel.getPhone());
+			ps.setString(2, userModel.getAddress());
+			ps.setInt(3, userModel.getId());
 
 			ps.executeUpdate();
 
@@ -310,6 +334,27 @@ public class UserDAOImpl implements IUserDAO {
 			e.printStackTrace();
 		}
 		
+
+	}
+
+	@Override
+	public int getTotalUsers() {
+		int totalUsers = 0;
+        try {
+            String sql = "SELECT COUNT(*) AS TotalUsers FROM [User] WHERE isDeleted = 0";
+            conn = new DBConnection().getConnection();
+
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                totalUsers = rs.getInt("TotalUsers");
+            }
+
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return totalUsers;
 	}
 
 }

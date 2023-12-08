@@ -56,4 +56,14 @@ public class ReviewServiceImpl implements IReviewService{
 		
 	}
 
+	@Override
+	public int countByStore(int storeId) {
+		 return reviewDAO.countByStore(storeId);
+	}
+
+	@Override
+	public int countNewByStore(int storeId) {
+		return reviewDAO.countNewByStore(storeId);
+	}
+
 }
