@@ -8,76 +8,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<!-- SECTION -->
-	<div class="section">
-		<!-- container -->
-		<div class="container">
-			<!-- row -->
-			<div class="row">
-				<!-- shop -->
-				<div class="col-md-4 col-xs-6">
-					<div class="shop">
-						<a href='<c:url value="/customer/product"/>'>
-							<div class="shop-img">
-								<img src="" alt="">
-							</div>
-						</a>
-						<div class="shop-body">
-							<h3>
-								Thời trang</a><br>Collection
-							</h3>
-							<a href="#" class="cta-btn">Shop now <i
-								class="fa fa-arrow-circle-right"></i></a>
-						</div>
-					</div>
-				</div>
-				<!-- /shop -->
-
-				<!-- shop -->
-				<div class="col-md-4 col-xs-6">
-					<div class="shop">
-						<a href='<c:url value="/customer/product"/>'>
-							<div class="shop-img">
-								<img src="" alt="">
-							</div>
-						</a>
-						<div class="shop-body">
-							<h3>
-								Đồ gia dụng<br>Collection
-							</h3>
-							<a href="#" class="cta-btn">Shop now <i
-								class="fa fa-arrow-circle-right"></i></a>
-						</div>
-					</div>
-				</div>
-				<!-- /shop -->
-
-				<!-- shop -->
-				<div class="col-md-4 col-xs-6">
-					<div class="shop">
-						<a href='<c:url value="/customer/product"/>'>
-							<div class="shop-img">
-								<img src="" alt="">
-							</div>
-						</a>
-						<div class="shop-body">
-							<h3>
-								Laptop<br>Collection
-							</h3>
-							<a href="#" class="cta-btn">Shop now <i
-								class="fa fa-arrow-circle-right"></i></a>
-						</div>
-					</div>
-				</div>
-				<!-- /shop -->
-			</div>
-			<!-- /row -->
-		</div>
-		<!-- /container -->
-	</div>
-	<!-- /SECTION -->
-
-	<!-- SẢN PHẨM MỚI -->
+	
+	<!-- TẤT CẢ SẢN PHẨM -->
 	<!-- SECTION -->
 	<div class="section">
 		<!-- container -->
@@ -203,7 +135,7 @@
 				<!-- section title -->
 				<div class="col-md-12">
 					<div class="section-title">
-						<h3 class="title">Sản phẩm mớiy</h3>
+						<h3 class="title">Sản phẩm mới</h3>
 						<div class="section-nav">
 							<ul class="section-tab-nav tab-nav">
 								<c:forEach var="category" items="${categoryParentList}">

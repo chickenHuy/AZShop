@@ -19,6 +19,14 @@ public interface IProductService {
 	List<ProductModel> getByStyleValueId(int styleValueId);
 
 	List<ProductModel> getByStoreId(int storeId);
+	
+	List<ProductModel> getProductbyQuantity(List<ProductModel> productList, int quantity);
+	
+    List<ProductModel> SortingProductbyPriceAscending(List<ProductModel> productList, int categoryId);
+    
+    List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList, int categoryId);
+
+    List<ProductModel> GetTopSellerProduct(List<ProductModel> productList, int k);
 
 	void update(ProductModel product);
 

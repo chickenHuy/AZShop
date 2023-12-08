@@ -20,13 +20,13 @@
 					<div class="aside">
 						<h3 class="aside-title">Danh mục</h3>
 						<div class="checkbox-filter">
-							<a href='<c:url value="/customer/category/${categoryParent.slug}"/>'>
+							<a href='<c:url value="/customer/category/${categoryParent.slug}?sortBy=${sortBy}&showCount=${showCount}"/>'>
 								<div class="input-checkbox ${category.slug}">
 									<label>Tất cả</label>
 								</div>
 							</a>
 							<c:forEach var="category" items="${categoryChildList}">	
-								<a href='<c:url value="/customer/category/${categoryParent.slug}/${category.slug}"/>'>
+								<a href='<c:url value="/customer/category/${categoryParent.slug}?sortBy=${sortBy}&showCount=${showCount}"/>'>
 									<div class="input-checkbox ${category.slug}">
 										<label>${category.name}<small>
 												(${category.countProduct})</small></label>
@@ -134,21 +134,27 @@
 					<!-- store top filter -->
 					<div class="store-filter clearfix">
 						<div class="store-sort">
-							<label> Sort By: <select class="input-select">
-									<option value="0">Popular</option>
-									<option value="1">Position</option>
+							<label>Sắp xếp: <select class="input-select"
+								name="sortBy" id="sortBy" onchange="handleChange()">
+									<option value="0">Giá tăng dần</option>
+									<option value="1">Giá giảm dần</option>
 							</select>
-							</label> <label> Show: <select class="input-select">
+							</label> <label>Hiển thị: <select class="input-select"
+								name="showCount" id="showCount" onchange="handleChange()">
 									<option value="0">20</option>
 									<option value="1">50</option>
 							</select>
 							</label>
 						</div>
 						<ul class="store-grid">
-							<li class="active"><i class="fa fa-th"></i></li>
-							<li><a href="#"><i class="fa fa-th-list"></i></a></li>
+							<li class="active"><a
+								href="/your_controller_url?sortBy=0&showValue=0"><i
+									class="fa fa-th"></i></a></li>
+							<li><a href="/your_controller_url?sortBy=1&showValue=0"><i
+									class="fa fa-th-list"></i></a></li>
 						</ul>
 					</div>
+
 					<!-- /store top filter -->
 
 					<!-- store products -->

@@ -47,7 +47,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/store/*", "/customer/style/*", "/customer-search", "/customer-information"})
+@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/store/*", "/customer/store-category/*", "/customer/style/*", "/customer-search", "/customer-information"})
 public class CustomerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -125,9 +125,17 @@ public class CustomerController extends HttpServlet {
 			}
 		}
 		
-		else if (url.contains("customer/store")) {
+		else if (url.contains("customer/store/")) {
 			try {
 				getStore(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		else if (url.contains("customer/store-category")) {
+			try {
+				getCategoryInStore(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -178,6 +186,101 @@ public class CustomerController extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public int countProductsInCategoryStore(int storeId, int categoryId) {
+        // Get products by category
+        List<ProductModel> productsInCate = productService.getByCategoryId(categoryId);
+        List<ProductModel> productList = new ArrayList<ProductModel>();
+        
+        for (ProductModel productModel : productsInCate) {
+			if (productModel.getStoreId() == storeId) {
+				productList.add(productModel);
+			}
+		}
+        
+        // Count the number of products
+        int productCount = (productList != null) ? productList.size() : 0;
+
+        return productCount;
+    }
+
+	private void getCategoryInStore(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String url = req.getRequestURL().toString();
+		URI uri;
+		try {
+
+			uri = new URI(url);
+			String path = uri.getPath();
+
+			String[] parts = path.split("/");
+
+			if (parts.length > 0) {
+				String slug = parts[parts.length - 1];
+				
+				try {
+
+					StoreModel store = new StoreModel();		
+					CategoryModel category = categoryService.getCategoryBySlug(slug);
+					
+					List<ProductModel> productList = new ArrayList<ProductModel>();
+					List<ProductModel> productsInCate = new ArrayList<ProductModel>();
+	                List<ImageModel> imageList = new ArrayList<ImageModel>();
+	                List<CategoryModel> categoryChildList = new ArrayList<CategoryModel>();
+	                
+	                //lấy tất cả sp trong dnah mục
+	                productsInCate = productService.getByCategoryId(category.getId());
+	                
+	                //lấy sp theo cửa hàng
+	                for (ProductModel productInCate : productsInCate) {
+	                	StoreModel storeModel = storeService.getById(productInCate.getStoreId());
+	                	
+						if (url.contains(storeModel.getSlug())) {
+							productList.add(productInCate);
+							store = storeModel;
+						}
+					}
+	                
+	                //Lấy ảnh sp
+	                for (ProductModel productModel : productList) {
+	        			ImageModel image = imageService.getImage(productModel.getId());
+	        			imageList.add(image);
+	        		}
+	                
+	                //Lấy tất cả sản phẩm trong cửa hàng
+	                List<ProductModel> allProductList = productService.getByStoreId(store.getId());
+	                
+	                
+	                //lấy danh sách danh mục
+	                for (ProductModel productModel : allProductList) {
+						CategoryModel categoryChild = categoryService.getById(productModel.getCategoryId());
+						categoryChildList.add(categoryChild);
+					}	       
+	                
+	                //đếm số lượng product trong mỗi category
+	                for (CategoryModel categoryChild : categoryChildList) {
+						int countProduct = countProductsInCategoryStore(store.getId(), categoryChild.getId());
+						
+						categoryChild.setCountProduct(countProduct);
+					}
+	                
+	                req.setAttribute("store", store);
+	                req.setAttribute("categoryChildList", categoryChildList);
+	                req.setAttribute("productList", productList);
+	                req.setAttribute("imageList", imageList);
+	               	                
+	                
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+				
+			}
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
+		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/store.jsp");
+        rd.forward(req, resp);
 	}
 
 	private void search(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -241,81 +344,36 @@ public class CustomerController extends HttpServlet {
 				
 				try {
 
-					StoreModel store = storeService.getBySlug(slug);
-					req.setAttribute("store", store);
-	                
-//	                Boolean isCategoryOrigin = false;
-//	                
-//	                //Kiếm tra category có phải là một caetgory gốc
-//	                List<CategoryModel> categoryParentList = categoryService.getParentCategory();
-//	                for (CategoryModel categoryModel : categoryParentList) {
-//						if (category.getId() == categoryModel.getId()) {
-//							isCategoryOrigin = true;
-//						}
-//					}
-	                
-//	                //Khai báo trong trường hợp nó là category gốc
-//	                CategoryModel categoryParent = categoryService.getParentCategory(category.getId());		                		                
-//	                List<CategoryModel> categoryChildList = categoryService.getChildCategory(category.getId());
-	                List<ProductModel> productList = new ArrayList<ProductModel>();
+					StoreModel store = storeService.getBySlug(slug);					
+					
+					List<ProductModel> productList = new ArrayList<ProductModel>();
 	                List<ImageModel> imageList = new ArrayList<ImageModel>();
-	                
-//	                //Lấy ra tất cả sản phẩm
-//	                for (CategoryModel categoryChild : categoryChildList) {
-//	                	List<ProductModel> productCategoryChilds = productService.getByCategoryId(categoryChild.getId());
-//	                	productList.addAll(productCategoryChilds);
-//					}
+	                List<CategoryModel> categoryChildList = new ArrayList<CategoryModel>();
 	                
 	                productList = productService.getByStoreId(store.getId());
 	                
-	                List<CategoryModel> categoryChildList = new ArrayList<CategoryModel>();
+	                //lấy danh sách danh mục
 	                for (ProductModel productModel : productList) {
-						CategoryModel category = categoryService.getById(productModel.getCategoryId());
-						categoryChildList.add(category);
+						CategoryModel categoryChild = categoryService.getById(productModel.getCategoryId());
+						categoryChildList.add(categoryChild);
+					}	                           
+	                
+	              //đếm số lượng product trong mỗi category
+	                for (CategoryModel categoryChild : categoryChildList) {
+						int countProduct = countProductsInCategoryStore(store.getId(), categoryChild.getId());
+						
+						categoryChild.setCountProduct(countProduct);
 					}
-	                
-	                List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
-	                for (CategoryModel categoryModel : categoryChildList) {
-						CategoryModel category = categoryService.getById(categoryModel.getCategoryId());
-						Boolean isExistCategory = false;
-						for (CategoryModel categoryExist : categoryList) {
-							if (category.getId() == categoryExist.getId()) isExistCategory = true;
-						}
-						if (isExistCategory == false) categoryList.add(category);
-					}
-	                
-//	                //nếu không phải
-//	                if (isCategoryOrigin == false) {
-//	                	categoryChildList = categoryService.getChildCategory(category.getCategoryId());
-//	                	categoryParent = categoryService.getById(category.getCategoryId());
-//	                	productList = productService.getByCategoryId(category.getId());
-//	                	
-//	                	//Lấy danh sách style value từ category parent
-//		                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
-//		                req.setAttribute("styleList", styleList);
-//		                
-//		                req.setAttribute("categoryStyle", category);
-//	                }
-	                
-//	                //đếm số lượng product trong mỗi category
-//	                for (CategoryModel categoryChild : categoryChildList) {
-//						int countProduct = countProductsInCategory(categoryChild.getId());
-//						
-//						categoryChild.setCountProduct(countProduct);
-//					}	
 	                
 	                for (ProductModel productModel : productList) {
 	        			ImageModel image = imageService.getImage(productModel.getId());
 	        			imageList.add(image);
 	        		}
 	                
-	                
-//	                req.setAttribute("category", category);
+	                req.setAttribute("store", store);
 	                req.setAttribute("categoryChildList", categoryChildList);
-	                req.setAttribute("categoryList", categoryList);
 	                req.setAttribute("productList", productList);
 	                req.setAttribute("imageList", imageList);
-//	                req.setAttribute("categoryParent", categoryParent);
 	               	                
 	                
 	            } catch (Exception e) {
@@ -435,6 +493,7 @@ public class CustomerController extends HttpServlet {
 	}
 
 	private void getCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
 		String url = req.getRequestURL().toString();
 		URI uri;
 		try {
@@ -473,6 +532,11 @@ public class CustomerController extends HttpServlet {
 	                	productList.addAll(productCategoryChilds);
 					}
 	                
+	                //Hiển thị tất cả thì sắp xếp theo mặc định
+	                productList = productService.SortingProductbyPriceAscending(productList, category.getId());
+//	                productList = productService.GetTopSellerProduct(productList, 3);
+	                int sortBy = 0; int showCount = 0;
+	                
 	                //nếu không phải
 	                if (isCategoryOrigin == false) {
 	                	categoryChildList = categoryService.getChildCategory(category.getCategoryId());
@@ -498,7 +562,8 @@ public class CustomerController extends HttpServlet {
 	        			imageList.add(image);
 	        		}
 	                
-	                
+	                req.setAttribute("sortBy", sortBy);
+	                req.setAttribute("showCount", showCount);
 	                req.setAttribute("category", category);
 	                req.setAttribute("categoryChildList", categoryChildList);
 	                req.setAttribute("categoryList", categoryChildList);

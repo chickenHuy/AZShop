@@ -12,11 +12,11 @@ public class OrderItemServiceImpl implements IOrderItemService {
 
 	IOrderItemDAO orderItemDAO = new OrderItemDAOImpl();
 	IProductService productService = new ProductServiceImpl();
-	
+
 	@Override
 	public void insert(OrderItemModel orderItem) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -45,13 +45,13 @@ public class OrderItemServiceImpl implements IOrderItemService {
 	@Override
 	public void update(OrderItemModel orderItem) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void delete(int id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -63,9 +63,13 @@ public class OrderItemServiceImpl implements IOrderItemService {
 	public BigDecimal calculateOrderItemTotal(int id) {
 		OrderItemModel orderItem = orderItemDAO.getById(id);
 		ProductModel product = productService.getById(orderItem.getProductId());
-		BigDecimal orderItemTotal = BigDecimal.valueOf(orderItem.getCount())
-		        .multiply(product.getPrice());
+		BigDecimal orderItemTotal = BigDecimal.valueOf(orderItem.getCount()).multiply(product.getPrice());
 
 		return orderItemTotal;
+	}
+
+	@Override
+	public List<OrderItemModel> getByOrderIdAndProductId(int orderId, int productId) {
+		return orderItemDAO.getByOrderIdAndProductId(orderId, productId);
 	}
 }
