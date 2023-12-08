@@ -12,9 +12,11 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle.Control;
 
 import javax.mail.Message;
 import javax.mail.Session;
@@ -26,6 +28,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import javax.swing.tree.DefaultTreeCellEditor.EditorContainer;
 
 import com.azshop.DAO.IOrderDAO;
@@ -74,6 +77,7 @@ import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadImage;
 import com.azshop.utils.UploadUtils;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
 		* 50)
@@ -122,6 +126,18 @@ public class VenderController extends HttpServlet {
 			return;
 		}
 		if (url.contains("/vendor/view-shop-info")) {
+			req.setAttribute("storeAvatar", "");
+			req.setAttribute("storeCover", "");
+			req.setAttribute("storeFeatured", "");
+			if (storeModel.getAvatar() != null && !storeModel.getAvatar().trim().equals("")) {
+				req.setAttribute("storeAvatar", "/AZShop/image?fname=" + storeModel.getAvatar());
+			}
+			if (storeModel.getCover() != null && !storeModel.getCover().trim().equals("")) {
+				req.setAttribute("storeCover", "/AZShop/image?fname=" + storeModel.getCover());
+			}
+			if (storeModel.getFeaturedImage() != null && !storeModel.getFeaturedImage().trim().equals("")) {
+				req.setAttribute("storeFeatured", "/AZShop/image?fname=" + storeModel.getFeaturedImage());
+			}
 			req.setAttribute("storeInfo", storeModel);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/shopInfo.jsp");
 			req.setAttribute("isView", true);
@@ -129,6 +145,18 @@ public class VenderController extends HttpServlet {
 			return;
 		}
 		if (url.contains("/vendor/update-shop-info")) {
+			req.setAttribute("storeAvatar", "");
+			req.setAttribute("storeCover", "");
+			req.setAttribute("storeFeatured", "");
+			if (storeModel.getAvatar() != null && !storeModel.getAvatar().trim().equals("")) {
+				req.setAttribute("storeAvatar", "/AZShop/image?fname=" + storeModel.getAvatar());
+			}
+			if (storeModel.getCover() != null && !storeModel.getCover().trim().equals("")) {
+				req.setAttribute("storeCover", "/AZShop/image?fname=" + storeModel.getCover());
+			}
+			if (storeModel.getFeaturedImage() != null && !storeModel.getFeaturedImage().trim().equals("")) {
+				req.setAttribute("storeFeatured", "/AZShop/image?fname=" + storeModel.getFeaturedImage());
+			}
 			req.setAttribute("storeInfo", storeModel);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/shopInfo.jsp");
 			req.setAttribute("isView", false);
@@ -527,7 +555,6 @@ public class VenderController extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 			resp.sendRedirect(req.getContextPath() + "/vendor/order/all?error=The update has failed.");
-
 		}
 
 	}
@@ -613,24 +640,54 @@ public class VenderController extends HttpServlet {
 	}
 
 	private void UpdateShopInfo(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+		resp.setContentType("application/json");
+
 		String shopName = req.getParameter("shopName").toString();
 		String shopBio = req.getParameter("shopBio").toString();
-		String storageLocation = "D:\\uploads";
+		String storageLocation = Constant.DIR;
 		String coverImage = UploadImage.UploadImageToLocal("coverImage", req, storageLocation);
 		String avatarImage = UploadImage.UploadImageToLocal("avatarImage", req, storageLocation);
 		String featuredImage = UploadImage.UploadImageToLocal("featuredImage", req, storageLocation);
 
-//		JsonObject responseStatus = new JsonObject();
-//		responseStatus.addProperty("status", "success");
-//		responseStatus.addProperty("message", "Dữ liệu đã được xử lý thành công");
+		HttpSession session = req.getSession();
+		StoreModel storeModel = (StoreModel) session.getAttribute(Constant.storeSession);
 
-		resp.setContentType("application/json");
-		resp.setCharacterEncoding("UTF-8");
-		resp.getWriter().println("1: " + shopName);
-		resp.getWriter().println("2: " + shopBio);
-		resp.getWriter().println("3: " + coverImage);
-		resp.getWriter().println("4: " + avatarImage);
-		resp.getWriter().println("5: " + featuredImage);
+		if (!shopName.trim().equals("")) {
+			storeModel.setName(shopName);
+		}
+		if (!shopBio.trim().equals("")) {
+			storeModel.setBio(shopBio);
+		}
+		if (!coverImage.trim().equals("")) {
+			storeModel.setCover(coverImage);
+		} 
+		if (!avatarImage.trim().equals("")) {
+			storeModel.setAvatar(avatarImage);
+		}
+		if (!featuredImage.trim().equals("")) {
+			storeModel.setFeaturedImage(featuredImage);
+		}
+
+		String message = "";
+		IStoreService storeService = new StoreServiceImpl();
+		JsonObject responseStatus = new JsonObject();
+		try {
+			storeService.update(storeModel);
+			message = "Change success!!!";
+			System.out.println(message);
+			responseStatus.addProperty("status", "Success");
+			responseStatus.addProperty("message", message);
+			session.setAttribute(Constant.storeSession, storeModel);
+		} catch (Exception e) {
+			e.printStackTrace();
+			message = "Change failse!!!";
+			responseStatus.addProperty("status", "Failse");
+			responseStatus.addProperty("message", message);
+		}
+		String jsonResponse = new Gson().toJson(responseStatus);
+		resp.getWriter().write(jsonResponse);
 	}
 
 	private void RegisterShop(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
