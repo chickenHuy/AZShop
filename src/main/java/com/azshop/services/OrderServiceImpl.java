@@ -126,4 +126,9 @@ public class OrderServiceImpl implements IOrderService {
 	public BigDecimal getSumRevenueByStore(int storeId) {
 		return orderDAO.getSumRevenueByStore(storeId);
 	}
+
+	@Override
+	public List<OrderModel> getByUserIdAndStoreId(int userId, int storeId) {
+		return orderDAO.getByUserIdAndStoreId(userId, storeId);
+	}
 }

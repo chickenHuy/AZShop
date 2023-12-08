@@ -72,7 +72,7 @@
 									class="fa fa-star"></i> <i class="fa fa-star"></i> <i
 									class="fa fa-star-o"></i>
 							</div>
-							<a class="review-link" href="#">10 Review(s) | Add your
+							<a class="review-link" href="#">${countReview} Review(s) | Add your
 								review</a>
 						</div>
 						<div>
@@ -136,7 +136,7 @@
 						<ul class="tab-nav">
 							<li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
 							<li><a data-toggle="tab" href="#tab2">Details</a></li>
-							<li><a data-toggle="tab" href="#tab3">Reviews (3)</a></li>
+							<li><a data-toggle="tab" href="#tab3">Reviews (${countReview})</a></li>
 						</ul>
 						<!-- /product tab nav -->
 
@@ -239,16 +239,25 @@
 												<c:forEach var="review" items="${review}">
 													<li>
 														<div class="review-heading">
+															<c:set var="printedUserName" value="false" />
 															<c:forEach var="user" items="${userList}">
-																<c:if test="${review.userId eq user.id}">
+																<c:if test="${review.userId eq user.id and printedUserName eq 'false'}">
 																	<h5 class="name">${user.firstName} ${user.lastName}</h5>
+																	<c:set var="printedUserName" value="true" />
 																</c:if>
 															</c:forEach>
 															<p class="date">${review.createAt}</p>
 															<div class="review-rating">
-																<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-																	class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-																	class="fa fa-star-o empty"></i>
+																<c:forEach var="i" begin="1" end="5">
+																	<c:choose>
+																		<c:when test="${i <= review.rating}">
+																			<i class="fa fa-star"></i>
+																		</c:when>
+																		<c:otherwise>
+																			<i class="fa fa-star-o empty"></i>
+																		</c:otherwise>
+																	</c:choose>
+																</c:forEach>
 															</div>
 														</div>
 														<div class="review-body">
@@ -271,10 +280,10 @@
 									<!-- Review Form -->
 									<div class="col-md-3">
 										<div id="review-form">
-											<form class="review-form">
+											<form class="review-form" action="review-product" method="post">
 												<input class="input" type="text" placeholder="Your Name">
 												<input class="input" type="email" placeholder="Your Email">
-												<textarea class="input" placeholder="Your Review"></textarea>
+												<textarea class="input" name="review" placeholder="Your Review"></textarea>
 												<div class="input-rating">
 													<span>Your Rating: </span>
 													<div class="stars">

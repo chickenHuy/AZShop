@@ -13,22 +13,21 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 	Connection conn = null;
 	PreparedStatement ps = null;
 	ResultSet rs = null;
-	
+
 	@Override
 	public void insert(OrderItemModel orderItem) {
 		try {
-			String sql = "INSERT INTO OrderItem (orderID, productId, count, createAt)"
-					+ "VALUES (?, ?, ?, GETDATE())";
-			
+			String sql = "INSERT INTO OrderItem (orderID, productId, count, createAt)" + "VALUES (?, ?, ?, GETDATE())";
+
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
-			
+
 			ps.setInt(1, orderItem.getOrderId());
 			ps.setInt(2, orderItem.getProductId());
 			ps.setInt(3, orderItem.getCount());
-			
+
 			ps.executeUpdate();
-			
+
 			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -38,15 +37,15 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 	@Override
 	public OrderItemModel getById(int id) {
 		OrderItemModel orderItemModel = new OrderItemModel();
-		
+
 		try {
 			String sql = "Select *from OrderItem where id = ? and isDeleted = 0";
-			
-			conn = new DBConnection().getConnection();			
-			ps = conn.prepareStatement(sql);		
-		
+
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+
 			ps.setInt(1, id);
-			
+
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				orderItemModel.setId(rs.getInt("id"));
@@ -60,20 +59,20 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return orderItemModel;
 	}
 
 	@Override
 	public List<OrderItemModel> getAll() {
 		List<OrderItemModel> orderItemModelList = new ArrayList<OrderItemModel>();
-		
+
 		try {
 			String sql = "Select *from OrderItem where isDeleted = 0";
-			
-			conn = new DBConnection().getConnection();			
-			ps = conn.prepareStatement(sql);		
-			
+
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				OrderItemModel orderItemModel = new OrderItemModel();
@@ -83,29 +82,29 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 				orderItemModel.setCount(rs.getInt("count"));
 				orderItemModel.setCreateAt(rs.getDate("createAt"));
 				orderItemModel.setUpdateAt(rs.getDate("updateAt"));
-				
+
 				orderItemModelList.add(orderItemModel);
 			}
 			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return orderItemModelList;
 	}
 
 	@Override
 	public List<OrderItemModel> getByOrderId(int orderId) {
 		List<OrderItemModel> orderItemModelList = new ArrayList<OrderItemModel>();
-		
+
 		try {
 			String sql = "Select *from OrderItem where orderID = ? and isDeleted = 0";
-			
-			conn = new DBConnection().getConnection();			
+
+			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
-			
+
 			ps.setInt(1, orderId);
-			
+
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				OrderItemModel orderItemModel = new OrderItemModel();
@@ -115,29 +114,29 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 				orderItemModel.setCount(rs.getInt("count"));
 				orderItemModel.setCreateAt(rs.getDate("createAt"));
 				orderItemModel.setUpdateAt(rs.getDate("updateAt"));
-				
+
 				orderItemModelList.add(orderItemModel);
 			}
 			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return orderItemModelList;
 	}
 
 	@Override
 	public List<OrderItemModel> getByProductId(int productId) {
 		List<OrderItemModel> orderItemModelList = new ArrayList<OrderItemModel>();
-		
+
 		try {
 			String sql = "Select *from OrderItem where productId = ? and isDeleted = 0";
-			
-			conn = new DBConnection().getConnection();			
+
+			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
-			
+
 			ps.setInt(1, productId);
-			
+
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				OrderItemModel orderItemModel = new OrderItemModel();
@@ -147,14 +146,14 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 				orderItemModel.setCount(rs.getInt("count"));
 				orderItemModel.setCreateAt(rs.getDate("createAt"));
 				orderItemModel.setUpdateAt(rs.getDate("updateAt"));
-				
+
 				orderItemModelList.add(orderItemModel);
 			}
 			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return orderItemModelList;
 	}
 
@@ -162,17 +161,17 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 	public void update(OrderItemModel orderItem) {
 		try {
 			String sql = "UPDATE OrderItem SET orderID = ?, productId = ?, count = ?, updateAt = GETDATE() where id=?";
-			
+
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
-						
+
 			ps.setInt(1, orderItem.getOrderId());
 			ps.setInt(2, orderItem.getProductId());
 			ps.setInt(3, orderItem.getCount());
 			ps.setInt(4, orderItem.getId());
-			
+
 			ps.executeUpdate();
-			
+
 			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -184,14 +183,13 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 		try {
 			String sql = "UPDATE OrderItem SET isDeleted = 1 WHERE id = ?";
 			conn = new DBConnection().getConnection();
-			
+
 			ps = conn.prepareStatement(sql);
-			ps.setInt(1, id);		
+			ps.setInt(1, id);
 			ps.executeUpdate();
-			
+
 			conn.close();
-			} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -200,8 +198,8 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 	public int countByOrder(int orderId) {
 		try {
 			String sql = "Select COUNT(*) as sumItem from OrderItem where isDeleted = 0 AND orderId = ?";
-			conn = new DBConnection().getConnection();			
-			ps = conn.prepareStatement(sql);		
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
 			ps.setInt(1, orderId);
 			rs = ps.executeQuery();
 			if (rs.next()) {
@@ -211,8 +209,41 @@ public class OrderItemDAOImpl implements IOrderItemDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return -1;
+	}
+
+	@Override
+	public List<OrderItemModel> getByOrderIdAndProductId(int orderId, int productId) {
+		List<OrderItemModel> orderItemModelList = new ArrayList<OrderItemModel>();
+
+		try {
+			String sql = "Select *from OrderItem where orderID = ? and productId = ? and isDeleted = 0";
+
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+
+			ps.setInt(1, orderId);
+			ps.setInt(2, productId);
+
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				OrderItemModel orderItemModel = new OrderItemModel();
+				orderItemModel.setId(rs.getInt("id"));
+				orderItemModel.setOrderId(rs.getInt("orderID"));
+				orderItemModel.setProductId(rs.getInt("productId"));
+				orderItemModel.setCount(rs.getInt("count"));
+				orderItemModel.setCreateAt(rs.getDate("createAt"));
+				orderItemModel.setUpdateAt(rs.getDate("updateAt"));
+
+				orderItemModelList.add(orderItemModel);
+			}
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return orderItemModelList;
 	}
 
 }
