@@ -675,16 +675,26 @@ public class ProductDAOImpl implements IProductDAO {
 
 	@Override
 	public List<ProductModel> GetTopSellerProduct(List<ProductModel> productList, int k) {
-		List<ProductModel> resultProducts = new ArrayList<>();
-
-        // Lọc ra các sản phẩm có số lượng lớn hơn hoặc bằng quantity
-        for (ProductModel product : productList) {
-            if (product.getQuantity() >= k) {
-                resultProducts.add(product);
-            }
-        }
-
-        return resultProducts;
+		int n = productList.size();
+		for (int i = 0; i < n - 1; i++) {
+			for (int j = 0; j < n - i - 1; j++) {
+				// So sánh số lượng đã bán của hai sản phẩm
+				int sold1 = productList.get(j).getSold();
+				int sold2 = productList.get(j + 1).getSold();
+				if (sold1 < sold2) {
+					// Đổi chỗ hai sản phẩm nếu thứ tự không đúng
+					ProductModel temp = productList.get(j);
+					productList.set(j, productList.get(j + 1));
+					productList.set(j + 1, temp);
+				}
+			}
+		}
+		
+		// Lấy ra một danh sách con gồm k sản phẩm bán được nhiều nhất
+		List<ProductModel> topSellerList = productList.subList(0, k);
+		
+		// Trả về danh sách con đó
+		return topSellerList;
 	}
 
 
