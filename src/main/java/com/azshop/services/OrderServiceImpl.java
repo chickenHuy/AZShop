@@ -35,6 +35,11 @@ public class OrderServiceImpl implements IOrderService {
 	public List<OrderModel> getAll() {
 		return orderDAO.getAll();
 	}
+	
+	@Override
+	public List<OrderModel> getAllAdmin() {
+		return orderDAO.getAllAdmin();
+	}
 
 	@Override
 	public List<OrderModel> getByUserId(int userId) {
