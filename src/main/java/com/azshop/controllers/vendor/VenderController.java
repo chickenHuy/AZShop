@@ -205,11 +205,9 @@ public class VenderController extends HttpServlet {
 			ChangeStatusOrder(req, resp);
 		} else if (url.contains("vendor/pickup-address")) {
 			GetPickupAddress(req, resp, userModel, storeModel);
-		}
-		else if (url.contains("/vendor/review/detail")) {
+		} else if (url.contains("/vendor/review/detail")) {
 			GetDetailReview(req, resp, storeModel);
-		}
-		else if (url.contains("/vendor/review")) {
+		} else if (url.contains("/vendor/review")) {
 			GetReview(req, resp, storeModel);
 		} else if (url.contains("vendor/statistics-revenue")) {
 			GetRevenue(req, resp, storeModel);
@@ -218,66 +216,62 @@ public class VenderController extends HttpServlet {
 		}
 	}
 
-
-
-	private void GetDetailReview(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel) throws ServletException, IOException {
+	private void GetDetailReview(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel)
+			throws ServletException, IOException {
 		try {
 			String slug = req.getParameter("slug");
 			String idReview = req.getParameter("id");
 			ProductModel productModel = productService.getBySlug(slug);
 			if (productModel == null) {
-				resp.sendRedirect("/views/vendor/404.jsp");
+				req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 				return;
 			}
 			List<ReviewModel> reviewModels = reviewService.getByProductId(productModel.getId());
 			req.setAttribute("name", productModel.getName());
 			req.setAttribute("reviews", reviewModels);
+			;
 			req.setAttribute("id", idReview);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/detailReview.jsp");
 			rDispatcher.forward(req, resp);
-			
-		}
-		catch (Exception e) {
-			resp.sendRedirect("/views/vendor/404.jsp");
+
+		} catch (Exception e) {
+			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 		}
 		return;
-		
+
 	}
 
-
-
-	private void GetDashBoard(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel) throws ServletException, IOException {
-		req.setAttribute("store", storeModel); //eWallet, rating, name
-		List<ProductModel> productModels = productService.getByStoreId(storeModel.getId()); //totalProducts
+	private void GetDashBoard(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel)
+			throws ServletException, IOException {
+		req.setAttribute("store", storeModel); // eWallet, rating, name
+		List<ProductModel> productModels = productService.getByStoreId(storeModel.getId()); // totalProducts
 		if (productModels != null)
 			req.setAttribute("totalProducts", productModels.size());
-		
+
 		BigDecimal totalRevenue = orderService.getSumRevenueByStore(storeModel.getId()); // totalRevenue
 		req.setAttribute("totalRevenue", totalRevenue);
-		
+
 		int soldInDay = productService.countInDayByStore(storeModel.getId());
 		req.setAttribute("totalSoldInDay", soldInDay);
-		
+
 		BigDecimal yesterdayRevenue = orderService.GetRevenueLastNDays(1, storeModel.getId()).get(0);
 		req.setAttribute("revenueYday", yesterdayRevenue);
-		
-		
+
 		int totalReviews = reviewService.countByStore(storeModel.getId());
 		req.setAttribute("totalReview", totalReviews);
-		
+
 		int totalCompleted = orderService.countCompletedByStore(storeModel.getId());
 		req.setAttribute("totalCompleted", totalCompleted);
 
-		
 		int totalFollows = userFollowStoreService.countByStore(storeModel.getId());
 		req.setAttribute("totalFollows", totalFollows);
-		
+
 		int totalOrders = orderService.countOrderByStore(storeModel.getId());
 		req.setAttribute("totalOrders", totalOrders);
-		
+
 		int newReviews = reviewService.countNewByStore(storeModel.getId());
 		req.setAttribute("newReviews", newReviews);
-		
+
 		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/dashboard.jsp");
 		rDispatcher.forward(req, resp);
 	}
@@ -287,9 +281,9 @@ public class VenderController extends HttpServlet {
 		ProductModel productModel = productService.getBestSellerProduct(storeModel.getId());
 		int totalProduct = productService.countAllByStore(storeModel.getId());
 		int totalSales = productService.countSaleByStore(storeModel.getId());
-		int totalInDay = productService.countInDayByStore(storeModel.getId()); 
+		int totalInDay = productService.countInDayByStore(storeModel.getId());
 		List<ProductModel> productModels = productService.getHotProduct(storeModel.getId());
-		req.setAttribute("totalProduct",totalProduct);
+		req.setAttribute("totalProduct", totalProduct);
 		req.setAttribute("totalSales", totalSales);
 		req.setAttribute("bestSeller", productModel);
 		req.setAttribute("totalInday", totalInDay);
@@ -745,7 +739,7 @@ public class VenderController extends HttpServlet {
 		}
 		if (!coverImage.trim().equals("")) {
 			storeModel.setCover(coverImage);
-		} 
+		}
 		if (!avatarImage.trim().equals("")) {
 			storeModel.setAvatar(avatarImage);
 		}

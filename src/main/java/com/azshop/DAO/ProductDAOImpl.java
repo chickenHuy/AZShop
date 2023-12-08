@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.azshop.models.CategoryModel;
@@ -722,6 +723,97 @@ public class ProductDAOImpl implements IProductDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public List<ProductModel> search(String key, int categoryId, int storeId, int styleValueId, int styleId) {
+		List<ProductModel> listProduct = new ArrayList<ProductModel>();
+		try {
+			String sql = "\r\n"
+					+ "SELECT \r\n"
+					+ "    Product.*\r\n"
+					+ "FROM Product\r\n"
+					+ "INNER JOIN Category ON Product.categoryId = Category.id\r\n"
+					+ "INNER JOIN StyleValue ON Product.styleValueId = StyleValue.id\r\n"
+					+ "INNER JOIN Style ON StyleValue.styleId = Style.id\r\n"
+					+ "WHERE \r\n"
+					+ "    (LOWER(Product.name) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' \r\n"
+					+ "    OR LOWER(Product.description) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' \r\n"
+					+ "    OR LOWER(Product.slug) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%'\r\n"
+					+ "    OR LOWER(Category.name) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' \r\n"
+					+ "    OR LOWER(Style.name) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' \r\n"
+					+ "    OR LOWER(StyleValue.name) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%')\r\n"
+					+ "  AND Product.isActive = 1\r\n"
+					+ "  AND Product.isDeleted = 0 ";
+			String category = "  AND Product.categoryId = ?";
+			String store = "  AND Product.storeId = ? ";
+			String styleValue = "  And Product.styleValueId = ? ";
+			String style = "  And Style.id = ?";
+			
+			
+			if (categoryId != -1)
+			{
+				sql += category;
+			}
+			if (storeId != -1) {
+				sql += store;
+			}
+			if (styleValueId != -1) {
+				sql += styleValue;
+			}
+			if (styleId != -1) {
+				sql += style;
+			}
+			int index = 1;
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setString(index++, key);
+			ps.setString(index++, key);
+			ps.setString(index++, key);
+			ps.setString(index++, key);
+			ps.setString(index++, key);
+			ps.setString(index++, key);
+			if (categoryId != -1)
+			{
+				ps.setInt(index++, categoryId);
+			}
+			if (storeId != -1) {
+				ps.setInt(index++, storeId);
+			}
+			if (styleValueId != -1) {
+				ps.setInt(index++, styleValueId);
+			}
+			if (styleId != -1) {
+				ps.setInt(index++, styleId);
+			}
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ProductModel product = new ProductModel();
+				product.setId(rs.getInt("id"));
+				product.setName(rs.getString("name"));
+				product.setSlug(rs.getString("slug"));
+				product.setDescription(rs.getString("description"));
+				product.setPrice(rs.getBigDecimal("price"));
+				product.setQuantity(rs.getInt("quantiny"));
+				product.setSold(rs.getInt("sold"));
+				product.setActive(rs.getBoolean("isActive"));
+				product.setVideo(rs.getString("video"));
+				product.setCategoryId(rs.getInt("categoryId"));
+				product.setStyleValueId(rs.getInt("styleValueId"));
+				product.setStoreId(rs.getInt("storeId"));
+				product.setRating(rs.getBigDecimal("rating"));
+				product.setCreateAt(rs.getDate("createAt"));
+				product.setUpdateAt(rs.getDate("updateAt"));
+
+				listProduct.add(product);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listProduct;
 	}
 
 

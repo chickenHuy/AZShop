@@ -33,13 +33,13 @@
 					<div class="aside">
 						<h3 class="aside-title">Danh mục sản phẩm</h3>
 						<div class="checkbox-filter">
-							<a href='<c:url value="/customer/store/${store.slug}"/>'>
+							<a href='<c:url value="/customer/store/${store.slug}?cate=&sortBy=${0}"/>'>
 								<div class="input-checkbox ${category.slug}">
 									<label><span>Tất cả</span></label>
 								</div>
 							</a>
 							<c:forEach var="category" items="${categoryChildList}">	
-								<a href='<c:url value="/customer/store-category/${store.slug}/${category.slug}"/>'>
+								<a href='<c:url value="/customer/store/${store.slug}?cate=${category.slug}&sortBy=${sortBy}"/>'>
 									<div class="input-checkbox ${category.slug}">
 										<label><span>${category.name}</span><small>
 												(${category.countProduct})</small></label>
@@ -127,21 +127,19 @@
 				<div id="store" class="col-md-9">
 					<!-- store top filter -->
 					<div class="store-filter clearfix">
-						<div class="store-sort">
-							<label> Sort By: <select class="input-select">
-									<option value="0">Popular</option>
-									<option value="1">Position</option>
-							</select>
-							</label> <label> Show: <select class="input-select">
-									<option value="0">20</option>
-									<option value="1">50</option>
-							</select>
-							</label>
+						<h3 style="text-transform: uppercase; font-size: 18px; margin: 0px; position: absolute; bottom: 0;">${category.name}</h3>
+						<div class="radio-container store-grid">
+							<a href='<c:url value="/customer/store/${store.slug}?cate=${category.slug}&sortBy=${0}"/>'>
+								<button id="buttonAscending" class="radio-button"
+									onclick="redirect('ascending')">Giá tăng dần</button>
+							</a> 
+							<a href='<c:url value="/customer/store/${store.slug}?cate=${category.slug}&sortBy=${1}"/>'>
+								<button id="buttonDescending" class="radio-button"
+									onclick="redirect('descending')">Giá giảm dần</button>
+							</a>
+
 						</div>
-						<ul class="store-grid">
-							<li class="active"><i class="fa fa-th"></i></li>
-							<li><a href="#"><i class="fa fa-th-list"></i></a></li>
-						</ul>
+						
 					</div>
 					<!-- /store top filter -->
 
@@ -151,7 +149,7 @@
 						<!-- product -->
 							<div class="col-md-4 col-xs-6">
 								<div class="product">
-									<a href='<c:url value="/guest/product/${product.slug}"/>'>
+									<a href='<c:url value="/customer/product/${product.slug}"/>'>
 										<div class="product-img">
 											<c:set var="hasImages" value="false" />
 											<c:forEach var="image" items="${imageList}">
@@ -227,6 +225,22 @@
 		<!-- /container -->
 	</div>
 	<!-- /SECTION -->
+	
+	<style>
+.radio-button {
+    background-color: #D10024;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.radio-button:hover {
+    background-color: #96001F;
+}
+
+    </style>
 
 </body>
 </html>

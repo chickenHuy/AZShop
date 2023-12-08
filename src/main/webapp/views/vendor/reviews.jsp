@@ -47,7 +47,7 @@
                          <td>
                             <c:forEach var = "product" items = "${products}">
                                 <c:if test="${product.id eq review.productId}">
-                                     <a href="/AZShop/vendor/product/edit/${product.slug}" class="product-title">${product.name}</a> 
+                                     <a href="/AZShop/vendor/review/detail?slug=${product.slug}&id=${review.id}" class="product-title">${product.name}</a> 
                                 </c:if>
                             </c:forEach>
                         <td>

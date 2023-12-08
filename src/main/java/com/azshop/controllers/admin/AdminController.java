@@ -260,7 +260,8 @@ public class AdminController extends HttpServlet {
 		if (id != null) {
 			StyleValueModel styleValue = styleValueService.getById(Integer.parseInt(id));
 			req.setAttribute("styleValue", styleValue);
-
+			String message = req.getParameter("message");
+			req.setAttribute("message", message);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editStyleValue.jsp");
 			rDispatcher.forward(req, resp);
 		}
@@ -710,24 +711,21 @@ public class AdminController extends HttpServlet {
 
 		String id = req.getParameter("id");
 		StyleValueModel styleValue = styleValueService.getById(Integer.parseInt(id));
-
+		
 		String name = req.getParameter("styleValueName");
-		styleValue.setName(name);
-
-		styleValueService.update(styleValue);
-
-		List<StyleValueModel> listStyleValue = styleValueService.getByStyleIdAmin(styleValue.getStyleId());
-		req.setAttribute("listStyleValue", listStyleValue);
-		req.setAttribute("styleId", styleValue.getStyleId());
-		List<StyleModel> listStyle = styleService.getAllAdmin();
-		req.setAttribute("listStyle", listStyle);
-
-		int countAllStyleValue = listStyleValue.size();
-		req.setAttribute("countAllStyleValue", countAllStyleValue);
-
-		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/stylevalues.jsp");
-		rDispatcher.forward(req, resp);
-
+		if (name != "") {
+			try {
+				styleValue.setName(name);
+				styleValueService.update(styleValue);
+				
+				resp.sendRedirect("/AZShop/admin/style/stylevalue/edit?id=" + id + "&&message=Successfully");
+			} catch (Exception e) {
+				resp.sendRedirect("/AZShop/admin/style/stylevalue/edit?id=" + id + "&&message=Failed to add the user level");
+			}
+			
+		}else {
+			resp.sendRedirect("/AZShop/admin/style/stylevalue/edit?id=" + id + "&&message=You must fill out the form");
+		}
 	}
 
 	private void postAddStyleValue(HttpServletRequest req, HttpServletResponse resp) throws IOException {

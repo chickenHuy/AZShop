@@ -50,4 +50,6 @@ public interface IProductDAO {
 	List<ProductModel> getHotProduct(int storeId);
 
 	void updateRating(ProductModel product);
+
+	List<ProductModel> search(String key, int categoryId, int storeId, int styleValueId, int styleId);
 }

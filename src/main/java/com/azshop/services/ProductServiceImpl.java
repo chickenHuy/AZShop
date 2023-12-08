@@ -122,4 +122,9 @@ public class ProductServiceImpl implements IProductService{
 		return productDAO.GetTopSellerProduct(productList, k);
 	}
 
+	@Override
+	public List<ProductModel> search(String key, int categoryId, int storeId, int styleValueId, int styleId) {
+		return productDAO.search(key, categoryId, storeId, styleValueId, styleId);
+	}
+
 }
