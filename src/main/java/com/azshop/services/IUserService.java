@@ -27,10 +27,10 @@ public interface IUserService {
 	UserModel login(String email, String password);
 	
 	void updatePassword(UserModel user, String newPassword);
-<<<<<<< HEAD
+
 	
 	int countUser(Date datetime);
-=======
+
 	void updateVendor(UserModel userModel);
->>>>>>> branch 'master' of https://github.com/chickenHuy/AZShop
+
 }

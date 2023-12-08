@@ -294,7 +294,7 @@ public class UserDAOImpl implements IUserDAO {
 	}
 
 	@Override
-<<<<<<< HEAD
+
 	public int countUser(Date datetime) {
 		int count = 0;
 	    try {
@@ -314,7 +314,8 @@ public class UserDAOImpl implements IUserDAO {
 	        e.printStackTrace();
 	    }
 	    return count;
-=======
+	}
+
 	public void updateVendor(UserModel userModel) {
 		try {
 			String sql = "UPDATE [User] SET  role = 'vendor', phone = ?, address = ? ,updateAt = GetDate() WHERE id = ?";
@@ -333,7 +334,7 @@ public class UserDAOImpl implements IUserDAO {
 			e.printStackTrace();
 		}
 		
->>>>>>> branch 'master' of https://github.com/chickenHuy/AZShop
+
 	}
 
 }

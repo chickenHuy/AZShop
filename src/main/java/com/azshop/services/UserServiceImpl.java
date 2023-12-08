@@ -75,15 +75,15 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-<<<<<<< HEAD
+
 	public int countUser(Date datetime) {
 		
 		return userDAO.countUser(datetime);
-=======
+	}
 	public void updateVendor(UserModel userModel) {
 		userDAO.updateVendor(userModel);
 		
->>>>>>> branch 'master' of https://github.com/chickenHuy/AZShop
+
 	}
 	
 	
