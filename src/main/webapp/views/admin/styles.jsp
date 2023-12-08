@@ -28,7 +28,7 @@
 	<div
 		class="product-count d-flex align-items-center gap-3 gap-lg-4 mb-4 fw-bold flex-wrap font-text1">
 		<a href="javascript:;"><span class="me-1">All</span><span
-			class="text-secondary">( ${countAllStyle} )</span></a>
+			class="text-secondary">(${countAllStyle})</span></a>
 	</div>
 
 	<div class="row g-3">
@@ -54,6 +54,7 @@
 						</select> <input type="submit" value="ADD"
 							class="btn btn-primary px-4 ms-2">
 					</div>
+					<p>${message }</p>
 				</div>
 			</form>
 		</div>

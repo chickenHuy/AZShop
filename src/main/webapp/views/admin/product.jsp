@@ -28,12 +28,7 @@
 	<div
 		class="product-count d-flex align-items-center gap-3 gap-lg-4 mb-4 fw-bold flex-wrap font-text1">
 		<a href="javascript:;"><span class="me-1">All</span><span
-			class="text-secondary">( ${countAllProduct} )</span></a> <a
-			href="javascript:;"><span class="me-1">Published</span><span
-			class="text-secondary">(56242)</span></a> <a href="javascript:;"><span
-			class="me-1">Drafts</span><span class="text-secondary">(17)</span></a> <a
-			href="javascript:;"><span class="me-1">On Discount</span><span
-			class="text-secondary">(88754)</span></a>
+			class="text-secondary">(${countAllProduct})</span></a> 
 	</div>
 
 	<div class="row g-3">

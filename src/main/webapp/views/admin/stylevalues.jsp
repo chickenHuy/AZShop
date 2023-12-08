@@ -14,8 +14,7 @@
 		<div class="ps-3">
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb mb-0 p-0">
-					<li class="breadcrumb-item"><a href="javascript:;"><i
-							class="bx bx-home-alt"></i></a></li>
+					<li class="breadcrumb-item"><a href="/AZShop/admin/styles">Style</a></li>
 					<li class="breadcrumb-item active" aria-current="page">Style
 						Value</li>
 				</ol>
@@ -29,7 +28,7 @@
 	<div
 		class="product-count d-flex align-items-center gap-3 gap-lg-4 mb-4 fw-bold flex-wrap font-text1">
 		<a href="javascript:;"><span class="me-1">All</span><span
-			class="text-secondary">( ${countAllStyleValue} )</span></a>
+			class="text-secondary">(${countAllStyleValue})</span></a>
 	</div>
 
 	<div class="row g-3">
@@ -49,12 +48,18 @@
 						<input type="submit" value="ADD"
 							class="btn btn-primary px-4 ms-2">
 					</div>
+					<p>${message }</p>
 				</div>
 
 			</form>
 		</div>
 	</div>
 	<!--end row-->
+	
+	<div>
+			<a href="/AZShop/admin/styles"><span class="material-symbols-outlined"
+				style="font-size: 24px;"> arrow_back </span></a>
+		</div>
 
 	<div class="card mt-4">
 		<div class="card-body">

@@ -178,7 +178,8 @@ public class AdminController extends HttpServlet {
 		if (orderId != null) {
 			List<OrderItemModel> listOrderItem = orderItemService.getByOrderId(Integer.parseInt(orderId));
 			req.setAttribute("listOrderItem", listOrderItem);
-
+			int countProduct = listOrderItem.size();
+			req.setAttribute("countProduct", countProduct);
 			BigDecimal totalOrder = BigDecimal.ZERO;
 
 			for (OrderItemModel orderItem : listOrderItem) {
@@ -278,13 +279,7 @@ public class AdminController extends HttpServlet {
 				styleValueService.delete(Integer.parseInt(id));
 			}
 		}
-		String referer = req.getHeader("Referer");
-
-		// Kiểm tra xem có địa chỉ URL trước đó không và không phải là địa chỉ gốc
-		if (referer != null && !referer.isEmpty() && !referer.equals(req.getRequestURL().toString())) {
-			// Chuyển hướng về trang trước đó
-			resp.sendRedirect(referer);
-		}
+		resp.sendRedirect("stylevalues?styleid=" + id);
 	}
 
 	private void getAllStyleValueByStyle(HttpServletRequest req, HttpServletResponse resp)
@@ -300,6 +295,8 @@ public class AdminController extends HttpServlet {
 
 			int countAllStyleValue = listStyleValue.size();
 			req.setAttribute("countAllStyleValue", countAllStyleValue);
+			String message = req.getParameter("message");
+			req.setAttribute("message", message);
 
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/stylevalues.jsp");
 			rDispatcher.forward(req, resp);
@@ -332,6 +329,8 @@ public class AdminController extends HttpServlet {
 		req.setAttribute("countAllStyle", countAllStyle);
 		List<CategoryModel> listCategory = categoryService.getAllAdmin();
 		req.setAttribute("listCategory", listCategory);
+		String message = req.getParameter("message");
+		req.setAttribute("message", message);
 
 		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/styles.jsp");
 		rDispatcher.forward(req, resp);
@@ -739,17 +738,19 @@ public class AdminController extends HttpServlet {
 		String styleId = req.getParameter("styleId");
 
 		StyleValueModel styleValue = new StyleValueModel();
-		styleValue.setName(name);
-		styleValue.setStyleId(Integer.parseInt(styleId));
+		
+		if (name != "" && styleId != null) {
+			try {
+				styleValue.setName(name);
+				styleValue.setStyleId(Integer.parseInt(styleId));
 
-		styleValueService.insert(styleValue);
-
-		String referer = req.getHeader("Referer");
-
-		// Kiểm tra xem có địa chỉ URL trước đó không và không phải là địa chỉ gốc
-		if (referer != null && !referer.isEmpty() && !referer.equals(req.getRequestURL().toString())) {
-			// Chuyển hướng về trang trước đó
-			resp.sendRedirect(referer);
+				styleValueService.insert(styleValue);
+				resp.sendRedirect("stylevalues?styleid=" + styleId + "&&message=Sucessfully");
+			} catch (Exception e) {
+				resp.sendRedirect("stylevalues?styleid=" + styleId + "&&message=Failed to add the style");
+			}
+		} else {
+			resp.sendRedirect("stylevalues?styleid=" + styleId + "&&message=You must fill out the form");
 		}
 	}
 
@@ -774,13 +775,21 @@ public class AdminController extends HttpServlet {
 
 		String name = req.getParameter("styleName");
 		String categoryId = req.getParameter("categoryId");
-
 		StyleModel style = new StyleModel();
-		style.setName(name);
-		style.setCategoryId(Integer.parseInt(categoryId));
-		styleService.insert(style);
-
-		resp.sendRedirect("styles");
+		
+		
+		if (name != "" && categoryId != null) {
+				try {
+					style.setName(name);
+					style.setCategoryId(Integer.parseInt(categoryId));
+					styleService.insert(style);
+					resp.sendRedirect("styles?message=Successfully");
+				} catch (Exception e) {
+					resp.sendRedirect("styles?message=Failed to add the style");
+				}
+		} else {
+			resp.sendRedirect("styles?message=You must fill out the form");
+		}
 	}
 
 	private void postEditUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {

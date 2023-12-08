@@ -28,7 +28,7 @@
 	<div
 		class="product-count d-flex align-items-center gap-3 gap-lg-4 mb-4 fw-bold flex-wrap font-text1">
 		<a href="javascript:;"><span class="me-1">All</span><span
-			class="text-secondary">( ${countAllOrderAdmin} )</span></a>
+			class="text-secondary">(${countAllOrderAdmin})</span></a>
 	</div>
 
 
@@ -53,7 +53,7 @@
 						<tbody>
 							<c:forEach var="order" items="${listOrder}">
 								<tr>
-									<td>${order.id}</td>
+									<td>#${order.id}</td>
 									<td>${order.price}</td>
 									<c:forEach var="user" items="${listUser}">
 										<c:if test="${user.id eq order.userId}">
@@ -73,15 +73,15 @@
 									<a class="dropdown-item"
 													href='<c:url value="/admin/order-detail?orderId=${order.id}"/>'>Detail</a>
 									<c:choose>
-											<c:when test="${order.status == 'pending Pickup'}">
+											<c:when test="${order.status == 'Pending Pickup'}">
 												<a class="dropdown-item"
 													href='<c:url value="/admin/order-edit-status?orderId=${order.id}"/>'>Shipping</a>
 											</c:when>
-											<c:when test="${order.status == 'shipping'}">
+											<c:when test="${order.status == 'Shipping'}">
 												<a class="dropdown-item"
 													href='<c:url value="/admin/order-edit-status?orderId=${order.id}"/>'>Delivered</a>
 											</c:when>
-											<c:when test="${order.status == 'delivered'}">
+											<c:when test="${order.status == 'Delivered'}">
 												<a class="dropdown-item"
 													href='<c:url value="/admin/order-edit-status?orderId=${order.id}"/>'>Completed</a>
 											</c:when>
