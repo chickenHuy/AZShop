@@ -484,5 +484,90 @@ public class ProductDAOImpl implements IProductDAO {
 	    return listProduct;
 	}
 
+	@Override
+	public List<ProductModel> getProductbyQuantity(List<ProductModel> productList, int quantity) {
+		List<ProductModel> result = new ArrayList<ProductModel>();
+        for (int i = 0; i < quantity && i < productList.size(); i++) {
+            result.add(productList.get(i));
+        }
+        return result;
+	}
+
+	@Override
+	public List<ProductModel> SortingProductbyPriceAscending(List<ProductModel> productList) {
+		List<ProductModel> listProduct = new ArrayList<ProductModel>();
+        try {
+            String sql = "SELECT * FROM Product ORDER BY price ASC";
+            conn = new DBConnection().getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ProductModel product = new ProductModel();
+
+                product.setId(rs.getInt("id"));
+                product.setName(rs.getString("name"));
+                product.setSlug(rs.getString("slug"));
+                product.setDescription(rs.getString("description"));
+                product.setPrice(rs.getBigDecimal("price"));
+                product.setQuantity(rs.getInt("quantiny"));
+                product.setSold(rs.getInt("sold"));
+                product.setActive(rs.getBoolean("isActive"));
+                product.setVideo(rs.getString("video"));
+                product.setCategoryId(rs.getInt("categoryId"));
+                product.setStyleValueId(rs.getInt("styleValueId"));
+                product.setStoreId(rs.getInt("storeId"));
+                product.setRating(rs.getBigDecimal("rating"));
+                product.setCreateAt(rs.getDate("createAt"));
+                product.setUpdateAt(rs.getDate("updateAt"));
+
+                listProduct.add(product);
+            }
+
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listProduct;
+	}
+
+	@Override
+	public List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList) {
+		List<ProductModel> listProduct = new ArrayList<ProductModel>();
+        try {
+            String sql = "SELECT * FROM Product ORDER BY price DE500000SC";
+            conn = new DBConnection().getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ProductModel product = new ProductModel();
+
+                product.setId(rs.getInt("id"));
+                product.setName(rs.getString("name"));
+                product.setSlug(rs.getString("slug"));
+                product.setDescription(rs.getString("description"));
+                product.setPrice(rs.getBigDecimal("price"));
+                product.setQuantity(rs.getInt("quantiny"));
+                product.setSold(rs.getInt("sold"));
+                product.setActive(rs.getBoolean("isActive"));
+                product.setVideo(rs.getString("video"));
+                product.setCategoryId(rs.getInt("categoryId"));
+                product.setStyleValueId(rs.getInt("styleValueId"));
+                product.setStoreId(rs.getInt("storeId"));
+                product.setRating(rs.getBigDecimal("rating"));
+                product.setCreateAt(rs.getDate("createAt"));
+                product.setUpdateAt(rs.getDate("updateAt"));
+
+                listProduct.add(product);
+            }
+
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listProduct;
+	}
+
 
 }
