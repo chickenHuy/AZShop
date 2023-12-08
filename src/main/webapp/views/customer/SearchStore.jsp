@@ -16,7 +16,7 @@
 			<div class="row">
 				<c:forEach var="store" items="${storeList}">
 					<!-- shop -->
-					<a href='<c:url value="/customer/store/${store.slug}/${category.slug}"/>'>
+					<a href='<c:url value="/customer/store/${store.slug}?cate=${category.slug}&sortBy=${0}"/>'>
 						<div class="col-md-4 col-xs-6">
 							<div class="shop">
 								<div class="shop-img">
