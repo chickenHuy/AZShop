@@ -29,11 +29,10 @@ import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadUtils;
 import com.google.gson.Gson;
 
-
-
 import com.azshop.models.CategoryModel;
 import com.azshop.models.OrderModel;
 import com.azshop.models.ProductModel;
+import com.azshop.models.StoreLevelModel;
 import com.azshop.services.*;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
@@ -43,7 +42,9 @@ import com.azshop.services.*;
 		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit",
 		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory",
 		"/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel",
-		"/admin/category/delete/*", "/admin/category/restore/*" })
+		"/admin/deleteuserlevel", "/admin/restoreuserlevel", "/admin/storelevel", "/admin/addstorelevel",
+		"/admin/editstorelevel", "/admin/deletestorelevel", "/admin/restorestorelevel", "/admin/category/delete/*",
+		"/admin/category/restore/*" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -53,7 +54,7 @@ public class AdminController extends HttpServlet {
 	IProductService productService = new ProductServiceImpl();
 	ICategoryService categoryService = new CategoryServiceImpl();
 	IStyleValueService styleValueService = new StyleValueImpl();
-
+	IStoreLevelService storeLevelService = new StoreLevelServiceImpl();
 	IUserLevelService userLevelService = new UserLevelServiceImpl();
 	IOrderService orderService = new OrderServiceImpl();
 
@@ -95,12 +96,33 @@ public class AdminController extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		} else if (url.contains("/admin/storelevel")) {
+			getAllStoreLevel(req, resp);
+			getAllStoreLevelDeleted(req, resp);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/storelevel.jsp");
+			rDispatcher.forward(req, resp);
+		} else if (url.contains("/admin/addstorelevel")) {
+			String message = req.getParameter("message");
+			req.setAttribute("message", message);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/addstorelevel.jsp");
+			rDispatcher.forward(req, resp);
+		} else if (url.contains("/admin/editstorelevel")) {
+			String id = req.getParameter("id");
+			String message = req.getParameter("message");
+			req.setAttribute("message", message);
+			if (id != null) {
+				StoreLevelModel storeLevel = storeLevelService.getById(Integer.parseInt(id));
+				req.setAttribute("storelevel", storeLevel);
+			}
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editstorelevel.jsp");
+			rDispatcher.forward(req, resp);
 		} else if (url.contains("/admin/store")) {
 			getAllStore(req, resp);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/store.jsp");
 			rDispatcher.forward(req, resp);
 		} else if (url.contains("/admin/userlevel")) {
 			getAllUserLevel(req, resp);
+			getAllUserLevelDeleted(req, resp);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/userlevel.jsp");
 			rDispatcher.forward(req, resp);
 		} else if (url.contains("/admin/adduserlevel")) {
@@ -122,23 +144,40 @@ public class AdminController extends HttpServlet {
 			}
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/edituserlevel.jsp");
 			rDispatcher.forward(req, resp);
-		}
+		} else if (url.contains("/admin/restorestorelevel")) {
+            restoreStoreLevel(req, resp);
+        } else if (url.contains("/admin/restoreuserlevel")) {
+            restoreUserLevel(req, resp);
+        }
 	}
-	
-	private void getInUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+	private void getAllStoreLevelDeleted(HttpServletRequest req, HttpServletResponse resp) {
+		List<StoreLevelModel> list = storeLevelService.getAllDeleted();
+		req.setAttribute("listdeleted", list);
+	}
+
+	private void getAllUserLevelDeleted(HttpServletRequest req, HttpServletResponse resp) {
+		List<UserLevelModel> list = userLevelService.getAllDeleted();
+		req.setAttribute("listdeleted", list);
+	}
+
+	private void getAllStoreLevel(HttpServletRequest req, HttpServletResponse resp) {
+		List<StoreLevelModel> list = storeLevelService.getAll();
+		req.setAttribute("liststorelevel", list);
+	}
+	private void getInUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Date currentDate = new Date();
 
-	    
-
-	    // Count users based on the formatted date and time
-	    int count = userService.countUser(currentDate);
+		// Count users based on the formatted date and time
+		int count = userService.countUser(currentDate);
 		// day du lieu ra view
 		req.setAttribute("count", count);
 		// view nhan du lieu
 		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
 		rd.forward(req, resp);
 	}
-	private void getRestoreCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+	private void getRestoreCategory(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		String url = req.getRequestURL().toString();
 		URI uri;
 		try {
@@ -394,10 +433,132 @@ public class AdminController extends HttpServlet {
 			postAddUserLevel(req, resp);
 		} else if (url.contains("/admin/edituserlevel")) {
 			postEditUserLevel(req, resp);
-		}
+		} else if (url.contains("/admin/deleteuserlevel")) {
+            postDeleteUserLevel(req, resp);
+        } else if (url.contains("/admin/addstorelevel")) {
+			postAddStoreLevel(req, resp);
+		} else if (url.contains("/admin/editstorelevel")) {
+			postEditStoreLevel(req, resp);
+		} else if (url.contains("/admin/deletestorelevel")) {
+            postDeleteStoreLevel(req, resp);
+        }
 
 	}
+	private void restoreUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
 
+        String id = req.getParameter("id");
+        UserLevelModel userLevel = userLevelService.getById(Integer.parseInt(id));
+        try {
+            userLevel.setDeleted(false);
+            userLevelService.update(userLevel);
+            resp.sendRedirect("userlevel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+	}
+
+	private void restoreStoreLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+
+        String id = req.getParameter("id");
+        StoreLevelModel storeLevel = storeLevelService.getById(Integer.parseInt(id));
+        try {
+            storeLevel.setDeleted(false);
+            storeLevelService.update(storeLevel);
+            resp.sendRedirect("storelevel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+	}
+
+	private void postDeleteStoreLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+
+        String id = req.getParameter("id");
+        StoreLevelModel storeLevel = storeLevelService.getById(Integer.parseInt(id));
+        try {
+            storeLevel.setDeleted(true);
+            storeLevelService.update(storeLevel);
+            resp.sendRedirect("editstorelevel?message=Sucessfully");
+        } catch (Exception e) {
+            resp.sendRedirect("editstorelevel?message=Failed to delete the store level");
+        }
+	}
+
+	private void postEditStoreLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		String id = req.getParameter("id");
+		StoreLevelModel storeLevel = storeLevelService.getById(Integer.parseInt(id));
+
+		String name = req.getParameter("storelevelname");
+		String minPoint = req.getParameter("minpoint");
+		String discount = req.getParameter("discount");
+
+		if (name != null && minPoint != null && discount != null) {
+			try {
+				storeLevel.setName(name);
+				storeLevel.setMinPoint(Integer.parseInt(minPoint));
+				storeLevel.setDiscount(Integer.parseInt(discount));
+
+				storeLevelService.update(storeLevel);
+				resp.sendRedirect("?message=Successfully");
+			} catch (Exception e) {
+				resp.sendRedirect("?message=Failed to edit the store level");
+			}
+		} else {
+			resp.sendRedirect("?message=You must fill out the form");
+		}
+	}
+
+	private void postAddStoreLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		StoreLevelModel storeLevel = new StoreLevelModel();
+
+		String name = req.getParameter("storelevelname");
+		String minPoint = req.getParameter("minpoint");
+		String discount = req.getParameter("discount");
+		if (name != null && minPoint != null && discount != null) {
+
+			if (!storeLevelService.checkName(name)) {
+				try {
+					storeLevel.setName(name);
+					storeLevel.setMinPoint(Integer.parseInt(minPoint));
+					storeLevel.setDiscount(Integer.parseInt(discount));
+
+					storeLevelService.insert(storeLevel);
+					resp.sendRedirect("?message=Successfully");
+				} catch (Exception e) {
+					resp.sendRedirect("?message=Failed to add the user level");
+				}
+			} else {
+				resp.sendRedirect("?message=Name already exists");
+			}
+		} else {
+			resp.sendRedirect("?message=You must fill out the form");
+		}
+	}
+	private void postDeleteUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+
+        String id = req.getParameter("id");
+        UserLevelModel userLevel = userLevelService.getById(Integer.parseInt(id));
+        try {
+            userLevel.setDeleted(true);
+            userLevelService.update(userLevel);
+            resp.sendRedirect("edituserlevel?message=Sucessfully");
+        } catch (Exception e) {
+            resp.sendRedirect("edituserlevel?message=Failed to delete the user level");
+        }
+    }
 	private void postEditUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
@@ -410,15 +571,19 @@ public class AdminController extends HttpServlet {
 		String discount = req.getParameter("discount");
 
 		if (name != null && minPoint != null && discount != null) {
-			try {
-				userLevel.setName(name);
-				userLevel.setMinPoint(Integer.parseInt(minPoint));
-				userLevel.setDiscount(Integer.parseInt(discount));
+			if (!userLevelService.checkName(name)) {
+				try {
+					userLevel.setName(name);
+					userLevel.setMinPoint(Integer.parseInt(minPoint));
+					userLevel.setDiscount(Integer.parseInt(discount));
 
-				userLevelService.update(userLevel);
-				resp.sendRedirect("?message=Successfully");
-			} catch (Exception e) {
-				resp.sendRedirect("?message=Failed to edit the user level");
+					userLevelService.insert(userLevel);
+					resp.sendRedirect("?message=Successfully");
+				} catch (Exception e) {
+					resp.sendRedirect("?message=Failed to add the user level");
+				}
+			} else {
+				resp.sendRedirect("?message=Name already exists");
 			}
 		} else {
 			resp.sendRedirect("?message=You must fill out the form");
