@@ -532,19 +532,14 @@ public class CustomerController extends HttpServlet {
 	                	productList.addAll(productCategoryChilds);
 					}
 	                
-	                //Hiển thị tất cả thì sắp xếp theo mặc định
-	                List<ProductModel> productListSort = productService.SortingProductbyPriceAscending(productList);
-	                List<ProductModel> productListByQuantity = productService.getProductbyQuantity(productListSort, 3);
-	                
-//	                productList = productService.GetTopSellerProduct(productList, 3);
-	                int sortBy = 0; int showCount = 0;
+	                int sortBy = Integer.parseInt(req.getParameter("sortBy"));
+	                int showCount = Integer.parseInt(req.getParameter("showCount"));	                	                	                	                	                  
 	                
 	                //nếu không phải
 	                if (isCategoryOrigin == false) {
 	                	categoryChildList = categoryService.getChildCategory(category.getCategoryId());
 	                	categoryParent = categoryService.getById(category.getCategoryId());
 	                	productList = productService.getByCategoryId(category.getId());
-	                	productListSort = productService.SortingProductbyPriceAscending(productList);
 	                	
 	                	//Lấy danh sách style value từ category parent
 		                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
@@ -552,6 +547,28 @@ public class CustomerController extends HttpServlet {
 		                
 		                req.setAttribute("categoryStyle", category);
 	                }
+	                
+	                List<ProductModel> productListSort = new ArrayList<ProductModel>();
+	                List<ProductModel> productListByQuantity = new ArrayList<ProductModel>();
+	                //sắp xếp
+	                if (sortBy == 0 && showCount == 0) {
+		                productListSort = productService.SortingProductbyPriceAscending(productList);
+		                productListByQuantity = productService.getProductbyQuantity(productListSort, 10);
+	                }
+	                else if (sortBy == 1 && showCount == 0) {
+	                	productListSort = productService.SortingProductbyPriceDecending(productList);
+		                productListByQuantity = productService.getProductbyQuantity(productListSort, 10);
+	                }
+	                
+	                else if (sortBy == 0 && showCount == 1) {
+	                	productListSort = productService.SortingProductbyPriceAscending(productList);
+		                productListByQuantity = productService.getProductbyQuantity(productListSort, 20);
+	                }
+	                
+	                else {
+	                	productListSort = productService.SortingProductbyPriceDecending(productList);
+		                productListByQuantity = productService.getProductbyQuantity(productListSort, 20);
+					}
 	                
 	                //đếm số lượng product trong mỗi category
 	                for (CategoryModel categoryChild : categoryChildList) {
