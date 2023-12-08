@@ -26,35 +26,7 @@ s
 	<!--end breadcrumb-->
 
 
-	<div
-		class="product-count d-flex align-items-center gap-3 gap-lg-4 mb-4 fw-bold flex-wrap font-text1">
-		<a href="javascript:;"><span class="me-1">All</span><span
-			class="text-secondary">( ${countAllOrder} )</span></a>
-	</div>
-
-	<div class="row g-3">
-		<div class="col-auto">
-			<div class="position-relative">
-				<input class="form-control px-5" type="search"
-					placeholder="Search Products"> <span
-					class="material-symbols-outlined position-absolute ms-3 translate-middle-y start-0 top-50 fs-5">search</span>
-			</div>
-		</div>
-		<div class="col-auto flex-grow-1 overflow-auto">
-			<div class="btn-group position-static">
-				<div class="btn-group position-static">
-					<select class="form-select" id="Category" name="categoryId">
-						<c:forEach var="orders" items="${listOrder}">
-							<option value=${category.id}>${category.name}</option>
-						</c:forEach>
-					</select>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!--end row-->
-
-	<div class="card mt-4">
+	<	<div class="card mt-4">
 		<div class="card-body">
 			<div class="product-table">
 				<div class="table-responsive white-space-nowrap">

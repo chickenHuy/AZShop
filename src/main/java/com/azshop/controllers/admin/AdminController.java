@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -26,6 +28,8 @@ import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadUtils;
 import com.google.gson.Gson;
+
+
 import com.azshop.models.CategoryModel;
 import com.azshop.models.OrderModel;
 import com.azshop.models.ProductModel;
@@ -57,8 +61,7 @@ public class AdminController extends HttpServlet {
 
 		String url = req.getRequestURL().toString();
 		if (url.contains("/admin/dashboard")) {
-			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/dashboard.jsp");
-			rDispatcher.forward(req, resp);
+			getInUser(req, resp);
 		} else if (url.contains("/admin/product/edit-status")) {
 			try {
 				editProductStatus(req, resp);
@@ -120,7 +123,20 @@ public class AdminController extends HttpServlet {
 			rDispatcher.forward(req, resp);
 		}
 	}
+	
+	private void getInUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		Date currentDate = new Date();
 
+	    
+
+	    // Count users based on the formatted date and time
+	    int count = userService.countUser(currentDate);
+		// day du lieu ra view
+		req.setAttribute("count", count);
+		// view nhan du lieu
+		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
+		rd.forward(req, resp);
+	}
 	private void getRestoreCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURL().toString();
 		URI uri;

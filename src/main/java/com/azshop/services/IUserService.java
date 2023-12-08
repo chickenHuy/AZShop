@@ -1,5 +1,6 @@
 package com.azshop.services;
 
+import java.util.Date;
 import java.util.List;
 
 import com.azshop.models.UserModel;
@@ -26,4 +27,6 @@ public interface IUserService {
 	UserModel login(String email, String password);
 	
 	void updatePassword(UserModel user, String newPassword);
+	
+	int countUser(Date datetime);
 }

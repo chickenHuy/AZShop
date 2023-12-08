@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -306,6 +307,28 @@ public class UserDAOImpl implements IUserDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public int countUser(Date datetime) {
+		int count = 0;
+	    try {
+	        String sql = "SELECT COUNT(*) AS UserCount FROM [User] WHERE [createAt] >= ?";
+	        conn = new DBConnection().getConnection();
+
+	        ps = conn.prepareStatement(sql);
+	        ps.setDate(1, new java.sql.Date(datetime.getTime())); // Chuyển đổi từ Java Date sang SQL Date
+
+	        rs = ps.executeQuery();
+	        if (rs.next()) {
+	            count = rs.getInt("UserCount");
+	        }
+
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return count;
 	}
 
 }
