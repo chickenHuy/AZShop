@@ -7,7 +7,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-s
 <main class="page-content">
 	<!--breadcrumb-->
 	<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -26,7 +25,16 @@ s
 	<!--end breadcrumb-->
 
 
-	<	<div class="card mt-4">
+	<div
+		class="product-count d-flex align-items-center gap-3 gap-lg-4 mb-4 fw-bold flex-wrap font-text1">
+		<a href="javascript:;"><span class="me-1">All</span><span
+			class="text-secondary">( ${countAllOrderAdmin} )</span></a>
+	</div>
+
+
+	<!--end row-->
+
+	<div class="card mt-4">
 		<div class="card-body">
 			<div class="product-table">
 				<div class="table-responsive white-space-nowrap">

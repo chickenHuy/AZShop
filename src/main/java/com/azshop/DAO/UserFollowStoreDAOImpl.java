@@ -72,7 +72,7 @@ public class UserFollowStoreDAOImpl implements IUserFollowStoreDAO {
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
-			conn.close();
+		
 
 			while (rs.next()) {
 				UserFollowStoreModel userFollowStore = new UserFollowStoreModel();
@@ -84,6 +84,7 @@ public class UserFollowStoreDAOImpl implements IUserFollowStoreDAO {
 
 				listUserFollowStoreModels.add(userFollowStore);
 			}
+			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -99,7 +100,7 @@ public class UserFollowStoreDAOImpl implements IUserFollowStoreDAO {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, userId);
 			rs = ps.executeQuery();
-			conn.close();
+		
 
 			while (rs.next()) {
 				UserFollowStoreModel userFollowStore = new UserFollowStoreModel();
@@ -111,6 +112,7 @@ public class UserFollowStoreDAOImpl implements IUserFollowStoreDAO {
 
 				listUserFollowStoreModels.add(userFollowStore);
 			}
+			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -126,7 +128,7 @@ public class UserFollowStoreDAOImpl implements IUserFollowStoreDAO {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, storeId);
 			rs = ps.executeQuery();
-			conn.close();
+		
 
 			while (rs.next()) {
 				UserFollowStoreModel userFollowStore = new UserFollowStoreModel();
@@ -138,10 +140,31 @@ public class UserFollowStoreDAOImpl implements IUserFollowStoreDAO {
 
 				listUserFollowStoreModels.add(userFollowStore);
 			}
+			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return listUserFollowStoreModels;
+	}
+
+	@Override
+	public int countByStore(int storeId) {
+		int count = 0;
+		try {
+			String sql = "SELECT count(*) as cntByStore FROM dbo.UserFollowStore WHERE storeId = ?;";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				count = rs.getInt("cntByStore");
+				conn.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 
 }

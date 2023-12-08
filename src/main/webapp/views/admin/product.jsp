@@ -73,7 +73,6 @@
 								<th>Action</th>
 							</tr>
 						</thead>
-						<tbody>
 							<c:forEach var="product" items="${listProduct}">
 								<tr>
 									<td>${product.name}</td>

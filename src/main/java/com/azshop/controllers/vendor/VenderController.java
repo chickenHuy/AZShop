@@ -12,9 +12,11 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle.Control;
 
 import javax.mail.Message;
 import javax.mail.Session;
@@ -26,10 +28,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import javax.swing.tree.DefaultTreeCellEditor.EditorContainer;
 
 import com.azshop.DAO.IOrderDAO;
 import com.azshop.DAO.IReviewDAO;
+import com.azshop.DAO.IUserFollowStoreDAO;
 import com.azshop.DAO.UserDAOImpl;
 import com.azshop.models.CategoryModel;
 import com.azshop.models.DeliveryModel;
@@ -57,6 +61,7 @@ import com.azshop.services.IReviewService;
 import com.azshop.services.IStoreService;
 import com.azshop.services.IStyleService;
 import com.azshop.services.IStyleValueService;
+import com.azshop.services.IUserFollowStoreService;
 import com.azshop.services.IUserService;
 import com.azshop.services.ImageServiceImpl;
 import com.azshop.services.OrderItemServiceImpl;
@@ -66,6 +71,7 @@ import com.azshop.services.ReviewServiceImpl;
 import com.azshop.services.StoreServiceImpl;
 import com.azshop.services.StyleServiceImpl;
 import com.azshop.services.StyleValueImpl;
+import com.azshop.services.UserFollowStoreServiceImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.CheckValid;
 import com.azshop.utils.Constant;
@@ -74,6 +80,7 @@ import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadImage;
 import com.azshop.utils.UploadUtils;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
 		* 50)
@@ -82,7 +89,7 @@ import com.google.gson.Gson;
 		"/vendor/order/detail/*", "/vendor/order/cancelled", "/vendor/order/all", "/vendor/order/processed",
 		"/vendor/order/details", "/vendor/product/delete/*", "/vendor/logout", "/vendor/order/status",
 		"/vendor/pickup-address", "/vendor/review", "/vendor/product/error403", "/vendor/statistics-revenue",
-		"/vendor/statistics-product" })
+		"/vendor/statistics-product", "/vendor/review/detail" })
 public class VenderController extends HttpServlet {
 
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -96,6 +103,7 @@ public class VenderController extends HttpServlet {
 	IAddressShippingService addressShippingService = new AddressShippingServiceImpl();
 	IUserService userService = new UserServiceImpl();
 	IReviewService reviewService = new ReviewServiceImpl();
+	IUserFollowStoreService userFollowStoreService = new UserFollowStoreServiceImpl();
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -117,11 +125,22 @@ public class VenderController extends HttpServlet {
 			return;
 		}
 		if (url.contains("/vendor/dashboard")) {
-			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/dashboard.jsp");
-			rDispatcher.forward(req, resp);
+			GetDashBoard(req, resp, storeModel);
 			return;
 		}
 		if (url.contains("/vendor/view-shop-info")) {
+			req.setAttribute("storeAvatar", "");
+			req.setAttribute("storeCover", "");
+			req.setAttribute("storeFeatured", "");
+			if (storeModel.getAvatar() != null && !storeModel.getAvatar().trim().equals("")) {
+				req.setAttribute("storeAvatar", "/AZShop/image?fname=" + storeModel.getAvatar());
+			}
+			if (storeModel.getCover() != null && !storeModel.getCover().trim().equals("")) {
+				req.setAttribute("storeCover", "/AZShop/image?fname=" + storeModel.getCover());
+			}
+			if (storeModel.getFeaturedImage() != null && !storeModel.getFeaturedImage().trim().equals("")) {
+				req.setAttribute("storeFeatured", "/AZShop/image?fname=" + storeModel.getFeaturedImage());
+			}
 			req.setAttribute("storeInfo", storeModel);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/shopInfo.jsp");
 			req.setAttribute("isView", true);
@@ -129,6 +148,18 @@ public class VenderController extends HttpServlet {
 			return;
 		}
 		if (url.contains("/vendor/update-shop-info")) {
+			req.setAttribute("storeAvatar", "");
+			req.setAttribute("storeCover", "");
+			req.setAttribute("storeFeatured", "");
+			if (storeModel.getAvatar() != null && !storeModel.getAvatar().trim().equals("")) {
+				req.setAttribute("storeAvatar", "/AZShop/image?fname=" + storeModel.getAvatar());
+			}
+			if (storeModel.getCover() != null && !storeModel.getCover().trim().equals("")) {
+				req.setAttribute("storeCover", "/AZShop/image?fname=" + storeModel.getCover());
+			}
+			if (storeModel.getFeaturedImage() != null && !storeModel.getFeaturedImage().trim().equals("")) {
+				req.setAttribute("storeFeatured", "/AZShop/image?fname=" + storeModel.getFeaturedImage());
+			}
 			req.setAttribute("storeInfo", storeModel);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/shopInfo.jsp");
 			req.setAttribute("isView", false);
@@ -174,13 +205,81 @@ public class VenderController extends HttpServlet {
 			ChangeStatusOrder(req, resp);
 		} else if (url.contains("vendor/pickup-address")) {
 			GetPickupAddress(req, resp, userModel, storeModel);
-		} else if (url.contains("/vendor/review")) {
+		}
+		else if (url.contains("/vendor/review/detail")) {
+			GetDetailReview(req, resp, storeModel);
+		}
+		else if (url.contains("/vendor/review")) {
 			GetReview(req, resp, storeModel);
 		} else if (url.contains("vendor/statistics-revenue")) {
 			GetRevenue(req, resp, storeModel);
 		} else if (url.contains("vendor/statistics-product")) {
 			GetStatisticsProduct(req, resp, storeModel);
 		}
+	}
+
+
+
+	private void GetDetailReview(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel) throws ServletException, IOException {
+		try {
+			String slug = req.getParameter("slug");
+			String idReview = req.getParameter("id");
+			ProductModel productModel = productService.getBySlug(slug);
+			if (productModel == null) {
+				resp.sendRedirect("/views/vendor/404.jsp");
+				return;
+			}
+			List<ReviewModel> reviewModels = reviewService.getByProductId(productModel.getId());
+			req.setAttribute("name", productModel.getName());
+			req.setAttribute("reviews", reviewModels);
+			req.setAttribute("id", idReview);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/detailReview.jsp");
+			rDispatcher.forward(req, resp);
+			
+		}
+		catch (Exception e) {
+			resp.sendRedirect("/views/vendor/404.jsp");
+		}
+		return;
+		
+	}
+
+
+
+	private void GetDashBoard(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel) throws ServletException, IOException {
+		req.setAttribute("store", storeModel); //eWallet, rating, name
+		List<ProductModel> productModels = productService.getByStoreId(storeModel.getId()); //totalProducts
+		if (productModels != null)
+			req.setAttribute("totalProducts", productModels.size());
+		
+		BigDecimal totalRevenue = orderService.getSumRevenueByStore(storeModel.getId()); // totalRevenue
+		req.setAttribute("totalRevenue", totalRevenue);
+		
+		int soldInDay = productService.countInDayByStore(storeModel.getId());
+		req.setAttribute("totalSoldInDay", soldInDay);
+		
+		BigDecimal yesterdayRevenue = orderService.GetRevenueLastNDays(1, storeModel.getId()).get(0);
+		req.setAttribute("revenueYday", yesterdayRevenue);
+		
+		
+		int totalReviews = reviewService.countByStore(storeModel.getId());
+		req.setAttribute("totalReview", totalReviews);
+		
+		int totalCompleted = orderService.countCompletedByStore(storeModel.getId());
+		req.setAttribute("totalCompleted", totalCompleted);
+
+		
+		int totalFollows = userFollowStoreService.countByStore(storeModel.getId());
+		req.setAttribute("totalFollows", totalFollows);
+		
+		int totalOrders = orderService.countOrderByStore(storeModel.getId());
+		req.setAttribute("totalOrders", totalOrders);
+		
+		int newReviews = reviewService.countNewByStore(storeModel.getId());
+		req.setAttribute("newReviews", newReviews);
+		
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/dashboard.jsp");
+		rDispatcher.forward(req, resp);
 	}
 
 	private void GetStatisticsProduct(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel)
@@ -287,6 +386,7 @@ public class VenderController extends HttpServlet {
 			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 			e.printStackTrace();
 		}
+		System.out.println("aa check commit");
 
 	}
 
@@ -538,7 +638,6 @@ public class VenderController extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 			resp.sendRedirect(req.getContextPath() + "/vendor/order/all?error=The update has failed.");
-
 		}
 
 	}
@@ -624,24 +723,54 @@ public class VenderController extends HttpServlet {
 	}
 
 	private void UpdateShopInfo(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+		resp.setContentType("application/json");
+
 		String shopName = req.getParameter("shopName").toString();
 		String shopBio = req.getParameter("shopBio").toString();
-		String storageLocation = "D:\\uploads";
+		String storageLocation = Constant.DIR;
 		String coverImage = UploadImage.UploadImageToLocal("coverImage", req, storageLocation);
 		String avatarImage = UploadImage.UploadImageToLocal("avatarImage", req, storageLocation);
 		String featuredImage = UploadImage.UploadImageToLocal("featuredImage", req, storageLocation);
 
-//		JsonObject responseStatus = new JsonObject();
-//		responseStatus.addProperty("status", "success");
-//		responseStatus.addProperty("message", "Dữ liệu đã được xử lý thành công");
+		HttpSession session = req.getSession();
+		StoreModel storeModel = (StoreModel) session.getAttribute(Constant.storeSession);
 
-		resp.setContentType("application/json");
-		resp.setCharacterEncoding("UTF-8");
-		resp.getWriter().println("1: " + shopName);
-		resp.getWriter().println("2: " + shopBio);
-		resp.getWriter().println("3: " + coverImage);
-		resp.getWriter().println("4: " + avatarImage);
-		resp.getWriter().println("5: " + featuredImage);
+		if (!shopName.trim().equals("")) {
+			storeModel.setName(shopName);
+		}
+		if (!shopBio.trim().equals("")) {
+			storeModel.setBio(shopBio);
+		}
+		if (!coverImage.trim().equals("")) {
+			storeModel.setCover(coverImage);
+		} 
+		if (!avatarImage.trim().equals("")) {
+			storeModel.setAvatar(avatarImage);
+		}
+		if (!featuredImage.trim().equals("")) {
+			storeModel.setFeaturedImage(featuredImage);
+		}
+
+		String message = "";
+		IStoreService storeService = new StoreServiceImpl();
+		JsonObject responseStatus = new JsonObject();
+		try {
+			storeService.update(storeModel);
+			message = "Change success!!!";
+			System.out.println(message);
+			responseStatus.addProperty("status", "Success");
+			responseStatus.addProperty("message", message);
+			session.setAttribute(Constant.storeSession, storeModel);
+		} catch (Exception e) {
+			e.printStackTrace();
+			message = "Change failse!!!";
+			responseStatus.addProperty("status", "Failse");
+			responseStatus.addProperty("message", message);
+		}
+		String jsonResponse = new Gson().toJson(responseStatus);
+		resp.getWriter().write(jsonResponse);
 	}
 
 	private void RegisterShop(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

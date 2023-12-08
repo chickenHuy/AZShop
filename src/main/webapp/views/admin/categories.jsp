@@ -67,8 +67,10 @@
 									</a></td>
 									<td>${category.slug}</td>
 									<td>${category.updateAt != null ? category.updateAt : category.createAt}</td>
-									<td><a class="dropdown-item"
-										href='<c:url value="/admin/category/edit?slug=${category.slug}"/>'>Edit</a>
+									<td>
+									<c:if test="${category.isDeleted() == false}">
+									<a class="dropdown-item"
+										href='<c:url value="/admin/category/edit?slug=${category.slug}"/>'>Edit</a></c:if> 
 										<c:if test="${category.isDeleted() == true}">
 											<!-- Nếu isDeleted là true, hiển thị nút Restore -->
 											<a class="dropdown-item"

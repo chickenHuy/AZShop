@@ -35,6 +35,11 @@ public class OrderServiceImpl implements IOrderService {
 	public List<OrderModel> getAll() {
 		return orderDAO.getAll();
 	}
+	
+	@Override
+	public List<OrderModel> getAllAdmin() {
+		return orderDAO.getAllAdmin();
+	}
 
 	@Override
 	public List<OrderModel> getByUserId(int userId) {
@@ -130,5 +135,15 @@ public class OrderServiceImpl implements IOrderService {
 	@Override
 	public List<OrderModel> getByUserIdAndStoreId(int userId, int storeId) {
 		return orderDAO.getByUserIdAndStoreId(userId, storeId);
+	}
+
+	@Override
+	public int countCompletedByStore(int storeId) {
+		return orderDAO.countCompletedByStore(storeId);
+	}
+
+	@Override
+	public int countOrderByStore(int storeId) {
+		return orderDAO.countOrderByStore(storeId);
 	}
 }

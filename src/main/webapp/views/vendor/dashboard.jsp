@@ -189,7 +189,7 @@
 				<div class="card-body">
 				  <div class="d-flex align-items-center justify-content-between">
 					<div class="">
-					  <h4 class="mb-0 text-white">${store.rating != null ? store.rating : '0'}</h4>
+					  <h4 class="mb-0 text-white">${store.rating != null ? store.rating : 'No ratings'}</h4>
 					  <p class="mb-0 text-white">Rating</p>
 					</div>
 					<div class="fs-2 text-white">
@@ -251,7 +251,7 @@
 					<a href="/AZShop/vendor/product/new" style="color: white;">
 				  <div class="d-flex align-items-center justify-content-between">
 					<div class="">
-					  <h4 class="mb-0">${countProduct  != null ? countProduct  : '0'}</h4>
+					  <h4 class="mb-0">${totalProducts  != null ? totalProducts  : '0'} +</h4>
 					  <p class="mb-0">Add New Product</p>
 					</div>
 					<div class="fs-2">

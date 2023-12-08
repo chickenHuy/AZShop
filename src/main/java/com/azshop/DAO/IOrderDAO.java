@@ -19,4 +19,7 @@ public interface IOrderDAO {
     List<BigDecimal> GetRevenueLastNDays(int nDay,int storeId);
     BigDecimal getSumRevenueByStore( int storeId);
     List<OrderModel> getByUserIdAndStoreId(int userId, int storeId);
+    int countCompletedByStore(int storeId);
+    int countOrderByStore(int storeId);
+    List<OrderModel> getAllAdmin();
 }
