@@ -40,7 +40,7 @@
 
 				<div class="col-md-6">
 					<div class="header-search">
-						<form action='<c:url value="/guest/search"/>' method="POST"  accept-charset="UTF-8">
+						<form action='<c:url value="/guest/search"/>' method="GET"  accept-charset="UTF-8">
 							<select class="input-select" name = "categoryId">
 							<c:if test="${categoryId != null}">  
 								<option value="-1" >All Categories </option>

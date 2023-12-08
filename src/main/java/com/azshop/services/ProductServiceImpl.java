@@ -123,8 +123,8 @@ public class ProductServiceImpl implements IProductService{
 	}
 
 	@Override
-	public List<ProductModel> search(String key, int categoryId, int storeId, int styleValueId, int styleId) {
-		return productDAO.search(key, categoryId, storeId, styleValueId, styleId);
+	public List<ProductModel> search(String key, int categoryId, int storeId, int styleValueId, int styleId, int page, int pageSize) {
+		return productDAO.search(key, categoryId, storeId, styleValueId, styleId, page, pageSize);
 	}
 
 }

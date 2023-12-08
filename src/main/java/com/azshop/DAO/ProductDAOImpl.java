@@ -726,94 +726,104 @@ public class ProductDAOImpl implements IProductDAO {
 	}
 
 	@Override
-	public List<ProductModel> search(String key, int categoryId, int storeId, int styleValueId, int styleId) {
-		List<ProductModel> listProduct = new ArrayList<ProductModel>();
-		try {
-			String sql = "\r\n"
-					+ "SELECT \r\n"
-					+ "    Product.*\r\n"
-					+ "FROM Product\r\n"
-					+ "INNER JOIN Category ON Product.categoryId = Category.id\r\n"
-					+ "INNER JOIN StyleValue ON Product.styleValueId = StyleValue.id\r\n"
-					+ "INNER JOIN Style ON StyleValue.styleId = Style.id\r\n"
-					+ "WHERE \r\n"
-					+ "    (LOWER(Product.name) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' \r\n"
-					+ "    OR LOWER(Product.description) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' \r\n"
-					+ "    OR LOWER(Product.slug) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%'\r\n"
-					+ "    OR LOWER(Category.name) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' \r\n"
-					+ "    OR LOWER(Style.name) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' \r\n"
-					+ "    OR LOWER(StyleValue.name) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%')\r\n"
-					+ "  AND Product.isActive = 1\r\n"
-					+ "  AND Product.isDeleted = 0 ";
-			String category = "  AND Product.categoryId = ?";
-			String store = "  AND Product.storeId = ? ";
-			String styleValue = "  And Product.styleValueId = ? ";
-			String style = "  And Style.id = ?";
-			
-			
-			if (categoryId != -1)
-			{
-				sql += category;
-			}
-			if (storeId != -1) {
-				sql += store;
-			}
-			if (styleValueId != -1) {
-				sql += styleValue;
-			}
-			if (styleId != -1) {
-				sql += style;
-			}
-			int index = 1;
-			conn = new DBConnection().getConnection();
-			ps = conn.prepareStatement(sql);
-			ps.setString(index++, key);
-			ps.setString(index++, key);
-			ps.setString(index++, key);
-			ps.setString(index++, key);
-			ps.setString(index++, key);
-			ps.setString(index++, key);
-			if (categoryId != -1)
-			{
-				ps.setInt(index++, categoryId);
-			}
-			if (storeId != -1) {
-				ps.setInt(index++, storeId);
-			}
-			if (styleValueId != -1) {
-				ps.setInt(index++, styleValueId);
-			}
-			if (styleId != -1) {
-				ps.setInt(index++, styleId);
-			}
-			rs = ps.executeQuery();
+	public List<ProductModel> search(String key, int categoryId, int storeId, int styleValueId, int styleId, int page, int pageSize) {
+	    List<ProductModel> listProduct = new ArrayList<ProductModel>();
+	    try {
+	        String sql = "SELECT Product.*, " +
+	                     "Category.name AS categoryName, " +
+	                     "Style.name AS styleName, " +
+	                     "StyleValue.name AS styleValueName " +
+	                     "FROM Product " +
+	                     "INNER JOIN Category ON Product.categoryId = Category.id " +
+	                     "INNER JOIN StyleValue ON Product.styleValueId = StyleValue.id " +
+	                     "INNER JOIN Style ON StyleValue.styleId = Style.id " +
+	                     "WHERE " +
+	                     "(LOWER(Product.name) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' " +
+	                     "OR LOWER(Product.description) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' " +
+	                     "OR LOWER(Product.slug) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' " +
+	                     "OR LOWER(Category.name) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' " +
+	                     "OR LOWER(Style.name) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%' " +
+	                     "OR LOWER(StyleValue.name) COLLATE SQL_Latin1_General_CP1_CI_AI LIKE N'%' + LOWER(?) + '%') " +
+	                     "AND Product.isActive = 1 " +
+	                     "AND Product.isDeleted = 0 ";
 
-			while (rs.next()) {
-				ProductModel product = new ProductModel();
-				product.setId(rs.getInt("id"));
-				product.setName(rs.getString("name"));
-				product.setSlug(rs.getString("slug"));
-				product.setDescription(rs.getString("description"));
-				product.setPrice(rs.getBigDecimal("price"));
-				product.setQuantity(rs.getInt("quantiny"));
-				product.setSold(rs.getInt("sold"));
-				product.setActive(rs.getBoolean("isActive"));
-				product.setVideo(rs.getString("video"));
-				product.setCategoryId(rs.getInt("categoryId"));
-				product.setStyleValueId(rs.getInt("styleValueId"));
-				product.setStoreId(rs.getInt("storeId"));
-				product.setRating(rs.getBigDecimal("rating"));
-				product.setCreateAt(rs.getDate("createAt"));
-				product.setUpdateAt(rs.getDate("updateAt"));
+	        String category = " AND Product.categoryId = ? ";
+	        String store = " AND Product.storeId = ? ";
+	        String styleValue = " AND Product.styleValueId = ? ";
+	        String style = " AND Style.id = ? ";
 
-				listProduct.add(product);
-			}
+	        if (categoryId != -1) {
+	            sql += category;
+	        }
+	        if (storeId != -1) {
+	            sql += store;
+	        }
+	        if (styleValueId != -1) {
+	            sql += styleValue;
+	        }
+	        if (styleId != -1) {
+	            sql += style;
+	        }
 
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return listProduct;
+	        sql += "ORDER BY Product.updateAt DESC, Product.createAt DESC " +
+	               "OFFSET ? ROWS " +
+	               "FETCH NEXT ? ROWS ONLY";
+
+	        int index = 1;
+	        conn = new DBConnection().getConnection();
+	        ps = conn.prepareStatement(sql);
+	        ps.setString(index++, key);
+	        ps.setString(index++, key);
+	        ps.setString(index++, key);
+	        ps.setString(index++, key);
+	        ps.setString(index++, key);
+	        ps.setString(index++, key);
+
+	        if (categoryId != -1) {
+	            ps.setInt(index++, categoryId);
+	        }
+	        if (storeId != -1) {
+	            ps.setInt(index++, storeId);
+	        }
+	        if (styleValueId != -1) {
+	            ps.setInt(index++, styleValueId);
+	        }
+	        if (styleId != -1) {
+	            ps.setInt(index++, styleId);
+	        }
+
+	        int offset = (page - 1) * pageSize;
+	        ps.setInt(index++, offset);
+	        ps.setInt(index++, pageSize);
+
+	        rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            ProductModel product = new ProductModel();
+	            product.setId(rs.getInt("id"));
+	            product.setName(rs.getString("name"));
+	            product.setSlug(rs.getString("slug"));
+	            product.setDescription(rs.getString("description"));
+	            product.setPrice(rs.getBigDecimal("price"));
+	            product.setQuantity(rs.getInt("quantiny"));
+	            product.setSold(rs.getInt("sold"));
+	            product.setActive(rs.getBoolean("isActive"));
+	            product.setVideo(rs.getString("video"));
+	            product.setCategoryId(rs.getInt("categoryId"));
+	            product.setStyleValueId(rs.getInt("styleValueId"));
+	            product.setStoreId(rs.getInt("storeId"));
+	            product.setRating(rs.getBigDecimal("rating"));
+	            product.setCreateAt(rs.getDate("createAt"));
+	            product.setUpdateAt(rs.getDate("updateAt"));
+
+	            listProduct.add(product);
+	        }
+
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return listProduct;
 	}
 
 

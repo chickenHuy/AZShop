@@ -2,6 +2,8 @@ package com.azshop.controllers.search;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -12,15 +14,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.azshop.models.ImageModel;
 import com.azshop.models.ProductModel;
 import com.azshop.models.StoreModel;
+import com.azshop.models.StyleModel;
 import com.azshop.models.UserModel;
 import com.azshop.services.CategoryServiceImpl;
 import com.azshop.services.ICategoryService;
+import com.azshop.services.IImageService;
 import com.azshop.services.IProductService;
 import com.azshop.services.IStoreService;
+import com.azshop.services.IStyleService;
+import com.azshop.services.ImageServiceImpl;
 import com.azshop.services.ProductServiceImpl;
 import com.azshop.services.StoreServiceImpl;
+import com.azshop.services.StyleServiceImpl;
 import com.azshop.utils.Constant;
 
 
@@ -30,16 +38,17 @@ public class searchController extends HttpServlet {
 		IProductService productService = new ProductServiceImpl();
 		IStoreService storeService = new StoreServiceImpl();
 		ICategoryService categoryService = new CategoryServiceImpl();
-
-	    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		IStyleService styleService = new StyleServiceImpl();
+		IImageService imageService = new ImageServiceImpl();
+	    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			request.setCharacterEncoding("UTF-8");
 			response.setCharacterEncoding("UTF-8");
-			
 			String url = request.getRequestURL().toString();
 			
 			if (url.contains("/customer/search")) {
 					HttpSession session = request.getSession();
 					UserModel userModel = (UserModel) session.getAttribute(Constant.userSession);
+					request.setAttribute("user", userModel);
 					if (userModel == null)
 					{
 						response.sendRedirect(request.getContextPath() + "/login-customer");
@@ -48,13 +57,22 @@ public class searchController extends HttpServlet {
 			
 	        String keyword = request.getParameter("searchTerm");
 	        int categoryId = Integer.parseInt(request.getParameter("categoryId"));
-	        List<ProductModel> productModels = productService.search(keyword, categoryId, -1, -1, -1);
+	        List<ProductModel> productModels = productService.search(keyword, categoryId, -1, -1, -1,1,12);
 	        for (ProductModel productModel : productModels) {
 				System.out.println(productModel.getName());
 			}
 	        
 	        List<StoreModel> storeModels = storeService.searchByKey(keyword, -1);
 	        request.setAttribute("stores", storeModels);
+	        
+	        List<StyleModel> styleModels = styleService.getAll();
+	        request.setAttribute("images", styleModels);
+	        List<ImageModel> imageModels = new ArrayList<ImageModel>();
+	        for (ProductModel productModel : productModels) {
+	        	imageModels.add(imageService.getImage(productModel.getId()));
+			}
+	        request.setAttribute("images", imageModels);
+	        request.setAttribute("styles", styleModels);
 	        request.setAttribute("products", productModels);
 	        request.setAttribute("searchTerm", keyword);
 	        request.setAttribute("categoryId", categoryId);

@@ -51,5 +51,5 @@ public interface IProductDAO {
 
 	void updateRating(ProductModel product);
 
-	List<ProductModel> search(String key, int categoryId, int storeId, int styleValueId, int styleId);
+	List<ProductModel> search(String key, int categoryId, int storeId, int styleValueId, int styleId, int page, int pageSize);
 }

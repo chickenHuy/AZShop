@@ -29,7 +29,7 @@ public interface IProductService {
     List<ProductModel> GetTopSellerProduct(List<ProductModel> productList, int k);
 
 	void update(ProductModel product);
-	List<ProductModel> search(String key, int categoryId, int storeId, int styleValueId, int styleId);
+	List<ProductModel> search(String key, int categoryId, int storeId, int styleValueId, int styleId, int page, int pageSize);
 
 	void delete(int id);
 	int countDraftByStore(int storeId);
