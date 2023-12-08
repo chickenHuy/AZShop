@@ -47,7 +47,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/store/*", "/customer/store-category/*", "/customer/style/*", "/customer-search", "/customer-information"})
+@WebServlet(urlPatterns = {"/customer-home", "/customer/category/*", "/customer/store/*", "/customer/style/*", "/customer-search", "/customer-information"})
 public class CustomerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -133,14 +133,6 @@ public class CustomerController extends HttpServlet {
 			}
 		}
 		
-		else if (url.contains("customer/store-category")) {
-			try {
-				getCategoryInStore(req, resp);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
 		else if (url.contains("customer-search")) {
 			try {
 				search(req, resp);
@@ -205,84 +197,6 @@ public class CustomerController extends HttpServlet {
         return productCount;
     }
 
-	private void getCategoryInStore(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String url = req.getRequestURL().toString();
-		URI uri;
-		try {
-
-			uri = new URI(url);
-			String path = uri.getPath();
-
-			String[] parts = path.split("/");
-
-			if (parts.length > 0) {
-				String slug = parts[parts.length - 1];
-				
-				try {
-
-					StoreModel store = new StoreModel();		
-					CategoryModel category = categoryService.getCategoryBySlug(slug);
-					
-					List<ProductModel> productList = new ArrayList<ProductModel>();
-					List<ProductModel> productsInCate = new ArrayList<ProductModel>();
-	                List<ImageModel> imageList = new ArrayList<ImageModel>();
-	                List<CategoryModel> categoryChildList = new ArrayList<CategoryModel>();
-	                
-	                //lấy tất cả sp trong dnah mục
-	                productsInCate = productService.getByCategoryId(category.getId());
-	                
-	                //lấy sp theo cửa hàng
-	                for (ProductModel productInCate : productsInCate) {
-	                	StoreModel storeModel = storeService.getById(productInCate.getStoreId());
-	                	
-						if (url.contains(storeModel.getSlug())) {
-							productList.add(productInCate);
-							store = storeModel;
-						}
-					}
-	                
-	                //Lấy ảnh sp
-	                for (ProductModel productModel : productList) {
-	        			ImageModel image = imageService.getImage(productModel.getId());
-	        			imageList.add(image);
-	        		}
-	                
-	                //Lấy tất cả sản phẩm trong cửa hàng
-	                List<ProductModel> allProductList = productService.getByStoreId(store.getId());
-	                
-	                
-	                //lấy danh sách danh mục
-	                for (ProductModel productModel : allProductList) {
-						CategoryModel categoryChild = categoryService.getById(productModel.getCategoryId());
-						categoryChildList.add(categoryChild);
-					}	       
-	                
-	                //đếm số lượng product trong mỗi category
-	                for (CategoryModel categoryChild : categoryChildList) {
-						int countProduct = countProductsInCategoryStore(store.getId(), categoryChild.getId());
-						
-						categoryChild.setCountProduct(countProduct);
-					}
-	                
-	                req.setAttribute("store", store);
-	                req.setAttribute("categoryChildList", categoryChildList);
-	                req.setAttribute("productList", productList);
-	                req.setAttribute("imageList", imageList);
-	               	                
-	                
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-				
-			}
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		
-		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/store.jsp");
-        rd.forward(req, resp);
-	}
-
 	private void search(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// ma hoa UTF-8
 		req.setCharacterEncoding("UTF-8");
@@ -344,15 +258,17 @@ public class CustomerController extends HttpServlet {
 				
 				try {
 
-					StoreModel store = storeService.getBySlug(slug);					
+					StoreModel store = storeService.getBySlug(slug);
+					CategoryModel category = categoryService.getCategoryBySlug(req.getParameter("cate"));
 					
 					List<ProductModel> productList = new ArrayList<ProductModel>();
 	                List<ImageModel> imageList = new ArrayList<ImageModel>();
 	                List<CategoryModel> categoryChildList = new ArrayList<CategoryModel>();
 	                
+	                //Lấy tất cả sản phẩm trong giỏ hàng
 	                productList = productService.getByStoreId(store.getId());
 	                
-	                //lấy danh sách danh mục
+	              //lấy danh sách danh mục
 	                for (ProductModel productModel : productList) {
 						CategoryModel categoryChild = categoryService.getById(productModel.getCategoryId());
 						categoryChildList.add(categoryChild);
@@ -365,12 +281,30 @@ public class CustomerController extends HttpServlet {
 						categoryChild.setCountProduct(countProduct);
 					}
 	                
+	                //Lấy sản phẩm trong danh mục nằm trong cửa hàng
+	                List<ProductModel> productsInCate = new ArrayList<ProductModel>();
+	                if (category.getSlug() != null) {
+	                	for (ProductModel product : productList) {
+							if (product.getCategoryId() == category.getId()) {
+								productsInCate.add(product);
+							}
+						}
+	                	productList = productsInCate;
+	                	req.setAttribute("category", category);
+	                }	                	                
+	                
 	                for (ProductModel productModel : productList) {
 	        			ImageModel image = imageService.getImage(productModel.getId());
 	        			imageList.add(image);
 	        		}
 	                
-	                req.setAttribute("store", store);
+	                int sortBy = Integer.parseInt(req.getParameter("sortBy"));
+	                
+	                if (sortBy == 0) productList = productService.SortingProductbyPriceAscending(productList);
+	                else productList = productService.SortingProductbyPriceDecending(productList);
+	                
+	                req.setAttribute("sortBy", sortBy);
+	                req.setAttribute("store", store);	               
 	                req.setAttribute("categoryChildList", categoryChildList);
 	                req.setAttribute("productList", productList);
 	                req.setAttribute("imageList", imageList);

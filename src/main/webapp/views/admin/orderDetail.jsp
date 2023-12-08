@@ -24,30 +24,13 @@
 			<div class="ps-3">
 				<nav aria-label="breadcrumb">
 					<ol class="breadcrumb mb-0 p-0">
-						<li class="breadcrumb-item"><a href="javascript:;"><i
-								class="bx bx-home-alt"></i></a></li>
+						<li class="breadcrumb-item"><a href="/AZShop/admin/orders">Orders</a></li>
 						<li class="breadcrumb-item active" aria-current="page">Order
 							Details</li>
 					</ol>
 				</nav>
 			</div>
-			<div class="ms-auto">
-				<div class="btn-group">
-					<button type="button" class="btn btn-primary">Settings</button>
-					<button type="button"
-						class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split"
-						data-bs-toggle="dropdown">
-						<span class="visually-hidden">Toggle Dropdown</span>
-					</button>
-					<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
-						<a class="dropdown-item" href="javascript:;">Action</a> <a
-							class="dropdown-item" href="javascript:;">Another action</a> <a
-							class="dropdown-item" href="javascript:;">Something else here</a>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="javascript:;">Separated link</a>
-					</div>
-				</div>
-			</div>
+			
 		</div>
 		<!--end breadcrumb-->
 
@@ -58,7 +41,16 @@
 					<div class="flex-grow-1">
 						<h4 class="fw-bold">Order #${orderId}</h4>
 						<p class="mb-0">
-							Customer ID : <a href="javascript:;">${order.userId}</a>
+							Customer : <a href="javascript:;">${user.firstName} ${user.lastName}</a>
+						</p>
+						<p class="mb-0">
+							Recipient : <a href="javascript:;">${order.recipientName}</a>
+						</p>
+						<p class="mb-0">
+							Phone : <a href="javascript:;">${order.phone}</a>
+						</p>
+						<p class="mb-0">
+							Shipping Address : <a href="javascript:;">${order.address}</a>
 						</p>
 					</div>
 					<div class="overflow-auto"></div>
@@ -71,7 +63,7 @@
 				<div class="card w-100">
 					<div class="card-body">
 						<h5 class="mb-3 fw-bold">
-							Wishlist<span class="fw-light ms-2">(46)</span>
+							Wishlist<span class="fw-light ms-2">(${countProduct})</span>
 						</h5>
 						<div class="product-table">
 							<div class="table-responsive white-space-nowrap">
@@ -199,23 +191,12 @@
 								<i class="bi bi-house-door-fill"></i>
 							</div>
 							<div class="detail-info">
-								<h6 class="fw-bold mb-1">Address 1</h6>
+								<h6 class="fw-bold mb-1">Address User</h6>
 								<p class="mb-0">${user.address}</p>
 							</div>
 						</div>
 					</div>
 
-					<div class="col">
-						<div class="d-flex align-items-start gap-3 border p-3 rounded">
-							<div class="detail-icon fs-5">
-								<i class="bi bi-house-fill"></i>
-							</div>
-							<div class="detail-info">
-								<h6 class="fw-bold mb-1">Shipping Address</h6>
-								<p class="mb-0">${order.address}</p>
-							</div>
-						</div>
-					</div>
 
 				</div>
 				<!--end row-->

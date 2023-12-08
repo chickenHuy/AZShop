@@ -178,7 +178,8 @@ public class AdminController extends HttpServlet {
 		if (orderId != null) {
 			List<OrderItemModel> listOrderItem = orderItemService.getByOrderId(Integer.parseInt(orderId));
 			req.setAttribute("listOrderItem", listOrderItem);
-
+			int countProduct = listOrderItem.size();
+			req.setAttribute("countProduct", countProduct);
 			BigDecimal totalOrder = BigDecimal.ZERO;
 
 			for (OrderItemModel orderItem : listOrderItem) {
@@ -228,28 +229,29 @@ public class AdminController extends HttpServlet {
 	}
 	private void GetStatisticsUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Date currentDate = new Date();
+	    String selectedDateStr = req.getParameter("selectedDate");
+	    Date selectedDate = null;
 
-		// Count users based on the formatted date and time
-		int count = userService.countUser(currentDate);
-		// day du lieu ra view
+	    if (selectedDateStr != null && !selectedDateStr.isEmpty()) {
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	        try {
+	            selectedDate = dateFormat.parse(selectedDateStr);
+	        } catch (Exception e) {
+	            e.printStackTrace(); // Xử lý ngoại lệ nếu có lỗi khi chuyển đổi
+	        }	        
+	    }
+	    else
+        {
+        	selectedDate= currentDate;
+        }
+	    int count = userService.countUser(selectedDate);
 		int total = userService.getTotalUsers();
 		req.setAttribute("total",total);
 		req.setAttribute("count", count);
 		// view nhan du lieu
 		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
 		rd.forward(req, resp);
-	}
-	private void getInUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Date currentDate = new Date();
-
-		// Count users based on the formatted date and time
-		int count = userService.countUser(currentDate);
-		// day du lieu ra view
-		req.setAttribute("count", count);
-		// view nhan du lieu
-		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
-		rd.forward(req, resp);
-	}
+		}
 
 	private void getEditStylValue(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -258,7 +260,8 @@ public class AdminController extends HttpServlet {
 		if (id != null) {
 			StyleValueModel styleValue = styleValueService.getById(Integer.parseInt(id));
 			req.setAttribute("styleValue", styleValue);
-
+			String message = req.getParameter("message");
+			req.setAttribute("message", message);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editStyleValue.jsp");
 			rDispatcher.forward(req, resp);
 		}
@@ -277,13 +280,7 @@ public class AdminController extends HttpServlet {
 				styleValueService.delete(Integer.parseInt(id));
 			}
 		}
-		String referer = req.getHeader("Referer");
-
-		// Kiểm tra xem có địa chỉ URL trước đó không và không phải là địa chỉ gốc
-		if (referer != null && !referer.isEmpty() && !referer.equals(req.getRequestURL().toString())) {
-			// Chuyển hướng về trang trước đó
-			resp.sendRedirect(referer);
-		}
+		resp.sendRedirect("stylevalues?styleid=" + id);
 	}
 
 	private void getAllStyleValueByStyle(HttpServletRequest req, HttpServletResponse resp)
@@ -299,6 +296,8 @@ public class AdminController extends HttpServlet {
 
 			int countAllStyleValue = listStyleValue.size();
 			req.setAttribute("countAllStyleValue", countAllStyleValue);
+			String message = req.getParameter("message");
+			req.setAttribute("message", message);
 
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/stylevalues.jsp");
 			rDispatcher.forward(req, resp);
@@ -331,6 +330,8 @@ public class AdminController extends HttpServlet {
 		req.setAttribute("countAllStyle", countAllStyle);
 		List<CategoryModel> listCategory = categoryService.getAllAdmin();
 		req.setAttribute("listCategory", listCategory);
+		String message = req.getParameter("message");
+		req.setAttribute("message", message);
 
 		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/styles.jsp");
 		rDispatcher.forward(req, resp);
@@ -710,24 +711,21 @@ public class AdminController extends HttpServlet {
 
 		String id = req.getParameter("id");
 		StyleValueModel styleValue = styleValueService.getById(Integer.parseInt(id));
-
+		
 		String name = req.getParameter("styleValueName");
-		styleValue.setName(name);
-
-		styleValueService.update(styleValue);
-
-		List<StyleValueModel> listStyleValue = styleValueService.getByStyleIdAmin(styleValue.getStyleId());
-		req.setAttribute("listStyleValue", listStyleValue);
-		req.setAttribute("styleId", styleValue.getStyleId());
-		List<StyleModel> listStyle = styleService.getAllAdmin();
-		req.setAttribute("listStyle", listStyle);
-
-		int countAllStyleValue = listStyleValue.size();
-		req.setAttribute("countAllStyleValue", countAllStyleValue);
-
-		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/stylevalues.jsp");
-		rDispatcher.forward(req, resp);
-
+		if (name != "") {
+			try {
+				styleValue.setName(name);
+				styleValueService.update(styleValue);
+				
+				resp.sendRedirect("/AZShop/admin/style/stylevalue/edit?id=" + id + "&&message=Successfully");
+			} catch (Exception e) {
+				resp.sendRedirect("/AZShop/admin/style/stylevalue/edit?id=" + id + "&&message=Failed to add the user level");
+			}
+			
+		}else {
+			resp.sendRedirect("/AZShop/admin/style/stylevalue/edit?id=" + id + "&&message=You must fill out the form");
+		}
 	}
 
 	private void postAddStyleValue(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -738,17 +736,19 @@ public class AdminController extends HttpServlet {
 		String styleId = req.getParameter("styleId");
 
 		StyleValueModel styleValue = new StyleValueModel();
-		styleValue.setName(name);
-		styleValue.setStyleId(Integer.parseInt(styleId));
+		
+		if (name != "" && styleId != null) {
+			try {
+				styleValue.setName(name);
+				styleValue.setStyleId(Integer.parseInt(styleId));
 
-		styleValueService.insert(styleValue);
-
-		String referer = req.getHeader("Referer");
-
-		// Kiểm tra xem có địa chỉ URL trước đó không và không phải là địa chỉ gốc
-		if (referer != null && !referer.isEmpty() && !referer.equals(req.getRequestURL().toString())) {
-			// Chuyển hướng về trang trước đó
-			resp.sendRedirect(referer);
+				styleValueService.insert(styleValue);
+				resp.sendRedirect("stylevalues?styleid=" + styleId + "&&message=Sucessfully");
+			} catch (Exception e) {
+				resp.sendRedirect("stylevalues?styleid=" + styleId + "&&message=Failed to add the style");
+			}
+		} else {
+			resp.sendRedirect("stylevalues?styleid=" + styleId + "&&message=You must fill out the form");
 		}
 	}
 
@@ -773,13 +773,21 @@ public class AdminController extends HttpServlet {
 
 		String name = req.getParameter("styleName");
 		String categoryId = req.getParameter("categoryId");
-
 		StyleModel style = new StyleModel();
-		style.setName(name);
-		style.setCategoryId(Integer.parseInt(categoryId));
-		styleService.insert(style);
-
-		resp.sendRedirect("styles");
+		
+		
+		if (name != "" && categoryId != null) {
+				try {
+					style.setName(name);
+					style.setCategoryId(Integer.parseInt(categoryId));
+					styleService.insert(style);
+					resp.sendRedirect("styles?message=Successfully");
+				} catch (Exception e) {
+					resp.sendRedirect("styles?message=Failed to add the style");
+				}
+		} else {
+			resp.sendRedirect("styles?message=You must fill out the form");
+		}
 	}
 
 	private void postEditUserLevel(HttpServletRequest req, HttpServletResponse resp) throws IOException {
