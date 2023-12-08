@@ -494,10 +494,10 @@ public class ProductDAOImpl implements IProductDAO {
 	}
 
 	@Override
-	public List<ProductModel> SortingProductbyPriceAscending(List<ProductModel> productList) {
+	public List<ProductModel> SortingProductbyPriceAscending(List<ProductModel> productList, int categoryId) {
 		List<ProductModel> listProduct = new ArrayList<ProductModel>();
         try {
-            String sql = "SELECT * FROM Product ORDER BY price ASC";
+            String sql = "SELECT * FROM dbo.[Product] WHERE categoryId = ? and isDeleted = 0 ORDER BY price ASC";
             conn = new DBConnection().getConnection();
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -532,10 +532,10 @@ public class ProductDAOImpl implements IProductDAO {
 	}
 
 	@Override
-	public List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList) {
+	public List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList, int categoryId) {
 		List<ProductModel> listProduct = new ArrayList<ProductModel>();
         try {
-            String sql = "SELECT * FROM Product ORDER BY price DE500000SC";
+            String sql = "SELECT * FROM dbo.[Product] WHERE categoryId = ? and isDeleted = 0 ORDER BY price DESC";
             conn = new DBConnection().getConnection();
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -612,7 +612,6 @@ public class ProductDAOImpl implements IProductDAO {
         }
         // Trả về danh sách các sản phẩm bán được nhiều nhất
         return topSellerList;
-
 	}
 
 

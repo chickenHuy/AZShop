@@ -20,13 +20,13 @@
 					<div class="aside">
 						<h3 class="aside-title">Danh mục</h3>
 						<div class="checkbox-filter">
-							<a href='<c:url value="/customer/category/${categoryParent.slug}"/>'>
+							<a href='<c:url value="/customer/category/${categoryParent.slug}?sortBy=${sortBy}&showCount=${showCount}"/>'>
 								<div class="input-checkbox ${category.slug}">
 									<label>Tất cả</label>
 								</div>
 							</a>
 							<c:forEach var="category" items="${categoryChildList}">	
-								<a href='<c:url value="/customer/category/${categoryParent.slug}/${category.slug}"/>'>
+								<a href='<c:url value="/customer/category/${categoryParent.slug}?sortBy=${sortBy}&showCount=${showCount}"/>'>
 									<div class="input-checkbox ${category.slug}">
 										<label>${category.name}<small>
 												(${category.countProduct})</small></label>
@@ -134,12 +134,12 @@
 					<!-- store top filter -->
 					<div class="store-filter clearfix">
 						<div class="store-sort">
-							<label>Sort By: <select class="input-select"
+							<label>Sắp xếp: <select class="input-select"
 								name="sortBy" id="sortBy" onchange="handleChange()">
-									<option value="0">Popular</option>
-									<option value="1">Position</option>
+									<option value="0">Giá tăng dần</option>
+									<option value="1">Giá giảm dần</option>
 							</select>
-							</label> <label>Show: <select class="input-select"
+							</label> <label>Hiển thị: <select class="input-select"
 								name="showCount" id="showCount" onchange="handleChange()">
 									<option value="0">20</option>
 									<option value="1">50</option>

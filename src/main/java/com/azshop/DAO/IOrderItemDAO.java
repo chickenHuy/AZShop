@@ -14,4 +14,5 @@ public interface IOrderItemDAO {
     void update(OrderItemModel orderItem);
     void delete(int id);
     int countByOrder(int orderId);
+    List<OrderItemModel> getByOrderIdAndProductId(int orderId, int productId);
 }
