@@ -46,7 +46,10 @@
 		<![endif]-->
 </head>
 <body>
+
 	<%@ include file="/common/customer/header.jsp"%>
+	<title><decorator:title></decorator:title></title>
+	<decorator:head></decorator:head>
 	<div class="contain">
 		<decorator:body></decorator:body>
 	</div>

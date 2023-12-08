@@ -226,19 +226,19 @@ public class VenderController extends HttpServlet {
 			String idReview = req.getParameter("id");
 			ProductModel productModel = productService.getBySlug(slug);
 			if (productModel == null) {
-				resp.sendRedirect("/views/vendor/404.jsp");
+				req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 				return;
 			}
 			List<ReviewModel> reviewModels = reviewService.getByProductId(productModel.getId());
 			req.setAttribute("name", productModel.getName());
-			req.setAttribute("reviews", reviewModels);
+			req.setAttribute("reviews", reviewModels);;
 			req.setAttribute("id", idReview);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/detailReview.jsp");
 			rDispatcher.forward(req, resp);
 			
 		}
 		catch (Exception e) {
-			resp.sendRedirect("/views/vendor/404.jsp");
+			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
 		}
 		return;
 		

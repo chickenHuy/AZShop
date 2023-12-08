@@ -33,4 +33,5 @@ public interface IUserDAO {
 	void updateVendor(UserModel userModel);
 	
 	
+	
 }
