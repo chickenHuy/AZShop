@@ -23,6 +23,11 @@ public interface IReviewService {
 	void update(ReviewModel review);
 
 	void delete(int id);
+<<<<<<< HEAD
 	
 	BigDecimal avgRating (int productId);
+=======
+	int countByStore(int storeId);
+	int countNewByStore(int storeId);
+>>>>>>> fe47ff8323fadbad2fba660ee85ea76466e65e70
 }

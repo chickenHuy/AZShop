@@ -83,6 +83,26 @@ public class ProductServiceImpl implements IProductService{
 	}
 
 	@Override
+	public int countSaleByStore(int storeId) {
+		return productDAO.countSaleByStore(storeId);
+	}
+
+	@Override
+	public ProductModel getBestSellerProduct(int storeId) {
+		return productDAO.getBestSellerProduct(storeId);
+	}
+
+	@Override
+	public List<ProductModel> getHotProduct(int storeId) {
+		return productDAO.getHotProduct(storeId);
+	}
+
+	@Override
+	public int countInDayByStore(int storeId) {
+		return productDAO.countInDayByStore(storeId);
+	}
+	
+	
 	public List<ProductModel> getProductbyQuantity(List<ProductModel> productList, int quantity) {
 		return productDAO.getProductbyQuantity(productList, quantity);
 	}

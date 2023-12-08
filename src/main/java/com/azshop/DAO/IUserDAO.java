@@ -28,6 +28,7 @@ public interface IUserDAO {
 
 	
 	int countUser(Date datetime);
+	int getTotalUsers();
 
 	void updateVendor(UserModel userModel);
 	

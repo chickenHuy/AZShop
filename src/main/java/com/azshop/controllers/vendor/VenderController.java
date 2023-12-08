@@ -30,6 +30,7 @@ import javax.swing.tree.DefaultTreeCellEditor.EditorContainer;
 
 import com.azshop.DAO.IOrderDAO;
 import com.azshop.DAO.IReviewDAO;
+import com.azshop.DAO.IUserFollowStoreDAO;
 import com.azshop.DAO.UserDAOImpl;
 import com.azshop.models.CategoryModel;
 import com.azshop.models.DeliveryModel;
@@ -57,6 +58,7 @@ import com.azshop.services.IReviewService;
 import com.azshop.services.IStoreService;
 import com.azshop.services.IStyleService;
 import com.azshop.services.IStyleValueService;
+import com.azshop.services.IUserFollowStoreService;
 import com.azshop.services.IUserService;
 import com.azshop.services.ImageServiceImpl;
 import com.azshop.services.OrderItemServiceImpl;
@@ -66,6 +68,7 @@ import com.azshop.services.ReviewServiceImpl;
 import com.azshop.services.StoreServiceImpl;
 import com.azshop.services.StyleServiceImpl;
 import com.azshop.services.StyleValueImpl;
+import com.azshop.services.UserFollowStoreServiceImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.CheckValid;
 import com.azshop.utils.Constant;
@@ -96,6 +99,7 @@ public class VenderController extends HttpServlet {
 	IAddressShippingService addressShippingService = new AddressShippingServiceImpl();
 	IUserService userService = new UserServiceImpl();
 	IReviewService reviewService = new ReviewServiceImpl();
+	IUserFollowStoreService userFollowStoreService = new UserFollowStoreServiceImpl();
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -117,8 +121,7 @@ public class VenderController extends HttpServlet {
 			return;
 		}
 		if (url.contains("/vendor/dashboard")) {
-			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/dashboard.jsp");
-			rDispatcher.forward(req, resp);
+			GetDashBoard(req, resp, storeModel);
 			return;
 		}
 		if (url.contains("/vendor/view-shop-info")) {
@@ -183,8 +186,54 @@ public class VenderController extends HttpServlet {
 		}
 	}
 
+	private void GetDashBoard(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel) throws ServletException, IOException {
+		req.setAttribute("store", storeModel); //eWallet, rating, name
+		List<ProductModel> productModels = productService.getByStoreId(storeModel.getId()); //totalProducts
+		if (productModels != null)
+			req.setAttribute("totalProducts", productModels.size());
+		
+		BigDecimal totalRevenue = orderService.getSumRevenueByStore(storeModel.getId()); // totalRevenue
+		req.setAttribute("totalRevenue", totalRevenue);
+		
+		int soldInDay = productService.countInDayByStore(storeModel.getId());
+		req.setAttribute("totalSoldInDay", soldInDay);
+		
+		BigDecimal yesterdayRevenue = orderService.GetRevenueLastNDays(1, storeModel.getId()).get(0);
+		req.setAttribute("revenueYday", yesterdayRevenue);
+		
+		
+		int totalReviews = reviewService.countByStore(storeModel.getId());
+		req.setAttribute("totalReview", totalReviews);
+		
+		int totalCompleted = orderService.countCompletedByStore(storeModel.getId());
+		req.setAttribute("totalCompleted", totalCompleted);
+
+		
+		int totalFollows = userFollowStoreService.countByStore(storeModel.getId());
+		req.setAttribute("totalFollows", totalFollows);
+		
+		int totalOrders = orderService.countOrderByStore(storeModel.getId());
+		req.setAttribute("totalOrders", totalOrders);
+		
+		int newReviews = reviewService.countNewByStore(storeModel.getId());
+		req.setAttribute("newReviews", newReviews);
+		
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/vendor/dashboard.jsp");
+		rDispatcher.forward(req, resp);
+	}
+
 	private void GetStatisticsProduct(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel)
 			throws ServletException, IOException {
+		ProductModel productModel = productService.getBestSellerProduct(storeModel.getId());
+		int totalProduct = productService.countAllByStore(storeModel.getId());
+		int totalSales = productService.countSaleByStore(storeModel.getId());
+		int totalInDay = productService.countInDayByStore(storeModel.getId()); 
+		List<ProductModel> productModels = productService.getHotProduct(storeModel.getId());
+		req.setAttribute("totalProduct",totalProduct);
+		req.setAttribute("totalSales", totalSales);
+		req.setAttribute("bestSeller", productModel);
+		req.setAttribute("totalInday", totalInDay);
+		req.setAttribute("products", productModels);
 		req.getRequestDispatcher("/views/vendor/statisticsProduct.jsp").forward(req, resp);
 
 	}
@@ -201,6 +250,7 @@ public class VenderController extends HttpServlet {
 			req.setAttribute("nDay", 10);
 			revenueNDay = orderService.GetRevenueLastNDays(10, storeModel.getId());
 		}
+		req.setAttribute("eWallet", storeModel.geteWallet());
 		req.setAttribute("revenues", RevenueData.generateRevenueDataList(revenueNDay));
 		req.setAttribute("totalRevenue", orderService.getSumRevenueByStore(storeModel.getId()));
 		req.getRequestDispatcher("/views/vendor/statisticsRevenue.jsp").forward(req, resp);

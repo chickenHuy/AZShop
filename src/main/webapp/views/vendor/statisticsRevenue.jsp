@@ -31,10 +31,23 @@
                       <div class="d-flex align-items-center">
                         <div class="">
                           <p class="mb-1">Total Revenue</p> 
-                          <h4 class="mb-0 text-success">${totalRevenue == null ? '0' : 'totalRevenue' } VNĐ</h4>
+                          <h4 class="mb-0 text-success">${totalRevenue == null ? '0' : totalRevenue } VNĐ</h4>
                         </div>
                         <div class="ms-auto widget-icon bg-success text-white">
                           <i class="bi bi-currency-dollar"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card radius-10 border-0 border-start border-primary border-4">
+                    <div class="card-body">
+                      <div class="d-flex align-items-center">
+                        <div class="">
+                          <p class="mb-1">AZ Pay</p>
+                          <h4 class="mb-0 text-primary">${eWallet == null ? '0' : eWallet } VNĐ</h4>
+                        </div>
+                        <div class="ms-auto widget-icon bg-primary text-white">
+                          <i class="bi bi-basket2-fill"></i>
                         </div>
                       </div>
                     </div>

@@ -493,6 +493,7 @@ public class CustomerController extends HttpServlet {
 	}
 
 	private void getCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
 		String url = req.getRequestURL().toString();
 		URI uri;
 		try {
@@ -531,11 +532,19 @@ public class CustomerController extends HttpServlet {
 	                	productList.addAll(productCategoryChilds);
 					}
 	                
+	                //Hiển thị tất cả thì sắp xếp theo mặc định
+	                List<ProductModel> productListSort = productService.SortingProductbyPriceAscending(productList);
+	                List<ProductModel> productListByQuantity = productService.getProductbyQuantity(productListSort, 3);
+	                
+//	                productList = productService.GetTopSellerProduct(productList, 3);
+	                int sortBy = 0; int showCount = 0;
+	                
 	                //nếu không phải
 	                if (isCategoryOrigin == false) {
 	                	categoryChildList = categoryService.getChildCategory(category.getCategoryId());
 	                	categoryParent = categoryService.getById(category.getCategoryId());
 	                	productList = productService.getByCategoryId(category.getId());
+	                	productListSort = productService.SortingProductbyPriceAscending(productList);
 	                	
 	                	//Lấy danh sách style value từ category parent
 		                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
@@ -556,11 +565,12 @@ public class CustomerController extends HttpServlet {
 	        			imageList.add(image);
 	        		}
 	                
-	                
+	                req.setAttribute("sortBy", sortBy);
+	                req.setAttribute("showCount", showCount);
 	                req.setAttribute("category", category);
 	                req.setAttribute("categoryChildList", categoryChildList);
 	                req.setAttribute("categoryList", categoryChildList);
-	                req.setAttribute("productList", productList);
+	                req.setAttribute("productList", productListByQuantity);
 	                req.setAttribute("imageList", imageList);
 	                req.setAttribute("categoryParent", categoryParent);
 	               	                

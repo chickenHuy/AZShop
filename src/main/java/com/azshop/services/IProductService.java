@@ -34,5 +34,9 @@ public interface IProductService {
 	int countDraftByStore(int storeId);
     int countPublishByStore(int storeId);
     int countAllByStore(int storeId);
+    int countInDayByStore(int storeId);
     List<ProductModel> getBySearch(int categoryId, int storeId, String isActive, String content);
+    int countSaleByStore(int storeId);
+    ProductModel getBestSellerProduct(int storeId);
+    List<ProductModel> getHotProduct(int storeId);
 }

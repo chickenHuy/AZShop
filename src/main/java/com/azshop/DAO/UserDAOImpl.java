@@ -337,4 +337,24 @@ public class UserDAOImpl implements IUserDAO {
 
 	}
 
+	@Override
+	public int getTotalUsers() {
+		int totalUsers = 0;
+        try {
+            String sql = "SELECT COUNT(*) AS TotalUsers FROM [User] WHERE isDeleted = 0";
+            conn = new DBConnection().getConnection();
+
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                totalUsers = rs.getInt("TotalUsers");
+            }
+
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return totalUsers;
+	}
+
 }

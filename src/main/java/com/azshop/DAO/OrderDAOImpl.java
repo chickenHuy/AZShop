@@ -124,6 +124,46 @@ public class OrderDAOImpl implements IOrderDAO {
 
 		return oderModelList;
 	}
+	
+	@Override
+	public List<OrderModel> getAllAdmin() {
+		List<OrderModel> oderModelList = new ArrayList<OrderModel>();
+		
+		try {
+			String sql = "Select *from [Order]";
+			conn = new DBConnection().getConnection();
+			
+			ps = conn.prepareStatement(sql);
+			
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				OrderModel order = new OrderModel();
+				order.setId(rs.getInt("id"));
+				order.setUserId(rs.getInt("userId"));
+				order.setStoreId(rs.getInt("storeId"));
+				order.setDeliveryId(rs.getInt("deliveryId"));
+				order.setRecipientName(rs.getString("recipientName"));
+				order.setAddress(rs.getString("address"));
+				order.setPhone(rs.getString("phone"));
+				order.setStatus(rs.getString("status"));
+				order.setPaidBefore(rs.getBoolean("isPaidBefore"));
+				order.setAmountFromUser(rs.getBigDecimal("amountFromUser"));
+				order.setAmountFromStore(rs.getBigDecimal("amountFromStore"));
+				order.setAmountToStore(rs.getBigDecimal("amountToStore"));
+				order.setAmountToAZShop(rs.getBigDecimal("amountToAZShop"));
+				order.setCreateAt(rs.getDate("createAt"));
+				order.setUpdateAt(rs.getDate("updateAt"));
+				
+				oderModelList.add(order);
+			}
+			
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return oderModelList;
+	}
 
 	@Override
 	public List<OrderModel> getByUserId(int userId) {
@@ -456,6 +496,54 @@ public class OrderDAOImpl implements IOrderDAO {
 		}
 
 		return oderModelList;
+	}
+
+	@Override
+	public int countCompletedByStore(int storeId) {
+		int result = 0;
+		try {
+			String sql = "Select Count(*) as cntCompleted from [Order] where storeId = ? and isDeleted = 0 and status = 'Completed'";
+			conn = new DBConnection().getConnection();
+
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				result =  rs.getInt("cntCompleted");
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	@Override
+	public int countOrderByStore(int storeId) {
+		int count = 0;
+
+		try {
+			String sql = "Select count(*) as cntOrder from [Order] where storeId = ? and isDeleted = 0";
+			conn = new DBConnection().getConnection();
+
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				OrderModel order = new OrderModel();
+				count = rs.getInt("cntOrder");
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return count;
 	}
 
 }
