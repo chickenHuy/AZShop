@@ -185,6 +185,16 @@ public class VenderController extends HttpServlet {
 
 	private void GetStatisticsProduct(HttpServletRequest req, HttpServletResponse resp, StoreModel storeModel)
 			throws ServletException, IOException {
+		ProductModel productModel = productService.getBestSellerProduct(storeModel.getId());
+		int totalProduct = productService.countAllByStore(storeModel.getId());
+		int totalSales = productService.countSaleByStore(storeModel.getId());
+		int totalInDay = productService.countInDayByStore(storeModel.getId()); 
+		List<ProductModel> productModels = productService.getHotProduct(storeModel.getId());
+		req.setAttribute("totalProduct",totalProduct);
+		req.setAttribute("totalSales", totalSales);
+		req.setAttribute("bestSeller", productModel);
+		req.setAttribute("totalInday", totalInDay);
+		req.setAttribute("products", productModels);
 		req.getRequestDispatcher("/views/vendor/statisticsProduct.jsp").forward(req, resp);
 
 	}
@@ -201,6 +211,7 @@ public class VenderController extends HttpServlet {
 			req.setAttribute("nDay", 10);
 			revenueNDay = orderService.GetRevenueLastNDays(10, storeModel.getId());
 		}
+		req.setAttribute("eWallet", storeModel.geteWallet());
 		req.setAttribute("revenues", RevenueData.generateRevenueDataList(revenueNDay));
 		req.setAttribute("totalRevenue", orderService.getSumRevenueByStore(storeModel.getId()));
 		req.getRequestDispatcher("/views/vendor/statisticsRevenue.jsp").forward(req, resp);

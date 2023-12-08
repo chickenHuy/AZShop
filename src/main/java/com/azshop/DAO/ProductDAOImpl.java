@@ -484,5 +484,142 @@ public class ProductDAOImpl implements IProductDAO {
 	    return listProduct;
 	}
 
+	@Override
+	public int countSaleByStore(int storeId) {
+		try {
+			String sql = "select sum([OrderItem].count) as sumSaleProduct from [Order] join [OrderItem] on [OrderItem].orderID = [Order].id where [Order].storeId = ? and [Order].status = 'Completed' ";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+			 return rs.getInt("sumSaleProduct");
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return 0;
+	}
+
+	@Override
+	public ProductModel getBestSellerProduct(int storeId) {
+		try {
+			String sql = "SELECT TOP 1\r\n"
+					+ "    P.id AS id,\r\n"
+					+ "    P.name AS name,\r\n"
+					+ "    P.price,\r\n"
+					+ "    SUM(OI.count) AS totalSold,\r\n"
+					+ "	P.slug\r\n"
+					+ "FROM\r\n"
+					+ "    [Order] AS O\r\n"
+					+ "JOIN\r\n"
+					+ "    [OrderItem] AS OI ON O.id = OI.orderID\r\n"
+					+ "JOIN\r\n"
+					+ "    [Product] AS P ON OI.productId = P.id\r\n"
+					+ "WHERE\r\n"
+					+ "    O.status = 'Completed'\r\n"
+					+ "    AND O.storeId = ? \r\n"
+					+ "    AND P.isDeleted = 0\r\n"
+					+ "GROUP BY\r\n"
+					+ "    P.id, P.name, P.price, P.slug\r\n"
+					+ "ORDER BY\r\n"
+					+ "    totalSold DESC;";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				ProductModel product = new ProductModel();
+				product.setId(rs.getInt("id"));
+				product.setName(rs.getString("name"));
+				product.setSlug(rs.getString("slug"));
+				product.setSold(rs.getInt("totalSold"));
+				return product;
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public List<ProductModel> getHotProduct(int storeId) {
+		List<ProductModel> listProduct = new ArrayList<ProductModel>();
+		try {
+			String sql = "SELECT TOP 10\r\n"
+					+ "    P.id AS id,\r\n"
+					+ "    P.name AS name,\r\n"
+					+ "    P.price,\r\n"
+					+ "    SUM(OI.count) AS totalSold,\r\n"
+					+ "	P.slug\r\n"
+					+ "FROM\r\n"
+					+ "    [Order] AS O\r\n"
+					+ "JOIN\r\n"
+					+ "    [OrderItem] AS OI ON O.id = OI.orderID\r\n"
+					+ "JOIN\r\n"
+					+ "    [Product] AS P ON OI.productId = P.id\r\n"
+					+ "WHERE\r\n"
+					+ "    O.status = 'Completed'\r\n"
+					+ "    AND O.storeId = ? \r\n"
+					+ "    AND P.isDeleted = 0\r\n"
+					+ "GROUP BY\r\n"
+					+ "    P.id, P.name, P.price, P.slug\r\n"
+					+ "ORDER BY\r\n"
+					+ "    totalSold DESC;";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ProductModel product = new ProductModel();
+
+				product.setId(rs.getInt("id"));
+				product.setName(rs.getString("name"));
+				product.setSlug(rs.getString("slug"));
+				product.setSold(rs.getInt("totalSold"));
+				listProduct.add(product);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listProduct;
+	}
+
+	@Override
+	public int countInDayByStore(int storeId) {
+		try {
+			String sql = "	SELECT SUM([OrderItem].count) AS sumSaleProduct \r\n"
+					+ "FROM [Order]\r\n"
+					+ "JOIN [OrderItem] ON [OrderItem].orderID = [Order].id\r\n"
+					+ "WHERE [Order].storeId = ?\r\n"
+					+ "    AND [Order].status = 'Completed'\r\n"
+					+ "    AND CONVERT(DATE, [Order].updateAt) = CONVERT(DATE, GETDATE());";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, storeId);
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+			 return rs.getInt("sumSaleProduct");
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return 0;
+	}
+
 
 }

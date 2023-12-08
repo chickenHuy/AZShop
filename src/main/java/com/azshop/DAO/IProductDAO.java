@@ -19,4 +19,9 @@ public interface IProductDAO {
     int countDraftByStore(int storeId);
     int countPublishByStore(int storeId);
     int countAllByStore(int storeId);
+    int countSaleByStore(int storeId);
+    int countInDayByStore(int storeId);
+    ProductModel getBestSellerProduct(int storeId);
+    List<ProductModel> getHotProduct(int storeId);
+    
 }

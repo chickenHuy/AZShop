@@ -82,4 +82,26 @@ public class ProductServiceImpl implements IProductService{
 		return productDAO.getBySearch(categoryId, storeId, isActive, content);
 	}
 
+	@Override
+	public int countSaleByStore(int storeId) {
+		return productDAO.countSaleByStore(storeId);
+	}
+
+	@Override
+	public ProductModel getBestSellerProduct(int storeId) {
+		return productDAO.getBestSellerProduct(storeId);
+	}
+
+	@Override
+	public List<ProductModel> getHotProduct(int storeId) {
+		return productDAO.getHotProduct(storeId);
+	}
+
+	@Override
+	public int countInDayByStore(int storeId) {
+		return productDAO.countInDayByStore(storeId);
+	}
+	
+	
+
 }
