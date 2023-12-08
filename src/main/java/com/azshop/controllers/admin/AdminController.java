@@ -228,28 +228,29 @@ public class AdminController extends HttpServlet {
 	}
 	private void GetStatisticsUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Date currentDate = new Date();
+	    String selectedDateStr = req.getParameter("selectedDate");
+	    Date selectedDate = null;
 
-		// Count users based on the formatted date and time
-		int count = userService.countUser(currentDate);
-		// day du lieu ra view
+	    if (selectedDateStr != null && !selectedDateStr.isEmpty()) {
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	        try {
+	            selectedDate = dateFormat.parse(selectedDateStr);
+	        } catch (Exception e) {
+	            e.printStackTrace(); // Xử lý ngoại lệ nếu có lỗi khi chuyển đổi
+	        }	        
+	    }
+	    else
+        {
+        	selectedDate= currentDate;
+        }
+	    int count = userService.countUser(selectedDate);
 		int total = userService.getTotalUsers();
 		req.setAttribute("total",total);
 		req.setAttribute("count", count);
 		// view nhan du lieu
 		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
 		rd.forward(req, resp);
-	}
-	private void getInUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Date currentDate = new Date();
-
-		// Count users based on the formatted date and time
-		int count = userService.countUser(currentDate);
-		// day du lieu ra view
-		req.setAttribute("count", count);
-		// view nhan du lieu
-		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
-		rd.forward(req, resp);
-	}
+		}
 
 	private void getEditStylValue(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
