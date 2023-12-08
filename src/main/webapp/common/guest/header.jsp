@@ -100,7 +100,8 @@
 					<li><a href='<c:url value="/guest-home"/>'>Trang chủ</a></li>
 					<li><a href='<c:url value="/guest-clothing"/>'>Sản phẩm hot</a></li>
 					<c:forEach var="category" items="${categoryParentList}">
-						<li><a href='<c:url value="/guest/category/${category.slug}"/>'>${category.name}</a></li>
+						<li><a
+							href='<c:url value="/guest/category/${category.slug}?sortBy=${0}"/>'>${category.name}</a></li>
 					</c:forEach>
 				</ul>
 				<!-- /NAV -->

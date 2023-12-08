@@ -146,10 +146,11 @@
 				<ul class="main-nav nav navbar-nav">
 					<li><a href='<c:url value="/customer-home"/>'>Trang chủ</a></li>
 					<li><a href='<c:url value="/customer-clothing"/>'>Sản phẩm hot</a></li>
-					<c:forEach var="category" items="${categoryParentList}">
-						<li><a href='<c:url value="/customer/category/${category.slug}"/>'>${category.name}</a></li>
-					</c:forEach>
-				</ul>
+				<c:forEach var="category" items="${categoryParentList}">
+					<li><a
+						href='<c:url value="/customer/category/${category.slug}?sortBy=${0}"/>'>${category.name}</a></li>
+				</c:forEach>
+			</ul>
 				<!-- /NAV -->
 			</div>
 			<!-- /responsive-nav -->

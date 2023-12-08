@@ -389,6 +389,8 @@ public class GuestController extends HttpServlet{
 	                	productList.addAll(productCategoryChilds);
 					}
 	                
+	                int sortBy = Integer.parseInt(req.getParameter("sortBy"));	                	                	                	                	                  
+	                
 	                //nếu không phải
 	                if (isCategoryOrigin == false) {
 	                	categoryChildList = categoryService.getChildCategory(category.getCategoryId());
@@ -402,6 +404,17 @@ public class GuestController extends HttpServlet{
 		                req.setAttribute("categoryStyle", category);
 	                }
 	                
+	                List<ProductModel> productListSort = new ArrayList<ProductModel>();             
+	                
+	                //sắp xếp
+	                if (sortBy == 0) {
+		                productListSort = productService.SortingProductbyPriceAscending(productList);
+	                }
+	                else if (sortBy == 1) {
+	                	productListSort = productService.SortingProductbyPriceDecending(productList);		               
+	                }
+	                
+	                
 	                //đếm số lượng product trong mỗi category
 	                for (CategoryModel categoryChild : categoryChildList) {
 						int countProduct = countProductsInCategory(categoryChild.getId());
@@ -414,11 +427,11 @@ public class GuestController extends HttpServlet{
 	        			imageList.add(image);
 	        		}
 	                
-	                
+	                req.setAttribute("sortBy", sortBy);
 	                req.setAttribute("category", category);
 	                req.setAttribute("categoryChildList", categoryChildList);
 	                req.setAttribute("categoryList", categoryChildList);
-	                req.setAttribute("productList", productList);
+	                req.setAttribute("productList", productListSort);
 	                req.setAttribute("imageList", imageList);
 	                req.setAttribute("categoryParent", categoryParent);
 	               	                

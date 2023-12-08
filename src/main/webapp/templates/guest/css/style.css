@@ -1227,7 +1227,7 @@ textarea.input {
 }
 
 .checkbox-filter .input-radio label, .checkbox-filter .input-checkbox label {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .checkbox-filter .input-radio label small, .checkbox-filter .input-checkbox label small {
@@ -1284,6 +1284,7 @@ textarea.input {
 .store-filter {
   margin-bottom: 15px;
   margin-top: 15px;
+  position: relative;
 }
 
 /*-- Store Sort --*/

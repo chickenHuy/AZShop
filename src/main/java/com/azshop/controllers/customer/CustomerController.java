@@ -532,8 +532,7 @@ public class CustomerController extends HttpServlet {
 	                	productList.addAll(productCategoryChilds);
 					}
 	                
-	                int sortBy = Integer.parseInt(req.getParameter("sortBy"));
-	                int showCount = Integer.parseInt(req.getParameter("showCount"));	                	                	                	                	                  
+	                int sortBy = Integer.parseInt(req.getParameter("sortBy"));	                	                	                	                	                  
 	                
 	                //nếu không phải
 	                if (isCategoryOrigin == false) {
@@ -548,27 +547,16 @@ public class CustomerController extends HttpServlet {
 		                req.setAttribute("categoryStyle", category);
 	                }
 	                
-	                List<ProductModel> productListSort = new ArrayList<ProductModel>();
-	                List<ProductModel> productListByQuantity = new ArrayList<ProductModel>();
+	                List<ProductModel> productListSort = new ArrayList<ProductModel>();             
+	                
 	                //sắp xếp
-	                if (sortBy == 0 && showCount == 0) {
+	                if (sortBy == 0) {
 		                productListSort = productService.SortingProductbyPriceAscending(productList);
-		                productListByQuantity = productService.getProductbyQuantity(productListSort, 10);
 	                }
-	                else if (sortBy == 1 && showCount == 0) {
-	                	productListSort = productService.SortingProductbyPriceDecending(productList);
-		                productListByQuantity = productService.getProductbyQuantity(productListSort, 10);
+	                else if (sortBy == 1) {
+	                	productListSort = productService.SortingProductbyPriceDecending(productList);		               
 	                }
 	                
-	                else if (sortBy == 0 && showCount == 1) {
-	                	productListSort = productService.SortingProductbyPriceAscending(productList);
-		                productListByQuantity = productService.getProductbyQuantity(productListSort, 20);
-	                }
-	                
-	                else {
-	                	productListSort = productService.SortingProductbyPriceDecending(productList);
-		                productListByQuantity = productService.getProductbyQuantity(productListSort, 20);
-					}
 	                
 	                //đếm số lượng product trong mỗi category
 	                for (CategoryModel categoryChild : categoryChildList) {
@@ -583,11 +571,10 @@ public class CustomerController extends HttpServlet {
 	        		}
 	                
 	                req.setAttribute("sortBy", sortBy);
-	                req.setAttribute("showCount", showCount);
 	                req.setAttribute("category", category);
 	                req.setAttribute("categoryChildList", categoryChildList);
 	                req.setAttribute("categoryList", categoryChildList);
-	                req.setAttribute("productList", productListByQuantity);
+	                req.setAttribute("productList", productListSort);
 	                req.setAttribute("imageList", imageList);
 	                req.setAttribute("categoryParent", categoryParent);
 	               	                
