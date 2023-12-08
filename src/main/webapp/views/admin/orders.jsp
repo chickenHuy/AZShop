@@ -69,7 +69,10 @@
 
 									<td>${order.status}</td>
 									<td>${order.updateAt != null ? order.updateAt : order.createAt}</td>
-									<td><c:choose>
+									<td>
+									<a class="dropdown-item"
+													href='<c:url value="/admin/order-detail?orderId=${order.id}"/>'>Detail</a>
+									<c:choose>
 											<c:when test="${order.status == 'pending Pickup'}">
 												<a class="dropdown-item"
 													href='<c:url value="/admin/order-edit-status?orderId=${order.id}"/>'>Shipping</a>

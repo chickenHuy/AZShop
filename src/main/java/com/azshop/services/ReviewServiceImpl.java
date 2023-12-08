@@ -58,10 +58,9 @@ public class ReviewServiceImpl implements IReviewService{
 	}
 
 	@Override
-<<<<<<< HEAD
 	public BigDecimal avgRating(int productId) {
 		return reviewDAO.avgRating(productId);
-=======
+	}
 	public int countByStore(int storeId) {
 		 return reviewDAO.countByStore(storeId);
 	}
@@ -69,12 +68,7 @@ public class ReviewServiceImpl implements IReviewService{
 	@Override
 	public int countNewByStore(int storeId) {
 		return reviewDAO.countNewByStore(storeId);
->>>>>>> fe47ff8323fadbad2fba660ee85ea76466e65e70
 	}
 
-	@Override
-	public BigDecimal avgRating(int productId) {
-		return reviewDAO.avgRating(productId);
-	}
 
 }

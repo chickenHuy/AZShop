@@ -44,9 +44,6 @@
 							class="material-symbols-outlined">arrow_right</span>Store level</a></li>
 					<li><a href='<c:url value="/admin/orders"/>'><span
 							class="material-symbols-outlined">arrow_right</span>Orders</a></li>
-					<li><a href="ecommerce-customer-details.html"><span
-							class="material-symbols-outlined">arrow_right</span>Order Details</a>
-					</li>
 				</ul></li>
 
 
