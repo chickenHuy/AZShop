@@ -22,9 +22,9 @@ public interface IProductService {
 	
 	List<ProductModel> getProductbyQuantity(List<ProductModel> productList, int quantity);
 	
-    List<ProductModel> SortingProductbyPriceAscending(List<ProductModel> productList, int categoryId);
+    List<ProductModel> SortingProductbyPriceAscending(List<ProductModel> productList);
     
-    List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList, int categoryId);
+    List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList);
 
     List<ProductModel> GetTopSellerProduct(List<ProductModel> productList, int k);
 

@@ -41,4 +41,5 @@ public interface IOrderService {
 	List<OrderModel> getByUserIdAndStoreId(int userId, int storeId);
 	int countCompletedByStore(int storeId);
 	int countOrderByStore(int storeId);
+    List<OrderModel> getAllAdmin();
 }
