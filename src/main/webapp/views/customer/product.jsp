@@ -69,11 +69,18 @@
 						</h2>
 						<div>
 							<div class="product-rating">
-								<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-									class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-									class="fa fa-star-o"></i>
+								<c:forEach var="i" begin="1" end="5">
+									<c:choose>
+										<c:when test="${i <= product.rating}">
+											<i class="fa fa-star"></i>
+										</c:when>
+										<c:otherwise>
+											<i class="fa fa-star-o empty"></i>
+										</c:otherwise>
+									</c:choose>
+								</c:forEach>
 							</div>
-							<a class="review-link" href="#">${countReview} Review(s) | Add your
+							<a class="review-link">${countReview} Review(s) | Add your
 								review</a>
 						</div>
 						<div>
@@ -125,23 +132,16 @@
 							<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
 							<li><a href="#"><i class="fa fa-envelope"></i></a></li>
 						</ul>
-
-						<!-- Hiển thị thông báo thành công -->
-						<c:if test="${not empty message}">
-							<div class="alert alert-success border-0 bg-success alert-dismissible fade show">
-								<div class="text-white">${message}</div>
-								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-							</div>
-						</c:if>
-					
-						<!-- Hiển thị thông báo lỗi -->
-						<c:if test="${not empty error}">
-							<div class="alert alert-danger border-0 bg-danger alert-dismissible fade show">
-								<div class="text-white">${error}</div>
-								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-							</div>
-						</c:if>
-
+						
+						<div>
+							<!-- Thêm đoạn mã để hiển thị thông báo -->
+							<c:if test="${not empty commentSuccess}">
+								<div class="alert alert-success">${commentSuccess}</div>
+							</c:if>
+							<c:if test="${not empty commentError}">
+								<div class="alert alert-danger">${commentError}</div>
+							</c:if>
+						</div>
 					</div>
 				</div>
 				<!-- /Product details -->
@@ -188,9 +188,16 @@
 											<div class="rating-avg">
 												<span>${product.rating}</span>
 												<div class="rating-stars">
-													<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-														class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-														class="fa fa-star-o"></i>
+													<c:forEach var="i" begin="1" end="5">
+														<c:choose>
+															<c:when test="${i <= product.rating}">
+																<i class="fa fa-star"></i>
+															</c:when>
+															<c:otherwise>
+																<i class="fa fa-star-o empty"></i>
+															</c:otherwise>
+														</c:choose>
+													</c:forEach>
 												</div>
 											</div>
 											<ul class="rating">
@@ -298,6 +305,7 @@
 									<div class="col-md-3">
 										<div id="review-form">
 											<form class="review-form" action="review-product" method="post">
+												
 												<textarea class="input" name="review" placeholder="Your Review"></textarea>
 												<div class="input-rating">
 													<span>Your Rating: </span>
