@@ -3,7 +3,14 @@
 	<body>
 		<!--start main content-->
 		<main class="page-content">
-			<h4 class="mb-3">Edit Shop Information</h4>
+			<div style="display: flex; flex-direction: row; align-items: center">
+				<h4 class="mb-3">${!isView?"Edit Shop Information":"Shop Information"}</h4>
+				<a href="update-shop-info" ${!isView? 'style="display: none;"' : '' }>
+					<button class="button__edit-shop-info"
+						style="width: auto; height: auto; padding: 5px 30px; margin: 0 70px; border: none; border-radius: 3px; background-color: #383d42; color: #fff; transform: translateY(-5px);"
+						onmouseover="this.style.color = '#d10024'" onmouseleave="this.style.color='#fff'">Edit</button>
+				</a>
+			</div>
 			<div class="row">
 				<div class="col-lg-8 mx-auto">
 					<div class="card">
@@ -15,7 +22,8 @@
 										style="min-height: 300px;">
 										<img src="" id="previewCoverImage" style="max-width: 100%; max-height: 100%;">
 										<input type="file" id="coverImage" name="coverImage" style="display: none;"
-											accept="image/*"> <label class="button__input--cover-image" for="coverImage"
+											accept="image/*"> <label ${isView? 'style="display: none;"' : '' }
+											class="button__input--cover-image" for="coverImage"
 											style="width: auto; height: auto; padding: 5px 30px; border-radius: 3px; position: absolute; bottom: 10px; right: 20px; background-color: #15161d; color: #fff;"
 											onmouseover="this.style.color = '#d10024'"
 											onmouseleave="this.style.color='#fff'"> <span>Change
@@ -31,8 +39,8 @@
 											<img id="previewAvatarImage" src="">
 										</div>
 										<input type="file" id="avatarImage" name="avatarImage" style="display: none;"
-											accept="image/*"> <label class="button__input--cover-image"
-											for="avatarImage"
+											accept="image/*"> <label ${isView? 'style="display: none;"' : '' }
+											class="button__input--cover-image" for="avatarImage"
 											style="width: auto; height: auto; padding: 5px 30px; border-radius: 3px; background-color: #15161d; color: #fff;"
 											onmouseover="this.style.color = '#d10024'"
 											onmouseleave="this.style.color='#fff'"> <span>Change
@@ -45,7 +53,7 @@
 								<div class="row g-3">
 									<div class="col-6">
 										<label class="form-label">Shop name</label> <input type="text"
-											class="form-control shopName" placeholder="Shop name">
+											class="form-control shopName" placeholder="Shop name" value="${storeInfo.name}" ${isView?'readonly':''}>
 									</div>
 								</div>
 								<hr>
@@ -53,7 +61,7 @@
 									<div class="col-12">
 										<label class="form-label">Shop bio</label>
 										<textarea class="form-control shopBio" rows="4" cols="4"
-											placeholder="Describe your shop..."></textarea>
+											placeholder="Describe your shop..." ${isView?'readonly':''}>${storeInfo.bio}</textarea>
 									</div>
 								</div>
 								<hr>
@@ -61,8 +69,8 @@
 									<div>
 										<label class="form-label">Featured photos of the shop</label> <input type="file"
 											id="featuredImage" name="featuredImage" style="display: none;"
-											accept="image/*"> <label class="button__input--featured-image"
-											for="featuredImage"
+											accept="image/*"> <label ${isView? 'style="display: none;"' : '' }
+											class="button__input--featured-image" for="featuredImage"
 											style="width: auto; height: auto; padding: 7px 20px; border-radius: 5px; margin: 0 20px; background-color: #15161d; color: #fff;"
 											onmouseover="this.style.color = '#d10024'"
 											onmouseleave="this.style.color='#fff'"> <span>Choose
@@ -77,14 +85,17 @@
 								</div>
 								<div class="text-start mt-3 text-end">
 									<button type="button" class="btn btn-md radius-30 px-4"
-										onclick="sendDataToController();"
+										${isView? 'style="display: none;"' : '' } onclick="sendDataToController();"
 										style="background-color: #15161d; color: #fff; bottom: 10px; right: 20px;"
 										onmouseover="this.style.color='#d10024'"
 										onmouseleave="this.style.color='#fff'">Save changes</button>
-									<button type="button" class="btn btn-md radius-30 px-4"
-										style="background-color: #15161d; color: #aaa; bottom: 10px; right: 20px;"
-										onmouseover="this.style.color='#d10024'"
-										onmouseleave="this.style.color='#fff'">Cancel</button>
+									<a href="view-shop-info">
+										<button type="button" class="btn btn-md radius-30 px-4"
+											${isView? 'style="display: none;"' : '' }
+											style="background-color: #15161d; color: #aaa; bottom: 10px; right: 20px;"
+											onmouseover="this.style.color='#d10024'"
+											onmouseleave="this.style.color='#fff'">Cancel</button>
+									</a>
 								</div>
 							</form>
 						</div>

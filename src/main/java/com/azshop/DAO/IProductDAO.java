@@ -14,6 +14,10 @@ public interface IProductDAO {
     List<ProductModel> getByStyleValueId(int styleValueId);
     List<ProductModel> getByStoreId(int storeId);
     List<ProductModel> getBySearch(int categoryId, int storeId, String isActive, String content);
+    List<ProductModel> getProductbyQuantity(List<ProductModel> productList, int quantity);
+    List<ProductModel> SortingProductbyPriceAscending(List<ProductModel> productList);
+    List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList);
+    List<ProductModel> GetTopSellerProduct(List<ProductModel> productList, int k);
     void update(ProductModel product);
     void delete(int id);
     int countDraftByStore(int storeId);

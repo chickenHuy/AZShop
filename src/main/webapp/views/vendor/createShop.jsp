@@ -88,17 +88,42 @@
 
         <div class="form-group">
           <label for="phoneNumber"  class="required" class="requiredInput">Số điện thoại:</label>
+        <c:if test="${user.phone != null}">
           <input type="tel" id="phoneNumber" name="phoneNumber" value="${user.phone}" disabled class="requiredInput">
+          </c:if>
+          <c:if test="${user.phone == null}">
+          <input type="tel" id="phoneNumber" name="phoneNumber" value="" required class="requiredInput">
+          </c:if>
         </div>
 
         <div class="form-group">
           <label for="phoneNumber"  class="required" class="requiredInput">Địa chỉ:</label>
-          <input type="tel" id="ad" name="address" value="${user.address}" disabled class="requiredInput">
+          <c:if test="${user.address != null}"> 
+          	<input type="tel" id="ad" name="address" value="${user.address}" disabled class="requiredInput">
+          </c:if>
+          <c:if test="${user.address == null}"> 
+          	<input type="tel" id="ad" name="address" value="" required class="requiredInput">
+          </c:if>
         </div>
 
         <button type="submit" class="btnDangKy">Đăng ký</button>
       </form>
     </div>
   </div>
+  
+  <%
+    // Lấy thông báo lỗi từ request
+    String error = (String) request.getAttribute("error");
+
+    // Kiểm tra xem có thông báo lỗi không và hiển thị cửa sổ alert
+    if (error != null && !error.isEmpty()) {
+%>
+    <script>
+        alert("Lỗi: <%= error %>");
+    </script>
+<%
+    }
+%>
+
 </body>
 </html>

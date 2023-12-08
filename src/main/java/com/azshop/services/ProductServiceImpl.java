@@ -82,4 +82,24 @@ public class ProductServiceImpl implements IProductService{
 		return productDAO.getBySearch(categoryId, storeId, isActive, content);
 	}
 
+	@Override
+	public List<ProductModel> getProductbyQuantity(List<ProductModel> productList, int quantity) {
+		return productDAO.getProductbyQuantity(productList, quantity);
+	}
+
+	@Override
+	public List<ProductModel> SortingProductbyPriceAscending(List<ProductModel> productList) {
+		return productDAO.SortingProductbyPriceAscending(productList);
+	}
+
+	@Override
+	public List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList) {
+		return productDAO.SortingProductbyPriceDecending(productList);
+	}
+
+	@Override
+	public List<ProductModel> GetTopSellerProduct(List<ProductModel> productList, int k) {
+		return productDAO.GetTopSellerProduct(productList, k);
+	}
+
 }
