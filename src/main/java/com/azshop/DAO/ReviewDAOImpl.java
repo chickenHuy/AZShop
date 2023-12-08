@@ -1,5 +1,6 @@
 package com.azshop.DAO;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 
 import java.sql.PreparedStatement;
@@ -92,7 +93,7 @@ public class ReviewDAOImpl implements IReviewDAO {
 				reviewModelList.add(reviewModel);
 			}
 			conn.close();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return reviewModelList;
@@ -124,7 +125,7 @@ public class ReviewDAOImpl implements IReviewDAO {
 				reviewModelList.add(reviewModel);
 			}
 			conn.close();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return reviewModelList;
@@ -156,7 +157,7 @@ public class ReviewDAOImpl implements IReviewDAO {
 				reviewModelList.add(reviewModel);
 			}
 			conn.close();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return reviewModelList;
@@ -188,7 +189,7 @@ public class ReviewDAOImpl implements IReviewDAO {
 				reviewModelList.add(reviewModel);
 			}
 			conn.close();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return reviewModelList;
@@ -220,7 +221,7 @@ public class ReviewDAOImpl implements IReviewDAO {
 				reviewModelList.add(reviewModel);
 			}
 			conn.close();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return reviewModelList;
@@ -230,7 +231,7 @@ public class ReviewDAOImpl implements IReviewDAO {
 	public void update(ReviewModel review) {
 		// TODO Auto-generated method stub
 		try {
-			String sql =  "UPDATE Review SET userId = ?, productId = ?, storeId = ?, orderId = ?, content = ?, rating = ?, updateAt = GETDATE() WHERE id = ?";
+			String sql = "UPDATE Review SET userId = ?, productId = ?, storeId = ?, orderId = ?, content = ?, rating = ?, updateAt = GETDATE() WHERE id = ?";
 			conn = new DBConnection().getConnection();
 
 			ps = conn.prepareStatement(sql);
@@ -245,9 +246,7 @@ public class ReviewDAOImpl implements IReviewDAO {
 			ps.executeUpdate();
 
 			conn.close();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -264,10 +263,28 @@ public class ReviewDAOImpl implements IReviewDAO {
 			ps.executeUpdate();
 
 			conn.close();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
- 
+
+	@Override
+	public BigDecimal avgRating(int productId) {
+		try {
+			String sql = "SELECT AVG(CAST(rating AS FLOAT)) AS averageRating FROM Review WHERE productId = ?";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, productId); 
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				return rs.getBigDecimal("averageRating");
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return BigDecimal.ZERO;
+	}
 }

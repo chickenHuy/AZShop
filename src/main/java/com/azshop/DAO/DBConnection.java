@@ -4,10 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DBConnection {
-<<<<<<< HEAD
-
-=======
->>>>>>> b4e90b13b4d8dcda9cd1a5615eaa201c856fc0ba
     private final String serverName = "database-azshop.cvv8fenhkivu.ap-southeast-2.rds.amazonaws.com";
     private final String dbName = "AZShop_Nhom_3";
     private final String portNumber = "1433";

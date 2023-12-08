@@ -1,5 +1,6 @@
 package com.azshop.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.azshop.models.ReviewModel;
@@ -22,4 +23,6 @@ public interface IReviewService {
 	void update(ReviewModel review);
 
 	void delete(int id);
+	
+	BigDecimal avgRating (int productId);
 }

@@ -171,13 +171,15 @@ public class ProductController extends HttpServlet {
 				reviewModel.setContent(content);
 				reviewModel.setRating(rating);
 				reviewService.insert(reviewModel);
-				resp.sendRedirect(req.getContextPath() + "/customer-home");
+				product.setRating(reviewService.avgRating(product.getId()));
+				
+				req.setAttribute("message", "Review submitted successfully!");
+				resp.sendRedirect(req.getContextPath() + "/customer/product/" + product.getSlug());
 				return;
-			} else {
-				resp.sendRedirect(req.getContextPath() + "/guest-home");
 			}
 		}
-
+		req.setAttribute("error", "Review submission failed!");
+		resp.sendRedirect(req.getContextPath() + "/customer/product/" + product.getSlug());
 	}
 
 	private void getProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
