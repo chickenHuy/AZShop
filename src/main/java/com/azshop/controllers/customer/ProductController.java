@@ -174,10 +174,12 @@ public class ProductController extends HttpServlet {
 				reviewService.insert(reviewModel);
 				product.setRating(reviewService.avgRating(product.getId()));
 				productService.update(product);
-				resp.sendRedirect(req.getContextPath() + "/customer-home");
+				req.setAttribute("commentSuccess", "Bình luận thành công!");
+				resp.sendRedirect(req.getContextPath() + "/customer/product/" + product.getSlug());
 				return;
 			} else {
-				resp.sendRedirect(req.getContextPath() + "/guest-home");
+				req.setAttribute("commentError", "Bình luận thất bại! Vui lòng thử lại.");
+				resp.sendRedirect(req.getContextPath() + "/customer/product/" + product.getSlug());
 			}
 		}
 
