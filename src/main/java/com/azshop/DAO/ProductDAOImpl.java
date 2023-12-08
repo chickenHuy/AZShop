@@ -532,7 +532,7 @@ public class ProductDAOImpl implements IProductDAO {
 	}
 
 	@Override
-	public List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList, int category) {
+	public List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList, int categoryId) {
 		List<ProductModel> listProduct = new ArrayList<ProductModel>();
         try {
             String sql = "SELECT * FROM dbo.[Product] WHERE categoryId = ? and isDeleted = 0 ORDER BY price DESC";
