@@ -21,13 +21,22 @@ public interface IOrderService {
 	void update(OrderModel order);
 
 	void delete(int id);
+
 	List<String> statusForVendor();
+
 	Boolean changeStatus(int id, String status);
+
 	List<OrderModel> getCancelled(int storeId);
+
 	List<OrderModel> getProcessing(int storeId);
+
 	List<OrderModel> getProcessed(int storeId);
 
 	BigDecimal calculateOrderTotal(int id);
+
 	List<BigDecimal> GetRevenueLastNDays(int nDay, int storeId);
+
 	BigDecimal getSumRevenueByStore(int storeId);
+
+	List<OrderModel> getByUserIdAndStoreId(int userId, int storeId);
 }

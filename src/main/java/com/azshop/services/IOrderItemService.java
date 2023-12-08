@@ -19,7 +19,10 @@ public interface IOrderItemService {
 	void update(OrderItemModel orderItem);
 
 	void delete(int id);
+
 	int countByOrder(int orderId);
 
 	BigDecimal calculateOrderItemTotal(int id);
+
+	List<OrderItemModel> getByOrderIdAndProductId(int orderId, int productId);
 }
