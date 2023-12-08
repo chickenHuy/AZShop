@@ -17,6 +17,7 @@ public interface IProductDAO {
     List<ProductModel> getProductbyQuantity(List<ProductModel> productList, int quantity);
     List<ProductModel> SortingProductbyPriceAscending(List<ProductModel> productList);
     List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList);
+    List<ProductModel> GetTopSellerProduct(List<ProductModel> productList, int k);
     void update(ProductModel product);
     void delete(int id);
     int countDraftByStore(int storeId);
