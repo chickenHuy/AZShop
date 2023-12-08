@@ -33,13 +33,13 @@
 					<div class="aside">
 						<h3 class="aside-title">Danh mục sản phẩm</h3>
 						<div class="checkbox-filter">
-							<a href='<c:url value="/customer/store/${store.slug}"/>'>
+							<a href='<c:url value="/guest/store/${store.slug}"/>'>
 								<div class="input-checkbox ${category.slug}">
 									<label><span>Tất cả</span></label>
 								</div>
 							</a>
 							<c:forEach var="category" items="${categoryChildList}">	
-								<a href='<c:url value="/customer/store-category/${store.slug}/${category.slug}"/>'>
+								<a href='<c:url value="/guest/store-category/${store.slug}/${category.slug}"/>'>
 									<div class="input-checkbox ${category.slug}">
 										<label><span>${category.name}</span><small>
 												(${category.countProduct})</small></label>
