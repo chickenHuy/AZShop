@@ -493,6 +493,7 @@ public class CustomerController extends HttpServlet {
 	}
 
 	private void getCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
 		String url = req.getRequestURL().toString();
 		URI uri;
 		try {
@@ -531,6 +532,11 @@ public class CustomerController extends HttpServlet {
 	                	productList.addAll(productCategoryChilds);
 					}
 	                
+	                //Hiển thị tất cả thì sắp xếp theo mặc định
+//	                productList = productService.SortingProductbyPriceAscending(productList);
+//	                productList = productService.GetTopSellerProduct(productList, 3);
+	                int sortBy = 0; int showCount = 0;
+	                
 	                //nếu không phải
 	                if (isCategoryOrigin == false) {
 	                	categoryChildList = categoryService.getChildCategory(category.getCategoryId());
@@ -556,7 +562,8 @@ public class CustomerController extends HttpServlet {
 	        			imageList.add(image);
 	        		}
 	                
-	                
+	                req.setAttribute("sortBy", sortBy);
+	                req.setAttribute("showCount", showCount);
 	                req.setAttribute("category", category);
 	                req.setAttribute("categoryChildList", categoryChildList);
 	                req.setAttribute("categoryList", categoryChildList);
