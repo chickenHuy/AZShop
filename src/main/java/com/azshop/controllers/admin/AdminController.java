@@ -76,6 +76,28 @@ public class AdminController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		String url = req.getRequestURL().toString();
+		
+		try {
+			HttpSession session = req.getSession();
+			if (session != null) {
+				Object sessionObject = session.getAttribute(Constant.userSession);
+				if (sessionObject instanceof UserModel) {
+					UserModel user = (UserModel) sessionObject;	
+					
+					String name = user.getFirstName() + " " + user.getLastName();
+					
+					req.setAttribute("userName", name);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+
+
+		
+		
+		
 		if (url.contains("/admin/dashboard")) {
 			GetStatisticRevenue(req,resp);
 		} else if (url.contains("/admin/product/edit-status")) {

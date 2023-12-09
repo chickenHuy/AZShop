@@ -98,7 +98,7 @@
 				<img src="assets/images/avatars/01.png" alt="">
 			</div>
 			<div class="user-info">
-				<h5 class="mb-0 user-name">Jhon Maxwell</h5>
+				<h5 class="mb-0 user-name">${userName}</h5>
 				<p class="mb-0 user-designation">UI Engineer</p>
 			</div>
 		</div>
