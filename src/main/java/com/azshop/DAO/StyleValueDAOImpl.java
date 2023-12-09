@@ -62,6 +62,33 @@ public class StyleValueDAOImpl implements IStyleValueDAO{
 		}
 		return styleValueModel;
 	}
+	
+	@Override
+	public StyleValueModel getByIdAdmin(int id) {
+		StyleValueModel styleValueModel = new StyleValueModel();
+		try {
+			 String sql = "SELECT * FROM StyleValue WHERE id = ?";
+		        conn = new DBConnection().getConnection();
+		        
+		        ps = conn.prepareStatement(sql);
+		        ps.setInt(1, id);
+		        
+		        rs = ps.executeQuery();
+		        if (rs.next()) {
+		        	styleValueModel.setId(rs.getInt("id"));
+		        	styleValueModel.setName(rs.getString("name"));
+		            styleValueModel.setStyleId(rs.getInt("styleId"));
+		            styleValueModel.setDeleted(rs.getBoolean("isDeleted"));
+		            styleValueModel.setCreateAt(rs.getDate("createAt"));
+		            styleValueModel.setUpdateAt(rs.getDate("updateAt"));
+		        }
+		        
+		        conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return styleValueModel;
+	}
 
 	@Override
 	public List<StyleValueModel> getAll() {

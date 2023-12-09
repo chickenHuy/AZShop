@@ -35,7 +35,7 @@
 		<div class="col-auto flex-grow-1 overflow-auto">
 			<form action="/AZShop/admin/productsByCategory" method="get"
 				class="d-flex">
-				<select class="form-select" id="Category" name="categoryId"
+				<select class="form-select" id="Category" name="categoryId" onchange="loadProducts"
 					style="width: 200px;">
 					<option value="-1">-- Select Category --</option>
 					<!-- Lựa chọn với giá trị null -->
@@ -68,9 +68,29 @@
 								<th>Action</th>
 							</tr>
 						</thead>
+						<tbody id="productTableBody">
 							<c:forEach var="product" items="${listProduct}">
 								<tr>
-									<td>${product.name}</td>
+									<td>
+												<div class="d-flex align-items-center gap-3">
+													<div class="product-box">
+														<c:set var="hasImages" value="false" />
+														<c:forEach var="image" items="${images}">
+															<c:if test="${product.id eq image.productId}">
+																<img src="/AZShop/image?fname=${image.image}" alt=""/>
+																<c:set var="hasImages" value="true" />
+															</c:if>
+														</c:forEach>
+														<c:if test="${not hasImages}">
+															<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
+															<img src="${pageContext.request.contextPath}/templates/static/none.png" alt=""/>
+														</c:if>
+													</div>
+													<div class="product-info">
+														<a href="javascript:;" class="product-title">${product.name}</a>
+													</div>
+												</div>
+											</td>
 									<td>${product.description}</td>
 									<td>${product.price}</td>
 									<td>${product.quantity}</td>
@@ -98,19 +118,11 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
-	$(document).ready(function() {
-		$("#Category").change(function() {
-			loadProducts();
-		});
-
-		// Đảm bảo rằng hàm loadProducts được gọi khi trang được tải lần đầu
-		loadProducts();
-	});
 
 	function loadProducts() {
 		var categoryId = $("#Category").val();
 
-		$.ajax({
+		/* $.ajax({
 			type : "GET",
 			url : "product?categoryId=" + categoryId,
 			success : function(data) {
@@ -119,6 +131,18 @@
 			error : function(error) {
 				console.log("Lỗi: " + error);
 			}
+		}); */
+		$.ajax({
+		    type: "GET",
+		    url: "product?categoryId=" + categoryId,
+		    success: function(data) {
+		        // Xử lý dữ liệu nếu cần
+		        // Sau đó, chuyển hướng trang
+		        window.location.href = "product?categoryId=" + categoryId;
+		    },
+		    error: function(error) {
+		        // Xử lý lỗi nếu cần
+		    }
 		});
 	}
 </script>
