@@ -236,6 +236,22 @@ public class ProductController extends HttpServlet {
 						userList.add(userModel);
 					}
 					req.setAttribute("userList", userList);
+					
+					// So luong sao va ty le sao
+					req.setAttribute("count5Star", reviewService.countStar(product.getId(), 5));
+					req.setAttribute("rate5Star", countStar(product.getId(), 5, reviewModels.size()));
+					
+					req.setAttribute("count4Star", reviewService.countStar(product.getId(), 4));
+					req.setAttribute("rate4Star", countStar(product.getId(), 4, reviewModels.size()));
+					
+					req.setAttribute("count3Star", reviewService.countStar(product.getId(), 3));
+					req.setAttribute("rate3Star", countStar(product.getId(), 3, reviewModels.size()));
+					
+					req.setAttribute("count2Star", reviewService.countStar(product.getId(), 2));
+					req.setAttribute("rate2Star", countStar(product.getId(), 2, reviewModels.size()));
+					
+					req.setAttribute("count1Star", reviewService.countStar(product.getId(), 1));
+					req.setAttribute("rate1Star", countStar(product.getId(), 1, reviewModels.size()));
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -248,5 +264,12 @@ public class ProductController extends HttpServlet {
 
 		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/product.jsp");
 		rd.forward(req, resp);
+	}
+	
+	private String countStar(Integer productId, int rating, int size) {
+		int total5StarReviews = reviewService.countStar(productId, rating);
+		double percentage = ((double) total5StarReviews / size) * 100;
+		String rateStar = String.valueOf(percentage);
+		return rateStar;
 	}
 }
