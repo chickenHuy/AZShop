@@ -2,12 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="/common/taglib.jsp"%>
 
-
-<c:forEach var = "store" items = "${stores}">
-<h5>${store.name} - ${store.bio}</h5>
-<hr>
-</c:forEach>
-
 	<!-- SECTION -->
 	<div class="section">
 		<!-- container -->
@@ -54,8 +48,39 @@
 
 				</div>
 				
+				
 				<div id="store" class="col-md-9">
-					<div class="row">
+				<div class="row">
+					<c:forEach var="store" items="${stores}">
+						<!-- shop -->
+						<a href='<c:url value="/customer/store/${store.slug}"/>'>
+							<div class="col-md-4 col-xs-6">
+								<div class="shop">
+									<div class="shop-img">
+										<img id="storeImage${store.id}" alt="" />
+									</div>
+									<div class="shop-body">
+										<h3>
+											${store.name}<br>Store
+										</h3>
+										<a href="#" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+									</div>
+								</div>
+							</div>
+						</a>
+						<!-- /shop -->
+					
+						<script>
+							document.addEventListener("DOMContentLoaded", function () {
+								var img = document.getElementById("storeImage${store.id}");
+								img.onerror = function () {
+									// Thay thế ảnh nếu có lỗi khi tải ảnh
+									img.src ="${pageContext.request.contextPath}/templates/static/none.png";
+								};
+								img.src = "/AZShop/image?fname=${store.avatar}";
+							});
+						</script>
+					</c:forEach>
 					<c:forEach var="product" items="${products}">
 						<!-- product -->
 							<div class="col-md-4 col-xs-6">
@@ -65,7 +90,7 @@
 											<c:set var="hasImages" value="false" />
 											<c:forEach var="image" items="${images}">
 												<c:if test="${product.id eq image.productId}">
-													<img src="/AZShop/image?fname=${image.image}" alt="" />
+													<img src="/AZShop/image?fname=${image.image}" id="productImage${image.id}" alt="" />
 													<c:set var="hasImages" value="true" />
 												</c:if>
 											</c:forEach>
@@ -107,6 +132,17 @@
 									</a>
 								</div>
 							</div>
+
+							<script>
+								document.addEventListener("DOMContentLoaded", function () {
+									var img = document.getElementById("productImage${image.id}");
+									img.onerror = function () {
+										// Thay thế ảnh nếu có lỗi khi tải ảnh
+										img.src ="${pageContext.request.contextPath}/templates/static/none.png";
+									};
+									img.src = "/AZShop/image?fname=${image.image}";
+								});
+							</script>
 						</c:forEach>
 						
 
