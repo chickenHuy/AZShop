@@ -91,7 +91,7 @@
 									<tr>
 										<td><a href="/AZShop/vendor/product/${product.slug}">${product.name}</a></td>
 										<td>${product.price}</td>
-										<td>${product.Sold}</td>	
+										<td>${product.sold}</td>	
 									</tr>
 								</c:forEach>
 							</tbody>
