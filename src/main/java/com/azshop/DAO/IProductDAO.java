@@ -30,6 +30,8 @@ public interface IProductDAO {
 	List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList);
 
 	List<ProductModel> GetTopSellerProduct(List<ProductModel> productList, int k);
+	
+	List<ProductModel> getNewestProduc(List<ProductModel> productList);
 
 	void update(ProductModel product);
 
