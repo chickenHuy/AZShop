@@ -260,17 +260,21 @@
 									<div class="col-md-6">
 										<div id="reviews">
 											<ul class="reviews">
-												<c:forEach var="index" begin="${startIndex}" end="${endIndex}">
+												<c:forEach var="review" items="${review}">
 													<li>
 														<div class="review-heading">
-															<!-- Hiển thị thông tin người đánh giá -->
-															<h5 class="name">${userList[index].firstName} ${userList[index].lastName}</h5>
-															<p class="date">${review[index].createAt}</p>
-															<!-- Hiển thị xếp hạng sao -->
+															<c:set var="printedUserName" value="false" />
+															<c:forEach var="user" items="${userList}">
+																<c:if test="${review.userId eq user.id and printedUserName eq 'false'}">
+																	<h5 class="name">${user.firstName} ${user.lastName}</h5>
+																	<c:set var="printedUserName" value="true" />
+																</c:if>
+															</c:forEach>
+															<p class="date">${review.createAt}</p>
 															<div class="review-rating">
 																<c:forEach var="i" begin="1" end="5">
 																	<c:choose>
-																		<c:when test="${i <= review[index].rating}">
+																		<c:when test="${i <= review.rating}">
 																			<i class="fa fa-star"></i>
 																		</c:when>
 																		<c:otherwise>
@@ -281,18 +285,8 @@
 															</div>
 														</div>
 														<div class="review-body">
-															<!-- Hiển thị nội dung đánh giá -->
-															<p>${review[index].content}</p>
+															<p>${review.content}</p>
 														</div>
-													</li>
-												</c:forEach>
-											</ul>
-											
-											<!-- Hiển thị phân trang -->
-											<ul class="reviews-pagination">
-												<c:forEach var="page" begin="1" end="${totalPages}">
-													<li class="${page == currentPage ? 'active' : ''}">
-														<a href="?page=${page}">${page}</a>
 													</li>
 												</c:forEach>
 											</ul>
