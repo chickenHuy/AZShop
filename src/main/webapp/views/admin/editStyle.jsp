@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Edit store level</title>
+<title>Edit style level</title>
 </head>
 <body>
 	<main class="page-content">
@@ -43,20 +43,23 @@
 								</div>
 							</div>
 
-							<div class="d-flex">
-								<label for="input36" class="form-label fw-bold me-2">Category</label>
-								<select class="form-select" id="Category" name="categoryId" id="input36">
-									<c:forEach var="item" items="${listCategory}">
-										<c:if test="${item.id == style.categoryId}">
-											<option value="${item.id}">${item.name}</option>
-										</c:if>
-									</c:forEach>
-									<c:forEach var="item" items="${listCategory}">
-										<c:if test="${item.id != style.categoryId}">
-											<option value="${item.id}">${item.name}</option>
-										</c:if>
-									</c:forEach>
-								</select>
+							<div class="row mb-3">
+								<label for="input36" class="col-sm-3 col-form-label">Category</label>
+								<div class="col-sm-9">
+									<select class="form-select" id="Category" name="categoryId"
+										id="input36">
+										<c:forEach var="item" items="${listCategory}">
+											<c:if test="${item.id == style.categoryId}">
+												<option value="${item.id}">${item.name}</option>
+											</c:if>
+										</c:forEach>
+										<c:forEach var="item" items="${listCategory}">
+											<c:if test="${item.id != style.categoryId}">
+												<option value="${item.id}">${item.name}</option>
+											</c:if>
+										</c:forEach>
+									</select>
+								</div>
 							</div>
 
 							<div class="row">

@@ -230,12 +230,6 @@ public class AdminController extends HttpServlet {
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editdelivery.jsp");
 			rDispatcher.forward(req, resp);
 		}
-
-
-		
-		
-		
-		
 	}
 
 	private void getEditStyle(HttpServletRequest req, HttpServletResponse resp) {
@@ -251,6 +245,8 @@ public class AdminController extends HttpServlet {
 	}
 
 	private void getOrderDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
 		String orderId = req.getParameter("orderId");
 		if (orderId != null) {
 			List<OrderItemModel> listOrderItem = orderItemService.getByOrderId(Integer.parseInt(orderId));
@@ -803,7 +799,12 @@ public class AdminController extends HttpServlet {
 				String categoryId = req.getParameter("categoryId");
 
 				if ("0".equals(categoryId)) {
-					category.setCategoryId(0);
+					if (category.getCategoryId() > 0) {
+						
+					}
+					else {
+						category.setCategoryId(0);
+					}
 				} else {
 					category.setCategoryId(Integer.parseInt(categoryId));
 				}

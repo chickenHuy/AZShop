@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Order</title>
 </head>
 <main class="page-content">
 	<!--breadcrumb-->
@@ -67,12 +67,45 @@
 										</c:if>
 									</c:forEach>
 
-									<td>${order.status}</td>
-									<td>${order.updateAt != null ? order.updateAt : order.createAt}</td>
-									<td>
-									<a class="dropdown-item"
-													href='<c:url value="/admin/order-detail?orderId=${order.id}"/>'>Detail</a>
+
 									<c:choose>
+										<c:when test="${order.status == 'Completed'}">
+											<td><span
+												class="lable-table bg-success-subtle text-success rounded border border-success-subtle font-text2 fw-bold">Completed<i
+													class="bi bi-check2 ms-2"></i></span></td>
+										</c:when>
+										<c:when test="${order.status == 'Cancelled'}">
+											<td><span
+												class="lable-table bg-danger-subtle text-danger rounded border border-danger-subtle font-text2 fw-bold">Cancelled<i
+													class="bi bi-x-lg ms-2"></i></span></td>
+										</c:when>
+										<c:when test="${order.status == 'Shipping'}">
+											<td><span
+												class="lable-table bg-warning-subtle text-warning rounded border border-warning-subtle font-text2 fw-bold">Shipping<i
+													class="bi bi-info-circle ms-2"></i></span></td>
+										</c:when>
+										<c:when test="${order.status == 'Delivered'}">
+											<td><span
+												class="lable-table bg-primary-subtle text-primary rounded border border-primary-subtle font-text2 fw-bold">Delivered<i
+													class="bi bi-check2-all ms-2"></i></span></td>
+										</c:when>
+										<c:when test="${order.status == 'Waiting'}">
+											<td><span
+												class="lable-table bg-warning-subtle text-warning rounded border border-warning-subtle font-text2 fw-bold">Waiting<i
+													class="bi bi-info-circle ms-2"></i></span></td>
+										</c:when>
+										<c:when test="${order.status == 'Processing'}">
+											<td><span
+												class="lable-table bg-warning-subtle text-warning rounded border border-warning-subtle font-text2 fw-bold">Processing<i
+													class="bi bi-info-circle ms-2"></i></span></td>
+										</c:when>
+									</c:choose>
+
+
+									<td>${order.updateAt != null ? order.updateAt : order.createAt}</td>
+									<td><a class="dropdown-item"
+										href='<c:url value="/admin/order-detail?orderId=${order.id}"/>'>Detail</a>
+										<c:choose>
 											<c:when test="${order.status == 'Pending Pickup'}">
 												<a class="dropdown-item"
 													href='<c:url value="/admin/order-edit-status?orderId=${order.id}"/>'>Shipping</a>
@@ -85,7 +118,7 @@
 												<a class="dropdown-item"
 													href='<c:url value="/admin/order-edit-status?orderId=${order.id}"/>'>Completed</a>
 											</c:when>
-											
+
 										</c:choose></td>
 								</tr>
 							</c:forEach>

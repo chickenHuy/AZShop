@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Product</title>
 </head>
 <main class="page-content">
 	<!--breadcrumb-->

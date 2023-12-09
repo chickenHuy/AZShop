@@ -47,9 +47,16 @@
 									<tr>
 										<td><a class="d-flex align-items-center gap-3"
 											href="javascript:;">
-												<div class="customer-pic">
-													<img src="${store.avatar }" class="rounded-circle"
-														width="40" height="40" alt="">
+												<div class="customer-pic d-flex align-items-center gap-3">
+													<c:if test="${store.avatar != null }">
+														<img src="/AZShop/image?fname=${store.avatar}" alt=""
+															width="40" height="40" class="rounded-circle">
+													</c:if>
+													<c:if test="${store.avatar == null }">
+														<img
+															src="${pageContext.request.contextPath}/templates/static/none.png"
+															alt="" width="40" height="40" class="rounded-circle">
+													</c:if>
 												</div>
 												<p class="mb-0 customer-name fw-bold">${store.name }</p>
 										</a></td>

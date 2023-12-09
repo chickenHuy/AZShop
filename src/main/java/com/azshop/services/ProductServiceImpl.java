@@ -127,4 +127,9 @@ public class ProductServiceImpl implements IProductService{
 		return productDAO.search(key, categoryId, storeId, styleValueId, styleId, page, pageSize);
 	}
 
+	@Override
+	public List<ProductModel> getNewestProduc(List<ProductModel> productList) {
+		return productDAO.getNewestProduc(productList);
+	}
+
 }

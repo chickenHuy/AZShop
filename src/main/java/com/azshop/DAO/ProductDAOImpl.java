@@ -2,6 +2,7 @@ package com.azshop.DAO;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -824,6 +825,28 @@ public class ProductDAOImpl implements IProductDAO {
 	        e.printStackTrace();
 	    }
 	    return listProduct;
+	}
+
+	@Override
+	public List<ProductModel> getNewestProduc(List<ProductModel> productList) {
+		 int n = productList.size();
+
+		    for (int i = 0; i < n - 1; i++) {
+		        for (int j = 0; j < n - i - 1; j++) {
+		            // So sánh theo createAt
+		            Date createAt1 = productList.get(j).getCreateAt();
+		            Date createAt2 = productList.get(j + 1).getCreateAt();
+
+		            if (createAt1.before(createAt2)) {
+		                // Hoán đổi vị trí của hai sản phẩm nếu createAt giảm dần (mới nhất đầu tiên)
+		                ProductModel temp = productList.get(j);
+		                productList.set(j, productList.get(j + 1));
+		                productList.set(j + 1, temp);
+		            }
+		        }
+		    }
+
+		    return productList;
 	}
 
 }
