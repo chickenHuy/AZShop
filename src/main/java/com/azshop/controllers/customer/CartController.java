@@ -44,7 +44,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer/add-to-cart/*", "/customer/delete-item-cart", "/customer/checkout"})
+@WebServlet(urlPatterns = {"/customer/add-to-cart/*", "/customer/delete-item-cart", "/customer/cart/checkout/", "/customer/cart/checkout-comfirm/"})
 public class CartController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -116,7 +116,7 @@ public class CartController extends HttpServlet{
 					req.setAttribute("user", user);
 					req.setAttribute("imageProductsInCart", imageProductsInCart);	
 					req.setAttribute("cartItemList", cartItemList);
-					req.setAttribute("productsInCart", productsInCart);						
+//					req.setAttribute("productsInCart", productsInCart);					
 				}
 			}
 		} catch (Exception e) {
@@ -156,7 +156,14 @@ public class CartController extends HttpServlet{
 				e.printStackTrace();
 			}			
 		}
-		else if (url.contains("customer/checkout")) {
+		else if (url.contains("customer/cart/checkout/")) {
+			try {
+				getInforCart(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		else if (url.contains("customer/cart/checkout-comfirm/")) {
 			try {
 				getInforCart(req, resp);
 			} catch (Exception e) {
