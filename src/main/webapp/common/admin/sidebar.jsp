@@ -32,6 +32,8 @@
 							class="material-symbols-outlined">arrow_right</span>Products</a></li>
 					<li><a href='<c:url value="/admin/categories"/>'><span
 							class="material-symbols-outlined">arrow_right</span>Categories</a></li>
+					<li><a href='<c:url value="/admin/delivery"/>'><span
+							class="material-symbols-outlined">arrow_right</span>Delivery</a></li>
 					<li><a href='<c:url value="/admin/styles"/>'><span
 							class="material-symbols-outlined">arrow_right</span>Styles</a></li>
 					<li><a href='<c:url value="/admin/customer"/>'><span

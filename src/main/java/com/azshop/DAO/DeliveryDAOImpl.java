@@ -131,6 +131,30 @@ public class DeliveryDAOImpl implements IDeliveryDAO{
 		        e.printStackTrace();
 		    }
 	}
+
+	@Override
+	public boolean checkName(String name) {
+		try {
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement("SELECT * from Delivery WHERE name = ?");
+			ps.setString(1, name);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				String temp = rs.getString("name");
+				if (temp.equals(name)) {
+					return true;
+				}
+			}
+			
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	
 	
 
 }

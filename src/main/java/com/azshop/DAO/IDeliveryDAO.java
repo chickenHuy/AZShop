@@ -10,4 +10,5 @@ public interface IDeliveryDAO {
     List<DeliveryModel> getAll();
     void update(DeliveryModel delivery);
     void delete(int id);
+    boolean checkName(String name);
 }

@@ -33,5 +33,9 @@ public class DeliveryServiceImpl implements IDeliveryService {
 	public void delete(int id) {
 		deliveryDAO.delete(id);
 	}
+	
+	public boolean checkName(String name) {
+		deliveryDAO.checkName(name);
+	}
 
 }

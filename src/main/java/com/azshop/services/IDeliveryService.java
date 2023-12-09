@@ -14,4 +14,6 @@ public interface IDeliveryService {
 	void update(DeliveryModel delivery);
 
 	void delete(int id);
+	
+	boolean checkName(String name);
 }
