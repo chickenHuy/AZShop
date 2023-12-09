@@ -44,6 +44,16 @@
 							class="material-symbols-outlined">arrow_right</span>Store level</a></li>
 					<li><a href='<c:url value="/admin/orders"/>'><span
 							class="material-symbols-outlined">arrow_right</span>Orders</a></li>
+							<li><a><span
+									class="material-symbols-outlined">arrow_right</span>Statistic</a>
+								<ul>
+							        <li><a href='<c:url value="/admin/UserStatic"/>'>User Statistic</a></li>
+							        <li><a href='<c:url value="/admin/StoreStatic"/>'>Store Statistic</a></li>
+							        <!-- Thêm các mục con khác nếu cần -->
+							   </ul>	
+								</li>
+									
+								
 				</ul></li>
 
 

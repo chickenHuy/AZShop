@@ -49,7 +49,7 @@ import com.azshop.services.*;
 		"/admin/editstorelevel", "/admin/deletestorelevel", "/admin/restorestorelevel", "/admin/category/*",
 		"/admin/styles", "/admin/style/delete", "/admin/style/restore", "/admin/addstyle", "/admin/style/stylevalues",
 		"/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
-		"/admin/order-detail" })
+		"/admin/order-detail","/admin/UserStatic","/admin/StoreStatic" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -73,7 +73,8 @@ public class AdminController extends HttpServlet {
 
 		String url = req.getRequestURL().toString();
 		if (url.contains("/admin/dashboard")) {
-			GetStatisticsUser(req, resp);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/dashboard.jsp");
+			rDispatcher.forward(req, resp);
 		} else if (url.contains("/admin/product/edit-status")) {
 			try {
 				editProductStatus(req, resp);
@@ -81,6 +82,7 @@ public class AdminController extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		
 		} else if (url.contains("/admin/productsByCategory")) {
 			getProductByCategory(req, resp);
 		} else if (url.contains("/admin/product")) {
@@ -104,6 +106,7 @@ public class AdminController extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		
 		} else if (url.contains("/admin/storelevel")) {
 			getAllStoreLevel(req, resp);
 			getAllStoreLevelDeleted(req, resp);
@@ -171,6 +174,17 @@ public class AdminController extends HttpServlet {
 		} else if (url.contains("/admin/order-detail")) {
 			getOrderDetail(req, resp);
 		}
+		else if (url.contains("/admin/StoreStatic")) {
+		GetStatisticsStore(req, resp);
+		}
+		else if (url.contains("/admin/UserStatic")) {
+		GetStatisticsUser(req, resp);
+		}
+	 
+		
+		
+		
+		
 	}
 
 	private void getOrderDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -249,7 +263,33 @@ public class AdminController extends HttpServlet {
 		req.setAttribute("total",total);
 		req.setAttribute("count", count);
 		// view nhan du lieu
-		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/StaticsUser.jsp");
+		rd.forward(req, resp);
+		}
+	
+	private void GetStatisticsStore(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		Date currentDate = new Date();
+	    String selectedDateStr = req.getParameter("selectedDate");
+	    Date selectedDate = null;
+
+	    if (selectedDateStr != null && !selectedDateStr.isEmpty()) {
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	        try {
+	            selectedDate = dateFormat.parse(selectedDateStr);
+	        } catch (Exception e) {
+	            e.printStackTrace(); // Xử lý ngoại lệ nếu có lỗi khi chuyển đổi
+	        }	        
+	    }
+	    else
+        {
+        	selectedDate= currentDate;
+        }
+	    int count = storeService.countNewStores(selectedDate);
+		int total = storeService.getTotalStores();
+		req.setAttribute("total",total);
+		req.setAttribute("count", count);
+		// view nhan du lieu
+		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/StaticsStore.jsp");
 		rd.forward(req, resp);
 		}
 

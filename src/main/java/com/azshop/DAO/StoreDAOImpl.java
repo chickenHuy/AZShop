@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.azshop.models.ProductModel;
@@ -395,5 +396,47 @@ public class StoreDAOImpl implements IStoreDAO {
 	            e.printStackTrace();
 	        }
 	        return storeList;
+	}
+
+	@Override
+	public int countNewStores(Date datetime) {
+		int count = 0;
+        try {
+            String sql = "SELECT COUNT(*) AS StoreCount FROM [Store] WHERE [createAt] >= ?";
+            conn = new DBConnection().getConnection();
+
+            ps = conn.prepareStatement(sql);
+            ps.setDate(1, new java.sql.Date(datetime.getTime())); // Chuyển đổi từ Java Date sang SQL Date
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("StoreCount");
+            }
+
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+	}
+
+	@Override
+	public int getTotalStores() {
+		int totalStores = 0;
+        try {
+            String sql = "SELECT COUNT(*) AS TotalStores FROM [Store] WHERE isDeleted = 0";
+            conn = new DBConnection().getConnection();
+
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                totalStores = rs.getInt("TotalStores");
+            }
+
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return totalStores;
 	}
 }
