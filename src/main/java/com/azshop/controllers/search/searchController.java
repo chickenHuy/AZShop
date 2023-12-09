@@ -110,9 +110,14 @@ public class searchController extends HttpServlet {
 					request.setAttribute("productsInCart", productsInCart);	
 			}
 			
+			String style = request.getParameter("styleId");
+			int styleTmp = -1;
+			if (style != null) {
+				styleTmp = Integer.parseInt(style);
+			}
 	        String keyword = request.getParameter("searchTerm");
 	        int categoryId = Integer.parseInt(request.getParameter("categoryId"));
-	        List<ProductModel> productModels = productService.search(keyword, categoryId, -1, -1, -1,1,12);
+	        List<ProductModel> productModels = productService.search(keyword, categoryId, -1, -1, styleTmp,1,12);
 	        for (ProductModel productModel : productModels) {
 				System.out.println(productModel.getName());
 			}
@@ -140,6 +145,7 @@ public class searchController extends HttpServlet {
 	        for (ProductModel productModel : productModels) {
 	        	imageModels.add(imageService.getImage(productModel.getId()));
 			}
+	        request.setAttribute("styleId", styleTmp);
 	        request.setAttribute("images", imageModels);
 	        request.setAttribute("styles", styleModels);
 	        request.setAttribute("products", productModels);
