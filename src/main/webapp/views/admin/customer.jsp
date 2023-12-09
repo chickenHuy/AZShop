@@ -30,8 +30,6 @@
 						<table id="example2" class="table align-middle">
 							<thead class="table-light">
 								<tr>
-									<th><input class="form-check-input" type="checkbox">
-									</th>
 									<th>Customers</th>
 									<th>Email</th>
 									<th>Phone</th>
@@ -44,16 +42,23 @@
 							<tbody>
 								<c:forEach var="user" items="${listuser}">
 									<tr>
-										<td><input class="form-check-input" type="checkbox">
-										</td>
 										<td><a class="d-flex align-items-center gap-3"
 											href="javascript:;">
 												<div class="customer-pic">
-													<img src="${user.coverImage }" class="rounded-circle"
-														width="40" height="40" alt="">
+													<c:if test="${user.avatar != null }">
+														<img src="/AZShop/image?fname=${user.avatar}" alt=""
+															width="40" height="40" class="rounded-circle">
+													</c:if>
+													<c:if test="${user.avatar == null }">
+														<img
+															src="${pageContext.request.contextPath}/templates/static/none.png"
+															alt="" width="40" height="40" class="rounded-circle">
+													</c:if>
 												</div>
 												<p class="mb-0 customer-name fw-bold">${user.firstName }
 													${user.lastName }</p>
+
+
 										</a></td>
 										<td><a href="javascript:;" class="font-text1">${user.email }</a>
 										</td>

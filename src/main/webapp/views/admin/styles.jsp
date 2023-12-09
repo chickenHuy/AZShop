@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Style</title>
 </head>
 <main class="page-content">
 	<!--breadcrumb-->
@@ -36,23 +36,25 @@
 			<form action="addstyle" method="post"
 				class="d-flex align-items-center justify-content-between">
 				<div class="mb-3">
-					<div class="d-flex">
-						<div class="mb-3 me-5">
+					<div class="d-flex gap-2">
+						<div class="col-md-6">
 							<h5>Style Name</h5>
+							<input type="text" class="form-control"
+							placeholder="write name here...." name="styleName" required>
 						</div>
-						<div class="mb-3 me-4 ms-3">
+						<div class="col-md-6">
 							<h5>Choose Category</h5>
-						</div>
-					</div>
-					<div class="d-flex">
-						<input type="text" class="form-control"
-							placeholder="write name here...." name="styleName"> <select
-							class="form-select ms-2" id="Category" name="categoryId">
+							<select
+							class="form-select" id="Category" name="categoryId">
 							<c:forEach var="category" items="${listCategory}">
 								<option value=${category.id}>${category.name}</option>
 							</c:forEach>
-						</select> <input type="submit" value="ADD"
-							class="btn btn-primary px-4 ms-2">
+						</select>
+						</div>
+						<div class="d-flex col-md-6 align-items-end">
+							<input type="submit" value="ADD"
+								class="btn btn-primary px-4 ms-2">
+						</div>
 					</div>
 					<p>${message }</p>
 				</div>
