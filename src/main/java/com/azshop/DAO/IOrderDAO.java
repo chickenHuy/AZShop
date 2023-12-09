@@ -24,5 +24,6 @@ public interface IOrderDAO {
     int countOrderByStore(int storeId);
     List<OrderModel> getAllAdmin();
     int getTotalShopRevenueByDate(Date Date);
+    int getTotalShopRevenue();
     
 }

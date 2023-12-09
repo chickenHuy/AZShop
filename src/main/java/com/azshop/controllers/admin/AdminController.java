@@ -286,8 +286,8 @@ public class AdminController extends HttpServlet {
 			selectedDate = currentDate;
 		}
 		int count = orderService.getTotalShopRevenueByDate(selectedDate);
-		//int total = userService.getTotalUsers();
-		//req.setAttribute("total", total);
+		int total = orderService.getTotalShopRevenue();
+		req.setAttribute("total", total);
 		req.setAttribute("count", count);
 		// view nhan du lieu
 		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");

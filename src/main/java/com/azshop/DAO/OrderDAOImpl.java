@@ -575,6 +575,32 @@ public class OrderDAOImpl implements IOrderDAO {
 
 		    return totalRevenue;
 	}
+
+	@Override
+	public int getTotalShopRevenue() {
+		int totalRevenue = 0;
+
+	    try {
+	        String sql = "SELECT SUM(amountFromStore + amountToStore + amountToAZShop) AS total_shop_revenue " +
+	                     "FROM [Order] ";
+
+	        conn = new DBConnection().getConnection();
+	        ps = conn.prepareStatement(sql);
+	        
+
+	        rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            totalRevenue = rs.getInt("total_shop_revenue");
+	        }
+
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return totalRevenue;
+	}
 	
 	
 	
