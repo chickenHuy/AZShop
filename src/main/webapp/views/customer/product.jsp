@@ -208,8 +208,8 @@
 															class="fa fa-star"></i>
 													</div>
 													<div class="rating-progress">
-														<div style="width: 80%;"></div>
-													</div> <span class="sum">3</span>
+														<div style="width: ${rate5Star}%;"></div>
+													</div> <span class="sum">${count5Star}</span>
 												</li>
 												<li>
 													<div class="rating-stars">
@@ -218,8 +218,8 @@
 															class="fa fa-star-o"></i>
 													</div>
 													<div class="rating-progress">
-														<div style="width: 60%;"></div>
-													</div> <span class="sum">2</span>
+														<div style="width: ${rate4Star}%;"></div>
+													</div> <span class="sum">${count4Star}</span>
 												</li>
 												<li>
 													<div class="rating-stars">
@@ -228,8 +228,8 @@
 															class="fa fa-star-o"></i>
 													</div>
 													<div class="rating-progress">
-														<div></div>
-													</div> <span class="sum">0</span>
+														<div style="width: ${rate3Star}%;"></div>
+													</div> <span class="sum">${count3Star}</span>
 												</li>
 												<li>
 													<div class="rating-stars">
@@ -238,8 +238,8 @@
 															class="fa fa-star-o"></i>
 													</div>
 													<div class="rating-progress">
-														<div></div>
-													</div> <span class="sum">0</span>
+														<div style="width: ${rate2Star}%;"></div>
+													</div> <span class="sum">${count2Star}</span>
 												</li>
 												<li>
 													<div class="rating-stars">
@@ -248,8 +248,8 @@
 															class="fa fa-star-o"></i>
 													</div>
 													<div class="rating-progress">
-														<div></div>
-													</div> <span class="sum">0</span>
+														<div style="width: ${rate1Star}%;"></div>
+													</div> <span class="sum">${count1Star}</span>
 												</li>
 											</ul>
 										</div>
@@ -260,21 +260,17 @@
 									<div class="col-md-6">
 										<div id="reviews">
 											<ul class="reviews">
-												<c:forEach var="review" items="${review}">
+												<c:forEach var="index" begin="${startIndex}" end="${endIndex}">
 													<li>
 														<div class="review-heading">
-															<c:set var="printedUserName" value="false" />
-															<c:forEach var="user" items="${userList}">
-																<c:if test="${review.userId eq user.id and printedUserName eq 'false'}">
-																	<h5 class="name">${user.firstName} ${user.lastName}</h5>
-																	<c:set var="printedUserName" value="true" />
-																</c:if>
-															</c:forEach>
-															<p class="date">${review.createAt}</p>
+															<!-- Hiển thị thông tin người đánh giá -->
+															<h5 class="name">${userList[index].firstName} ${userList[index].lastName}</h5>
+															<p class="date">${review[index].createAt}</p>
+															<!-- Hiển thị xếp hạng sao -->
 															<div class="review-rating">
 																<c:forEach var="i" begin="1" end="5">
 																	<c:choose>
-																		<c:when test="${i <= review.rating}">
+																		<c:when test="${i <= review[index].rating}">
 																			<i class="fa fa-star"></i>
 																		</c:when>
 																		<c:otherwise>
@@ -285,17 +281,20 @@
 															</div>
 														</div>
 														<div class="review-body">
-															<p>${review.content}</p>
+															<!-- Hiển thị nội dung đánh giá -->
+															<p>${review[index].content}</p>
 														</div>
 													</li>
 												</c:forEach>
 											</ul>
+											
+											<!-- Hiển thị phân trang -->
 											<ul class="reviews-pagination">
-												<li class="active">1</li>
-												<li><a href="#">2</a></li>
-												<li><a href="#">3</a></li>
-												<li><a href="#">4</a></li>
-												<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+												<c:forEach var="page" begin="1" end="${totalPages}">
+													<li class="${page == currentPage ? 'active' : ''}">
+														<a href="?page=${page}">${page}</a>
+													</li>
+												</c:forEach>
 											</ul>
 										</div>
 									</div>

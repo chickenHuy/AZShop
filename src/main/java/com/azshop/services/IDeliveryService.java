@@ -6,6 +6,7 @@ import com.azshop.models.DeliveryModel;
 
 public interface IDeliveryService {
 	void insert(DeliveryModel delivery);
+	
 
 	DeliveryModel getById(int id);
 
@@ -14,4 +15,6 @@ public interface IDeliveryService {
 	void update(DeliveryModel delivery);
 
 	void delete(int id);
+	
+	boolean checkName(String name);
 }

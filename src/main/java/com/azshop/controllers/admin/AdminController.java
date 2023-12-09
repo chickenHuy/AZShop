@@ -51,7 +51,7 @@ import com.azshop.services.*;
 		"/admin/editstorelevel", "/admin/deletestorelevel", "/admin/restorestorelevel", "/admin/category/*",
 		"/admin/styles", "/admin/style/delete", "/admin/style/restore", "/admin/addstyle", "/admin/style/stylevalues",
 		"/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
-		"/admin/order-detail","/admin/UserStatic","/admin/StoreStatic" })
+		"/admin/order-detail","/admin/UserStatic","/admin/StoreStatic", "/admin/delivery","/admin/adddelivery","/admin/editdelivery" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -187,6 +187,25 @@ public class AdminController extends HttpServlet {
 		else if (url.contains("/admin/UserStatic")) {
 		GetStatisticsUser(req, resp);
 		}
+		else if (url.contains("/admin/delivery")) {
+			getDelivery(req, resp);
+		}else if (url.contains("/admin/adddelivery")) {
+			String message = req.getParameter("message");
+			req.setAttribute("message", message);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/adddelivery.jsp");
+			rDispatcher.forward(req, resp);
+		} else if(url.contains("/admin/editdelivery")) {
+			String id = req.getParameter("id");
+			String message = req.getParameter("message");
+			req.setAttribute("message", message);
+			if (id != null) {
+				DeliveryModel deliveryModel = deliveryService.getById(Integer.parseInt(id));
+				req.setAttribute("delivery", deliveryModel);
+			}
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editdelivery.jsp");
+			rDispatcher.forward(req, resp);
+		}
+		
 	 
 		
 		
@@ -686,7 +705,12 @@ public class AdminController extends HttpServlet {
 			postEditStoreLevel(req, resp);
 		} else if (url.contains("/admin/deletestorelevel")) {
 			postDeleteStoreLevel(req, resp);
+		} else if(url.contains("/admin/adddelivery")) {
+			postAddDelivery(req,resp);
+		} else if(url.contains("/admin/editdelivery")) {
+			postEditDelivery(req,resp);
 		}
+		
 
 	}
 
@@ -999,5 +1023,74 @@ public class AdminController extends HttpServlet {
 		List<UserModel> list = userService.getAll();
 		req.setAttribute("listuser", list);
 	}
+	
+	private void getDelivery(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		List<DeliveryModel> list = deliveryService.getAll();
+		req.setAttribute("listDelivery", list);
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/delivery.jsp");
+		rDispatcher.forward(req, resp);
+	}
+	
+	private void postAddDelivery(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+		
+		DeliveryModel deliveryModel = new DeliveryModel();
+		
+		String name = req.getParameter("deliveryname");
+		String price = req.getParameter("price");
+		String description = req.getParameter("description");
+		
+		if (name != null && price != null && description != null) {
+
+				if (!deliveryService.checkName(name)) {
+					try {
+						deliveryModel.setName(name);
+						deliveryModel.setPrice(new BigDecimal(price));
+						deliveryModel.setDescription(description);
+						deliveryService.insert(deliveryModel);
+						resp.sendRedirect("?message=Successfully");
+					} catch (Exception e) {
+						resp.sendRedirect("?message=Failed to add the delivery level");
+					}
+				} else {
+					resp.sendRedirect("?message=Name already exists");
+				}
+		} else {
+				resp.sendRedirect("?message=You must fill out the form");
+		}
+	}
+	
+	private void postEditDelivery(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		String id = req.getParameter("id");
+		DeliveryModel deliveryModel = deliveryService.getById(Integer.parseInt(id));
+
+		String name = req.getParameter("deliveryname");
+		String price = req.getParameter("price");
+		String description = req.getParameter("description");
+
+		if (name != null && price != null && description != null) {
+			try {
+				deliveryModel.setName(name);
+				deliveryModel.setPrice(new BigDecimal(price));
+				deliveryModel.setDescription(description);
+
+				deliveryService.update(deliveryModel);
+				resp.sendRedirect("?message=Successfully");
+			} catch (Exception e) {
+				resp.sendRedirect("?message=Failed to edit delivery");
+			}
+		} else {
+			resp.sendRedirect("?message=You must fill out the form");
+		}
+	}
+	
 
 }
+
+	
+
+

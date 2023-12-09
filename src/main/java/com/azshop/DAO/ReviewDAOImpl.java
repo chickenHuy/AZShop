@@ -348,4 +348,40 @@ public class ReviewDAOImpl implements IReviewDAO {
 		}
 		return countStar;
 	}
+
+	@Override
+	public List<ReviewModel> getByProductIdPage(int productId, int offset, int limit) {
+		List<ReviewModel> reviewModelList = new ArrayList<>();
+	    try {
+	        String sql = "SELECT * FROM Review WHERE productId = ? ORDER BY createAt DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+	        conn = new DBConnection().getConnection();
+	        ps = conn.prepareStatement(sql);
+	        ps.setInt(1, productId);
+	        ps.setInt(2, offset);
+	        ps.setInt(3, limit);
+
+	        rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            ReviewModel reviewModel = new ReviewModel();
+
+	            reviewModel.setId(rs.getInt("id"));
+	            reviewModel.setUserId(rs.getInt("userId"));
+	            reviewModel.setProductId(rs.getInt("productId"));
+	            reviewModel.setStoreId(rs.getInt("storeId"));
+	            reviewModel.setOrderId(rs.getInt("orderId"));
+	            reviewModel.setContent(rs.getString("content"));
+	            reviewModel.setRating(rs.getInt("rating"));
+	            reviewModel.setCreateAt(rs.getDate("createAt"));
+	            reviewModel.setUpdateAt(rs.getDate("updateAt"));
+
+	            reviewModelList.add(reviewModel);
+	        }
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return reviewModelList;
+	}
 }
