@@ -70,5 +70,10 @@ public class ReviewServiceImpl implements IReviewService{
 		return reviewDAO.countNewByStore(storeId);
 	}
 
+	@Override
+	public int countStar(int productId, int rating) {
+		return reviewDAO.countStar(productId, rating);
+	}
+
 
 }
