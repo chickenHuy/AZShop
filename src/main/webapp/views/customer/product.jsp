@@ -6,6 +6,26 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+    /* CSS cho video container */
+    .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px; /* Tăng độ rộng tối đa của video nếu bạn muốn */
+        margin: auto;
+    }
+
+    /* CSS cho video */
+    .video-container video {
+        width: 100%;
+        height: auto;
+        display: block;
+        padding: 2px 0 0 5px;
+    }
+
+
+
+</style>
 </head>
 <body>
 
@@ -45,23 +65,42 @@
 								 <img src="/AZShop/image?fname=${image.image}" alt="">
 							</div>
 						</c:forEach>
+								<c:if test="${product.video != null}">
+										    <div class="card">
+										        <div class="video-container">
+										            <video controls>
+										                <source src="${(product != null && product.video != null) ? '/AZShop/video?fname=' : ''}${(product != null && product.video != null) ? product.video : ''}" type="video/mp4">
+										            </video>
+										        </div>
+										    </div>
+										</c:if>
 					</div>
+					
 				</div>
 				<!-- /Product main img -->
 
 				<!-- Product thumb imgs -->
 				<div class="col-md-2  col-md-pull-5">
 					<div id="product-imgs">
+									
 						<c:forEach var="image" items="${imageList}"> 
 							<div class="product-preview">
 								 <img src="/AZShop/image?fname=${image.image}" alt="">
 							</div>
 						</c:forEach>
+						<c:if test="${product.video != null}">
+					    <div class="card">
+					        <div class="video-container">
+					            <video>
+					                <source src="${(product != null && product.video != null) ? '/AZShop/video?fname=' : ''}${(product != null && product.video != null) ? product.video : ''}" type="video/mp4">
+					            </video>
+					        </div>
+					    </div>
+					</c:if>
 					</div>
 				</div>
-				<!-- /Product thumb imgs -->
 
-
+				
 				<!-- Product details -->
 				<div class="col-md-5">
 					<div class="product-details">
@@ -89,7 +128,7 @@
 							</h3>
 							<span class="product-available">In Stock</span>
 						</div>
-						<p>Cửa hàng: ${store.name}</p>
+						<p>Cửa hàng: <a href='/AZShop/customer/store/slug={$store.slug}' style="text-decorator:none;">${store.name}</a></p>
 
 						
 
@@ -255,7 +294,7 @@
 										</div>
 									</div>
 									<!-- /Rating -->
-
+	
 									<!-- Reviews -->
 									<div class="col-md-6">
 										<div id="reviews">
@@ -371,6 +410,7 @@
 									</div>
 								</div>
 							</a>
+							
 							<div class="product-body">
 								<c:forEach var="category" items="${categoryList}">
 									<c:if test="${product.categoryId eq category.id}">
@@ -412,9 +452,11 @@
 					</div>
 					<!-- /product -->
 				</c:forEach>
+				
 
 			</div>
 			<!-- /row -->
+			
 		</div>
 		<!-- /container -->
 	</div>

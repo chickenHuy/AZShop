@@ -553,6 +553,7 @@ public class GuestController extends HttpServlet{
 		List<CategoryModel> categoryList = categoryService.getAll();
 		List<ProductModel> productList = productService.getAll();
 		List<ImageModel> imageList = new ArrayList<ImageModel>();
+		List<ProductModel> newestProductList = productService.getNewestProduc(productList);
 		
 		for (ProductModel productModel : productList) {
 			ImageModel image = imageService.getImage(productModel.getId());
@@ -562,6 +563,7 @@ public class GuestController extends HttpServlet{
 		req.setAttribute("categoryList", categoryList);
 		req.setAttribute("imageList", imageList);
 		req.setAttribute("productList",productList);
+		req.setAttribute("newestProductList", newestProductList);
 		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/home.jsp");
 		rd.forward(req, resp);
 	}

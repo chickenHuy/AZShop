@@ -27,6 +27,9 @@ public interface IProductService {
     List<ProductModel> SortingProductbyPriceDecending(List<ProductModel> productList);
 
     List<ProductModel> GetTopSellerProduct(List<ProductModel> productList, int k);
+    
+	List<ProductModel> getNewestProduc(List<ProductModel> productList);
+
 
 	void update(ProductModel product);
 	List<ProductModel> search(String key, int categoryId, int storeId, int styleValueId, int styleId, int page, int pageSize);

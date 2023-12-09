@@ -222,7 +222,7 @@
 							<!-- tab -->
 							<div id="tab2" class="tab-pane fade in active">
 								<div class="products-slick" data-nav="#slick-nav-2">
-									<c:forEach var="product" items="${productList}">
+									<c:forEach var="product" items="${newestProductList}">
 										<!-- product -->
 										<div class="product">
 											<a href='<c:url value="/guest/product"/>'>

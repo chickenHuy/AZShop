@@ -56,7 +56,7 @@
 									<option value="${category.id}">${category.name}</option>
 								</c:if>
 							</c:forEach>
-							<input type="hidden" name = "styleId" value =${styleId == null ? '':styleId}>
+							<input type="hidden" name = "styleId" value =${styleId == null ? '-1'  : styleId}>
 							</select> <input class="input" name="searchTerm" placeholder="Search here" value=${searchTerm == null ? '' : searchTerm}> 
 							<button type="submit" class="search-btn">Tìm kiếm</button>
 						</form>
