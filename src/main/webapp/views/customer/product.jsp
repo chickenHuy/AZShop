@@ -208,8 +208,8 @@
 															class="fa fa-star"></i>
 													</div>
 													<div class="rating-progress">
-														<div style="width: 80%;"></div>
-													</div> <span class="sum">3</span>
+														<div style="width: ${rate5Star}%;"></div>
+													</div> <span class="sum">${count5Star}</span>
 												</li>
 												<li>
 													<div class="rating-stars">
@@ -218,8 +218,8 @@
 															class="fa fa-star-o"></i>
 													</div>
 													<div class="rating-progress">
-														<div style="width: 60%;"></div>
-													</div> <span class="sum">2</span>
+														<div style="width: ${rate4Star}%;"></div>
+													</div> <span class="sum">${count4Star}</span>
 												</li>
 												<li>
 													<div class="rating-stars">
@@ -228,8 +228,8 @@
 															class="fa fa-star-o"></i>
 													</div>
 													<div class="rating-progress">
-														<div></div>
-													</div> <span class="sum">0</span>
+														<div style="width: ${rate3Star}%;"></div>
+													</div> <span class="sum">${count3Star}</span>
 												</li>
 												<li>
 													<div class="rating-stars">
@@ -238,8 +238,8 @@
 															class="fa fa-star-o"></i>
 													</div>
 													<div class="rating-progress">
-														<div></div>
-													</div> <span class="sum">0</span>
+														<div style="width: ${rate2Star}%;"></div>
+													</div> <span class="sum">${count2Star}</span>
 												</li>
 												<li>
 													<div class="rating-stars">
@@ -248,8 +248,8 @@
 															class="fa fa-star-o"></i>
 													</div>
 													<div class="rating-progress">
-														<div></div>
-													</div> <span class="sum">0</span>
+														<div style="width: ${rate1Star}%;"></div>
+													</div> <span class="sum">${count1Star}</span>
 												</li>
 											</ul>
 										</div>
