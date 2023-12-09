@@ -99,7 +99,7 @@
 			</div>
 			<div class="user-info">
 				<h5 class="mb-0 user-name">${userName}</h5>
-				<p class="mb-0 user-designation">UI Engineer</p>
+				<p class="mb-0 user-designation">Admin</p>
 			</div>
 		</div>
 		<ul class="dropdown-menu dropdown-menu-end">
