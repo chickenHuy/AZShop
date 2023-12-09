@@ -48,10 +48,11 @@ import com.azshop.services.*;
 		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory",
 		"/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel",
 		"/admin/deleteuserlevel", "/admin/restoreuserlevel", "/admin/storelevel", "/admin/addstorelevel",
-		"/admin/editstorelevel", "/admin/deletestorelevel", "/admin/restorestorelevel", "/admin/category/*",
+		"/admin/editstorelevel", "/admin/deletestorelevel", "/admin/restorestorelevel", "/admin/category/delete",
 		"/admin/styles", "/admin/style/delete", "/admin/style/restore", "/admin/addstyle", "/admin/style/stylevalues",
 		"/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
-		"/admin/order-detail","/admin/UserStatic","/admin/StoreStatic", "/admin/delivery","/admin/adddelivery","/admin/editdelivery","/admin/deletedelivery" })
+		"/admin/order-detail","/admin/UserStatic","/admin/StoreStatic", "/admin/style/edit", "/admin/category/restore",
+        "/admin/StoreStatic", "/admin/delivery","/admin/adddelivery","/admin/editdelivery","/admin/deletedelivery" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -75,11 +76,8 @@ public class AdminController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		String url = req.getRequestURL().toString();
-		
-		
 		if (url.contains("/admin/dashboard")) {
-			GetStatisticRevenue(req,resp
-					);
+			GetStatisticRevenue(req,resp);
 		} else if (url.contains("/admin/product/edit-status")) {
 			try {
 				editProductStatus(req, resp);
@@ -100,7 +98,7 @@ public class AdminController extends HttpServlet {
 			getAddCategory(req, resp);
 		} else if (url.contains("/admin/category/edit")) {
 			getEditCategory(req, resp);
-		} else if (url.contains("/admin/category")) {
+		}  else if (url.contains("/admin/category/restore")) {
 			editCategoryStatus(req, resp);
 		} else if (url.contains("/admin/customer")) {
 			getAllUser(req, resp);
@@ -166,6 +164,10 @@ public class AdminController extends HttpServlet {
 			getDeleteStyle(req, resp);
 		} else if (url.contains("/admin/style/restore")) {
 			getRestoreStyle(req, resp);
+		} else if (url.contains("/admin/style/edit")) {
+			getEditStyle(req, resp);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editStyle.jsp");
+			rDispatcher.forward(req, resp);
 		} else if (url.contains("/admin/styles")) {
 			getAllStyle(req, resp);
 		} else if (url.contains("/admin/style/stylevalues")) {
@@ -204,16 +206,26 @@ public class AdminController extends HttpServlet {
 			}
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editdelivery.jsp");
 			rDispatcher.forward(req, resp);
-		} 
-		
-	 
+		}
+
+
 		
 		
 		
 		
 	}
-	
-	
+
+	private void getEditStyle(HttpServletRequest req, HttpServletResponse resp) {
+		String id = req.getParameter("id");
+		String message = req.getParameter("message");
+		req.setAttribute("message", message);
+		List<CategoryModel> listCategory = categoryService.getAll();
+		req.setAttribute("listCategory", listCategory);
+		if (id != null) {
+			StyleModel style = styleService.getById(Integer.parseInt(id));
+			req.setAttribute("style", style);
+		}
+	}
 
 	private void getOrderDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String orderId = req.getParameter("orderId");
@@ -268,7 +280,7 @@ public class AdminController extends HttpServlet {
 		List<StoreLevelModel> list = storeLevelService.getAll();
 		req.setAttribute("liststorelevel", list);
 	}
-	
+
 	private void GetStatisticRevenue(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		Date currentDate = new Date();
@@ -432,36 +444,17 @@ public class AdminController extends HttpServlet {
 
 	private void editCategoryStatus(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String url = req.getRequestURL().toString();
-		URI uri;
-		try {
-			uri = new URI(url);
-			String path = uri.getPath();
-			String[] parts = path.split("/");
-			PrintWriter out = resp.getWriter();
-			if (parts.length > 0) {
-				if (url.contains("restore")) {
-					String slug = parts[parts.length - 1].replace("restore-", "");
-					CategoryModel category = categoryService.getCategoryBySlug(slug);
-					if (category == null) {
-						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-					} else {
-						categoryService.restoreBySlug(slug);
-					}
-				} else {
-					String slug = parts[parts.length - 1].replace("delete-", "");
-					CategoryModel category = categoryService.getCategoryBySlug(slug);
-					if (category == null) {
-						req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
-					} else {
-						categoryService.deleteBySlug(slug);
-					}
-				}
-				resp.sendRedirect("/AZShop/admin/categories");
-			}
-		} catch (Exception e) {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		String slug = req.getParameter("slug");
+		CategoryModel category = categoryService.getCategoryBySlug(slug);
+		if (category == null) {
 			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+		} else {
+			categoryService.restoreBySlug(slug);
 		}
+		resp.sendRedirect("/AZShop/admin/categories");
 	}
 
 	private void editOrderStatus(HttpServletRequest req, HttpServletResponse resp)
@@ -493,21 +486,7 @@ public class AdminController extends HttpServlet {
 		int categoryId = Integer.parseInt(req.getParameter("categoryId"));
 		if (categoryId == -1) {
 
-			List<ProductModel> listProduct = productService.getAll();
-
-			List<CategoryModel> listCategory = categoryService.getAll();
-			List<ImageModel> lisImageModels = new ArrayList<ImageModel>();
-			for (ProductModel productModel : listProduct) {
-				List<ImageModel> listModelByProduct = imageService.getByProductId(productModel.getId());
-				if (listModelByProduct.size() > 0)
-					lisImageModels.add(listModelByProduct.get(0));
-			}
-			req.setAttribute("images", lisImageModels);
-
-			int countAllProduct = listProduct.size();
-			req.setAttribute("listProduct", listProduct);
-			req.setAttribute("countAllProduct", countAllProduct);
-			req.setAttribute("listCategory", listCategory);
+			getAllProduct(req, resp);
 
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
 			rDispatcher.forward(req, resp);
@@ -526,6 +505,9 @@ public class AdminController extends HttpServlet {
 					lisImageModels.add(listModelByProduct.get(0));
 			}
 			req.setAttribute("images", lisImageModels);
+
+			List<StoreModel> listStore = storeService.getAll();
+			req.setAttribute("listStore", listStore);
 
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
 			rDispatcher.forward(req, resp);
@@ -580,6 +562,9 @@ public class AdminController extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 		String slug = req.getParameter("slug");
+		String message = req.getParameter("message");
+
+		req.setAttribute("message", message);
 
 		CategoryModel category = categoryService.getCategoryBySlug(slug);
 		req.setAttribute("category", category);
@@ -705,14 +690,111 @@ public class AdminController extends HttpServlet {
 			postEditStoreLevel(req, resp);
 		} else if (url.contains("/admin/deletestorelevel")) {
 			postDeleteStoreLevel(req, resp);
+		} else if (url.contains("/admin/category/edit")) {
+			postEditCategory(req, resp);
+		} else if (url.contains("/admin/category/delete")) {
+			postDeleteCategory(req, resp);
+		} else if (url.contains("/admin/style/edit")) {
+			postEditStyle(req, resp);
 		} else if(url.contains("/admin/adddelivery")) {
-			postAddDelivery(req,resp);
-		} else if(url.contains("/admin/editdelivery")) {
-			postEditDelivery(req,resp);
-		} else if (url.contains("/admin/deletedelivery")) {
-			postDeleteDelivery(req, resp);
+            postAddDelivery(req,resp);
+        } else if(url.contains("/admin/editdelivery")) {
+            postEditDelivery(req,resp);
+        } else if (url.contains("/admin/deletedelivery")) {
+            postDeleteDelivery(req, resp);
+        }
+
+	}
+
+	private void postEditStyle(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		String id = req.getParameter("id");
+		StyleModel style = styleService.getById(Integer.parseInt(id));
+
+		String name = req.getParameter("styleName");
+		String categoryId = req.getParameter("categoryId");
+		if (name != "") {
+			try {
+				style.setName(name);
+				style.setCategoryId(Integer.parseInt(categoryId));
+				styleService.update(style);
+
+				resp.sendRedirect("/AZShop/admin/style/edit?id=" + id + "&&message=Successfully");
+			} catch (Exception e) {
+				resp.sendRedirect(
+						"/AZShop/admin/style/edit?id=" + id + "&&message=Failed to add the user level");
+			}
+
+		} else {
+			resp.sendRedirect("/AZShop/admin/style/edit?id=" + id + "&&message=You must fill out the form");
 		}
-		
+	}
+
+	private void postDeleteCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		String slug = req.getParameter("slug");
+		CategoryModel category = categoryService.getCategoryBySlug(slug);
+		if (category == null) {
+			req.getRequestDispatcher("/views/vendor/404.jsp").forward(req, resp);
+		} else {
+			categoryService.deleteBySlug(slug);
+		}
+		resp.sendRedirect("/AZShop/admin/categories");
+	}
+
+	private void postEditCategory(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		String id = req.getParameter("id");
+		CategoryModel category = categoryService.getById(Integer.parseInt(id));
+		String slug=null;
+
+		String name = req.getParameter("categoryName");
+		if (name != "")
+		{
+
+			try {
+				slug = SlugUtil.toSlug(name);
+				int indexOfDash = slug.lastIndexOf("-");
+				if (indexOfDash != -1) {
+					slug = slug.substring(0, indexOfDash);
+				}
+
+				String categoryId = req.getParameter("categoryId");
+
+				if ("0".equals(categoryId)) {
+					category.setCategoryId(0);
+				} else {
+					category.setCategoryId(Integer.parseInt(categoryId));
+				}
+
+				Part imagePart = req.getPart("image");
+
+				if (imagePart != null && imagePart.getSize() != 0) {
+					// Tên file duy nhất
+					String fileName = "image" + System.currentTimeMillis();
+
+					// Xử lý tải lên và lưu trữ hình ảnh
+					String imagePath = UploadUtils.processUpload("image", req, Constant.DIR, fileName);
+					category.setImage(imagePath);
+				}
+
+				category.setName(name);
+				category.setSlug(slug);
+				categoryService.update(category);
+				resp.sendRedirect("?slug=" + slug + "&&message=Sucessfully");
+			} catch (Exception e) {
+				resp.sendRedirect("?slug=" + category.getSlug() + "&&message=Failed to edit the category");
+			}
+		} else {
+			resp.sendRedirect("?slug=" + category.getSlug() + "?message=You must fill out the form");
+		}
+
 
 	}
 
@@ -1017,7 +1099,8 @@ public class AdminController extends HttpServlet {
 		req.setAttribute("countAllProduct", countAllProduct);
 		req.setAttribute("listCategory", listCategory);
 
-		
+		List<StoreModel> listStore = storeService.getAll();
+		req.setAttribute("listStore", listStore);
 
 	}
 
@@ -1025,24 +1108,24 @@ public class AdminController extends HttpServlet {
 		List<UserModel> list = userService.getAll();
 		req.setAttribute("listuser", list);
 	}
-	
+
 	private void getDelivery(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 		List<DeliveryModel> list = deliveryService.getAll();
 		req.setAttribute("listDelivery", list);
 		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/delivery.jsp");
 		rDispatcher.forward(req, resp);
 	}
-	
+
 	private void postAddDelivery(HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-		
+
 		DeliveryModel deliveryModel = new DeliveryModel();
-		
+
 		String name = req.getParameter("deliveryname");
 		String price = req.getParameter("price");
 		String description = req.getParameter("description");
-		
+
 		if (name != null && price != null && description != null) {
 
 				if (!deliveryService.checkName(name)) {
@@ -1062,7 +1145,7 @@ public class AdminController extends HttpServlet {
 				resp.sendRedirect("?message=You must fill out the form");
 		}
 	}
-	
+
 	private void postEditDelivery(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
@@ -1089,7 +1172,7 @@ public class AdminController extends HttpServlet {
 			resp.sendRedirect("?message=You must fill out the form");
 		}
 	}
-	
+
 	private void postDeleteDelivery(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
@@ -1104,10 +1187,6 @@ public class AdminController extends HttpServlet {
 			resp.sendRedirect("editdelivery?message=Failed to delete delivery");
 		}
 	}
-	
+
 
 }
-
-	
-
-
