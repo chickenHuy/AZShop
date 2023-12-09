@@ -64,7 +64,43 @@
                 </div>
             </div>
         </div>
-        		
+        		<div class="col">
+                <div class="card radius-10 border-0 border-start border-success border-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="">
+                                <p class="mb-1">Total Follower</p>
+                                <h4 class="mb-0 text-success">${totalFL}</h4>
+                            </div>
+                            <div class="ms-auto widget-icon bg-success text-white">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                        </div>
+                        <div class="progress mt-3" style="height: 4.5px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>	
+            
+			<div class="col">
+                <div class="card radius-10 border-0 border-start border-success border-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="">
+                                <p class="mb-1">Total Product</p>
+                                <h4 class="mb-0 text-success">${totalProducts != null ? totalProducts : '0'}</h4>
+                            </div>
+                            <div class="ms-auto widget-icon bg-success text-white">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                        </div>
+                        <div class="progress mt-3" style="height: 4.5px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>	
         	
 
 				  	      

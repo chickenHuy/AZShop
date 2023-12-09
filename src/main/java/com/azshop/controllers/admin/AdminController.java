@@ -63,7 +63,7 @@ public class AdminController extends HttpServlet {
 	ICategoryService categoryService = new CategoryServiceImpl();
 	IStyleValueService styleValueService = new StyleValueImpl();
 	IStyleService styleService = new StyleServiceImpl();
-
+	IUserFollowStoreService UserFollowStoreService = new UserFollowStoreServiceImpl();
 	IUserLevelService userLevelService = new UserLevelServiceImpl();
 	IStoreLevelService storeLevelService = new StoreLevelServiceImpl();
 	IOrderService orderService = new OrderServiceImpl();
@@ -299,8 +299,16 @@ public class AdminController extends HttpServlet {
 		}
 		int count = orderService.getTotalShopRevenueByDate(selectedDate);
 		int total = orderService.getTotalShopRevenue();
+		int totalFL = UserFollowStoreService.getTotalFollow();
+		List<ProductModel> productModels = productService.getAll(); // totalProducts
+		if (productModels != null)
+			req.setAttribute("totalProducts", productModels.size());
+		List<OrderModel> orderModels = orderService.getAll();
+		if (orderModels != null)
+			req.setAttribute("totalOrders", orderModels.size());
 		req.setAttribute("total", total);
 		req.setAttribute("count", count);
+		req.setAttribute("totalFL", totalFL);
 		// view nhan du lieu
 		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
 		rd.forward(req, resp);
