@@ -826,5 +826,4 @@ public class ProductDAOImpl implements IProductDAO {
 	    return listProduct;
 	}
 
-
 }

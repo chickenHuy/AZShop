@@ -29,4 +29,6 @@ public interface IReviewDAO {
 	int countNewByStore(int storeId);
 
 	BigDecimal avgRating(int productId);
+
+	int countStar(int productId, int rating);
 }

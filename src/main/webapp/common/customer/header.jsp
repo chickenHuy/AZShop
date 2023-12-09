@@ -106,7 +106,7 @@
 															<a href="#">${product.name}</a>
 														</h3>
 														<h4 class="product-price">
-															<span class="qty">${cartItem.count}x</span>${product.price}
+															<span class="qty">${cartItem.count}x</span>${product.price} VNĐ
 														</h4>
 													</c:if>
 												</c:forEach>												
@@ -121,7 +121,7 @@
 								</div>
 								<div class="cart-summary">
 									<small>${quantity} Item(s) selected</small>
-									<h5>SUBTOTAL: $2940.00</h5>
+									<h5>SUBTOTAL: ${sumPrice} VNĐ</h5>
 								</div>
 								<div class="cart-btns">
 									<a href='<c:url value="/customer/cart"/>'>View Cart</a> <a href='<c:url value="/customer/checkout"/>'>Checkout <i

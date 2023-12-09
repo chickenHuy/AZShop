@@ -39,7 +39,7 @@ public class DeliveryDAOImpl implements IDeliveryDAO{
 	public DeliveryModel getById(int id) {
 		DeliveryModel deliveryModel = new DeliveryModel();
 		try {
-			 String sql = "SELECT * FROM Delivery WHERE id = ?";
+			 String sql = "SELECT * FROM Delivery WHERE id = ? and isDeleted = 0";
 		        conn = new DBConnection().getConnection();
 		        
 		        ps = conn.prepareStatement(sql);
@@ -66,7 +66,7 @@ public class DeliveryDAOImpl implements IDeliveryDAO{
 	public List<DeliveryModel> getAll() {
 		List<DeliveryModel> deliveryList = new ArrayList<DeliveryModel>();
 	    try {
-	        String sql = "SELECT * FROM Delivery";
+	        String sql = "SELECT * FROM Delivery where isDeleted = 0";
 	        conn = new DBConnection().getConnection();
 	        
 	        ps = conn.prepareStatement(sql);

@@ -2,6 +2,7 @@ package com.azshop.controllers.customer;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -75,21 +76,37 @@ public class CustomerController extends HttpServlet {
 				if (sessionObject instanceof UserModel) {
 					UserModel user = (UserModel) sessionObject;
 					List<CartModel> cartList = cartService.getByUserId(user.getId());
-					List<CartItemModel> cartItemList = new ArrayList<CartItemModel>();
+					List<CartItemModel> cartItemList = new ArrayList<CartItemModel>();										
 					
 					//Hiển thị item trong giỏ hàng
 					for (CartModel cart : cartList) {
-						List<CartItemModel> itemList = cartItemService.getByCartId(cart.getId());
+						List<CartItemModel> itemList = cartItemService.getByCartId(cart.getId());						
 						cartItemList.addAll(itemList);
-					}										
+					}															
 					
 					//Lấy thông tin danh sách product có trong giỏ hàng
-					List<ProductModel> productsInCart = new ArrayList<ProductModel>();
+					List<ProductModel> productsInCart = new ArrayList<ProductModel>();										
 					
 					for (CartItemModel cartItem : cartItemList) {
-						ProductModel  productInCart = productService.getById(cartItem.getProductId());
+						ProductModel  productInCart = productService.getById(cartItem.getProductId());						
+						productInCart.getPrice().setScale(0);
 						productsInCart.add(productInCart);
 					}
+					
+					BigDecimal sum = BigDecimal.ZERO;
+
+					for (int i = 0; i < cartItemList.size(); i++) {
+					    ProductModel productModel = productService.getById(cartItemList.get(i).getProductId());
+					    
+					    if (productModel != null) {
+					        BigDecimal productPrice = productModel.getPrice();
+					        int count = cartItemList.get(i).getCount();
+					        
+					        sum = sum.add(productPrice.multiply(BigDecimal.valueOf(count))).setScale(0);
+					    }
+					}
+
+				    req.setAttribute("sumPrice", sum);
 					
 					List<ImageModel> imageProductsInCart = new ArrayList<ImageModel>();
 
