@@ -14,8 +14,7 @@
 				<nav aria-label="breadcrumb">
 					<ol class="breadcrumb mb-0 p-0">
 						<li class="breadcrumb-item"><a href="delivery">Delivery</a></li>
-						<li class="breadcrumb-item active" aria-current="page">Edit
-							Delivery</li>
+						<li class="breadcrumb-item active" aria-current="page">Edit Delivery</li>
 					</ol>
 				</nav>
 			</div>
@@ -44,7 +43,7 @@
 								<label for="input36" class="col-sm-3 col-form-label">Price</label>
 								<div class="col-sm-9">
 									<input type="number" class="form-control" id="input36"
-										placeholder="Min point" name="minpoint"
+										placeholder="Price" name="price"
 										value="${delivery.price }" required>
 								</div>
 							</div>

@@ -6,6 +6,7 @@ import com.azshop.models.DeliveryModel;
 
 public interface IDeliveryService {
 	void insert(DeliveryModel delivery);
+	
 
 	DeliveryModel getById(int id);
 
