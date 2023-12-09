@@ -601,6 +601,48 @@ public class OrderDAOImpl implements IOrderDAO {
 
 	    return totalRevenue;
 	}
+
+	@Override
+	public List<OrderModel> getByUserIdandStatus(int userId, String status) {
+		List<OrderModel> oderModelList = new ArrayList<OrderModel>();
+
+		try {
+			String sql = "Select *from [Order] where userId = ? and status = ? and isDeleted = 0";
+			conn = new DBConnection().getConnection();
+
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, userId);
+			ps.setString(2, status);
+
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				OrderModel order = new OrderModel();
+				order.setId(rs.getInt("id"));
+				order.setUserId(rs.getInt("userId"));
+				order.setStoreId(rs.getInt("storeId"));
+				order.setDeliveryId(rs.getInt("deliveryId"));
+				order.setRecipientName(rs.getString("recipientName"));
+				order.setAddress(rs.getString("address"));
+				order.setPhone(rs.getString("phone"));
+				order.setStatus(rs.getString("status"));
+				order.setPaidBefore(rs.getBoolean("isPaidBefore"));
+				order.setAmountFromUser(rs.getBigDecimal("amountFromUser"));
+				order.setAmountFromStore(rs.getBigDecimal("amountFromStore"));
+				order.setAmountToStore(rs.getBigDecimal("amountToStore"));
+				order.setAmountToAZShop(rs.getBigDecimal("amountToAZShop"));
+				order.setCreateAt(rs.getDate("createAt"));
+				order.setUpdateAt(rs.getDate("updateAt"));
+
+				oderModelList.add(order);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return oderModelList;
+	}
 	
 	
 	

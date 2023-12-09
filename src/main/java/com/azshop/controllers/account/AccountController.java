@@ -86,10 +86,23 @@ public class AccountController extends HttpServlet {
 			user = (UserModel) session.getAttribute(Constant.userSession);
 			req.setAttribute("user", user);
 		}
-		
-		List<OrderModel> order = orderService.getByUserId(user.getId());
-		req.setAttribute("listOrder", order);
-		
+
+		List<OrderModel> orderListWaiting = orderService.getByUserIdandStatus(user.getId(), "Waiting");
+		List<OrderModel> orderListProcessing = orderService.getByUserIdandStatus(user.getId(), "Processing");
+		List<OrderModel> orderListPending = orderService.getByUserIdandStatus(user.getId(), "Pending Pickup");
+		List<OrderModel> orderListShipping = orderService.getByUserIdandStatus(user.getId(), "Shipping");
+		List<OrderModel> orderListDelivered = orderService.getByUserIdandStatus(user.getId(), "Delivered");
+		List<OrderModel> orderListCompleted = orderService.getByUserIdandStatus(user.getId(), "Completed");
+		List<OrderModel> orderListCancelled = orderService.getByUserIdandStatus(user.getId(), "Cancelled");
+
+		req.setAttribute("orderListWaiting", orderListWaiting);
+		req.setAttribute("orderListProcessing", orderListProcessing);
+		req.setAttribute("orderListPending", orderListPending);
+		req.setAttribute("orderListShipping", orderListShipping);
+		req.setAttribute("orderListDelivered", orderListDelivered);
+		req.setAttribute("orderListCompleted", orderListCompleted);
+		req.setAttribute("orderListCancelled", orderListCancelled);
+
 		req.getRequestDispatcher("/views/account/information.jsp").forward(req, resp);
 	}
 
