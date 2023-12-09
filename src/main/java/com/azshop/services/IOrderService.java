@@ -1,8 +1,10 @@
 package com.azshop.services;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
+import com.azshop.DAO.DBConnection;
 import com.azshop.models.OrderModel;
 
 public interface IOrderService {
@@ -42,4 +44,8 @@ public interface IOrderService {
 	int countCompletedByStore(int storeId);
 	int countOrderByStore(int storeId);
     List<OrderModel> getAllAdmin();
+ // Thêm phương thức mới vào OrderDAOImpl
+    int getTotalShopRevenueByDate(Date Date) ;
+    int getTotalShopRevenue();
+ 	    
 }

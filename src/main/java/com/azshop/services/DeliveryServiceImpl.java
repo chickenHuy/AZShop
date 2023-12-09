@@ -13,7 +13,7 @@ public class DeliveryServiceImpl implements IDeliveryService {
 	public void insert(DeliveryModel delivery) {
 		deliveryDAO.insert(delivery);
 	}
-
+	
 	@Override
 	public DeliveryModel getById(int id) {
 		return deliveryDAO.getById(id);
@@ -35,7 +35,7 @@ public class DeliveryServiceImpl implements IDeliveryService {
 	}
 	
 	public boolean checkName(String name) {
-		deliveryDAO.checkName(name);
+		return deliveryDAO.checkName(name);
 	}
 
 }

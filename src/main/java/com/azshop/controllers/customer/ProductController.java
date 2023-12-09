@@ -141,135 +141,165 @@ public class ProductController extends HttpServlet {
 	}
 
 	private void postReviewProduct(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		resp.setContentType("text/html;charset=UTF-8");
-		req.setCharacterEncoding("UTF-8");
+		// Đặt kiểu và bảng mã cho response
+	    resp.setContentType("text/html;charset=UTF-8");
+	    req.setCharacterEncoding("UTF-8");
 
-		HttpSession session = req.getSession();
-		UserModel user = (UserModel) session.getAttribute(Constant.userSession);
-		int orderId = 0;
+	    // Lấy thông tin người dùng từ session
+	    HttpSession session = req.getSession();
+	    UserModel user = (UserModel) session.getAttribute(Constant.userSession);
+	    int orderId = 0;
 
-		ProductModel product = (ProductModel) session.getAttribute("productsession");
-		StoreModel store = (StoreModel) session.getAttribute("storesession");
+	    // Lấy thông tin sản phẩm và cửa hàng từ session
+	    ProductModel product = (ProductModel) session.getAttribute("productsession");
+	    StoreModel store = (StoreModel) session.getAttribute("storesession");
 
-		List<OrderModel> order = orderService.getByUserIdAndStoreId(user.getId(), store.getId());
+	    // Lấy danh sách đơn hàng của người dùng cho cửa hàng cụ thể
+	    List<OrderModel> orders = orderService.getByUserIdAndStoreId(user.getId(), store.getId());
 
-		for (OrderModel orderModel : order) {
-			List<OrderItemModel> orderItemModels = orderItemService.getByOrderIdAndProductId(orderModel.getId(),
-					product.getId());
-			if (orderItemModels != null && "Completed".equals(orderModel.getStatus())) {
-				orderId = orderModel.getId();
-				String content = req.getParameter("review");
-				String start = req.getParameter("rating");
-				int rating = 0;
-				if (start != null) {
-					rating = Integer.parseInt(start);
-				}
-				ReviewModel reviewModel = new ReviewModel();
-				reviewModel.setUserId(user.getId());
-				reviewModel.setStoreId(store.getId());
-				reviewModel.setProductId(product.getId());
-				reviewModel.setOrderId(orderId);
-				reviewModel.setContent(content);
-				reviewModel.setRating(rating);
-				reviewService.insert(reviewModel);
-				product.setRating(reviewService.avgRating(product.getId()));
-				productService.update(product);
-				req.setAttribute("commentSuccess", "Bình luận thành công!");
-				resp.sendRedirect(req.getContextPath() + "/customer/product/" + product.getSlug());
-				return;
-			} else {
-				req.setAttribute("commentError", "Bình luận thất bại! Vui lòng thử lại.");
-				resp.sendRedirect(req.getContextPath() + "/customer/product/" + product.getSlug());
-			}
-		}
+	    // Duyệt qua danh sách đơn hàng
+	    for (OrderModel orderModel : orders) {
+	        // Lấy danh sách các mục đơn hàng cho sản phẩm cụ thể
+	        List<OrderItemModel> orderItemModels = orderItemService.getByOrderIdAndProductId(orderModel.getId(),
+	                product.getId());
 
+	        // Kiểm tra điều kiện để đảm bảo đánh giá có thể được thêm
+	        if (orderItemModels != null && "Completed".equals(orderModel.getStatus())) {
+	            orderId = orderModel.getId();
+	            String content = req.getParameter("review");
+	            String start = req.getParameter("rating");
+	            int rating = (start != null) ? Integer.parseInt(start) : 0;
+
+	            // Tạo đối tượng đánh giá và thêm vào cơ sở dữ liệu
+	            ReviewModel reviewModel = new ReviewModel();
+	            reviewModel.setUserId(user.getId());
+	            reviewModel.setStoreId(store.getId());
+	            reviewModel.setProductId(product.getId());
+	            reviewModel.setOrderId(orderId);
+	            reviewModel.setContent(content);
+	            reviewModel.setRating(rating);
+	            reviewService.insert(reviewModel);
+
+	            // Cập nhật đánh giá trung bình cho sản phẩm
+	            product.setRating(reviewService.avgRating(product.getId()));
+	            productService.update(product);
+
+	            // Đặt thông báo thành công và chuyển hướng trang
+	            req.setAttribute("commentSuccess", "Bình luận thành công!");
+	            resp.sendRedirect(req.getContextPath() + "/customer/product/" + product.getSlug());
+	            return;
+	        } else {
+	            // Đặt thông báo lỗi và chuyển hướng trang
+	            req.setAttribute("commentError", "Bình luận thất bại! Vui lòng thử lại.");
+	            resp.sendRedirect(req.getContextPath() + "/customer/product/" + product.getSlug());
+	        }
+	    }
 	}
 
 	private void getProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String url = req.getRequestURL().toString();
-		String pageCurrent = "category";
-		URI uri;
 		try {
+			// Trích xuất slug từ request URL
+			String slug = extractSlugFromRequest(req);
 
-			uri = new URI(url);
-			String path = uri.getPath();
+			if (slug != null) {
+				// Lấy thông tin sản phẩm dựa trên slug
+				ProductModel product = productService.getBySlug(slug);
 
-			String[] parts = path.split("/");
-
-			if (parts.length > 0) {
-				String slug = parts[parts.length - 1];
-				req.setAttribute("slug", slug);
-				pageCurrent = pageCurrent + slug;
-
-				try {
-					ProductModel product = productService.getBySlug(slug);
-					CategoryModel category = categoryService.getById(product.getCategoryId());
-					StyleValueModel styleValue = styleValueService.getById(product.getStyleValueId());
-					List<ImageModel> imageList = imageService.getByProductId(product.getId());
-					StoreModel store = storeService.getById(product.getStoreId());
-					List<ReviewModel> reviewModels = reviewService.getByProductId(product.getId());
-					List<UserModel> userList = new ArrayList<UserModel>();
-
-					// san pham lien quan
-					List<ProductModel> productRelateds = productService.getByCategoryId(product.getCategoryId());
-					List<ImageModel> imageRelateds = new ArrayList<ImageModel>();
-					for (ProductModel productRelated : productRelateds) {
-						ImageModel imageRelate = imageService.getImage(productRelated.getId());
-						imageRelateds.add(imageRelate);
-					}
-
-					req.setAttribute("product", product);
-					req.setAttribute("store", store);
-					HttpSession session = req.getSession(true);
-					session.setAttribute("productsession", product);
-					session.setAttribute("storesession", store);
-					req.setAttribute("productRelateds", productRelateds);
-					req.setAttribute("category", category);
-					req.setAttribute("styleValue", styleValue);
-					req.setAttribute("imageList", imageList);
-					req.setAttribute("imageRelateds", imageRelateds);
-					req.setAttribute("review", reviewModels);
-					req.setAttribute("countReview", reviewModels.size());
-
-					for (ReviewModel reviewModel : reviewModels) {
-						UserModel userModel = userService.getById(reviewModel.getUserId());
-						userList.add(userModel);
-					}
-					req.setAttribute("userList", userList);
-					
-					// So luong sao va ty le sao
-					req.setAttribute("count5Star", reviewService.countStar(product.getId(), 5));
-					req.setAttribute("rate5Star", countStar(product.getId(), 5, reviewModels.size()));
-					
-					req.setAttribute("count4Star", reviewService.countStar(product.getId(), 4));
-					req.setAttribute("rate4Star", countStar(product.getId(), 4, reviewModels.size()));
-					
-					req.setAttribute("count3Star", reviewService.countStar(product.getId(), 3));
-					req.setAttribute("rate3Star", countStar(product.getId(), 3, reviewModels.size()));
-					
-					req.setAttribute("count2Star", reviewService.countStar(product.getId(), 2));
-					req.setAttribute("rate2Star", countStar(product.getId(), 2, reviewModels.size()));
-					
-					req.setAttribute("count1Star", reviewService.countStar(product.getId(), 1));
-					req.setAttribute("rate1Star", countStar(product.getId(), 1, reviewModels.size()));
-
-				} catch (Exception e) {
-					e.printStackTrace();
+				if (product != null) {
+					// Thiết lập các thuộc tính của sản phẩm cho request
+					setProductAttributes(req, product);
 				}
-
 			}
-		} catch (URISyntaxException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+		// Chuyển hướng đến trang jsp hiển thị sản phẩm
 		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/product.jsp");
 		rd.forward(req, resp);
 	}
-	
+
+	// Phương thức trích xuất slug từ URL
+	private String extractSlugFromRequest(HttpServletRequest req) throws URISyntaxException {
+		String url = req.getRequestURL().toString();
+		URI uri = new URI(url);
+		String path = uri.getPath();
+		String[] parts = path.split("/");
+		return (parts.length > 0) ? parts[parts.length - 1] : null;
+	}
+
+	// Phương thức thiết lập các thuộc tính của sản phẩm cho request
+	private void setProductAttributes(HttpServletRequest req, ProductModel product) {
+		try {
+			// Lấy thông tin liên quan đến sản phẩm và thiết lập cho request
+			CategoryModel category = categoryService.getById(product.getCategoryId());
+			StyleValueModel styleValue = styleValueService.getById(product.getStyleValueId());
+			StoreModel store = storeService.getById(product.getStoreId());
+			List<ImageModel> imageList = imageService.getByProductId(product.getId());
+			List<ReviewModel> reviewModels = reviewService.getByProductId(product.getId());
+			List<ProductModel> productRelateds = productService.getByCategoryId(product.getCategoryId());
+			List<ImageModel> imageRelateds = getImageRelateds(productRelateds);
+
+			// Lưu thông tin sản phẩm và các thông tin liên quan vào session
+			HttpSession session = req.getSession(true);
+			session.setAttribute("productsession", product);
+			session.setAttribute("storesession", store);
+
+			// Đặt các thuộc tính cho request
+			req.setAttribute("product", product);
+			req.setAttribute("store", store);
+			req.setAttribute("productRelateds", productRelateds);
+			req.setAttribute("category", category);
+			req.setAttribute("styleValue", styleValue);
+			req.setAttribute("imageList", imageList);
+			req.setAttribute("imageRelateds", imageRelateds);
+			req.setAttribute("review", reviewModels);
+			req.setAttribute("countReview", reviewModels.size());
+			req.setAttribute("userList", getUserList(reviewModels));
+
+			// Thiết lập thông tin đánh giá sao
+			setStarAttributes(req, product.getId(), reviewModels);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Phương thức lấy danh sách ảnh liên quan đến sản phẩm
+	private List<ImageModel> getImageRelateds(List<ProductModel> productRelateds) {
+		List<ImageModel> imageRelateds = new ArrayList<>();
+		for (ProductModel productRelated : productRelateds) {
+			ImageModel imageRelate = imageService.getImage(productRelated.getId());
+			imageRelateds.add(imageRelate);
+		}
+		return imageRelateds;
+	}
+
+	// Phương thức lấy danh sách người dùng đánh giá sản phẩm
+	private List<UserModel> getUserList(List<ReviewModel> reviewModels) {
+		List<UserModel> userList = new ArrayList<>();
+		for (ReviewModel reviewModel : reviewModels) {
+			UserModel userModel = userService.getById(reviewModel.getUserId());
+			userList.add(userModel);
+		}
+		return userList;
+	}
+
+	// Phương thức thiết lập các thuộc tính đánh giá sao cho request
+	private void setStarAttributes(HttpServletRequest req, Integer productId, List<ReviewModel> reviewModels) {
+		for (int rating = 5; rating >= 1; rating--) {
+			String countAttrName = "count" + rating + "Star";
+			String rateAttrName = "rate" + rating + "Star";
+
+			req.setAttribute(countAttrName, reviewService.countStar(productId, rating));
+			req.setAttribute(rateAttrName, countStar(productId, rating, reviewModels.size()));
+		}
+	}
+
+	// Phương thức tính tỉ lệ đánh giá sao
 	private String countStar(Integer productId, int rating, int size) {
-		int total5StarReviews = reviewService.countStar(productId, rating);
-		double percentage = ((double) total5StarReviews / size) * 100;
-		String rateStar = String.valueOf(percentage);
-		return rateStar;
+		int totalStarReviews = reviewService.countStar(productId, rating);
+		double percentage = ((double) totalStarReviews / size) * 100;
+		return String.valueOf(percentage);
 	}
 }

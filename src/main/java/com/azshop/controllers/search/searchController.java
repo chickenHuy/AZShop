@@ -1,8 +1,10 @@
 package com.azshop.controllers.search;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,12 +16,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.azshop.models.CartItemModel;
+import com.azshop.models.CartModel;
 import com.azshop.models.ImageModel;
 import com.azshop.models.ProductModel;
 import com.azshop.models.StoreModel;
 import com.azshop.models.StyleModel;
 import com.azshop.models.UserModel;
+import com.azshop.services.CartItemServiceImpl;
+import com.azshop.services.CartServiceImpl;
 import com.azshop.services.CategoryServiceImpl;
+import com.azshop.services.ICartItemService;
+import com.azshop.services.ICartService;
 import com.azshop.services.ICategoryService;
 import com.azshop.services.IImageService;
 import com.azshop.services.IProductService;
@@ -40,6 +48,8 @@ public class searchController extends HttpServlet {
 		ICategoryService categoryService = new CategoryServiceImpl();
 		IStyleService styleService = new StyleServiceImpl();
 		IImageService imageService = new ImageServiceImpl();
+		ICartService cartService = new CartServiceImpl();
+		ICartItemService cartItemService = new CartItemServiceImpl();
 	    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			request.setCharacterEncoding("UTF-8");
 			response.setCharacterEncoding("UTF-8");
@@ -52,7 +62,52 @@ public class searchController extends HttpServlet {
 					if (userModel == null)
 					{
 						response.sendRedirect(request.getContextPath() + "/login-customer");
+						return;
 					}
+					List<CartModel> cartList = cartService.getByUserId(userModel.getId());
+					List<CartItemModel> cartItemList = new ArrayList<CartItemModel>();										
+					
+					//Hiển thị item trong giỏ hàng
+					for (CartModel cart : cartList) {
+						List<CartItemModel> itemList = cartItemService.getByCartId(cart.getId());						
+						cartItemList.addAll(itemList);
+					}															
+					
+					//Lấy thông tin danh sách product có trong giỏ hàng
+					List<ProductModel> productsInCart = new ArrayList<ProductModel>();										
+					
+					for (CartItemModel cartItem : cartItemList) {
+						ProductModel  productInCart = productService.getById(cartItem.getProductId());						
+						productInCart.setPrice(productInCart.getPrice().setScale(0));
+						productsInCart.add(productInCart);
+					}
+					
+					BigDecimal sum = BigDecimal.ZERO;
+
+					for (int i = 0; i < cartItemList.size(); i++) {
+					    ProductModel productModel = productService.getById(cartItemList.get(i).getProductId());
+					    
+					    if (productModel != null) {
+					        BigDecimal productPrice = productModel.getPrice();
+					        int count = cartItemList.get(i).getCount();
+					        
+					        sum = sum.add(productPrice.multiply(BigDecimal.valueOf(count))).setScale(0);
+					    }
+					}
+
+				    request.setAttribute("sumPrice", sum);
+					
+					List<ImageModel> imageProductsInCart = new ArrayList<ImageModel>();
+
+					for (ProductModel productModel : productsInCart) {
+						ImageModel image = imageService.getImage(productModel.getId());
+						imageProductsInCart.add(image);
+					}
+					
+					request.setAttribute("quantity", cartItemList.size());
+					request.setAttribute("imageProductsInCart", imageProductsInCart);	
+					request.setAttribute("cartItemList", cartItemList);
+					request.setAttribute("productsInCart", productsInCart);	
 			}
 			
 	        String keyword = request.getParameter("searchTerm");
@@ -63,7 +118,21 @@ public class searchController extends HttpServlet {
 			}
 	        
 	        List<StoreModel> storeModels = storeService.searchByKey(keyword, -1);
-	        request.setAttribute("stores", storeModels);
+
+			if (storeModels != null && !storeModels.isEmpty()) {
+			    int limit = Math.min(3, storeModels.size());
+			    List<StoreModel> selectedStores = new ArrayList<>();
+			
+			    for (int i = 0; i < limit; i++) {
+			        selectedStores.add(storeModels.get(i));
+			    }
+			
+			    request.setAttribute("stores", selectedStores);
+			} else {
+			    // Xử lý khi danh sách là null hoặc rỗng
+			    // Ví dụ: Gán một danh sách trống cho thuộc tính "stores"
+			    request.setAttribute("stores", Collections.emptyList());
+			}
 	        
 	        List<StyleModel> styleModels = styleService.getAll();
 	        request.setAttribute("images", styleModels);

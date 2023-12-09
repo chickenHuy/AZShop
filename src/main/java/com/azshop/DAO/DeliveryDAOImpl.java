@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.azshop.models.DeliveryModel;
+import com.azshop.models.UserLevelModel;
 
 public class DeliveryDAOImpl implements IDeliveryDAO{
 	
@@ -17,7 +18,7 @@ public class DeliveryDAOImpl implements IDeliveryDAO{
 	@Override
 	public void insert(DeliveryModel delivery) {
 		try {
-			String sql = "INSERT INTO Delivery (name, price, description, createAt) VALUES (?, ?, ?, GETDATE())";
+			String sql = "INSERT INTO Delivery (name, price, description, isDeleted, createAt) VALUES (?, ?, ?,0, GETDATE())";
 			conn = new DBConnection().getConnection();
 			
 			ps = conn.prepareStatement(sql);
@@ -34,6 +35,32 @@ public class DeliveryDAOImpl implements IDeliveryDAO{
 		        e.printStackTrace();
 		    }
 	}
+	
+	@Override
+	public void update(DeliveryModel delivery) {
+		try {
+			String sql =  "UPDATE Delivery SET name = ?, price = ?, description = ?, isDeleted = ?, updateAt = GetDate() WHERE id = ?";
+			conn = new DBConnection().getConnection();
+			
+			ps = conn.prepareStatement(sql);
+			
+			ps.setString(1, delivery.getName());
+			ps.setBigDecimal(2, delivery.getPrice());
+			ps.setString(3, delivery.getDescription());
+			ps.setBoolean(4, delivery.isDeleted());
+			ps.setInt(5, delivery.getId());
+			
+			ps.executeUpdate();
+			
+			conn.close();
+		    } 
+		catch (Exception e) 
+			{
+		        e.printStackTrace();
+		    }
+		
+	}
+	
 
 	@Override
 	public DeliveryModel getById(int id) {
@@ -89,28 +116,6 @@ public class DeliveryDAOImpl implements IDeliveryDAO{
 	        e.printStackTrace();
 	    }
 	    return deliveryList;
-	}
-
-	@Override
-	public void update(DeliveryModel delivery) {
-		try {
-			String sql =  "UPDATE Delivery SET name = ?, price = ?, description = ?, updateAt = GETDATE() WHERE id = ?";
-			conn = new DBConnection().getConnection();
-			
-			ps = conn.prepareStatement(sql);
-			
-			ps.setString(1, delivery.getName());
-			ps.setBigDecimal(2, delivery.getPrice());
-			ps.setString(3, delivery.getDescription());
-			ps.setInt(4, delivery.getId());
-			ps.executeUpdate();
-			
-			conn.close();
-		    } 
-		catch (Exception e) 
-			{
-		        e.printStackTrace();
-		    }
 	}
 
 	@Override
