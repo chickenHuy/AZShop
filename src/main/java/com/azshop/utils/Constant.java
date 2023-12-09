@@ -7,4 +7,5 @@ public class Constant {
 	
 	public static String userSession = "Account";
 	public static String storeSession = "Store";
+	public static String DIR_2 = "D:";
 }

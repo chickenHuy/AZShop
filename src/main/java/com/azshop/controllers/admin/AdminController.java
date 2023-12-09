@@ -51,7 +51,7 @@ import com.azshop.services.*;
 		"/admin/editstorelevel", "/admin/deletestorelevel", "/admin/restorestorelevel", "/admin/category/*",
 		"/admin/styles", "/admin/style/delete", "/admin/style/restore", "/admin/addstyle", "/admin/style/stylevalues",
 		"/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
-		"/admin/order-detail","/admin/UserStatic","/admin/StoreStatic", "/admin/delivery","/admin/adddelivery","/admin/editdelivery" })
+		"/admin/order-detail","/admin/UserStatic","/admin/StoreStatic", "/admin/delivery","/admin/adddelivery","/admin/editdelivery","/admin/deletedelivery" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -204,7 +204,7 @@ public class AdminController extends HttpServlet {
 			}
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editdelivery.jsp");
 			rDispatcher.forward(req, resp);
-		}
+		} 
 		
 	 
 		
@@ -709,6 +709,8 @@ public class AdminController extends HttpServlet {
 			postAddDelivery(req,resp);
 		} else if(url.contains("/admin/editdelivery")) {
 			postEditDelivery(req,resp);
+		} else if (url.contains("/admin/deletedelivery")) {
+			postDeleteDelivery(req, resp);
 		}
 		
 
@@ -1085,6 +1087,21 @@ public class AdminController extends HttpServlet {
 			}
 		} else {
 			resp.sendRedirect("?message=You must fill out the form");
+		}
+	}
+	
+	private void postDeleteDelivery(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		String id = req.getParameter("id");
+		DeliveryModel deliveryModel = deliveryService.getById(Integer.parseInt(id));
+		try {
+			deliveryModel.setDeleted(true);
+			deliveryService.update(deliveryModel);
+			resp.sendRedirect("editdelivery?message=Sucessfully");
+		} catch (Exception e) {
+			resp.sendRedirect("editdelivery?message=Failed to delete delivery");
 		}
 	}
 	
