@@ -16,16 +16,16 @@
 			<div class="ps-3">
 				<nav aria-label="breadcrumb">
 					<ol class="breadcrumb mb-0 p-0">
-						<li class="breadcrumb-item"><a href="javascript:;"><i
-								class="bx bx-home-alt"></i></a></li>
-						<li class="breadcrumb-item active" aria-current="page">Add
+						<li class="breadcrumb-item"><a
+							href="/AZShop/admin/categories">Categories</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Edit
 							Category</li>
 					</ol>
 				</nav>
 			</div>
 		</div>
 		<!--end breadcrumb-->
-		<form action="addcategory" method="post" enctype="multipart/form-data">
+		<form action="edit" method="post" enctype="multipart/form-data">
 			<div class="row">
 				<div class="col-12 col-lg-8">
 					<div class="card">
@@ -33,7 +33,11 @@
 							<div class="mb-4">
 								<h5 class="mb-3">Category Name</h5>
 								<input type="text" class="form-control"
-									placeholder="write name here...." name="categoryName" value="${category.name }">
+									placeholder="write name here...." name="categoryName"
+									value="${category.name }" required> <input
+									type="hidden" class="form-control"
+									placeholder="write name here...." name="id"
+									value="${category.id }">
 							</div>
 							<div class="mb-4">
 								<h5 class="mb-3">Display images</h5>
@@ -41,7 +45,7 @@
 									<div class="container">
 										<div class="row g-3">
 											<div class="col-md-6">
-												
+
 												<label class="custom-file-input-wrapper"> <input
 													type="file" accept=".jpg, .png, image/jpeg, image/png"
 													name="image" class="custom-file-input"
@@ -49,7 +53,9 @@
 													<div class="custom-file-label">Choose Image</div>
 												</label>
 												<div id="thumbnail">
-													<img id="imgCate" src="/AZShop/image?fname=${category.image}" alt= "" width="400" height="400"/>
+													<img id="imgCate"
+														src="/AZShop/image?fname=${category.image}" alt=""
+														width="400" height="400" />
 												</div>
 												<div id="fileSize1"></div>
 											</div>
@@ -70,10 +76,19 @@
 									<label for="Category" class="form-label fw-bold">Category</label>
 									<select class="form-select" id="Category" name="categoryId">
 										<c:forEach var="item" items="${listCategory}">
-											<c:if test="${item.id == category.categoryId}"> <option value="${category.categoryId}">${item.name}</option></c:if>
+											<c:if test="${item.id == category.categoryId}">
+												<option value="${category.categoryId}">${item.name}</option>
+
+											</c:if>
 										</c:forEach>
+
+										<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
+										<option value="0">--Select Category--</option>
+
 										<c:forEach var="item" items="${listCategory}">
-											<c:if test="${item.id != category.categoryId}"><option value="${item.id}">${item.name}</option></c:if>
+											<c:if test="${item.id != category.categoryId}">
+												<option value="${item.id}">${item.name}</option>
+											</c:if>
 										</c:forEach>
 									</select>
 								</div>
@@ -83,9 +98,15 @@
 					</div>
 
 					<div class="card-body">
-						<div class="d-flex align-items-center justify-content-between">
-							<input type="submit" value="Publish" class="btn btn-primary px-4">
+						<div class="d-flex">
+							<input type="submit" value="Save" class="btn btn-primary px-4">
+							<button type="button" class="btn btn-danger px-4 ms-2"
+								data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal">Delete</button>
 						</div>
+
+						<p class="mt-2">${message}</p>
+						<!-- Thêm lớp mt-2 để thêm margin-top -->
+
 					</div>
 				</div>
 			</div>
@@ -93,6 +114,32 @@
 		</form>
 
 	</main>
+
+	<div class="modal fade" id="deleteConfirmationModal" tabindex="-1"
+		aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteConfirmationModalLabel">Delete
+						Category</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure you want to delete this category?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Cancel</button>
+					<form action="delete" method="post">
+						<input type="hidden" name="slug" value="${category.slug}">
+						<button type="submit" class="btn btn-danger">Delete</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<script>
 	function handleImageSelection(input, thumbnailId, imgId) {
         var file = input.files[0];

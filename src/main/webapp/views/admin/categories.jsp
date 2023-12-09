@@ -49,7 +49,8 @@
 						<thead class="table-light">
 							<tr>
 								<th>Category Name</th>
-								<th>Slug</th>
+								<th>Category Parent</th>
+								<th>Active</th>
 								<th>Date</th>
 								<th>Action</th>
 							</tr>
@@ -60,57 +61,45 @@
 									<td><a class="d-flex align-items-center gap-3"
 										href="javascript:;">
 											<div class="customer-pic">
-												<img src="/AZShop/image?fname=${category.image}"
-													width="100" height="100" alt="">
+												<img src="/AZShop/image?fname=${category.image}" width="100"
+													height="100" alt="">
 											</div>
 											<p class="mb-0 customer-name fw-bold">${category.name}</p>
 									</a></td>
-									<td>${category.slug}</td>
+									<c:set var="hasImages" value="false" />
+									<c:forEach var="item" items="${listCategory}">
+										<c:if test="${item.id == category.categoryId}">
+											<td>${item.name}</td>
+											<c:set var="hasImages" value="true" />
+										</c:if>
+									</c:forEach>
+									<c:if test="${not hasImages}">
+										<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
+										<td></td>
+									</c:if>
+									<c:choose>
+										<c:when test="${category.isDeleted() == false}">
+											<td><span
+												class="lable-table bg-success-subtle text-success rounded border border-success-subtle font-text2 fw-bold">Activated</span></td>	
+										</c:when>
+										<c:otherwise>
+											<td><span
+												class="lable-table bg-danger-subtle text-danger rounded border border-danger-subtle font-text2 fw-bold">Deleted</span></td>
+										</c:otherwise>
+									</c:choose>
 									<td>${category.updateAt != null ? category.updateAt : category.createAt}</td>
-									<td>
-									<c:if test="${category.isDeleted() == false}">
-									<a class="dropdown-item"
-										href='<c:url value="/admin/category/edit?slug=${category.slug}"/>'>Edit</a></c:if> 
-										<c:if test="${category.isDeleted() == true}">
+									<td><c:if test="${category.isDeleted() == false}">
+											<a class="dropdown-item"
+												href='<c:url value="/admin/category/edit?slug=${category.slug}"/>'>Edit</a>
+										</c:if> <c:if test="${category.isDeleted() == true}">
 											<!-- Nếu isDeleted là true, hiển thị nút Restore -->
 											<a class="dropdown-item"
-												href='<c:url value="/admin/category/restore-${category.slug}"/>'>Restore</a>
-										</c:if> <c:if test="${category.isDeleted() == false}">
-											<!-- Nếu isDeleted là false, hiển thị nút Delete -->
-											<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal"
-												href='<c:url value="/admin/category/delete-${category.slug}"/>'>Delete</a>
-										</c:if>
-									</td>
+												href='<c:url value="/admin/category/restore?slug=${category.slug}"/>'>Restore</a>
+										</c:if></td>
 								</tr>
 							</c:forEach>
 						</tbody>
 					</table>
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-<div class="modal fade" id="deleteConfirmationModal" tabindex="-1"
-		aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="deleteConfirmationModalLabel">Delete
-						Category</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<p>Are you sure you want to delete this category?</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">Cancel</button>
-					<form action="deletestorelevel" method="post">
-						<input type="hidden" name="id" value="${category.id}">
-						<button type="submit" class="btn btn-danger">Delete</button>
-					</form>
 				</div>
 			</div>
 		</div>
