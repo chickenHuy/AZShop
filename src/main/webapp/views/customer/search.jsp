@@ -19,8 +19,8 @@
 									<label>Tất cả</label>
 								</div>
 							</a>
-							<c:forEach var="category" items="${categoryChildList}">	
-								<a href=''>
+							<c:forEach var="category" items="${categoryParentList}">	
+								<a href='<c:url value="/customer/search?categoryId=${category.id}&styleId=${styleId}&searchTerm=${searchTerm}"/>'>
 									<div class="input-checkbox ${category.slug}">
 										<label>${category.name}<small> (${category.countProduct})</small></label>
 									</div>
@@ -37,7 +37,7 @@
 						<h3 class="aside-title">Style</h3>
 						<div class="checkbox-filter">
 							<c:forEach var="style" items="${styles}">	
-								<a href=''>
+								<a href='<c:url value="/customer/search?categoryId=${categoryId}&styleId=${style.id}&searchTerm=${searchTerm}"/>'>
 									<div class="input-checkbox">
 											<label>${style.name}</label>
 									</div>
