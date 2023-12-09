@@ -262,11 +262,11 @@ public class CategoryDAOImpl implements ICategoryDAO {
 	public List<CategoryModel> getParentCategory() {
 	    List<CategoryModel> categoryList = new ArrayList<>();
 	    try {
-	        String sql = "SELECT c.id, c.name, COALESCE(COUNT(p.id), 0) AS product_count, c.categoryId, c.slug, c.image, c.isDeleted, c.createAt, c.updateAt " +
-	                     "FROM Category c LEFT JOIN Product p ON c.id = p.categoryId AND p.isDeleted = 0 " +
-	                     "WHERE c.categoryId IS NULL AND c.isDeleted = 0 and p.isDeleted = 0 and p.isActive = 1" +
-	                     "GROUP BY c.id, c.name, c.categoryId, c.slug, c.image, c.isDeleted, c.createAt, c.updateAt " +
-	                     "ORDER BY c.id";
+	        String sql = "SELECT c.id, c.name, COALESCE(COUNT(p.id), 0) AS product_count, c.categoryId, c.slug, c.image, c.isDeleted, c.createAt, c.updateAt \r\n"
+	        		+ "	                     FROM Category c LEFT JOIN Product p ON c.id = p.categoryId AND p.isDeleted = 0 \r\n"
+	        		+ "	                     WHERE c.categoryId IS NULL AND c.isDeleted = 0 and (isActive = 1 OR isActive is null)\r\n"
+	        		+ "	                     GROUP BY c.id, c.name, c.categoryId, c.slug, c.image, c.isDeleted, c.createAt, c.updateAt\r\n"
+	        		+ "	                     ORDER BY c.id";
 
 	        conn = new DBConnection().getConnection();
 	        ps = conn.prepareStatement(sql);

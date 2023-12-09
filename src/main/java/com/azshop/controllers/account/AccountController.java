@@ -13,24 +13,31 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.azshop.models.CartModel;
+import com.azshop.models.OrderModel;
 import com.azshop.models.StoreModel;
 import com.azshop.models.UserModel;
+import com.azshop.services.IOrderService;
 import com.azshop.services.IStoreService;
 import com.azshop.services.IUserService;
+import com.azshop.services.OrderServiceImpl;
 import com.azshop.services.StoreServiceImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
 import com.azshop.utils.UploadUtils;
 
-@WebServlet(urlPatterns = {"/login-customer", "/verify-customer", "/register-customer", "/forget-customer", "/logout-customer", "/reset-success-customer", "/information", "/update-infor", "/update-password", "/waiting"})
-@MultipartConfig(fileSizeThreshold = 1024*1024*10, maxFileSize = 1024*1024*50, maxRequestSize = 1024*1024*50)
+@WebServlet(urlPatterns = { "/login-customer", "/verify-customer", "/register-customer", "/forget-customer",
+		"/logout-customer", "/reset-success-customer", "/information", "/update-infor", "/update-password",
+		"/waiting" })
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
+		* 50)
 
-public class AccountController extends HttpServlet{
+public class AccountController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	IUserService userService = new UserServiceImpl();
-	
+	IOrderService orderService = new OrderServiceImpl();
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI().toString();
@@ -74,24 +81,40 @@ public class AccountController extends HttpServlet{
 
 	private void getInfor(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
+		UserModel user = new UserModel();
 		if (session != null) {
-			Object sessionObject = session.getAttribute(Constant.userSession);
-			if (sessionObject instanceof UserModel) {
-				UserModel user = (UserModel) sessionObject;
-				req.setAttribute("user", user);
-			}
+			user = (UserModel) session.getAttribute(Constant.userSession);
+			req.setAttribute("user", user);
 		}
+
+		List<OrderModel> orderListWaiting = orderService.getByUserIdandStatus(user.getId(), "Waiting");
+		List<OrderModel> orderListProcessing = orderService.getByUserIdandStatus(user.getId(), "Processing");
+		List<OrderModel> orderListPending = orderService.getByUserIdandStatus(user.getId(), "Pending Pickup");
+		List<OrderModel> orderListShipping = orderService.getByUserIdandStatus(user.getId(), "Shipping");
+		List<OrderModel> orderListDelivered = orderService.getByUserIdandStatus(user.getId(), "Delivered");
+		List<OrderModel> orderListCompleted = orderService.getByUserIdandStatus(user.getId(), "Completed");
+		List<OrderModel> orderListCancelled = orderService.getByUserIdandStatus(user.getId(), "Cancelled");
+
+		req.setAttribute("orderListWaiting", orderListWaiting);
+		req.setAttribute("orderListProcessing", orderListProcessing);
+		req.setAttribute("orderListPending", orderListPending);
+		req.setAttribute("orderListShipping", orderListShipping);
+		req.setAttribute("orderListDelivered", orderListDelivered);
+		req.setAttribute("orderListCompleted", orderListCompleted);
+		req.setAttribute("orderListCancelled", orderListCancelled);
+
 		req.getRequestDispatcher("/views/account/information.jsp").forward(req, resp);
 	}
 
-	private void getResetSuccess(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private void getResetSuccess(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		req.getRequestDispatcher("/views/account/reset-success.jsp").forward(req, resp);
 	}
 
 	private void getLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		HttpSession session = req.getSession();
 		session.removeAttribute(Constant.userSession);
-		
+
 		resp.sendRedirect("./guest-home");
 	}
 
@@ -115,11 +138,11 @@ public class AccountController extends HttpServlet{
 	private void getRegister(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.getRequestDispatcher("/views/account/register.jsp").forward(req, resp);
 	}
-	
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI().toString();
-		if (url.contains("register-customer")) { 
+		if (url.contains("register-customer")) {
 			postRegister(req, resp);
 		} else if (url.contains("verify-customer")) {
 			postVerify(req, resp);
@@ -137,7 +160,7 @@ public class AccountController extends HttpServlet{
 	private void postUpdatePassword(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		resp.setContentType("text/html;charset=UTF-8");
 		req.setCharacterEncoding("UTF-8");
-		
+
 		UserModel user = new UserModel();
 		String currentPass = req.getParameter("currentPassword");
 		String newPassword = req.getParameter("newPassword");
@@ -158,7 +181,8 @@ public class AccountController extends HttpServlet{
 		}
 	}
 
-	private void postUpdateInfor(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+	private void postUpdateInfor(HttpServletRequest req, HttpServletResponse resp)
+			throws IOException, ServletException {
 		resp.setContentType("text/html;charset=UTF-8");
 		req.setCharacterEncoding("UTF-8");
 		UserModel user = new UserModel();
@@ -170,12 +194,11 @@ public class AccountController extends HttpServlet{
 			}
 		}
 		String image = null;
-		if (req.getPart("Image").getSize() != 0)
-		{
+		if (req.getPart("Image").getSize() != 0) {
 			String fileName = "" + System.currentTimeMillis();
 			image = UploadUtils.processUpload("Image", req, Constant.DIR, fileName);
 		}
-		
+
 		user.setFirstName(req.getParameter("firstName"));
 		user.setLastName(req.getParameter("lastName"));
 		user.setEmail(user.getEmail());
@@ -188,14 +211,14 @@ public class AccountController extends HttpServlet{
 
 	private void postForget(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		resp.setContentType("text/html;charset=UTF-8");
-		
+
 		String email = req.getParameter("username");
 		if (userService.checkExistEmial(email)) {
 			Email mail = new Email();
 			String newPassword = mail.getRandom();
-			
+
 			UserModel user = userService.getByEmail(email);
-			
+
 			boolean test = mail.sendEmailForget(user, newPassword);
 			if (test) {
 				userService.updatePassword(user, newPassword);
@@ -212,15 +235,15 @@ public class AccountController extends HttpServlet{
 
 	private void postLogin(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("text/html;charset=UTF-8");
-		
+
 		String username = req.getParameter("username");
 		String password = req.getParameter("password");
-		
+
 		if (username.isEmpty() || password.isEmpty()) {
 			req.getRequestDispatcher("/views/account/login.jsp").forward(req, resp);
 			return;
 		}
-		
+
 		UserModel user = userService.login(username, password);
 		if (user != null) {
 			HttpSession session = req.getSession(true);
@@ -228,26 +251,26 @@ public class AccountController extends HttpServlet{
 			resp.sendRedirect(req.getContextPath() + "/waiting");
 		} else {
 			// Đăng nhập không thành công, đặt thông báo lỗi vào request
-	        req.setAttribute("loginError", "Thông tin đăng nhập không chính xác!");
-	        // Forward lại đến trang login.jsp để hiển thị thông báo lỗi
-	        req.getRequestDispatcher("/views/account/login.jsp").forward(req, resp);
+			req.setAttribute("loginError", "Thông tin đăng nhập không chính xác!");
+			// Forward lại đến trang login.jsp để hiển thị thông báo lỗi
+			req.getRequestDispatcher("/views/account/login.jsp").forward(req, resp);
 		}
 	}
 
 	private void postVerify(HttpServletRequest req, HttpServletResponse resp) {
 		resp.setContentType("text/html;charset=UTF-8");
-		try (PrintWriter outPrintWriter = resp.getWriter()){
-			
+		try (PrintWriter outPrintWriter = resp.getWriter()) {
+
 			HttpSession session = req.getSession();
 			UserModel userModel = (UserModel) session.getAttribute("user");
 			String codeSend = (String) session.getAttribute("code");
-			
+
 			String code = req.getParameter("verify-code");
-			
+
 			if (code.equals(codeSend)) {
 				userModel.setEmail(userModel.getEmail());
 				userModel.setEmailActive(true);
-				
+
 				userService.updateStatusEmail(userModel);
 				resp.sendRedirect(req.getContextPath() + "/login-customer");
 			}
@@ -264,24 +287,24 @@ public class AccountController extends HttpServlet{
 		String password = req.getParameter("password");
 		String firstName = req.getParameter("first-name");
 		String lastName = req.getParameter("last-name");
-		
+
 		if (userService.checkExistEmial(email)) {
 			req.setAttribute("registrationError", "Email đã tồn tại");
 			req.getRequestDispatcher("/views/account/register.jsp").forward(req, resp);
 		} else {
 			Email mail = new Email();
 			String code = mail.getRandom();
-			
+
 			UserModel user = new UserModel(firstName, lastName, email);
-			
+
 			boolean test = mail.sendEmail(user, code);
 			if (test) {
 				HttpSession session = req.getSession();
 				session.setAttribute("user", user);
 				session.setAttribute("code", code);
-				
+
 				boolean isSuccess = userService.insertRegister(firstName, lastName, email, password);
-				
+
 				if (isSuccess) {
 					resp.sendRedirect(req.getContextPath() + "/verify-customer");
 				} else {
@@ -293,5 +316,5 @@ public class AccountController extends HttpServlet{
 			}
 		}
 	}
-	
+
 }

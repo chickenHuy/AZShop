@@ -6,6 +6,26 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+    /* CSS cho video container */
+    .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px; /* Tăng độ rộng tối đa của video nếu bạn muốn */
+        margin: auto;
+    }
+
+    /* CSS cho video */
+    .video-container video {
+        width: 100%;
+        height: auto;
+        display: block;
+        padding: 2px 0 0 5px;
+    }
+
+
+
+</style>
 </head>
 <body>
 
@@ -45,6 +65,15 @@
 								 <img src="/AZShop/image?fname=${image.image}" alt="">
 							</div>
 						</c:forEach>
+							<c:if test="${product.video != null}">
+										    <div class="card">
+										        <div class="video-container">
+										            <video controls>
+										                <source src="${(product != null && product.video != null) ? '/AZShop/video?fname=' : ''}${(product != null && product.video != null) ? product.video : ''}" type="video/mp4">
+										            </video>
+										        </div>
+										    </div>
+										</c:if>
 					</div>
 				</div>
 				<!-- /Product main img -->
@@ -57,6 +86,15 @@
 								 <img src="/AZShop/image?fname=${image.image}" alt="">
 							</div>
 						</c:forEach>
+						<c:if test="${product.video != null}">
+					    <div class="card">
+					        <div class="video-container">
+					            <video>
+					                <source src="${(product != null && product.video != null) ? '/AZShop/video?fname=' : ''}${(product != null && product.video != null) ? product.video : ''}" type="video/mp4">
+					            </video>
+					        </div>
+					    </div>
+					</c:if>
 					</div>
 				</div>
 				<!-- /Product thumb imgs -->
@@ -81,7 +119,7 @@
 							</h3>
 							<span class="product-available">In Stock</span>
 						</div>
-						<p>Cửa hàng: ${store.name}</p>
+						<p>Cửa hàng: <a href='/AZShop/guest/store/slug={$store.slug}' style="text-decorator:none;">${store.name}</a></p>
 
 						<a href="<c:url value='/login-customer' />">
 							<div class="add-to-cart">

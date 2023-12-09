@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 
 import com.azshop.models.CartItemModel;
 import com.azshop.models.CartModel;
+import com.azshop.models.CategoryModel;
 import com.azshop.models.ImageModel;
 import com.azshop.models.ProductModel;
 import com.azshop.models.StoreModel;
@@ -145,14 +146,35 @@ public class searchController extends HttpServlet {
 	        for (ProductModel productModel : productModels) {
 	        	imageModels.add(imageService.getImage(productModel.getId()));
 			}
+	        
+	        List<CategoryModel> categoryParentList = categoryService.getParentCategory();
+	        
+	        for (CategoryModel categoryParent : categoryParentList) {
+				List<CategoryModel> categoryChildList = categoryService.getChildCategory(categoryParent.getId());
+				for (CategoryModel categoryChild : categoryChildList) {
+					categoryChild.setCountProduct(categoryChild.getId());
+				}
+			}
+	        
 	        request.setAttribute("styleId", styleTmp);
 	        request.setAttribute("images", imageModels);
 	        request.setAttribute("styles", styleModels);
 	        request.setAttribute("products", productModels);
 	        request.setAttribute("searchTerm", keyword);
 	        request.setAttribute("categoryId", categoryId);
-	        request.setAttribute("categoryParentList", categoryService.getParentCategory());
+	        request.setAttribute("categoryParentList", categoryParentList);
 	        request.getRequestDispatcher("/views/customer/search.jsp").forward(request, response);
 	    }
+	    
+	  //Đếm sản phẩm có trong danh mục
+    	public int countProductsInCategory(int categoryId) {
+            List<ProductModel> productList = productService.getByCategoryId(categoryId);
+
+            int productCount = (productList != null) ? productList.size() : 0;
+
+            return productCount;
+        }
 
 }
+
+

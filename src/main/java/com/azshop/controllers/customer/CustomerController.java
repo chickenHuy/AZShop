@@ -543,11 +543,10 @@ public class CustomerController extends HttpServlet {
         rd.forward(req, resp);
 	}
 
+	//Đếm sản phẩm có trong danh mục
 	public int countProductsInCategory(int categoryId) {
-        // Get products by category
         List<ProductModel> productList = productService.getByCategoryId(categoryId);
 
-        // Count the number of products
         int productCount = (productList != null) ? productList.size() : 0;
 
         return productCount;

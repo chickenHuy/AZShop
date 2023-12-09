@@ -213,6 +213,9 @@
 														<i class="fa-solid fa-ellipsis"></i>
 													</button>
 													<ul class="dropdown-menu">
+														<c:if test="${product.getIsActive() == true}">
+															<li><a class="dropdown-item" href='<c:url value="/customer/product/${product.slug}"/>'>View As Customer</a></li>
+														</c:if>
 														<li><a class="dropdown-item" href='<c:url value="/vendor/product/edit/${product.slug}"/>'>Edit</a></li>
 														<li><a class="dropdown-item" href='<c:url value="/vendor/product/delete/${product.slug}"/>'>Delete</a></li>
 													</ul>
