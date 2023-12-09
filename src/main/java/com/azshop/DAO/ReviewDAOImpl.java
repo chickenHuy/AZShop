@@ -328,4 +328,24 @@ public class ReviewDAOImpl implements IReviewDAO {
 		return BigDecimal.ZERO;
 	}
 
+	@Override
+	public int countStar(int productId, int rating) {
+		int countStar = 0;
+		try {
+			String sql = "SELECT COUNT(*) as countStar FROM [Review] where productId = ? and rating = ?";
+
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, productId);
+			ps.setInt(2, rating);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				countStar = rs.getInt("countStar");
+			}
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return countStar;
+	}
 }

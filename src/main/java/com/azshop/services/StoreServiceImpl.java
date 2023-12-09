@@ -1,5 +1,6 @@
 package com.azshop.services;
 
+import java.util.Date;
 import java.util.List;
 
 import com.azshop.DAO.IStoreDAO;
@@ -70,6 +71,17 @@ public class StoreServiceImpl implements IStoreService {
 	@Override
 	public List<StoreModel> searchByKey(String key, int storeLevelId) {
 		return storeDAO.searchByKey(key, storeLevelId);
+	}
+
+	@Override
+	public int countNewStores(Date datetime) {
+		return storeDAO.countNewStores(datetime);
+	}
+
+	@Override
+	public int getTotalStores() {
+		// TODO Auto-generated method stub
+		return storeDAO.getTotalStores();
 	}
 
 }
