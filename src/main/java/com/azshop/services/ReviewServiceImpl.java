@@ -75,5 +75,10 @@ public class ReviewServiceImpl implements IReviewService{
 		return reviewDAO.countStar(productId, rating);
 	}
 
+	@Override
+	public List<ReviewModel> getByProductIdPage(int productId, int offset, int limit) {
+		return reviewDAO.getByProductIdPage(productId, offset, limit);
+	}
+
 
 }

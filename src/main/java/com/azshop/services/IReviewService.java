@@ -31,4 +31,6 @@ public interface IReviewService {
 	BigDecimal avgRating(int productId);
 	
 	int countStar(int productId, int rating);
+	
+	List<ReviewModel> getByProductIdPage(int productId, int offset, int limit);
 }
