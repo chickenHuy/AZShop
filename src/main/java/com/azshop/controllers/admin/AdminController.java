@@ -37,6 +37,7 @@ import com.azshop.models.OrderItemModel;
 import com.azshop.models.OrderModel;
 import com.azshop.models.ProductModel;
 import com.azshop.models.RevenueData;
+import com.azshop.models.ReviewModel;
 import com.azshop.models.StoreLevelModel;
 import com.azshop.services.*;
 
@@ -69,7 +70,7 @@ public class AdminController extends HttpServlet {
 	IOrderService orderService = new OrderServiceImpl();
 	IOrderItemService orderItemService = new OrderItemServiceImpl();
 	IDeliveryService deliveryService = new DeliveryServiceImpl();
-
+	IReviewService ReviewService = new ReviewServiceImpl();
 	IImageService imageService = new ImageServiceImpl();
 
 	@Override
@@ -328,6 +329,10 @@ public class AdminController extends HttpServlet {
 		List<OrderModel> orderModels = orderService.getAll();
 		if (orderModels != null)
 			req.setAttribute("totalOrders", orderModels.size());
+		
+		List<ReviewModel> ReviewModels = ReviewService.getAll();
+		if (ReviewModels != null)
+			req.setAttribute("totalReview", ReviewModels.size());
 		req.setAttribute("total", total);
 		req.setAttribute("count", count);
 		req.setAttribute("totalFL", totalFL);

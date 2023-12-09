@@ -89,7 +89,7 @@
                         <div class="d-flex align-items-center">
                             <div class="">
                                 <p class="mb-1">Total Product</p>
-                                <h4 class="mb-0 text-success">${totalProducts != null ? totalProducts : '0'}</h4>
+                                <h4 class="mb-0 text-success">${totalReview != null ? totalReview : '0'}</h4>
                             </div>
                             <div class="ms-auto widget-icon bg-success text-white">
                                 <i class="bi bi-currency-dollar"></i>
