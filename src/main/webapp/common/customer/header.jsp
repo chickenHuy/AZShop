@@ -125,7 +125,7 @@
 									<h5>SUBTOTAL: ${sumPrice} VNĐ</h5>
 								</div>
 								<div class="cart-btns">
-									<a href='<c:url value="/customer/cart"/>'>View Cart</a> <a href='<c:url value="/customer/checkout"/>'>Checkout <i
+									<a href='<c:url value="/customer/cart"/>'>View Cart</a> <a href='<c:url value="/customer/cart/checkout"/>'>Checkout <i
 										class="fa fa-arrow-circle-right"></i></a>
 								</div>
 							</div>

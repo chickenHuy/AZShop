@@ -46,5 +46,6 @@ public interface IOrderService {
     List<OrderModel> getAllAdmin();
  // Thêm phương thức mới vào OrderDAOImpl
     int getTotalShopRevenueByDate(Date Date) ;
+    int getTotalShopRevenue();
  	    
 }

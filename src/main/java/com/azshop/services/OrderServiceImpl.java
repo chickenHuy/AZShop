@@ -154,4 +154,10 @@ public class OrderServiceImpl implements IOrderService {
 	public int getTotalShopRevenueByDate(Date Date) {
 		return orderDAO.getTotalShopRevenueByDate(Date);
 	}
+
+	@Override
+	public int getTotalShopRevenue() {
+		// TODO Auto-generated method stub
+		return orderDAO.getTotalShopRevenue();
+	}
 }
