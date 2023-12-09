@@ -85,7 +85,7 @@
 			<h1>Profile</h1>
 			<nav>
 				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a href="<c:url value='/customer-home' />">Home</a></li>
+					<li class="breadcrumb-item"><a href="<c:url value='/waiting' />">Home</a></li>
 					<li class="breadcrumb-item">Users</li>
 					<li class="breadcrumb-item active">Profile</li>
 				</ol>
@@ -100,9 +100,14 @@
 					<div class="card">
 						<div
 							class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-
-							<img src = "/AZShop/image?fname=${user.avatar}" alt="Profile"
+							<c:if test ="${user.avatar != null }">
+								<img src = "/AZShop/image?fname=${user.avatar}" alt="Profile"
 								class="rounded-circle">
+							</c:if>
+							<c:if test ="${user.avatar == null }">
+								<img src="${pageContext.request.contextPath}/templates/static/none.png" alt="Profile"
+								class="rounded-circle">
+							</c:if>
 							<h2>${user.firstName} ${user.lastName}</h2>
 						</div>
 					</div>
