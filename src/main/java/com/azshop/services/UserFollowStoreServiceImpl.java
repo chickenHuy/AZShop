@@ -49,4 +49,11 @@ public class UserFollowStoreServiceImpl implements IUserFollowStoreService{
 		return userFollowStoreDAO.countByStore(storeId);
 	}
 
+	@Override
+	public int getTotalFollow() {
+		
+			return userFollowStoreDAO.getTotalFollow();
+		
+	}
+
 }

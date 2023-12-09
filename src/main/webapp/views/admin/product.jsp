@@ -16,7 +16,8 @@
 				<ol class="breadcrumb mb-0 p-0">
 					<li class="breadcrumb-item"><a href="javascript:;"><i
 							class="bx bx-home-alt"></i></a></li>
-					<li class="breadcrumb-item active" aria-current="page"><a href="product">Products</a></li>
+					<li class="breadcrumb-item active" aria-current="page"><a
+						href="product">Products</a></li>
 				</ol>
 			</nav>
 		</div>
@@ -28,15 +29,15 @@
 	<div
 		class="product-count d-flex align-items-center gap-3 gap-lg-4 mb-4 fw-bold flex-wrap font-text1">
 		<a href="javascript:;"><span class="me-1">All</span><span
-			class="text-secondary">(${countAllProduct})</span></a> 
+			class="text-secondary">(${countAllProduct})</span></a>
 	</div>
 
 	<div class="row g-3">
 		<div class="col-auto flex-grow-1 overflow-auto">
 			<form action="/AZShop/admin/productsByCategory" method="get"
 				class="d-flex">
-				<select class="form-select" id="Category" name="categoryId" onchange="loadProducts()"
-					style="width: 200px;">
+				<select class="form-select" id="Category" name="categoryId"
+					onchange="loadProducts()" style="width: 200px;">
 					<option value="-1">-- Select Category --</option>
 					<!-- Lựa chọn với giá trị null -->
 					<c:forEach var="category" items="${listCategory}">
@@ -58,10 +59,10 @@
 							<tr>
 								<th>Product Name</th>
 								<th>Description</th>
+								<th>Store</th>
 								<th>Price</th>
 								<th>Quantity</th>
 								<th>Sold</th>
-								<th>Rating</th>
 								<th>Action</th>
 							</tr>
 						</thead>
@@ -69,30 +70,42 @@
 							<c:forEach var="product" items="${listProduct}">
 								<tr>
 									<td>
-												<div class="d-flex align-items-center gap-3">
-													<div class="product-box">
-														<c:set var="hasImages" value="false" />
-														<c:forEach var="image" items="${images}">
-															<c:if test="${product.id eq image.productId}">
-																<img src="/AZShop/image?fname=${image.image}" alt=""/>
-																<c:set var="hasImages" value="true" />
-															</c:if>
-														</c:forEach>
-														<c:if test="${not hasImages}">
-															<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
-															<img src="${pageContext.request.contextPath}/templates/static/none.png" alt=""/>
-														</c:if>
-													</div>
-													<div class="product-info">
-														<a href="javascript:;" class="product-title">${product.name}</a>
-													</div>
-												</div>
-											</td>
+										<div class="d-flex align-items-center gap-3">
+											<div class="product-box">
+												<c:set var="hasImages" value="false" />
+												<c:forEach var="image" items="${images}">
+													<c:if test="${product.id eq image.productId}">
+														<img src="/AZShop/image?fname=${image.image}" alt="" />
+														<c:set var="hasImages" value="true" />
+													</c:if>
+												</c:forEach>
+												<c:if test="${not hasImages}">
+													<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
+													<img
+														src="${pageContext.request.contextPath}/templates/static/none.png"
+														alt="" />
+												</c:if>
+											</div>
+											<div class="product-info">
+												<a href="javascript:;" class="product-title">${product.name}</a>
+											</div>
+										</div>
+									</td>
 									<td>${product.description}</td>
+									<c:set var="hasImages" value="false" />
+									<c:forEach var="store" items="${listStore}">
+										<c:if test="${store.id == product.storeId}">
+											<td>${store.name}</td>
+											<c:set var="hasImages" value="true" />
+										</c:if>
+									</c:forEach>
+									<c:if test="${not hasImages}">
+										<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
+										<td></td>
+									</c:if>
 									<td>${product.price}</td>
 									<td>${product.quantity}</td>
 									<td>${product.sold}</td>
-									<td>${product.rating}</td>
 									<td><c:choose>
 											<c:when test="${product.isActive}">
 												<a class="dropdown-item"
@@ -115,7 +128,6 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
-
 	function loadProducts() {
 		var categoryId = $("#Category").val();
 
@@ -131,16 +143,17 @@
 		}); */
 
 		$.ajax({
-		    type: "GET",
-		    url: "productsByCategory?categoryId=" + categoryId,
-		    success: function(data) {
-		        // Xử lý dữ liệu nếu cần
-		        // Sau đó, chuyển hướng trang
-		        window.location.href = "productsByCategory?categoryId=" + categoryId;
-		    },
-		    error: function(error) {
-		        // Xử lý lỗi nếu cần
-		    }
+			type : "GET",
+			url : "productsByCategory?categoryId=" + categoryId,
+			success : function(data) {
+				// Xử lý dữ liệu nếu cần
+				// Sau đó, chuyển hướng trang
+				window.location.href = "productsByCategory?categoryId="
+						+ categoryId;
+			},
+			error : function(error) {
+				// Xử lý lỗi nếu cần
+			}
 		});
 	}
 </script>

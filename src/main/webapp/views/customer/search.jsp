@@ -14,15 +14,26 @@
 					<div class="aside">
 						<h3 class="aside-title">Categories</h3>
 						<div class="checkbox-filter">
-							<a href=''>
+							<a href='<c:url value="/customer/search?categoryId=-1&styleId=${styleId}&searchTerm=${searchTerm}"/>'>
 								<div class="input-checkbox ${category.slug}">
-									<label>Tất cả</label>
+										<c:if test="${categoryId eq '-1'}"> 
+											<label style="color: #d10024"> Tất cả
+										</c:if>
+										<c:if test="${!(categoryId eq '-1')}">
+											<label >Tất cả</label>
+										</c:if>
 								</div>
 							</a>
-							<c:forEach var="category" items="${categoryChildList}">	
-								<a href=''>
+							<c:forEach var="category" items="${categoryParentList}">	
+								<a href='<c:url value="/customer/search?categoryId=${category.id}&styleId=${styleId}&searchTerm=${searchTerm}"/>'>
 									<div class="input-checkbox ${category.slug}">
-										<label>${category.name}<small> (${category.countProduct})</small></label>
+										<c:if test="${categoryId eq category.id}"> 
+											<label style="color: #d10024">${category.name}
+										</c:if>
+										<c:if test="${!(categoryId eq category.id)}">
+											<label >${category.name}
+										</c:if>
+										<small> (${category.countProduct})</small></label>
 									</div>
 								</a>
 							</c:forEach>
@@ -37,7 +48,7 @@
 						<h3 class="aside-title">Style</h3>
 						<div class="checkbox-filter">
 							<c:forEach var="style" items="${styles}">	
-								<a href=''>
+								<a href='<c:url value="/customer/search?categoryId=${categoryId}&styleId=${style.id}&searchTerm=${searchTerm}"/>'>
 									<div class="input-checkbox">
 											<label>${style.name}</label>
 									</div>

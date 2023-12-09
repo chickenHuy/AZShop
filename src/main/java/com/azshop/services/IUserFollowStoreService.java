@@ -17,4 +17,5 @@ public interface IUserFollowStoreService {
 
 	List<UserFollowStoreModel> getByStoreId(int storeId);
 	int countByStore(int storeId);
+	int getTotalFollow();
 }

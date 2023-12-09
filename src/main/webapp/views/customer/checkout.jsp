@@ -156,7 +156,7 @@
 						<div class="order-col">
 							<div>Shiping</div>
 							<div>
-								<strong>FREE</strong>
+								<strong>${delivery.price}</strong>
 							</div>
 						</div>
 						<div class="order-col">
@@ -172,7 +172,9 @@
 						<c:forEach var="delivery" items="${deliveryList}" varStatus="loop">
 							<div class="input-radio">
 								<input type="radio" name="payment"
-									id="payment-${loop.index + 1}"> <label
+									id="payment-${loop.index + 1}"
+									value="${delivery.name} (${delivery.price} VNĐ)"
+									deliveryId="${delivery.id}"> <label
 									for="payment-${loop.index + 1}"> <span></span>
 									${delivery.name} (${delivery.price} VNĐ)
 								</label>
@@ -181,6 +183,7 @@
 								</div>
 							</div>
 						</c:forEach>
+
 					</div>
 					<div class="input-checkbox">
 						<input type="checkbox" id="terms"> <label for="terms">
@@ -188,7 +191,7 @@
 								conditions</a>
 						</label>
 					</div>
-					<a href="#" class="primary-btn order-submit">Place order</a>
+					<a href="/customer/checkout/comfirm" class="primary-btn order-submit">Place order</a>
 				</div>
 				<!-- /Order Details -->
 			</div>
@@ -197,3 +200,17 @@
 		<!-- /container -->
 	</div>
 	<!-- /SECTION --></html>
+	
+	
+	<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var radioButtons = document.querySelectorAll('input[name="payment"]');
+
+        radioButtons.forEach(function (radioButton) {
+            radioButton.addEventListener('change', function () {
+                var selectedId = radioButton.getAttribute('deliveryId');            
+            });
+        });
+    });
+</script>
+	
