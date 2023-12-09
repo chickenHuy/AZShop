@@ -49,10 +49,10 @@
 						<form action='<c:url value="/customer/search"/>' method="GET"  accept-charset="UTF-8">
 							<select class="input-select" name = "categoryId">
 							<c:if test="${categoryId != null}">  
-								<option value="-1" >All Categories </option>
+								<option value="-1" >Tất cả </option>
 							</c:if>
 							<c:if test="${categoryId == null}">  
-								<option value="-1" selected>All Categories </option>
+								<option value="-1" selected>Tất cả </option>
 							</c:if>
 							<c:forEach var = "category" items ="${categoryParentList}">
 								<c:if test="${categoryId != null && categoryId eq category.id}">  
