@@ -39,7 +39,7 @@
                             <input class="form-control" type="text" name="username" placeholder="Username" required>
                             <input class="form-control" type="password" name="password" placeholder="Password" required>
                             <div class="form-button">
-                                <button id="submit" type="submit" class="ibtn">Login</button>
+                                <button id="submit" type="submit" class="ibtn" style="background-color:#d21737;">Login</button>
                                 <a href="${pageContext.request.contextPath}/forget-customer">Forget password?</a>
                             </div>
                         </form>
