@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,15 +25,13 @@ import com.azshop.models.StyleModel;
 import com.azshop.models.StyleValueModel;
 import com.azshop.models.UserLevelModel;
 import com.azshop.models.UserModel;
-import com.azshop.services.IStoreService;
-import com.azshop.services.IUserService;
-import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.SlugUtil;
 import com.azshop.utils.UploadUtils;
 import com.google.gson.Gson;
 import com.azshop.models.CategoryModel;
 import com.azshop.models.DeliveryModel;
+import com.azshop.models.ImageModel;
 import com.azshop.models.OrderItemModel;
 import com.azshop.models.OrderModel;
 import com.azshop.models.ProductModel;
@@ -68,6 +67,7 @@ public class AdminController extends HttpServlet {
 	IOrderItemService orderItemService = new OrderItemServiceImpl();
 	IDeliveryService deliveryService = new DeliveryServiceImpl();
 
+	IImageService imageService = new  ImageServiceImpl();
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -280,7 +280,8 @@ public class AdminController extends HttpServlet {
 				styleValueService.delete(Integer.parseInt(id));
 			}
 		}
-		resp.sendRedirect("stylevalues?styleid=" + id);
+		StyleValueModel styleValue = styleValueService.getByIdAdmin(Integer.parseInt(id));
+		resp.sendRedirect("/AZShop/admin/style/stylevalues?styleid=" + styleValue.getStyleId());
 	}
 
 	private void getAllStyleValueByStyle(HttpServletRequest req, HttpServletResponse resp)
@@ -403,6 +404,13 @@ public class AdminController extends HttpServlet {
 			List<ProductModel> listProduct = productService.getAll();
 
 			List<CategoryModel> listCategory = categoryService.getAll();
+			List<ImageModel> lisImageModels = new ArrayList<ImageModel>();
+			for (ProductModel productModel : listProduct) {
+				List<ImageModel> listModelByProduct = imageService.getByProductId(productModel.getId());
+				if (listModelByProduct.size() > 0)
+					lisImageModels.add(listModelByProduct.get(0));
+			}
+			req.setAttribute("images", lisImageModels);
 
 			int countAllProduct = listProduct.size();
 			req.setAttribute("listProduct", listProduct);
@@ -892,13 +900,20 @@ public class AdminController extends HttpServlet {
 		if (categoryId == null || categoryId.isEmpty()) {
 
 			List<ProductModel> listProduct = productService.getAll();
-
+			
 			List<CategoryModel> listCategory = categoryService.getAll();
-
+			List<ImageModel> lisImageModels = new ArrayList<ImageModel>();
+			for (ProductModel productModel : listProduct) {
+				List<ImageModel> listModelByProduct = imageService.getByProductId(productModel.getId());
+				if (listModelByProduct.size() > 0)
+					lisImageModels.add(listModelByProduct.get(0));
+			}
+			req.setAttribute("images", lisImageModels);
 			int countAllProduct = listProduct.size();
 			req.setAttribute("listProduct", listProduct);
 			req.setAttribute("countAllProduct", countAllProduct);
 			req.setAttribute("listCategory", listCategory);
+			
 
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
 			rDispatcher.forward(req, resp);

@@ -20,4 +20,6 @@ public interface IStyleValueService {
 	List<StyleValueModel> getByStyleIdAmin(int id);
 
 	void restore(int id);
+
+	StyleValueModel getByIdAdmin(int id);
 }

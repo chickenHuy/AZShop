@@ -18,6 +18,11 @@ public class StyleValueImpl implements IStyleValueService {
 	public StyleValueModel getById(int id) {
 		return styleValueDAO.getById(id);
 	}
+	
+	@Override
+	public StyleValueModel getByIdAdmin(int id) {
+		return styleValueDAO.getByIdAdmin(id);
+	}
 
 	@Override
 	public List<StyleValueModel> getAll() {
