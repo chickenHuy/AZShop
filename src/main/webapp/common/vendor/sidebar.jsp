@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="/common/taglib.jsp"%>
 <aside class="sidebar-wrapper">
 	<div class="sidebar-header">
 		<div class="logo-icon">
@@ -95,7 +98,7 @@
 			class="dropdown-toggle d-flex align-items-center px-3 gap-3 w-100 h-100"
 			data-bs-toggle="dropdown">
 			<div class="user-img">
-				<img src="assets/images/avatars/01.png" alt="">
+				<img src="/AZShop/image?fname=${user.avatar}" alt="">
 			</div>
 			<div class="user-info">
 				<h5 class="mb-0 user-name">
@@ -106,20 +109,11 @@
 			</div>
 		</div>
 		<ul class="dropdown-menu dropdown-menu-end">
-			<li><a class="dropdown-item" href="javascript:;"><span
-					class="material-symbols-outlined me-2"> account_circle </span><span>Profile</span></a>
+			<li><a class="dropdown-item" href="/AZShop/information"><span
+					class="material-symbols-outlined me-2"> account_circle </span><span>Account Profile</span></a>
 			</li>
-			<li><a class="dropdown-item" href="javascript:;"><span
-					class="material-symbols-outlined me-2"> tune </span><span>Settings</span></a>
-			</li>
-			<li><a class="dropdown-item" href="javascript:;"><span
+			<li><a class="dropdown-item" href="/AZShop/vendor/dashboard"><span
 					class="material-symbols-outlined me-2"> dashboard </span><span>Dashboard</span></a>
-			</li>
-			<li><a class="dropdown-item" href="javascript:;"><span
-					class="material-symbols-outlined me-2"> account_balance </span><span>Earnings</span></a>
-			</li>
-			<li><a class="dropdown-item" href="javascript:;"><span
-					class="material-symbols-outlined me-2"> cloud_download </span><span>Downloads</span></a>
 			</li>
 			<li>
 				<div class="dropdown-divider mb-0"></div>

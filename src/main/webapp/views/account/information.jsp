@@ -31,12 +31,12 @@
 <body>
 
 	<!-- ======= Header ======= -->
-	<header id="header" class="header fixed-top d-flex align-items-center">
+	<header id="header" class="header fixed-top d-flex align-items-center" style="background-color: #15161d;">
 
-		<div class="d-flex align-items-center justify-content-between">
+		<div class="d-flex align-items-center justify-content-between" >
 			<a href="<c:url value='/waiting' />" class="logo d-flex align-items-center"> <img
 				src="<c:url value='/templates/account/assets/img/logo.png' />" alt=""> <span
-				class="d-none d-lg-block">AZSHOP</span>
+				class="d-none d-lg-block" style="color:#ffffff;">AZSHOP</span>
 			</a> <i class="bi bi-list toggle-sidebar-btn"></i>
 		</div>
 		<!-- End Logo -->
@@ -50,7 +50,7 @@
 					href="#" data-bs-toggle="dropdown"> <img
 					src = "/AZShop/image?fname=${user.avatar}" alt="Profile"
 						class="rounded-circle"> <span
-						class="d-none d-md-block dropdown-toggle ps-2">${user.email}</span>
+						class="d-none d-md-block dropdown-toggle ps-2" style="color:#ffffff;">${user.email}</span>
 				</a>
 				<!-- End Profile Iamge Icon -->
 
@@ -93,7 +93,7 @@
 		</div>
 		<!-- End Page Title -->
 
-		<section class="section profile">
+		<section class="section profile" >
 			<div class="row">
 				<div class="col-xl-4">
 
@@ -336,7 +336,7 @@
 	<!-- End #main -->
 
     <!-- ======= Footer ======= -->
-  <footer id="footer" class="footer">
+  <footer id="footer" class="footer" >
     <div class="copyright">
       &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
     </div>
