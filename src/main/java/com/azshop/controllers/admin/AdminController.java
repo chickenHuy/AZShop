@@ -49,7 +49,7 @@ import com.azshop.services.*;
 		"/admin/editstorelevel", "/admin/deletestorelevel", "/admin/restorestorelevel", "/admin/category/*",
 		"/admin/styles", "/admin/style/delete", "/admin/style/restore", "/admin/addstyle", "/admin/style/stylevalues",
 		"/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
-		"/admin/order-detail" })
+		"/admin/order-detail","/admin/UserStatic","/admin/StoreStatic" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -67,13 +67,15 @@ public class AdminController extends HttpServlet {
 	IOrderItemService orderItemService = new OrderItemServiceImpl();
 	IDeliveryService deliveryService = new DeliveryServiceImpl();
 
-	IImageService imageService = new  ImageServiceImpl();
+	IImageService imageService = new ImageServiceImpl();
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		String url = req.getRequestURL().toString();
 		if (url.contains("/admin/dashboard")) {
-			GetStatisticsUser(req, resp);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/dashboard.jsp");
+			rDispatcher.forward(req, resp);
 		} else if (url.contains("/admin/product/edit-status")) {
 			try {
 				editProductStatus(req, resp);
@@ -81,10 +83,13 @@ public class AdminController extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		
 		} else if (url.contains("/admin/productsByCategory")) {
 			getProductByCategory(req, resp);
 		} else if (url.contains("/admin/product")) {
 			getAllProduct(req, resp);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
+			rDispatcher.forward(req, resp);
 		} else if (url.contains("/admin/categories")) {
 			getAllCategory(req, resp);
 		} else if (url.contains("/admin/addcategory")) {
@@ -104,6 +109,7 @@ public class AdminController extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		
 		} else if (url.contains("/admin/storelevel")) {
 			getAllStoreLevel(req, resp);
 			getAllStoreLevelDeleted(req, resp);
@@ -171,6 +177,17 @@ public class AdminController extends HttpServlet {
 		} else if (url.contains("/admin/order-detail")) {
 			getOrderDetail(req, resp);
 		}
+		else if (url.contains("/admin/StoreStatic")) {
+		GetStatisticsStore(req, resp);
+		}
+		else if (url.contains("/admin/UserStatic")) {
+		GetStatisticsUser(req, resp);
+		}
+	 
+		
+		
+		
+		
 	}
 
 	private void getOrderDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -207,7 +224,6 @@ public class AdminController extends HttpServlet {
 			UserLevelModel userLevel = userLevelService.getById(user.getUserLevelId());
 			req.setAttribute("discount", BigDecimal.valueOf(userLevel.getDiscount() / 100.0).multiply(totalOrder));
 
-
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/orderDetail.jsp");
 			rDispatcher.forward(req, resp);
 		}
@@ -227,7 +243,33 @@ public class AdminController extends HttpServlet {
 		List<StoreLevelModel> list = storeLevelService.getAll();
 		req.setAttribute("liststorelevel", list);
 	}
-	private void GetStatisticsUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+	private void GetStatisticsUser(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		Date currentDate = new Date();
+		String selectedDateStr = req.getParameter("selectedDate");
+		Date selectedDate = null;
+
+		if (selectedDateStr != null && !selectedDateStr.isEmpty()) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				selectedDate = dateFormat.parse(selectedDateStr);
+			} catch (Exception e) {
+				e.printStackTrace(); // Xử lý ngoại lệ nếu có lỗi khi chuyển đổi
+			}
+		} else {
+			selectedDate = currentDate;
+		}
+		int count = userService.countUser(selectedDate);
+		int total = userService.getTotalUsers();
+		req.setAttribute("total", total);
+		req.setAttribute("count", count);
+		// view nhan du lieu
+		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/StaticsUser.jsp");
+		rd.forward(req, resp);
+		}
+	
+	private void GetStatisticsStore(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Date currentDate = new Date();
 	    String selectedDateStr = req.getParameter("selectedDate");
 	    Date selectedDate = null;
@@ -244,14 +286,14 @@ public class AdminController extends HttpServlet {
         {
         	selectedDate= currentDate;
         }
-	    int count = userService.countUser(selectedDate);
-		int total = userService.getTotalUsers();
+	    int count = storeService.countNewStores(selectedDate);
+		int total = storeService.getTotalStores();
 		req.setAttribute("total",total);
 		req.setAttribute("count", count);
 		// view nhan du lieu
-		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/StaticsStore.jsp");
 		rd.forward(req, resp);
-		}
+	}
 
 	private void getEditStylValue(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -427,6 +469,13 @@ public class AdminController extends HttpServlet {
 			req.setAttribute("countAllProduct", countAllProduct);
 			List<CategoryModel> listCategory = categoryService.getAll();
 			req.setAttribute("listCategory", listCategory);
+			List<ImageModel> lisImageModels = new ArrayList<ImageModel>();
+			for (ProductModel productModel : listProduct) {
+				List<ImageModel> listModelByProduct = imageService.getByProductId(productModel.getId());
+				if (listModelByProduct.size() > 0)
+					lisImageModels.add(listModelByProduct.get(0));
+			}
+			req.setAttribute("images", lisImageModels);
 
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
 			rDispatcher.forward(req, resp);
@@ -719,19 +768,20 @@ public class AdminController extends HttpServlet {
 
 		String id = req.getParameter("id");
 		StyleValueModel styleValue = styleValueService.getById(Integer.parseInt(id));
-		
+
 		String name = req.getParameter("styleValueName");
 		if (name != "") {
 			try {
 				styleValue.setName(name);
 				styleValueService.update(styleValue);
-				
+
 				resp.sendRedirect("/AZShop/admin/style/stylevalue/edit?id=" + id + "&&message=Successfully");
 			} catch (Exception e) {
-				resp.sendRedirect("/AZShop/admin/style/stylevalue/edit?id=" + id + "&&message=Failed to add the user level");
+				resp.sendRedirect(
+						"/AZShop/admin/style/stylevalue/edit?id=" + id + "&&message=Failed to add the user level");
 			}
-			
-		}else {
+
+		} else {
 			resp.sendRedirect("/AZShop/admin/style/stylevalue/edit?id=" + id + "&&message=You must fill out the form");
 		}
 	}
@@ -744,7 +794,7 @@ public class AdminController extends HttpServlet {
 		String styleId = req.getParameter("styleId");
 
 		StyleValueModel styleValue = new StyleValueModel();
-		
+
 		if (name != "" && styleId != null) {
 			try {
 				styleValue.setName(name);
@@ -782,17 +832,16 @@ public class AdminController extends HttpServlet {
 		String name = req.getParameter("styleName");
 		String categoryId = req.getParameter("categoryId");
 		StyleModel style = new StyleModel();
-		
-		
+
 		if (name != "" && categoryId != null) {
-				try {
-					style.setName(name);
-					style.setCategoryId(Integer.parseInt(categoryId));
-					styleService.insert(style);
-					resp.sendRedirect("styles?message=Successfully");
-				} catch (Exception e) {
-					resp.sendRedirect("styles?message=Failed to add the style");
-				}
+			try {
+				style.setName(name);
+				style.setCategoryId(Integer.parseInt(categoryId));
+				styleService.insert(style);
+				resp.sendRedirect("styles?message=Successfully");
+			} catch (Exception e) {
+				resp.sendRedirect("styles?message=Failed to add the style");
+			}
 		} else {
 			resp.sendRedirect("styles?message=You must fill out the form");
 		}
@@ -895,40 +944,24 @@ public class AdminController extends HttpServlet {
 	}
 
 	private void getAllProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String categoryId = req.getParameter("categoryId");
 
-		if (categoryId == null || categoryId.isEmpty()) {
+		List<ProductModel> listProduct = productService.getAll();
 
-			List<ProductModel> listProduct = productService.getAll();
-			
-			List<CategoryModel> listCategory = categoryService.getAll();
-			List<ImageModel> lisImageModels = new ArrayList<ImageModel>();
-			for (ProductModel productModel : listProduct) {
-				List<ImageModel> listModelByProduct = imageService.getByProductId(productModel.getId());
-				if (listModelByProduct.size() > 0)
-					lisImageModels.add(listModelByProduct.get(0));
-			}
-			req.setAttribute("images", lisImageModels);
-			int countAllProduct = listProduct.size();
-			req.setAttribute("listProduct", listProduct);
-			req.setAttribute("countAllProduct", countAllProduct);
-			req.setAttribute("listCategory", listCategory);
-			
-
-			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
-			rDispatcher.forward(req, resp);
-
-		} else {
-			List<ProductModel> listProduct = productService.getByCategoryId(Integer.parseInt(categoryId));
-			req.setAttribute("listProduct", listProduct);
-			int countAllProduct = listProduct.size();
-			req.setAttribute("countAllProduct", countAllProduct);
-			List<CategoryModel> listCategory = categoryService.getAll();
-			req.setAttribute("listCategory", listCategory);
-
-			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/product.jsp");
-			rDispatcher.forward(req, resp);
+		List<CategoryModel> listCategory = categoryService.getAll();
+		List<ImageModel> lisImageModels = new ArrayList<ImageModel>();
+		for (ProductModel productModel : listProduct) {
+			List<ImageModel> listModelByProduct = imageService.getByProductId(productModel.getId());
+			if (listModelByProduct.size() > 0)
+				lisImageModels.add(listModelByProduct.get(0));
 		}
+		req.setAttribute("images", lisImageModels);
+		int countAllProduct = listProduct.size();
+		req.setAttribute("listProduct", listProduct);
+		req.setAttribute("countAllProduct", countAllProduct);
+		req.setAttribute("listCategory", listCategory);
+
+		
+
 	}
 
 	private void getAllUser(HttpServletRequest req, HttpServletResponse resp) {

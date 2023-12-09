@@ -89,7 +89,7 @@ public class CustomerController extends HttpServlet {
 					
 					for (CartItemModel cartItem : cartItemList) {
 						ProductModel  productInCart = productService.getById(cartItem.getProductId());						
-						productInCart.getPrice().setScale(0);
+						productInCart.setPrice(productInCart.getPrice().setScale(0));
 						productsInCart.add(productInCart);
 					}
 					

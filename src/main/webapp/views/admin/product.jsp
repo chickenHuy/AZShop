@@ -16,7 +16,7 @@
 				<ol class="breadcrumb mb-0 p-0">
 					<li class="breadcrumb-item"><a href="javascript:;"><i
 							class="bx bx-home-alt"></i></a></li>
-					<li class="breadcrumb-item active" aria-current="page">Products</li>
+					<li class="breadcrumb-item active" aria-current="page"><a href="product">Products</a></li>
 				</ol>
 			</nav>
 		</div>
@@ -35,7 +35,7 @@
 		<div class="col-auto flex-grow-1 overflow-auto">
 			<form action="/AZShop/admin/productsByCategory" method="get"
 				class="d-flex">
-				<select class="form-select" id="Category" name="categoryId" onchange="loadProducts"
+				<select class="form-select" id="Category" name="categoryId" onchange="loadProducts()"
 					style="width: 200px;">
 					<option value="-1">-- Select Category --</option>
 					<!-- Lựa chọn với giá trị null -->
@@ -43,9 +43,6 @@
 						<option value="${category.id}">${category.name}</option>
 					</c:forEach>
 				</select>
-				<div class="mx-2"></div>
-				<!-- Khoảng trắng giữa select và button -->
-				<button type="submit" class="btn btn-primary">Filter</button>
 			</form>
 		</div>
 	</div>
@@ -132,13 +129,14 @@
 				console.log("Lỗi: " + error);
 			}
 		}); */
+
 		$.ajax({
 		    type: "GET",
-		    url: "product?categoryId=" + categoryId,
+		    url: "productsByCategory?categoryId=" + categoryId,
 		    success: function(data) {
 		        // Xử lý dữ liệu nếu cần
 		        // Sau đó, chuyển hướng trang
-		        window.location.href = "product?categoryId=" + categoryId;
+		        window.location.href = "productsByCategory?categoryId=" + categoryId;
 		    },
 		    error: function(error) {
 		        // Xử lý lỗi nếu cần

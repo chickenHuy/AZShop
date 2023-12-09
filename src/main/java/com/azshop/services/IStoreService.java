@@ -1,5 +1,6 @@
 package com.azshop.services;
 
+import java.util.Date;
 import java.util.List;
 
 import com.azshop.models.ProductModel;
@@ -26,4 +27,8 @@ public interface IStoreService {
 	
     StoreModel getByOwnerId(int userId);
     List<StoreModel> searchByKey(String key, int storeLevelId);
+    
+    int countNewStores(Date datetime);
+    
+    int getTotalStores();
 }
