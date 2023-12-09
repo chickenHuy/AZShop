@@ -177,7 +177,13 @@
 													<del class="product-old-price">${product.price}</del>
 												</h4>
 												<div class="product-rating">
-													<!-- Your rating logic here -->
+													<script>
+														var rating = ${product.rating};
+
+														for (var i = 0; i < rating; i++) {
+															document.write('<i class="fa fa-star"></i>');
+														}
+													</script>
 												</div>
 												<div class="product-btns">
 													<button class="add-to-wishlist">

@@ -12,7 +12,7 @@
 				<div id="aside" class="col-md-3">
 					<!-- aside Widget -->
 					<div class="aside">
-						<h3 class="aside-title">Categories</h3>
+						<h3 class="aside-title">Danh mục tìm kiếm</h3>
 						<div class="checkbox-filter">
 							<a href='<c:url value="/customer/search?categoryId=-1&styleId=${styleId}&searchTerm=${searchTerm}"/>'>
 								<div class="input-checkbox ${category.slug}">
@@ -64,7 +64,7 @@
 				<div class="row">
 					<c:forEach var="store" items="${stores}">
 						<!-- shop -->
-						<a href='<c:url value="/customer/store/${store.slug}"/>'>
+						<a href='<c:url value="/customer/store/${store.slug}?cate=&sortBy=${0}"/>'>
 							<div class="col-md-4 col-xs-6">
 								<div class="shop">
 									<div class="shop-img">
