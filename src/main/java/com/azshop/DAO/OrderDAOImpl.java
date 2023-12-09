@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.azshop.models.OrderModel;
@@ -545,5 +546,38 @@ public class OrderDAOImpl implements IOrderDAO {
 
 		return count;
 	}
+
+	@Override
+	public int getTotalShopRevenueByDate(Date Date) {
+		// Thêm phương thức mới vào OrderDAOImpl
+		
+		    int totalRevenue = 0;
+
+		    try {
+		        String sql = "SELECT SUM(amountFromStore + amountToStore + amountToAZShop) AS total_shop_revenue " +
+		                     "FROM [Order] " +
+		                     "WHERE CONVERT(DATE, createAt) = ?";
+
+		        conn = new DBConnection().getConnection();
+		        ps = conn.prepareStatement(sql);
+		        ps.setDate(1, new java.sql.Date(Date.getTime()));
+
+		        rs = ps.executeQuery();
+
+		        if (rs.next()) {
+		            totalRevenue = rs.getInt("total_shop_revenue");
+		        }
+
+		        conn.close();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+
+		    return totalRevenue;
+	}
+	
+	
+	
+
 
 }
