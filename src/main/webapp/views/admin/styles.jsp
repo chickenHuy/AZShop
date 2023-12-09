@@ -37,10 +37,10 @@
 				class="d-flex align-items-center justify-content-between">
 				<div class="mb-3">
 					<div class="d-flex">
-						<div class="mb-2 me-5">
+						<div class="mb-3 me-5">
 							<h5>Style Name</h5>
 						</div>
-						<div class="mb-2 me-4 ms-3">
+						<div class="mb-3 me-4 ms-3">
 							<h5>Choose Category</h5>
 						</div>
 					</div>
@@ -86,10 +86,20 @@
 										</c:if>
 									</c:forEach>
 									<td>${style.updateAt != null ? style.updateAt : style.createAt}</td>
-									<td></td>
-									<td><a class="dropdown-item"
-										href='<c:url value="/admin/style/edit?id=${style.id}"/>'>Edit</a>
-										<c:if test="${style.isDeleted() == true}">
+									<c:choose>
+										<c:when test="${style.isDeleted() == false}">
+											<td><span
+												class="lable-table bg-success-subtle text-success rounded border border-success-subtle font-text2 fw-bold">Activated</span></td>	
+										</c:when>
+										<c:otherwise>
+											<td><span
+												class="lable-table bg-danger-subtle text-danger rounded border border-danger-subtle font-text2 fw-bold">Deleted</span></td>
+										</c:otherwise>
+									</c:choose>
+									<td><c:if test="${style.isDeleted() == false}">
+											<a class="dropdown-item"
+												href='<c:url value="/admin/style/edit?id=${style.id}"/>'>Edit</a>
+										</c:if> <c:if test="${style.isDeleted() == true}">
 											<!-- Nếu isDeleted là true, hiển thị nút Restore -->
 											<a class="dropdown-item"
 												href='<c:url value="/admin/style/restore?id=${style.id}"/>'>Restore</a>

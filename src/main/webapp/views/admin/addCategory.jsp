@@ -16,8 +16,7 @@
 			<div class="ps-3">
 				<nav aria-label="breadcrumb">
 					<ol class="breadcrumb mb-0 p-0">
-						<li class="breadcrumb-item"><a href="javascript:;"><i
-								class="bx bx-home-alt"></i></a></li>
+						<li class="breadcrumb-item"><a href="categories">Categories</a></li>
 						<li class="breadcrumb-item active" aria-current="page">Add
 							Category</li>
 					</ol>
@@ -33,7 +32,7 @@
 							<div class="mb-4">
 								<h5 class="mb-3">Category Name</h5>
 								<input type="text" class="form-control"
-									placeholder="write name here...." name="categoryName">
+									placeholder="write name here...." name="categoryName" required>
 							</div>
 							<div class="mb-4">
 								<h5 class="mb-3">Display images</h5>
@@ -44,7 +43,7 @@
 												<label class="custom-file-input-wrapper"> <input
 													type="file" accept=".jpg, .png, image/jpeg, image/png"
 													name="image" class="custom-file-input"
-													onchange="handleImageSelection(this, 'thumbnail1')">
+													onchange="handleImageSelection(this, 'thumbnail1')" required>
 													<div class="custom-file-label">Choose Image</div>
 												</label>
 												<div id="thumbnail1"></div>
