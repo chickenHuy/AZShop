@@ -167,4 +167,33 @@ public class UserFollowStoreDAOImpl implements IUserFollowStoreDAO {
 		return count;
 	}
 
-}
+	@Override
+	public int getTotalFollow() {
+		int totalFollowers = 0;
+
+
+	    try {
+	        String sql = "SELECT COUNT(*) AS total_followers FROM [UserFollowStore]";
+
+	        conn = new DBConnection().getConnection();
+	        ps = conn.prepareStatement(sql);
+	        
+
+	        rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	        	totalFollowers = rs.getInt("total_followers");
+	        }
+
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return totalFollowers;
+	}
+
+
+	}
+
+

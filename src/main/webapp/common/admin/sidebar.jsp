@@ -121,7 +121,7 @@
 			<li>
 				<div class="dropdown-divider mb-0"></div>
 			</li>
-			<li><a class="dropdown-item" href="javascript:;"><span
+			<li><a class="dropdown-item" href="<c:url value='/logout-customer' />"><span
 					class="material-symbols-outlined me-2"> logout </span><span>Logout</span></a>
 			</li>
 		</ul>

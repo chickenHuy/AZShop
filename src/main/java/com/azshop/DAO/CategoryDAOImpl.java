@@ -260,32 +260,37 @@ public class CategoryDAOImpl implements ICategoryDAO {
 
 	@Override
 	public List<CategoryModel> getParentCategory() {
-		List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
-		try {
-			String sql = "SELECT * FROM Category WHERE categoryId is null AND isDeleted = 0";
-			conn = new DBConnection().getConnection();
+	    List<CategoryModel> categoryList = new ArrayList<>();
+	    try {
+	        String sql = "SELECT c.id, c.name, COALESCE(COUNT(p.id), 0) AS product_count, c.categoryId, c.slug, c.image, c.isDeleted, c.createAt, c.updateAt " +
+	                     "FROM Category c LEFT JOIN Product p ON c.id = p.categoryId AND p.isDeleted = 0 " +
+	                     "WHERE c.categoryId IS NULL AND c.isDeleted = 0 and p.isDeleted = 0 and p.isActive = 1" +
+	                     "GROUP BY c.id, c.name, c.categoryId, c.slug, c.image, c.isDeleted, c.createAt, c.updateAt " +
+	                     "ORDER BY c.id";
 
-			ps = conn.prepareStatement(sql);
+	        conn = new DBConnection().getConnection();
+	        ps = conn.prepareStatement(sql);
+	        rs = ps.executeQuery();
 
-			rs = ps.executeQuery();
-			while (rs.next()) {
-				CategoryModel category = new CategoryModel();
-				category.setId(rs.getInt("id"));
-				category.setCategoryId(rs.getInt("categoryId"));
-				category.setName(rs.getString("name"));
-				category.setSlug(rs.getString("slug"));
-				category.setImage(rs.getString("image"));
-				category.setDeleted(rs.getBoolean("isDeleted"));
-				category.setCreateAt(rs.getDate("createAt"));
-				category.setUpdateAt(rs.getDate("updateAt"));
-				categoryList.add(category);
-			}
+	        while (rs.next()) {
+	            CategoryModel category = new CategoryModel();
+	            category.setId(rs.getInt("id"));
+	            category.setName(rs.getString("name"));
+	            category.setCategoryId(rs.getInt("categoryId"));
+	            category.setSlug(rs.getString("slug"));
+	            category.setImage(rs.getString("image"));
+	            category.setDeleted(rs.getBoolean("isDeleted"));
+	            category.setCreateAt(rs.getDate("createAt"));
+	            category.setUpdateAt(rs.getDate("updateAt"));
+	            category.setCountProduct(rs.getInt("product_count"));;
+	            categoryList.add(category);
+	        }
 
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return categoryList;
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return categoryList;
 	}
 
 	@Override
@@ -365,5 +370,6 @@ public class CategoryDAOImpl implements ICategoryDAO {
 		}
 		return listCategory;
 	}
+	
 
 }
