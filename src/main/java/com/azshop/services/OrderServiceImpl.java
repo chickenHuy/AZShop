@@ -44,7 +44,7 @@ public class OrderServiceImpl implements IOrderService {
 
 	@Override
 	public List<OrderModel> getByUserId(int userId) {
-		return null;
+		return orderDAO.getByUserId(userId);
 	}
 
 	@Override
