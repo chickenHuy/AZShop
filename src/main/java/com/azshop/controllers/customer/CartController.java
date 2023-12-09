@@ -1,6 +1,7 @@
 package com.azshop.controllers.customer;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -17,15 +18,18 @@ import javax.servlet.http.HttpSession;
 import com.azshop.models.CartItemModel;
 import com.azshop.models.CartModel;
 import com.azshop.models.CategoryModel;
+import com.azshop.models.DeliveryModel;
 import com.azshop.models.ImageModel;
 import com.azshop.models.ProductModel;
 import com.azshop.models.UserModel;
 import com.azshop.services.CartItemServiceImpl;
 import com.azshop.services.CartServiceImpl;
 import com.azshop.services.CategoryServiceImpl;
+import com.azshop.services.DeliveryServiceImpl;
 import com.azshop.services.ICartItemService;
 import com.azshop.services.ICartService;
 import com.azshop.services.ICategoryService;
+import com.azshop.services.IDeliveryService;
 import com.azshop.services.IImageService;
 import com.azshop.services.IProductService;
 import com.azshop.services.IStoreService;
@@ -54,9 +58,69 @@ public class CartController extends HttpServlet{
 	IStoreService storeService = new StoreServiceImpl();
 	ICartService cartService = new CartServiceImpl();
 	ICartItemService cartItemService = new CartItemServiceImpl();
+	IDeliveryService deliveryService = new DeliveryServiceImpl();
 	
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI().toString();
+		
+		try {
+			HttpSession session = req.getSession();
+			if (session != null) {
+				Object sessionObject = session.getAttribute(Constant.userSession);
+				if (sessionObject instanceof UserModel) {
+					UserModel user = (UserModel) sessionObject;
+					List<CartModel> cartList = cartService.getByUserId(user.getId());
+					List<CartItemModel> cartItemList = new ArrayList<CartItemModel>();
+					
+					//Hiển thị item trong giỏ hàng
+					for (CartModel cart : cartList) {
+						List<CartItemModel> itemList = cartItemService.getByCartId(cart.getId());
+						cartItemList.addAll(itemList);
+					}										
+					
+					//Lấy thông tin danh sách product có trong giỏ hàng
+					List<ProductModel> productsInCart = new ArrayList<ProductModel>();
+					
+					for (CartItemModel cartItem : cartItemList) {
+						ProductModel  productInCart = productService.getById(cartItem.getProductId());
+						productsInCart.add(productInCart);
+					}
+					
+					BigDecimal sum = BigDecimal.ZERO;
+
+					for (int i = 0; i < cartItemList.size(); i++) {
+					    ProductModel productModel = productService.getById(cartItemList.get(i).getProductId());
+					    
+					    if (productModel != null) {
+					        BigDecimal productPrice = productModel.getPrice();
+					        int count = cartItemList.get(i).getCount();
+					        
+					        sum = sum.add(productPrice.multiply(BigDecimal.valueOf(count))).setScale(0);
+					    }
+					}
+
+				    req.setAttribute("sumPrice", sum);
+					
+					List<ImageModel> imageProductsInCart = new ArrayList<ImageModel>();
+
+					for (ProductModel productModel : productsInCart) {
+						ImageModel image = imageService.getImage(productModel.getId());
+						imageProductsInCart.add(image);
+					}
+					
+					List<DeliveryModel> deliveryList = deliveryService.getAll();
+					
+					req.setAttribute("deliveryList", deliveryList);
+					req.setAttribute("quantity", cartItemList.size());
+					req.setAttribute("user", user);
+					req.setAttribute("imageProductsInCart", imageProductsInCart);	
+					req.setAttribute("cartItemList", cartItemList);
+					req.setAttribute("productsInCart", productsInCart);						
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		// Hiển thị menu danh mục
 		List<CategoryModel> categoryParentList = categoryService.getParentCategory();
@@ -121,6 +185,8 @@ public class CartController extends HttpServlet{
 
 	private void getInforCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<CartItemModel> cartItemList = cartItemService.getAll();
+		
+		
 		req.setAttribute("cartItemList", cartItemList);
 		
 		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/checkout.jsp");

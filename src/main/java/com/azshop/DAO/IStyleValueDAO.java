@@ -14,4 +14,5 @@ public interface IStyleValueDAO {
 	void delete(int id);
 	List<StyleValueModel> getByStyleIdAmin(int id);
 	void restore(int id);
+	StyleValueModel getByIdAdmin(int id);
 }

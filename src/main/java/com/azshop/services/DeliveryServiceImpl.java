@@ -11,8 +11,7 @@ public class DeliveryServiceImpl implements IDeliveryService {
 	IDeliveryDAO deliveryDAO = new DeliveryDAOImpl();
 	@Override
 	public void insert(DeliveryModel delivery) {
-		// TODO Auto-generated method stub
-		
+		deliveryDAO.insert(delivery);
 	}
 
 	@Override
@@ -27,14 +26,12 @@ public class DeliveryServiceImpl implements IDeliveryService {
 
 	@Override
 	public void update(DeliveryModel delivery) {
-		// TODO Auto-generated method stub
-		
+		deliveryDAO.update(delivery);
 	}
 
 	@Override
 	public void delete(int id) {
-		// TODO Auto-generated method stub
-		
+		deliveryDAO.delete(id);
 	}
 
 }

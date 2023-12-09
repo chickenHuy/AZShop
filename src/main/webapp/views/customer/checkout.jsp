@@ -42,35 +42,20 @@
 							<h3 class="title">Billing address</h3>
 						</div>
 						<div class="form-group">
-							<input class="input" type="text" name="first-name"
-								placeholder="First Name">
+							<input class="input" type="text" name="first-name" placeholder="First Name" value="${user.firstName}">
 						</div>
 						<div class="form-group">
-							<input class="input" type="text" name="last-name"
-								placeholder="Last Name">
+							<input class="input" type="text" name="last-name" placeholder="Last Name" value="${user.lastName}">
 						</div>
 						<div class="form-group">
-							<input class="input" type="email" name="email"
-								placeholder="Email">
+							<input class="input" type="email" name="email" placeholder="Email" value="${user.email}">
 						</div>
 						<div class="form-group">
-							<input class="input" type="text" name="address"
-								placeholder="Address">
+							<input class="input" type="text" name="address" placeholder="Address" value="${user.address}">
 						</div>
+						
 						<div class="form-group">
-							<input class="input" type="text" name="city" placeholder="City">
-						</div>
-						<div class="form-group">
-							<input class="input" type="text" name="country"
-								placeholder="Country">
-						</div>
-						<div class="form-group">
-							<input class="input" type="text" name="zip-code"
-								placeholder="ZIP Code">
-						</div>
-						<div class="form-group">
-							<input class="input" type="tel" name="tel"
-								placeholder="Telephone">
+							<input class="input" type="tel" name="tel" placeholder="Telephone" value="${user.phone}">
 						</div>
 						<div class="form-group">
 							<div class="input-checkbox">
@@ -162,7 +147,7 @@
 									<c:forEach var="product" items="${productsInCart}">
 										<c:if test="${product.id eq cartItem.productId}">
 											<div>${product.name}</div>
-											<div>${product.price}</div>
+											<div>${product.price} VNĐ</div>
 										</c:if>
 									</c:forEach>
 								</div>
@@ -179,41 +164,23 @@
 								<strong>TOTAL</strong>
 							</div>
 							<div>
-								<strong class="order-total">$2940.00</strong>
+								<strong class="order-total">${sumPrice} VNĐ</strong>
 							</div>
 						</div>
 					</div>
 					<div class="payment-method">
-						<div class="input-radio">
-							<input type="radio" name="payment" id="payment-1"> <label
-								for="payment-1"> <span></span> Direct Bank Transfer
-							</label>
-							<div class="caption">
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-									sed do eiusmod tempor incididunt ut labore et dolore magna
-									aliqua.</p>
+						<c:forEach var="delivery" items="${deliveryList}" varStatus="loop">
+							<div class="input-radio">
+								<input type="radio" name="payment"
+									id="payment-${loop.index + 1}"> <label
+									for="payment-${loop.index + 1}"> <span></span>
+									${delivery.name} (${delivery.price} VNĐ)
+								</label>
+								<div class="caption">
+									<p>${delivery.description}</p>
+								</div>
 							</div>
-						</div>
-						<div class="input-radio">
-							<input type="radio" name="payment" id="payment-2"> <label
-								for="payment-2"> <span></span> Cheque Payment
-							</label>
-							<div class="caption">
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-									sed do eiusmod tempor incididunt ut labore et dolore magna
-									aliqua.</p>
-							</div>
-						</div>
-						<div class="input-radio">
-							<input type="radio" name="payment" id="payment-3"> <label
-								for="payment-3"> <span></span> Paypal System
-							</label>
-							<div class="caption">
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-									sed do eiusmod tempor incididunt ut labore et dolore magna
-									aliqua.</p>
-							</div>
-						</div>
+						</c:forEach>
 					</div>
 					<div class="input-checkbox">
 						<input type="checkbox" id="terms"> <label for="terms">

@@ -41,13 +41,16 @@
 									<div class="container">
 										<div class="row g-3">
 											<div class="col-md-6">
+												
 												<label class="custom-file-input-wrapper"> <input
 													type="file" accept=".jpg, .png, image/jpeg, image/png"
 													name="image" class="custom-file-input"
-													onchange="handleImageSelection(this, 'thumbnail1')">
+													onchange="handleImageSelection(this, 'thumbnail', 'imgCate')">
 													<div class="custom-file-label">Choose Image</div>
 												</label>
-												<div id="thumbnail1"></div>
+												<div id="thumbnail">
+													<img id="imgCate" src="/AZShop/image?fname=${category.image}" alt= "" width="400" height="400"/>
+												</div>
 												<div id="fileSize1"></div>
 											</div>
 										</div>
@@ -66,9 +69,11 @@
 								<div class="col-12">
 									<label for="Category" class="form-label fw-bold">Category</label>
 									<select class="form-select" id="Category" name="categoryId">
-										<option value="">-- Select Category --</option> <!-- Lựa chọn với giá trị null -->
-										<c:forEach var="category" items="${listCategory}">
-											<option value="${category.id }">${category.name}</option>
+										<c:forEach var="item" items="${listCategory}">
+											<c:if test="${item.id == category.categoryId}"> <option value="${category.categoryId}">${item.name}</option></c:if>
+										</c:forEach>
+										<c:forEach var="item" items="${listCategory}">
+											<c:if test="${item.id != category.categoryId}"><option value="${item.id}">${item.name}</option></c:if>
 										</c:forEach>
 									</select>
 								</div>
@@ -88,5 +93,59 @@
 		</form>
 
 	</main>
+	<script>
+	function handleImageSelection(input, thumbnailId, imgId) {
+        var file = input.files[0];
+        var thumbnail = document.getElementById(thumbnailId);
+        var fileSizeElementId = 'fileSize' + input.name.substring(input.name.length - 1);
+        var fileSizeElement = document.getElementById(fileSizeElementId);
+        var fileSizeError = document.getElementById('fileSizeError');
+        if (file) {
+            var reader = new FileReader();
+            var previousImageSource = thumbnail.getAttribute('data-previous-source');
+            if (previousImageSource != null){
+				deleteImage(previousImageSource,thumbnailId)
+            }
+            reader.onload = function (e) {
+            	var img = document.getElementById(imgId);
+                img.src = e.target.result;
+                img.classList.add('thumbnail');
+                img.width = 400;
+                img.height = 400; 
+                thumbnail.innerHTML = '';
+                thumbnail.appendChild(img);
+                checkFileSize(input, fileSizeElement, fileSizeError);
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function checkFileSize(input, fileSizeElement, fileSizeError) {
+        var fileSize = input.files[0].size;
+        var fileSizeFormatted = formatBytes(fileSize);
+
+        if (fileSize > 1.5 * 512 * 512) {
+            fileSizeElement.innerHTML = 'Size: ' + fileSizeFormatted;
+            fileSizeError.innerHTML = 'The file size of ' + input.name + ' exceeds the allowed limit.';
+            input.value = ''; // Clear the selected file so that the user can choose again
+        } else {
+            fileSizeElement.innerHTML = 'Size: ' + fileSizeFormatted;
+            fileSizeError.innerHTML = ''; // Clear the error message if the file size is valid
+        }
+    }
+
+    function formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 Bytes';
+
+        const k = 512;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+	</script>
 </body>
 </html>
