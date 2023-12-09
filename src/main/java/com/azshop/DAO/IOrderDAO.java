@@ -1,6 +1,7 @@
 package com.azshop.DAO;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.azshop.models.OrderModel;
@@ -22,4 +23,7 @@ public interface IOrderDAO {
     int countCompletedByStore(int storeId);
     int countOrderByStore(int storeId);
     List<OrderModel> getAllAdmin();
+    int getTotalShopRevenueByDate(Date Date);
+    int getTotalShopRevenue();
+    
 }

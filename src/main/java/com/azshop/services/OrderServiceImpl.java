@@ -2,6 +2,7 @@ package com.azshop.services;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.azshop.DAO.IOrderDAO;
@@ -147,5 +148,16 @@ public class OrderServiceImpl implements IOrderService {
 	@Override
 	public int countOrderByStore(int storeId) {
 		return orderDAO.countOrderByStore(storeId);
+	}
+
+	@Override
+	public int getTotalShopRevenueByDate(Date Date) {
+		return orderDAO.getTotalShopRevenueByDate(Date);
+	}
+
+	@Override
+	public int getTotalShopRevenue() {
+		// TODO Auto-generated method stub
+		return orderDAO.getTotalShopRevenue();
 	}
 }

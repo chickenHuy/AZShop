@@ -18,6 +18,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import com.azshop.models.StoreModel;
@@ -35,6 +36,7 @@ import com.azshop.models.ImageModel;
 import com.azshop.models.OrderItemModel;
 import com.azshop.models.OrderModel;
 import com.azshop.models.ProductModel;
+import com.azshop.models.RevenueData;
 import com.azshop.models.StoreLevelModel;
 import com.azshop.services.*;
 
@@ -49,7 +51,7 @@ import com.azshop.services.*;
 		"/admin/editstorelevel", "/admin/deletestorelevel", "/admin/restorestorelevel", "/admin/category/*",
 		"/admin/styles", "/admin/style/delete", "/admin/style/restore", "/admin/addstyle", "/admin/style/stylevalues",
 		"/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
-		"/admin/order-detail","/admin/UserStatic","/admin/StoreStatic", "/admin/delivery","/admin/adddelivery","/admin/editdelivery" })
+		"/admin/order-detail","/admin/UserStatic","/admin/StoreStatic", "/admin/delivery","/admin/adddelivery","/admin/editdelivery","/admin/deletedelivery" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -73,9 +75,11 @@ public class AdminController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		String url = req.getRequestURL().toString();
+		
+		
 		if (url.contains("/admin/dashboard")) {
-			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/dashboard.jsp");
-			rDispatcher.forward(req, resp);
+			GetStatisticRevenue(req,resp
+					);
 		} else if (url.contains("/admin/product/edit-status")) {
 			try {
 				editProductStatus(req, resp);
@@ -200,7 +204,7 @@ public class AdminController extends HttpServlet {
 			}
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editdelivery.jsp");
 			rDispatcher.forward(req, resp);
-		}
+		} 
 		
 	 
 		
@@ -208,6 +212,8 @@ public class AdminController extends HttpServlet {
 		
 		
 	}
+	
+	
 
 	private void getOrderDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String orderId = req.getParameter("orderId");
@@ -262,7 +268,32 @@ public class AdminController extends HttpServlet {
 		List<StoreLevelModel> list = storeLevelService.getAll();
 		req.setAttribute("liststorelevel", list);
 	}
+	
+	private void GetStatisticRevenue(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		Date currentDate = new Date();
+		String selectedDateStr = req.getParameter("selectedDate");
+		Date selectedDate = null;
 
+		if (selectedDateStr != null && !selectedDateStr.isEmpty()) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				selectedDate = dateFormat.parse(selectedDateStr);
+			} catch (Exception e) {
+				e.printStackTrace(); // Xử lý ngoại lệ nếu có lỗi khi chuyển đổi
+			}
+		} else {
+			selectedDate = currentDate;
+		}
+		int count = orderService.getTotalShopRevenueByDate(selectedDate);
+		int total = orderService.getTotalShopRevenue();
+		req.setAttribute("total", total);
+		req.setAttribute("count", count);
+		// view nhan du lieu
+		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
+		rd.forward(req, resp);
+
+	}
 	private void GetStatisticsUser(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		Date currentDate = new Date();
@@ -678,6 +709,8 @@ public class AdminController extends HttpServlet {
 			postAddDelivery(req,resp);
 		} else if(url.contains("/admin/editdelivery")) {
 			postEditDelivery(req,resp);
+		} else if (url.contains("/admin/deletedelivery")) {
+			postDeleteDelivery(req, resp);
 		}
 		
 
@@ -1054,6 +1087,21 @@ public class AdminController extends HttpServlet {
 			}
 		} else {
 			resp.sendRedirect("?message=You must fill out the form");
+		}
+	}
+	
+	private void postDeleteDelivery(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding("UTF-8");
+
+		String id = req.getParameter("id");
+		DeliveryModel deliveryModel = deliveryService.getById(Integer.parseInt(id));
+		try {
+			deliveryModel.setDeleted(true);
+			deliveryService.update(deliveryModel);
+			resp.sendRedirect("editdelivery?message=Sucessfully");
+		} catch (Exception e) {
+			resp.sendRedirect("editdelivery?message=Failed to delete delivery");
 		}
 	}
 	
