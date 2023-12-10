@@ -48,25 +48,34 @@
 								<th>Status</th>
 								<th>Date</th>
 								<th>Action</th>
+								<th>Information</th>
 							</tr>
 						</thead>
 						<tbody>
 							<c:forEach var="order" items="${listOrder}">
 								<tr>
+									<!--  -->
 									<td>#${order.id}</td>
 									<td>${order.price}</td>
+									<!-- Tên người đặt hàng -->
 									<c:forEach var="user" items="${listUser}">
 										<c:if test="${user.id eq order.userId}">
-											<td>${user.lastName}</td>
+											<td>${user.firstName} ${user.lastName}</td>
 										</c:if>
 									</c:forEach>
-
+									<!-- Store bán hàng -->
+									<c:set var="hasImages" value="false" />
 									<c:forEach var="store" items="${listStore}">
 										<c:if test="${store.id eq order.storeId}">
 											<td>${store.name}</td>
+											<c:set var="hasImages" value="true" />
 										</c:if>
 									</c:forEach>
-
+									<c:if test="${not hasImages}">
+										<!-- Store đã bị xoá -->
+										<td><td><span
+												class="lable-table bg-danger-subtle text-danger rounded border border-danger-subtle font-text2 fw-bold">Deleted</span></td>
+									</c:if>
 
 									<c:choose>
 										<c:when test="${order.status == 'Completed'}">
@@ -99,13 +108,17 @@
 												class="lable-table bg-warning-subtle text-warning rounded border border-warning-subtle font-text2 fw-bold">Processing<i
 													class="bi bi-info-circle ms-2"></i></span></td>
 										</c:when>
+										<c:otherwise>
+											<td><span
+												class="lable-table bg-warning-subtle text-warning rounded border border-warning-subtle font-text2 fw-bold">${order.status}<i
+													class="bi bi-info-circle ms-2"></i></span></td>
+										</c:otherwise>
 									</c:choose>
 
 
 									<td>${order.updateAt != null ? order.updateAt : order.createAt}</td>
-									<td><a class="dropdown-item"
-										href='<c:url value="/admin/order-detail?orderId=${order.id}"/>'>Detail</a>
-										<c:choose>
+
+									<td><c:choose>
 											<c:when test="${order.status == 'Pending Pickup'}">
 												<a class="dropdown-item"
 													href='<c:url value="/admin/order-edit-status?orderId=${order.id}"/>'>Shipping</a>
@@ -120,6 +133,8 @@
 											</c:when>
 
 										</c:choose></td>
+									<td><a class="dropdown-item"
+										href='<c:url value="/admin/order-detail?orderId=${order.id}"/>'>Detail</a></td>
 								</tr>
 							</c:forEach>
 						</tbody>
