@@ -84,6 +84,10 @@ public class OrderServiceImpl implements IOrderService {
 		if (orderModel.getStatus().equals("Cancelled") || orderModel.getStatus().equals("Completed")) {
 			return false;
 		}
+		if (status.equals("Cancelled"))
+		{
+			orderDAO.resoreQuantityProduct(id);
+		}
 		return orderDAO.changeStatus(id, status);
 	}
 

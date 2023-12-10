@@ -153,7 +153,7 @@ public class searchController extends HttpServlet {
 	        for (CategoryModel categoryParent : categoryParentList) {
 				List<CategoryModel> categoryChildList = categoryService.getChildCategory(categoryParent.getId());
 				for (CategoryModel categoryChild : categoryChildList) {
-					categoryChild.setCountProduct(categoryChild.getId());
+					categoryChild.setCountProduct(countProductsInCategory(categoryChild.getId()));
 					quantity += categoryChild.getCountProduct();
 				}
 				categoryParent.setCountProduct(quantity);
