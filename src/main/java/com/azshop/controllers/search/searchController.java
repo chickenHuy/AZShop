@@ -171,15 +171,15 @@ public class searchController extends HttpServlet {
 			}
 	        
 	        List<CategoryModel> categoryParentList = categoryService.getParentCategory();
+	        List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
 	        
-	        int quantity = 0;
-	        for (CategoryModel categoryParent : categoryParentList) {
-				List<CategoryModel> categoryChildList = categoryService.getChildCategory(categoryParent.getId());
-				for (CategoryModel categoryChild : categoryChildList) {
-					categoryChild.setCountProduct(countProductsInCategory(categoryChild.getId()));
-					quantity += categoryChild.getCountProduct();
-				}
-				categoryParent.setCountProduct(quantity);
+	        for (CategoryModel categoryModel : categoryParentList) {
+				categoryList.addAll(categoryService.getChildCategory(categoryModel.getId()));
+			}
+	        
+	        for (CategoryModel category : categoryList) {
+				
+				category.setCountProduct(countProductsInCategory(category.getId()));
 			}
 	        
 	        request.setAttribute("styleId", styleTmp);
@@ -188,7 +188,7 @@ public class searchController extends HttpServlet {
 	        request.setAttribute("products", productModels);
 	        request.setAttribute("searchTerm", keyword);
 	        request.setAttribute("categoryId", categoryId);
-	        request.setAttribute("categoryParentList", categoryParentList);
+	        request.setAttribute("categoryParentList", categoryList);
 	        
 	        
 	        request.getRequestDispatcher("/views/customer/search.jsp").forward(request, response);
