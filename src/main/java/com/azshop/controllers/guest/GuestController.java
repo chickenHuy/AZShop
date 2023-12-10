@@ -45,7 +45,7 @@ import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
 
-@WebServlet(urlPatterns = {"/guest-home", "/guest/product/*", "/guest-search"})
+@WebServlet(urlPatterns = {"/guest-home"})
 public class GuestController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -72,115 +72,7 @@ public class GuestController extends HttpServlet{
 				e.printStackTrace();
 			}
 		}		
-		else if (url.contains("guest/store/")) {
-			try {
-				getStore(req, resp);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		else if (url.contains("guest/product")) {
-			try {
-				getProduct(req, resp);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		else if (url.contains("guest-search")) {
-			try {
-				search(req, resp);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 	}
-	
-	public int countProductsInCategoryStore(int storeId, int categoryId) {
-        // Get products by category
-        List<ProductModel> productsInCate = productService.getByCategoryId(categoryId);
-        List<ProductModel> productList = new ArrayList<ProductModel>();
-        
-        for (ProductModel productModel : productsInCate) {
-			if (productModel.getStoreId() == storeId) {
-				productList.add(productModel);
-			}
-		}
-        
-        // Count the number of products
-        int productCount = (productList != null) ? productList.size() : 0;
-
-        return productCount;
-    }
-	
-	private void getStore(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String url = req.getRequestURL().toString();
-		URI uri;
-		try {
-
-			uri = new URI(url);
-			String path = uri.getPath();
-
-			String[] parts = path.split("/");
-
-			if (parts.length > 0) {
-				String slug = parts[parts.length - 1];
-				
-				try {
-
-					StoreModel store = storeService.getBySlug(slug);					
-					
-					List<ProductModel> productList = new ArrayList<ProductModel>();
-	                List<ImageModel> imageList = new ArrayList<ImageModel>();
-	                List<CategoryModel> categoryChildList = new ArrayList<CategoryModel>();
-	                
-	                productList = productService.getByStoreId(store.getId());
-	                
-	                //lấy danh sách danh mục
-	                for (ProductModel productModel : productList) {
-						CategoryModel categoryChild = categoryService.getById(productModel.getCategoryId());
-						categoryChildList.add(categoryChild);
-					}	                           
-	                
-	              //đếm số lượng product trong mỗi category
-	                for (CategoryModel categoryChild : categoryChildList) {
-						int countProduct = countProductsInCategoryStore(store.getId(), categoryChild.getId());
-						
-						categoryChild.setCountProduct(countProduct);
-					}
-	                
-	                for (ProductModel productModel : productList) {
-	        			ImageModel image = imageService.getImage(productModel.getId());
-	        			imageList.add(image);
-	        		}
-	                
-	                req.setAttribute("store", store);
-	                req.setAttribute("categoryChildList", categoryChildList);
-	                req.setAttribute("productList", productList);
-	                req.setAttribute("imageList", imageList);
-	               	                
-	                
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-				
-			}
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		
-		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/store.jsp");
-        rd.forward(req, resp);
-	}
-
-	public int countProductsInCategory(int categoryId) {
-        // Get products by category
-        List<ProductModel> productList = productService.getByCategoryId(categoryId);
-
-        // Count the number of products
-        int productCount = (productList != null) ? productList.size() : 0;
-
-        return productCount;
-    }
 
 	private void search(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// ma hoa UTF-8
@@ -229,58 +121,6 @@ public class GuestController extends HttpServlet{
 		
 	}
 
-	private void getProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String url = req.getRequestURL().toString();
-		String pageCurrent = "category";
-		URI uri;
-		try {
-
-			uri = new URI(url);
-			String path = uri.getPath();
-
-			String[] parts = path.split("/");
-
-			if (parts.length > 0) {
-				String slug = parts[parts.length - 1];
-				req.setAttribute("slug", slug);
-				pageCurrent = pageCurrent + slug;
-				
-				try {
-					ProductModel product = productService.getBySlug(slug);
-					CategoryModel category = categoryService.getById(product.getCategoryId());	
-					StyleValueModel styleValue = styleValueService.getById(product.getStyleValueId());
-					List<ImageModel> imageList = imageService.getByProductId(product.getId());
-					StoreModel store = storeService.getById(product.getStoreId());
-					
-					//san pham lien quan
-					List<ProductModel> productRelateds = productService.getByCategoryId(product.getCategoryId());
-					List<ImageModel> imageRelateds = new ArrayList<ImageModel>();
-					for (ProductModel productRelated : productRelateds) {
-						ImageModel imageRelate = imageService.getImage(productRelated.getId());
-						imageRelateds.add(imageRelate);
-					}
-	                
-					req.setAttribute("product", product);
-					req.setAttribute("store", store);
-					req.setAttribute("productRelateds", productRelateds);
-					req.setAttribute("category", category);
-					req.setAttribute("styleValue", styleValue);
-					req.setAttribute("imageList", imageList);
-					req.setAttribute("imageRelateds", imageRelateds);
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-				
-			}
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		
-		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/product.jsp");
-		rd.forward(req, resp);
-	}
-
-
 	private void getAll(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		List<CategoryModel> categoryList = categoryService.getAll();
@@ -297,7 +137,7 @@ public class GuestController extends HttpServlet{
 		req.setAttribute("imageList", imageList);
 		req.setAttribute("productList",productList);
 		req.setAttribute("newestProductList", newestProductList);
-		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/home.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/home.jsp");
 		rd.forward(req, resp);
 	}
 }

@@ -109,7 +109,7 @@
 				<!-- NAV -->
 				<ul class="main-nav nav navbar-nav">
 					<li><a href='<c:url value="/guest-home"/>'>Trang chủ</a></li>
-					<li><a href='<c:url value="/guest-clothing"/>'>Sản phẩm hot</a></li>
+					<li><a href='<c:url value="/guest/hot-product"/>'>Sản phẩm hot</a></li>
 					<c:forEach var="category" items="${categoryParentList}">
 						<li><a
 							href='<c:url value="/guest/category/${category.slug}?sortBy=${0}"/>'>${category.name}</a></li>
