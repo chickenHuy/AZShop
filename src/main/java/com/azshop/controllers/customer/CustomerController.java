@@ -22,6 +22,7 @@ import com.azshop.DAO.CategoryDAOImpl;
 import com.azshop.models.CartItemModel;
 import com.azshop.models.CartModel;
 import com.azshop.models.CategoryModel;
+import com.azshop.models.DeliveryModel;
 import com.azshop.models.ImageModel;
 import com.azshop.models.ProductModel;
 import com.azshop.models.StoreModel;
@@ -69,62 +70,60 @@ public class CustomerController extends HttpServlet {
 		List<CategoryModel> categoryParentList = categoryService.getParentCategory();
 		req.setAttribute("categoryParentList", categoryParentList);				
 		
-		try {
-			HttpSession session = req.getSession();
-			if (session != null) {
-				Object sessionObject = session.getAttribute(Constant.userSession);
-				if (sessionObject instanceof UserModel) {
-					UserModel user = (UserModel) sessionObject;
-					List<CartModel> cartList = cartService.getByUserId(user.getId());
-					List<CartItemModel> cartItemList = new ArrayList<CartItemModel>();										
-					
-					//Hiển thị item trong giỏ hàng
-					for (CartModel cart : cartList) {
-						List<CartItemModel> itemList = cartItemService.getByCartId(cart.getId());						
-						cartItemList.addAll(itemList);
-					}															
-					
-					//Lấy thông tin danh sách product có trong giỏ hàng
-					List<ProductModel> productsInCart = new ArrayList<ProductModel>();										
-					
-					for (CartItemModel cartItem : cartItemList) {
-						ProductModel  productInCart = productService.getById(cartItem.getProductId());						
-						productInCart.setPrice(productInCart.getPrice().setScale(0));
-						productsInCart.add(productInCart);
-					}
-					
-					BigDecimal sum = BigDecimal.ZERO;
-
-					for (int i = 0; i < cartItemList.size(); i++) {
-					    ProductModel productModel = productService.getById(cartItemList.get(i).getProductId());
-					    
-					    if (productModel != null) {
-					        BigDecimal productPrice = productModel.getPrice();
-					        int count = cartItemList.get(i).getCount();
-					        
-					        sum = sum.add(productPrice.multiply(BigDecimal.valueOf(count))).setScale(0);
-					    }
-					}
-
-				    req.setAttribute("sumPrice", sum);
-					
-					List<ImageModel> imageProductsInCart = new ArrayList<ImageModel>();
-
-					for (ProductModel productModel : productsInCart) {
-						ImageModel image = imageService.getImage(productModel.getId());
-						imageProductsInCart.add(image);
-					}
-					
-					req.setAttribute("quantity", cartItemList.size());
-					req.setAttribute("user", user);
-					req.setAttribute("imageProductsInCart", imageProductsInCart);	
-					req.setAttribute("cartItemList", cartItemList);
-					req.setAttribute("productsInCart", productsInCart);						
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		HttpSession sessionCart = req.getSession();
+		
+		UserModel userCart = (UserModel) sessionCart.getAttribute(Constant.userSession);
+		req.setAttribute("user", userCart);
+		if (userCart == null)
+		{
+			resp.sendRedirect(req.getContextPath() + "/login-customer");
+			return;
 		}
+		List<CartModel> cartList = cartService.getByUserId(userCart.getId());
+		List<CartItemModel> cartItemList = new ArrayList<CartItemModel>();
+		
+		//Hiển thị item trong giỏ hàng
+		for (CartModel cart : cartList) {
+			List<CartItemModel> itemList = cartItemService.getByCartId(cart.getId());
+			cartItemList.addAll(itemList);
+		}										
+		
+		//Lấy thông tin danh sách product có trong giỏ hàng
+		List<ProductModel> productsInCart = new ArrayList<ProductModel>();
+		
+		for (CartItemModel cartItem : cartItemList) {
+			ProductModel  productInCart = productService.getById(cartItem.getProductId());
+			productInCart.setPrice(productInCart.getPrice().setScale(0));
+			productsInCart.add(productInCart);
+		}
+		
+		BigDecimal sum = BigDecimal.ZERO;
+
+		for (int i = 0; i < cartItemList.size(); i++) {
+		    ProductModel productModel = productService.getById(cartItemList.get(i).getProductId());
+		    
+		    if (productModel != null) {
+		        BigDecimal productPrice = productModel.getPrice();
+		        int count = cartItemList.get(i).getCount();
+		        
+		        sum = sum.add(productPrice.multiply(BigDecimal.valueOf(count))).setScale(0);
+		    }
+		}
+
+	    req.setAttribute("sumPrice", sum);
+		
+		List<ImageModel> imageProductsInCart = new ArrayList<ImageModel>();
+
+		for (ProductModel productModel : productsInCart) {
+			ImageModel image = imageService.getImage(productModel.getId());
+			imageProductsInCart.add(image);
+		}
+		
+		req.setAttribute("quantity", cartItemList.size());
+		req.setAttribute("user", userCart);
+		req.setAttribute("imageProductsInCart", imageProductsInCart);	
+		req.setAttribute("cartItemList", cartItemList);
+		req.setAttribute("productsInCart", productsInCart);		
 		
 		if (url.contains("customer-home")) {
 			try {

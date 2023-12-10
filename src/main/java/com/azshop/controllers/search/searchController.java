@@ -149,11 +149,14 @@ public class searchController extends HttpServlet {
 	        
 	        List<CategoryModel> categoryParentList = categoryService.getParentCategory();
 	        
+	        int quantity = 0;
 	        for (CategoryModel categoryParent : categoryParentList) {
 				List<CategoryModel> categoryChildList = categoryService.getChildCategory(categoryParent.getId());
 				for (CategoryModel categoryChild : categoryChildList) {
 					categoryChild.setCountProduct(categoryChild.getId());
+					quantity += categoryChild.getCountProduct();
 				}
+				categoryParent.setCountProduct(quantity);
 			}
 	        
 	        request.setAttribute("styleId", styleTmp);
