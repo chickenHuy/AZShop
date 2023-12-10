@@ -88,19 +88,19 @@
 			</div>
 		</div>
 		<div>&nbsp;</div>
-		<h6 class="mb-0 fw-bold">List new store in Last ${day} day</h6>		
+		<h6 class="mb-0 fw-bold">List new Store in Last ${day} day</h6>		
 
 
 		<hr>
-		<div class="card">
+		<div class="card mt-4">
 			<div class="card-body">
-				<div class="table-responsive">
+				<div class="table-responsive white-space-nowrap">
 					<table id="example2" class="table table-striped table-bordered">
-						<thead>
+						<thead class="table-light">
 							<tr>
 								<th>Store ID</th>
 								<th>Store Name</th>
-								<th>Store owner</th>
+								<th>Store Owner</th>
 								<th>Creat At</th>
 							</tr>
 						</thead>
