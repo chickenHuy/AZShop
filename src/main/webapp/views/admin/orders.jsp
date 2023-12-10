@@ -143,5 +143,6 @@
 			</div>
 		</div>
 	</div>
+	<p>${message}</p>
 
 </main>

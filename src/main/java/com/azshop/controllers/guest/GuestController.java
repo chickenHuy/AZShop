@@ -125,7 +125,7 @@ public class GuestController extends HttpServlet{
 	private void getAll(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		List<CategoryModel> categoryList = categoryService.getAll();
-		List<ProductModel> productList = productService.getAll();
+		List<ProductModel> productList = productService.getAllProductActive();
 		List<ImageModel> imageList = new ArrayList<ImageModel>();
 		List<ProductModel> newestProductList = productService.getNewestProduc(productList);
 		

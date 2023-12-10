@@ -41,7 +41,7 @@
 
 					<!-- aside Widget -->
 					<div class="aside">
-						<h3 class="aside-title">Phong cách</h3>
+						<h3 class="aside-title">${category.id}</h3>
 						<div class="checkbox-filter">
 							<c:forEach var="style" items="${styleList}">	
 								<a href='<c:url value="/${role}/category/${categoryParent.slug}/${category.slug}?sortBy=${sortBy}&styleId=${style.id}"/>'>

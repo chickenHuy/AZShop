@@ -132,4 +132,9 @@ public class ProductServiceImpl implements IProductService{
 		return productDAO.getNewestProduc(productList);
 	}
 
+	@Override
+	public List<ProductModel> getAllProductActive() {
+		return productDAO.getAllProductActive();
+	}
+
 }

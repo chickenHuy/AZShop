@@ -68,7 +68,7 @@
 			</div>
 		</div>
 
-		<h6 class="mb-0 fw-bold">Select day</h6>	
+		<h6 class="mb-0 fw-bold">Select Day</h6>	
 		<div class="row g-3">
 			<div class="col-auto flex-grow-1 overflow-auto">
 				<form action="/AZShop/admin/UserStatic" method="get" class="d-flex">
@@ -88,7 +88,7 @@
 			</div>
 		</div>
 		<div>&nbsp;</div>
-		<h6 class="mb-0 fw-bold">List new user in Last ${day} day</h6>		
+		<h6 class="mb-0 fw-bold">List new User in Last ${day} day</h6>		
 
 
 		<hr>
@@ -96,14 +96,14 @@
 			<div class="card-body">
 				<div class="table-responsive">
 					<table id="example2" class="table table-striped table-bordered">
-						<thead>
+						<thead class="table-light">
 							<tr>
-								<th>User name</th>
-								<th>email</th>
-								<th>phone</th>
-								<th>address</th>
-								<th>role</th>
-								<th>point</th>
+								<th>User Name</th>
+								<th>Email</th>
+								<th>Phone</th>
+								<th>Address</th>
+								<th>Role</th>
+								<th>Point</th>
 
 
 							</tr>

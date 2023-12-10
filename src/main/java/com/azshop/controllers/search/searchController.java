@@ -112,6 +112,8 @@ public class searchController extends HttpServlet {
 					request.setAttribute("productsInCart", productsInCart);	
 			}
 			
+			else if (url.contains("/guest/search")) request.setAttribute("role", "guest");
+			
 			String style = request.getParameter("styleId");
 			String action = request.getParameter("action");
 			int styleTmp = -1;
@@ -156,8 +158,8 @@ public class searchController extends HttpServlet {
 			
 			    request.setAttribute("stores", selectedStores);
 			} else {
-			    // Xử lý khi danh sách là null hoặc rỗng
-			    // Ví dụ: Gán một danh sách trống cho thuộc tính "stores"
+				
+				
 			    request.setAttribute("stores", Collections.emptyList());
 			}
 	        

@@ -1202,7 +1202,7 @@ textarea.input {
   width: 20px;
   height: 20px;
   display: inline-block !important;
-  margin: 60px 2px;
+  margin: 0px 2px;
 }
 
 .products-slick-nav .slick-prev:before, .products-slick-nav .slick-next:before {

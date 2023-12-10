@@ -15,28 +15,44 @@
 		<div class="container">
 			<!-- row -->
 			<div class="row">
+			
+			<!-- Products tab & slick -->
+				<div class="col-md-12">
+					<div class="row">
+						<div class="products-tabs">
+							<!-- tab -->
+							<div id="tab1" class="tab-pane active">
+								<div class="products-slick" data-nav="#slick-nav-6">
 
-				<c:forEach var="category" items="${categoryParentList}">
-					<!-- shop -->
-					<div class="col-md-4 col-xs-6">
-
-						<div class="shop">
-							<a href='<c:url value="/${role}/category/${category.slug}?sortBy=${0}"/>'>
-								<div class="shop-img">
-									<img src="/AZShop/image?fname=${category.image}" alt="" />
-								</div>
-							</a>
-							<div class="shop-body">
-								<h3>
-									${category.name}</a><br>Danh mục
-								</h3>
-								<a href="#" class="cta-btn">Mua ngay <i
-									class="fa fa-arrow-circle-right"></i></a>
+									<c:forEach var="category" items="${categoryParentList}">
+										<!-- shop -->
+										<div class="col-md-4 col-xs-6">
+					
+											<div class="shop">
+												<a href='<c:url value="/${role}/category/${category.slug}?sortBy=${0}"/>'>
+													<div class="shop-img">
+														<img src="/AZShop/image?fname=${category.image}" alt="" />
+													</div>
+												</a>
+												<div class="shop-body">
+													<h3>
+														${category.name}</a><br>Danh mục
+													</h3>
+													<a href="#" class="cta-btn">Mua ngay <i
+														class="fa fa-arrow-circle-right"></i></a>
+												</div>
+											</div>
+										</div>
+										<!-- /shop -->
+									</c:forEach>
+									</div>
+								<div id="slick-nav-6" class="products-slick-nav"></div>
 							</div>
+							<!-- /tab -->
 						</div>
 					</div>
-					<!-- /shop -->
-				</c:forEach>
+				</div>
+				<!-- Products tab & slick -->
 
 
 			</div>

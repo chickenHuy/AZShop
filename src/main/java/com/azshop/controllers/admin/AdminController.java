@@ -317,6 +317,21 @@ public class AdminController extends HttpServlet {
 		String selectedDateStr = req.getParameter("selectedDate");
 		Date selectedDate = null;
 
+		try {
+			HttpSession session = req.getSession();
+			if (session != null) {
+				Object sessionObject = session.getAttribute(Constant.userSession);
+				if (sessionObject instanceof UserModel) {
+					UserModel user = (UserModel) sessionObject;
+
+					String name = user.getFirstName() + " " + user.getLastName();
+
+					req.setAttribute("userName", name);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if (selectedDateStr != null && !selectedDateStr.isEmpty()) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			try {
@@ -557,16 +572,8 @@ public class AdminController extends HttpServlet {
 					product.setSold(product.getSold() + orderItem.getCount());
 					productService.update(product);
 				}
-				
-				TransactionModel transaction = new TransactionModel();
-				transaction.setUserId(order.getUserId());
-				transaction.setStoreId(order.getStoreId());
-				transaction.setAmount(order.getAmountFromUser());
-				transaction.setUp(true);
-				
-				transactionService.insert(transaction);
 			} catch (Exception e) {
-				order.setStatus("Delivered");
+
 			}
 
 		}

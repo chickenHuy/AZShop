@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.w3c.dom.stylesheets.StyleSheetList;
+
 import com.azshop.models.CartItemModel;
 import com.azshop.models.CartModel;
 import com.azshop.models.CategoryModel;
@@ -166,9 +168,9 @@ private static final long serialVersionUID = 1L;
 	                	productList = productService.getByCategoryId(category.getId());
 	                	
 	                	//Lấy danh sách style value từ category parent
-		                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
-		                req.setAttribute("styleList", styleList);        
-		                req.setAttribute("categoryStyle", category);
+		                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());  
+		                
+		                req.setAttribute("styleList", styleList);
 		                
 		                String styleIdString = req.getParameter("styleId");
 		                
@@ -182,7 +184,7 @@ private static final long serialVersionUID = 1L;
 				                	productList.addAll(productsInStyle);
 								}	
 			                }		
-		                }		                
+		                }				                
 		                                	                 
 	                }
 	                
@@ -211,8 +213,18 @@ private static final long serialVersionUID = 1L;
 	        			imageList.add(image);
 	        		}
 	                
+	                List<ProductModel> hotProductList = productService.GetTopSellerProduct(productListSort, 3);
+	                List<ImageModel> imageModels = new ArrayList<ImageModel>();
+	                
+	                for (ProductModel productModel : hotProductList) {
+	        			ImageModel image = imageService.getImage(productModel.getId());
+	        			imageModels.add(image);
+	        		}	                
+	                
+	                req.setAttribute("hotProductList",hotProductList);
+	                req.setAttribute("imageProHotList", imageModels);	
 	                req.setAttribute("sortBy", sortBy);
-	                req.setAttribute("category", category);
+	                req.setAttribute("category", category);	                
 	                req.setAttribute("categoryChildList", categoryChildList);
 	                req.setAttribute("categoryList", categoryChildList);
 	                req.setAttribute("productList", productListSort);
@@ -229,7 +241,7 @@ private static final long serialVersionUID = 1L;
 			e.printStackTrace();
 		}
 		
-		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/category.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/category.jsp");
         rd.forward(req, resp);
 		
 	}
