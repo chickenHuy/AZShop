@@ -105,6 +105,7 @@ public class searchController extends HttpServlet {
 						imageProductsInCart.add(image);
 					}
 					
+					request.setAttribute("role", "customer");
 					request.setAttribute("quantity", cartItemList.size());
 					request.setAttribute("imageProductsInCart", imageProductsInCart);	
 					request.setAttribute("cartItemList", cartItemList);

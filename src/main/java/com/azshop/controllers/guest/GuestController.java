@@ -45,7 +45,7 @@ import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
 
-@WebServlet(urlPatterns = {"/guest-home",  "/guest/store/*", "/guest/product/*", "/guest-search"})
+@WebServlet(urlPatterns = {"/guest-home", "/guest/product/*", "/guest-search"})
 public class GuestController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;

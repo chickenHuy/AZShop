@@ -20,8 +20,7 @@ import com.azshop.models.CartModel;
 import com.azshop.models.CategoryModel;
 import com.azshop.models.ImageModel;
 import com.azshop.models.ProductModel;
-import com.azshop.models.StyleModel;
-import com.azshop.models.StyleValueModel;
+import com.azshop.models.StoreModel;
 import com.azshop.models.UserModel;
 import com.azshop.services.CartItemServiceImpl;
 import com.azshop.services.CartServiceImpl;
@@ -43,8 +42,8 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/guest/category/*", "/customer/category/*"})
-public class CategoryController extends HttpServlet{
+@WebServlet(urlPatterns = {"/customer/store/*", "/guest/store/*"})
+public class StoreController extends HttpServlet{
 private static final long serialVersionUID = 1L;
 	
 	ICategoryService categoryService = new CategoryServiceImpl();
@@ -133,91 +132,57 @@ private static final long serialVersionUID = 1L;
 				String slug = parts[parts.length - 1];
 				
 				try {
-					//Lấy category từ slug
-	                CategoryModel category = categoryService.getCategoryBySlug(slug);
-	                
-	                Boolean isCategoryOrigin = false;
-	                
-	                //Kiếm tra category có phải là một caetgory gốc
-	                for (CategoryModel categoryModel : categoryParentList) {
-						if (category.getId() == categoryModel.getId()) {
-							isCategoryOrigin = true;
-						}
-					}
-	                
-	                //Khai báo trong trường hợp nó là category gốc
-	                CategoryModel categoryParent = categoryService.getParentCategory(category.getId());		                		                
-	                List<CategoryModel> categoryChildList = categoryService.getChildCategory(category.getId());
-	                
-	                List<ProductModel> productList = new ArrayList<ProductModel>();
+
+					StoreModel store = storeService.getBySlug(slug);
+					CategoryModel category = categoryService.getCategoryBySlug(req.getParameter("cate"));
+					
+					List<ProductModel> productList = new ArrayList<ProductModel>();
 	                List<ImageModel> imageList = new ArrayList<ImageModel>();
+	                List<CategoryModel> categoryChildList = new ArrayList<CategoryModel>();
 	                
-	                //Lấy ra tất cả sản phẩm
-	                for (CategoryModel categoryChild : categoryChildList) {
-	                	List<ProductModel> productCategoryChilds = productService.getByCategoryId(categoryChild.getId());
-	                	productList.addAll(productCategoryChilds);
-					}	                	                	                	                	                	                	                  
+	                //Lấy tất cả sản phẩm trong giỏ hàng
+	                productList = productService.getByStoreId(store.getId());
 	                
-	                //nếu không phải
-	                if (isCategoryOrigin == false) {
-	                	categoryChildList = categoryService.getChildCategory(category.getCategoryId());
-	                	categoryParent = categoryService.getById(category.getCategoryId());
-	                	productList.clear();
-	                	productList = productService.getByCategoryId(category.getId());
-	                	
-	                	//Lấy danh sách style value từ category parent
-		                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
-		                req.setAttribute("styleList", styleList);        
-		                req.setAttribute("categoryStyle", category);
-		                
-		                String styleIdString = req.getParameter("styleId");
-		                
-		                if (styleIdString != null) {
-		                	int styleId = Integer.parseInt(styleIdString);
-		                	if (styleId != 0) {
-			                	List<StyleValueModel> styleValueList = styleValueService.getByStyleId(styleId);	              
-				                productList.clear();
-				                for (StyleValueModel styleValue : styleValueList) {
-				                	List<ProductModel> productsInStyle = productService.getByStyleValueId(styleValue.getId());
-				                	productList.addAll(productsInStyle);
-								}	
-			                }		
-		                }		                
-		                                	                 
-	                }
+	              //lấy danh sách danh mục
+	                for (ProductModel productModel : productList) {
+						CategoryModel categoryChild = categoryService.getById(productModel.getCategoryId());
+						categoryChildList.add(categoryChild);
+					}	                           
 	                
 	              //đếm số lượng product trong mỗi category
 	                for (CategoryModel categoryChild : categoryChildList) {
-						int countProduct = countProductsInCategory(categoryChild.getId());
+						int countProduct = countProductsInCategoryStore(store.getId(), categoryChild.getId());
 						
 						categoryChild.setCountProduct(countProduct);
-					}	
+					}
 	                
-	                List<ProductModel> productListSort = new ArrayList<ProductModel>();             
-	                
-	                int sortBy = Integer.parseInt(req.getParameter("sortBy"));
-	                
-	              //sắp xếp
-	                if (sortBy == 0) {
-		                productListSort = productService.SortingProductbyPriceAscending(productList);
-	                }
-	                else if (sortBy == 1) {
-	                	productListSort = productService.SortingProductbyPriceDecending(productList);		               
-	                }	 
-	                        	                	                
+	                //Lấy sản phẩm trong danh mục nằm trong cửa hàng
+	                List<ProductModel> productsInCate = new ArrayList<ProductModel>();
+	                if (category.getSlug() != null) {
+	                	for (ProductModel product : productList) {
+							if (product.getCategoryId() == category.getId()) {
+								productsInCate.add(product);
+							}
+						}
+	                	productList = productsInCate;
+	                	req.setAttribute("category", category);
+	                }	                	                
 	                
 	                for (ProductModel productModel : productList) {
 	        			ImageModel image = imageService.getImage(productModel.getId());
 	        			imageList.add(image);
 	        		}
 	                
+	                int sortBy = Integer.parseInt(req.getParameter("sortBy"));
+	                
+	                if (sortBy == 0) productList = productService.SortingProductbyPriceAscending(productList);
+	                else productList = productService.SortingProductbyPriceDecending(productList);
+	                
 	                req.setAttribute("sortBy", sortBy);
-	                req.setAttribute("category", category);
+	                req.setAttribute("store", store);	               
 	                req.setAttribute("categoryChildList", categoryChildList);
-	                req.setAttribute("categoryList", categoryChildList);
-	                req.setAttribute("productList", productListSort);
+	                req.setAttribute("productList", productList);
 	                req.setAttribute("imageList", imageList);
-	                req.setAttribute("categoryParent", categoryParent);
 	               	                
 	                
 	            } catch (Exception e) {
@@ -229,15 +194,22 @@ private static final long serialVersionUID = 1L;
 			e.printStackTrace();
 		}
 		
-		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/category.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/store.jsp");
         rd.forward(req, resp);
-		
 	}
 	
-
-	public int countProductsInCategory(int categoryId) {
-        List<ProductModel> productList = productService.getByCategoryId(categoryId);
-
+	public int countProductsInCategoryStore(int storeId, int categoryId) {
+        // Get products by category
+        List<ProductModel> productsInCate = productService.getByCategoryId(categoryId);
+        List<ProductModel> productList = new ArrayList<ProductModel>();
+        
+        for (ProductModel productModel : productsInCate) {
+			if (productModel.getStoreId() == storeId) {
+				productList.add(productModel);
+			}
+		}
+        
+        // Count the number of products
         int productCount = (productList != null) ? productList.size() : 0;
 
         return productCount;
