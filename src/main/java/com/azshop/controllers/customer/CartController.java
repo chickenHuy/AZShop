@@ -44,7 +44,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer/add-to-cart/*", "/customer/delete-item-cart", "/customer/cart/checkout/", "/customer/cart/checkout-comfirm/"})
+@WebServlet(urlPatterns = {"/customer/add-to-cart/*", "/customer/delete-item-cart", "/customer/cart/checkout", "/customer/cart/checkout-comfirm"})
 public class CartController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -132,16 +132,32 @@ public class CartController extends HttpServlet{
 				e.printStackTrace();
 			}			
 		}
-		else if (url.contains("customer/cart/checkout/")) {
+		else if (url.contains("customer/cart/checkout")) {
 			try {
-				getInforCart(req, resp);
+				List<CartItemModel> cartItemModels = new ArrayList<CartItemModel>();
+				for (CartModel cartModel : cartList) {	
+					cartItemModels.addAll(cartItemService.getByCartId(cartModel.getId()));
+				}
+				
+				req.setAttribute("cartItemList", cartItemList);
+				
+				RequestDispatcher rd = req.getRequestDispatcher("/views/customer/checkout.jsp");
+				rd.forward(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		else if (url.contains("customer/cart/checkout-comfirm/")) {
+		else if (url.contains("customer/cart/checkout-comfirm")) {
 			try {
-				getInforCart(req, resp);
+				List<CartItemModel> cartItemModels = new ArrayList<CartItemModel>();
+				for (CartModel cartModel : cartList) {	
+					cartItemModels.addAll(cartItemService.getByCartId(cartModel.getId()));
+				}
+				
+				req.setAttribute("cartItemList", cartItemList);
+				
+				RequestDispatcher rd = req.getRequestDispatcher("/views/customer/checkout.jsp");
+				rd.forward(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -167,121 +183,111 @@ public class CartController extends HttpServlet{
 		resp.sendRedirect(req.getHeader("Referer"));
 	}
 
-	private void getInforCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<CartItemModel> cartItemList = cartItemService.getAll();
-		
-		
-		req.setAttribute("cartItemList", cartItemList);
-		
-		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/checkout.jsp");
-		rd.forward(req, resp);
-	}
-
 	private void addProductToCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		//ma hoa UTF-8
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
+		
+		HttpSession session = req.getSession();
+		
+		UserModel user = (UserModel) session.getAttribute(Constant.userSession);
+		req.setAttribute("user", user);
+		if (user == null)
+		{
+			resp.sendRedirect(req.getContextPath() + "/login-customer");
+			return;
+		}
+		
+		String url = req.getRequestURL().toString();
+		URI uri;
 		try {
-			HttpSession session = req.getSession();
-			if (session != null) {
-				Object sessionObject = session.getAttribute(Constant.userSession);
-				if (sessionObject instanceof UserModel) {
-					UserModel user = (UserModel) sessionObject;
-					req.setAttribute("user", user);
+
+			uri = new URI(url);
+			String path = uri.getPath();
+
+			String[] parts = path.split("/");
+
+			if (parts.length > 0) {
+				String slug = parts[parts.length - 1];
+				try {
 					
-					//Sử dụng thông tin người dùng ở đây
-					String url = req.getRequestURL().toString();
-					URI uri;
-					try {
-
-						uri = new URI(url);
-						String path = uri.getPath();
-
-						String[] parts = path.split("/");
-
-						if (parts.length > 0) {
-							String slug = parts[parts.length - 1];
-							try {
-								
-								ProductModel product = productService.getBySlug(slug);														
-								
-								//Lấy thử danh sách cart
-								List<CartModel> cartList = cartService.getAll();
-								boolean isExistCart = false;
-								CartModel cart = new CartModel();
-								for (CartModel cartModel : cartList) {
-									//Kiểm tra xem store id của product được thêm vào có trong cart nào chưa
-									if (product.getStoreId() == cartModel.getStoreId()) {
-										isExistCart = true;
-										cart = cartModel;
-									}
-								}
-								
-								//nếu đã có thì sẽ tiếp tục thêm sản phẩm vào
-								if (isExistCart == true) {
-									//Kiểm tra có item trong giỏ hàng chưa
-									boolean isExistItemCart = false;
-									List<CartItemModel> cartItems = cartItemService.getAll();
-									CartItemModel itemInCart = new CartItemModel();
-									for (CartItemModel item : cartItems) {
-										if(product.getId() == item.getProductId()) {
-											isExistItemCart = true;
-											itemInCart = item;
-										}
-									}
-									//Nếu chưa có item trong cart
-									if (isExistItemCart == false) {
-										//Thêm item mới vào cart
-										CartItemModel newItem = new CartItemModel();
-										newItem.setCartId(cart.getId());
-										newItem.setProductId(product.getId());
-										newItem.setStyleValueId(product.getStyleValueId());
-										newItem.setCount(Integer.parseInt(req.getParameter("count")));
-										cartItemService.insert(newItem);
-									}
-									//Nếu đã có thì tăng thêm số lượng
-									else {
-										int count = Integer.parseInt(req.getParameter("count"));
-										
-										itemInCart.setCount(itemInCart.getCount() + count);
-										cartItemService.update(itemInCart);
-									}
-								}
-								
-								//nếu chưa có thì tạo cart mới cho store id này
-								else {
-									CartModel newCart = new CartModel();
-									newCart.setUserId(user.getId());
-									newCart.setStoreId(product.getStoreId());
-									cartService.insert(newCart);
-									
-									cartList = cartService.getAll();
-									
-									for (CartModel cartModel : cartList) {										
-										if (product.getStoreId() == cartModel.getStoreId()) {
-											cart = cartModel;
-										}
-									}
-									
-									//Thêm item cho cart
-									CartItemModel cartItem = new CartItemModel();
-									cartItem.setCartId(cart.getId());
-									cartItem.setProductId(product.getId());
-									cartItem.setStyleValueId(product.getStyleValueId());
-									cartItem.setCount(Integer.parseInt(req.getParameter("count")));
-									cartItemService.insert(cartItem);
-								}
-
-							} catch (Exception e) {
-								e.printStackTrace();
+					ProductModel product = productService.getBySlug(slug);														
+					
+					//Lấy thử danh sách cart
+					List<CartModel> cartList = cartService.getByUserId(user.getId());
+					boolean isExistCart = false;
+					CartModel cart = new CartModel();
+					
+					for (CartModel cartModel : cartList) {
+						//Kiểm tra xem store id của product được thêm vào có trong cart nào chưa
+						if (product.getStoreId() == cartModel.getStoreId()) {
+							isExistCart = true;
+							cart = cartModel;
+						}
+					}
+					
+					//nếu đã có thì sẽ tiếp tục thêm sản phẩm vào
+					if (isExistCart == true) {
+						//Kiểm tra có item trong giỏ hàng chưa
+						boolean isExistItemCart = false;
+						List<CartItemModel> cartItems = new ArrayList<CartItemModel>();
+						for (CartModel cartModel : cartList) {	
+							cartItems.addAll(cartItemService.getByCartId(cartModel.getId()));
+						}
+						
+						CartItemModel itemInCart = new CartItemModel();
+						for (CartItemModel item : cartItems) {
+							if(product.getId() == item.getProductId()) {
+								isExistItemCart = true;
+								itemInCart = item;
 							}
 						}
-					} catch (URISyntaxException e) {
-						e.printStackTrace();
-					}				
+						//Nếu chưa có item trong cart
+						if (isExistItemCart == false) {
+							//Thêm item mới vào cart
+							CartItemModel newItem = new CartItemModel();
+							newItem.setCartId(cart.getId());
+							newItem.setProductId(product.getId());
+							newItem.setStyleValueId(product.getStyleValueId());
+							newItem.setCount(Integer.parseInt(req.getParameter("count")));
+							cartItemService.insert(newItem);
+						}
+						//Nếu đã có thì tăng thêm số lượng
+						else {
+							int count = Integer.parseInt(req.getParameter("count"));
+							
+							itemInCart.setCount(itemInCart.getCount() + count);
+							cartItemService.update(itemInCart);
+						}
+					}
+					
+					//nếu chưa có thì tạo cart mới cho store id này
+					else {
+						CartModel newCart = new CartModel();
+						newCart.setUserId(user.getId());
+						newCart.setStoreId(product.getStoreId());
+						cartService.insert(newCart);						
+						
+						for (CartModel cartModel : cartList) {										
+							if (product.getStoreId() == cartModel.getStoreId()) {
+								cart = cartModel;
+							}
+						}
+						
+						//Thêm item cho cart
+						CartItemModel cartItem = new CartItemModel();
+						cartItem.setCartId(cart.getId());
+						cartItem.setProductId(product.getId());
+						cartItem.setStyleValueId(product.getStyleValueId());
+						cartItem.setCount(Integer.parseInt(req.getParameter("count")));
+						cartItemService.insert(cartItem);
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			}		
-		} catch (Exception e) {
+			}
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 		
