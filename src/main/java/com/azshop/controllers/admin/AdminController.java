@@ -557,8 +557,16 @@ public class AdminController extends HttpServlet {
 					product.setSold(product.getSold() + orderItem.getCount());
 					productService.update(product);
 				}
+				
+				TransactionModel transaction = new TransactionModel();
+				transaction.setUserId(order.getUserId());
+				transaction.setStoreId(order.getStoreId());
+				transaction.setAmount(order.getAmountFromUser());
+				transaction.setUp(true);
+				
+				transactionService.insert(transaction);
 			} catch (Exception e) {
-
+				order.setStatus("Delivered");
 			}
 
 		}
