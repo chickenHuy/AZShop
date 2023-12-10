@@ -333,7 +333,22 @@
 											<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#order-waiting">Waiting</button>
 										</li>
 										<li class="nav-item">
+											<button class="nav-link" data-bs-toggle="tab" data-bs-target="#order-processing">Processing</button>
+										</li>
+										<li class="nav-item">
+											<button class="nav-link" data-bs-toggle="tab" data-bs-target="#order-pending">Pending Pickup</button>
+										</li>
+										<li class="nav-item">
+											<button class="nav-link" data-bs-toggle="tab" data-bs-target="#order-shipping">Shipping</button>
+										</li>
+										<li class="nav-item">
+											<button class="nav-link" data-bs-toggle="tab" data-bs-target="#order-delivered">Delivered</button>
+										</li>
+										<li class="nav-item">
 											<button class="nav-link" data-bs-toggle="tab" data-bs-target="#order-completed">Completed</button>
+										</li>
+										<li class="nav-item">
+											<button class="nav-link" data-bs-toggle="tab" data-bs-target="#order-cancelled">Cancelled</button>
 										</li>
 									</ul>
 
@@ -356,7 +371,7 @@
 													</tr>
 													</thead>
 													<tbody>
-														<c:forEach var="order" items="${listOrder}">
+														<c:forEach var="order" items="${orderListWaiting}">
 															<tr>
 																<td>${order.id}</td>
 																<td>${order.address}</td>
@@ -370,6 +385,134 @@
 											</table>
 										</div>
 								
+										<div class="tab-pane fade pt-3" id="order-processing">
+											<!-- Nội dung cho Đơn hàng Hoàn Thành -->
+											<h5 class="card-title">Bảng dữ liệu</h5>
+											<p>Theo dõi đơn hàng tại đây!</p>
+											<table class="table datatable">
+												<thead>
+													<tr>
+														<th>
+														<b>O</b>rder Id
+														</th>
+														<th>Address</th>
+														<th>Status</th>
+														<th>Phone</th>
+														<th data-type="date" data-format="YYYY/DD/MM">Time</th>
+														<th>Action</th>
+													</tr>
+													</thead>
+													<tbody>
+														<c:forEach var="order" items="${orderListProcessing}">
+															<tr>
+																<td>${order.id}</td>
+																<td>${order.address}</td>
+																<td>${order.status}</td>
+																<td>${order.phone}</td>
+																<td>${order.createAt}</td>
+																<td>Action</td>
+															</tr>
+														</c:forEach>
+													</tbody>
+											</table>
+										</div>
+
+										<div class="tab-pane fade pt-3" id="order-pending">
+											<!-- Nội dung cho Đơn hàng Hoàn Thành -->
+											<h5 class="card-title">Bảng dữ liệu</h5>
+											<p>Theo dõi đơn hàng tại đây!</p>
+											<table class="table datatable">
+												<thead>
+													<tr>
+														<th>
+														<b>O</b>rder Id
+														</th>
+														<th>Address</th>
+														<th>Status</th>
+														<th>Phone</th>
+														<th data-type="date" data-format="YYYY/DD/MM">Time</th>
+														<th>Action</th>
+													</tr>
+													</thead>
+													<tbody>
+														<c:forEach var="order" items="${orderListPending}">
+															<tr>
+																<td>${order.id}</td>
+																<td>${order.address}</td>
+																<td>${order.status}</td>
+																<td>${order.phone}</td>
+																<td>${order.createAt}</td>
+																<td>Action</td>
+															</tr>
+														</c:forEach>
+													</tbody>
+											</table>
+										</div>
+
+										<div class="tab-pane fade pt-3" id="order-shipping">
+											<!-- Nội dung cho Đơn hàng Hoàn Thành -->
+											<h5 class="card-title">Bảng dữ liệu</h5>
+											<p>Theo dõi đơn hàng tại đây!</p>
+											<table class="table datatable">
+												<thead>
+													<tr>
+														<th>
+														<b>O</b>rder Id
+														</th>
+														<th>Address</th>
+														<th>Status</th>
+														<th>Phone</th>
+														<th data-type="date" data-format="YYYY/DD/MM">Time</th>
+														<th>Action</th>
+													</tr>
+													</thead>
+													<tbody>
+														<c:forEach var="order" items="${orderListShipping}">
+															<tr>
+																<td>${order.id}</td>
+																<td>${order.address}</td>
+																<td>${order.status}</td>
+																<td>${order.phone}</td>
+																<td>${order.createAt}</td>
+																<td>Action</td>
+															</tr>
+														</c:forEach>
+													</tbody>
+											</table>
+										</div>
+
+										<div class="tab-pane fade pt-3" id="order-delivered">
+											<!-- Nội dung cho Đơn hàng Hoàn Thành -->
+											<h5 class="card-title">Bảng dữ liệu</h5>
+											<p>Theo dõi đơn hàng tại đây!</p>
+											<table class="table datatable">
+												<thead>
+													<tr>
+														<th>
+														<b>O</b>rder Id
+														</th>
+														<th>Address</th>
+														<th>Status</th>
+														<th>Phone</th>
+														<th data-type="date" data-format="YYYY/DD/MM">Time</th>
+														<th>Action</th>
+													</tr>
+													</thead>
+													<tbody>
+														<c:forEach var="order" items="${orderListDelivered}">
+															<tr>
+																<td>${order.id}</td>
+																<td>${order.address}</td>
+																<td>${order.status}</td>
+																<td>${order.phone}</td>
+																<td>${order.createAt}</td>
+																<td>Action</td>
+															</tr>
+														</c:forEach>
+													</tbody>
+											</table>
+										</div>
+
 										<div class="tab-pane fade pt-3" id="order-completed">
 											<!-- Nội dung cho Đơn hàng Hoàn Thành -->
 											<h5 class="card-title">Bảng dữ liệu</h5>
@@ -388,7 +531,39 @@
 													</tr>
 													</thead>
 													<tbody>
-														<c:forEach var="order" items="${listOrder}">
+														<c:forEach var="order" items="${orderListCompleted}">
+															<tr>
+																<td>${order.id}</td>
+																<td>${order.address}</td>
+																<td>${order.status}</td>
+																<td>${order.phone}</td>
+																<td>${order.createAt}</td>
+																<td>Action</td>
+															</tr>
+														</c:forEach>
+													</tbody>
+											</table>
+										</div>
+
+										<div class="tab-pane fade pt-3" id="order-cancelled">
+											<!-- Nội dung cho Đơn hàng Hoàn Thành -->
+											<h5 class="card-title">Bảng dữ liệu</h5>
+											<p>Theo dõi đơn hàng tại đây!</p>
+											<table class="table datatable">
+												<thead>
+													<tr>
+														<th>
+														<b>O</b>rder Id
+														</th>
+														<th>Address</th>
+														<th>Status</th>
+														<th>Phone</th>
+														<th data-type="date" data-format="YYYY/DD/MM">Time</th>
+														<th>Action</th>
+													</tr>
+													</thead>
+													<tbody>
+														<c:forEach var="order" items="${orderListCancelled}">
 															<tr>
 																<td>${order.id}</td>
 																<td>${order.address}</td>

@@ -20,11 +20,11 @@ public class OrderServiceImpl implements IOrderService {
 	IUserService userService = new UserServiceImpl();
 	IUserLevelService userLevelService = new UserLevelServiceImpl();
 	IDeliveryService deliveryService = new DeliveryServiceImpl();
-	
+
 	@Override
 	public void insert(OrderModel order) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class OrderServiceImpl implements IOrderService {
 	public List<OrderModel> getAll() {
 		return orderDAO.getAll();
 	}
-	
+
 	@Override
 	public List<OrderModel> getAllAdmin() {
 		return orderDAO.getAllAdmin();
@@ -66,9 +66,9 @@ public class OrderServiceImpl implements IOrderService {
 	@Override
 	public void delete(int id) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
 	public List<String> statusForVendor() {
 		List<String> staList = new ArrayList<String>();
@@ -81,7 +81,7 @@ public class OrderServiceImpl implements IOrderService {
 	@Override
 	public Boolean changeStatus(int id, String status) {
 		OrderModel orderModel = orderDAO.getById(id);
-		if (orderModel.getStatus().equals("Cancelled") || orderModel.getStatus().equals("Completed") ) {
+		if (orderModel.getStatus().equals("Cancelled") || orderModel.getStatus().equals("Completed")) {
 			return false;
 		}
 		return orderDAO.changeStatus(id, status);
@@ -109,24 +109,24 @@ public class OrderServiceImpl implements IOrderService {
 		UserModel user = userService.getById(order.getUserId());
 		UserLevelModel userLevel = userLevelService.getById(user.getUserLevelId());
 		DeliveryModel delivery = deliveryService.getById(order.getDeliveryId());
-		
+
 		BigDecimal orderTotal = BigDecimal.ZERO;
-		
+
 		for (OrderItemModel orderItem : orderItems) {
 			BigDecimal orderItemTotal = orderItemService.calculateOrderItemTotal(orderItem.getId());
-	        orderTotal = orderTotal.add(orderItemTotal);
-        }
-		
+			orderTotal = orderTotal.add(orderItemTotal);
+		}
+
 		orderTotal = orderTotal.add(delivery.getPrice());
 		if (userLevel.getDiscount() != 0) {
-			BigDecimal discount = BigDecimal.valueOf(userLevel.getDiscount()/100.0).multiply(orderTotal);
+			BigDecimal discount = BigDecimal.valueOf(userLevel.getDiscount() / 100.0).multiply(orderTotal);
 			orderTotal = orderTotal.subtract(discount);
 		}
-        return orderTotal;
+		return orderTotal;
 	}
 
 	@Override
-	public List<BigDecimal> GetRevenueLastNDays(int nDay,int storeId) {
+	public List<BigDecimal> GetRevenueLastNDays(int nDay, int storeId) {
 		return orderDAO.GetRevenueLastNDays(nDay, storeId);
 	}
 
@@ -159,5 +159,10 @@ public class OrderServiceImpl implements IOrderService {
 	public int getTotalShopRevenue() {
 		// TODO Auto-generated method stub
 		return orderDAO.getTotalShopRevenue();
+	}
+
+	@Override
+	public List<OrderModel> getByUserIdandStatus(int userId, String status) {
+		return orderDAO.getByUserIdandStatus(userId, status);
 	}
 }

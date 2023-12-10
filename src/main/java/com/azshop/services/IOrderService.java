@@ -41,11 +41,17 @@ public interface IOrderService {
 	BigDecimal getSumRevenueByStore(int storeId);
 
 	List<OrderModel> getByUserIdAndStoreId(int userId, int storeId);
+
 	int countCompletedByStore(int storeId);
+
 	int countOrderByStore(int storeId);
-    List<OrderModel> getAllAdmin();
- // Thêm phương thức mới vào OrderDAOImpl
-    int getTotalShopRevenueByDate(Date Date) ;
-    int getTotalShopRevenue();
- 	    
+
+	List<OrderModel> getAllAdmin();
+
+	// Thêm phương thức mới vào OrderDAOImpl
+	int getTotalShopRevenueByDate(Date Date);
+
+	int getTotalShopRevenue();
+
+	List<OrderModel> getByUserIdandStatus(int userId, String status);
 }
