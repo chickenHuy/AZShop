@@ -45,18 +45,7 @@ import com.azshop.services.*;
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
 		* 50)
 
-<<<<<<< HEAD
-//@WebServlet(urlPatterns = { "/admin/dashboard", "/admin/product", "/admin/customer", "/admin/store",
-//		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit",
-//		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory",
-//		"/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel",
-//		"/admin/deleteuserlevel", "/admin/restoreuserlevel", "/admin/storelevel", "/admin/addstorelevel",
-//		"/admin/editstorelevel", "/admin/deletestorelevel", "/admin/restorestorelevel", "/admin/category/delete",
-//		"/admin/styles", "/admin/style/delete", "/admin/style/restore", "/admin/addstyle", "/admin/style/stylevalues",
-//		"/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
-//		"/admin/order-detail","/admin/UserStatic","/admin/StoreStatic", "/admin/style/edit", "/admin/category/restore",
-//        "/admin/delivery","/admin/adddelivery","/admin/editdelivery","/admin/deletedelivery","admin/transaction" })
-=======
+
 @WebServlet(urlPatterns = { "/admin/dashboard", "/admin/product", "/admin/customer", "/admin/store",
 		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit",
 		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory",
@@ -68,7 +57,6 @@ import com.azshop.services.*;
 		"/admin/order-detail", "/admin/UserStatic", "/admin/StoreStatic", "/admin/style/edit",
 		"/admin/category/restore", "/admin/delivery", "/admin/adddelivery", "/admin/editdelivery",
 		"/admin/deletedelivery", "/admin/transaction", "/admin/order/cancel-order" })
->>>>>>> db5542ebd4c13eefd56346b30ffae3c4f8802b23
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
