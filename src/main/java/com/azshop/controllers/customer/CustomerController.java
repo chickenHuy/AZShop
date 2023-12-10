@@ -49,7 +49,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer-home", "/customer-information"})
+@WebServlet(urlPatterns = {"/customer-home", "/customer-information", "/customer/hot-product"})
 public class CustomerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -141,6 +141,14 @@ public class CustomerController extends HttpServlet {
 			}
 		}
 		
+		else if (url.contains("customer/hot-product")) {
+			try {
+				getHotProduct(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		else if (url.contains("customer-search")) {
 			try {
 				search(req, resp);
@@ -174,6 +182,24 @@ public class CustomerController extends HttpServlet {
 		}
 	}
 	
+	private void getHotProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		List<ProductModel> productList = productService.getAll();
+		List<CategoryModel> categoryList = categoryService.getAll();
+		List<ProductModel> productHotList = productService.GetTopSellerProduct(productList, 10);
+		List<ImageModel> imageList = new ArrayList<ImageModel>();
+		
+		for (ProductModel productModel : productHotList) {
+			ImageModel image = imageService.getImage(productModel.getId());
+			imageList.add(image);
+		}
+		
+		req.setAttribute("imageList", imageList);
+		req.setAttribute("categoryList", categoryList);
+		req.setAttribute("productList",productHotList);
+		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/HotProduct.jsp");
+		rd.forward(req, resp);
+	}
+
 	public int countProductsInCategoryStore(int storeId, int categoryId) {
         // Get products by category
         List<ProductModel> productsInCate = productService.getByCategoryId(categoryId);
@@ -322,6 +348,7 @@ public class CustomerController extends HttpServlet {
 
 	private void getAll(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<ProductModel> productList = productService.getAll();
+		List<CategoryModel> categoryList = categoryService.getAll();
 		List<ImageModel> imageList = new ArrayList<ImageModel>();
 		
 		for (ProductModel productModel : productList) {
@@ -330,6 +357,7 @@ public class CustomerController extends HttpServlet {
 		}
 		
 		req.setAttribute("imageList", imageList);
+		req.setAttribute("categoryList", categoryList);
 		req.setAttribute("productList",productList);
 		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/home.jsp");
 		rd.forward(req, resp);
