@@ -44,7 +44,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = {"/customer/add-to-cart/*", "/customer/delete-item-cart", "/customer/cart/checkout/", "/customer/cart/checkout-comfirm/"})
+@WebServlet(urlPatterns = {"/customer/add-to-cart/*", "/customer/delete-item-cart", "/customer/cart/checkout", "/customer/cart/checkout-comfirm"})
 public class CartController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -132,16 +132,32 @@ public class CartController extends HttpServlet{
 				e.printStackTrace();
 			}			
 		}
-		else if (url.contains("customer/cart/checkout/")) {
+		else if (url.contains("customer/cart/checkout")) {
 			try {
-				getInforCart(req, resp);
+				List<CartItemModel> cartItemModels = new ArrayList<CartItemModel>();
+				for (CartModel cartModel : cartList) {	
+					cartItemModels.addAll(cartItemService.getByCartId(cartModel.getId()));
+				}
+				
+				req.setAttribute("cartItemList", cartItemList);
+				
+				RequestDispatcher rd = req.getRequestDispatcher("/views/customer/checkout.jsp");
+				rd.forward(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		else if (url.contains("customer/cart/checkout-comfirm/")) {
+		else if (url.contains("customer/cart/checkout-comfirm")) {
 			try {
-				getInforCart(req, resp);
+				List<CartItemModel> cartItemModels = new ArrayList<CartItemModel>();
+				for (CartModel cartModel : cartList) {	
+					cartItemModels.addAll(cartItemService.getByCartId(cartModel.getId()));
+				}
+				
+				req.setAttribute("cartItemList", cartItemList);
+				
+				RequestDispatcher rd = req.getRequestDispatcher("/views/customer/checkout.jsp");
+				rd.forward(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -165,16 +181,6 @@ public class CartController extends HttpServlet{
 		
 		//chuyển tới trang trước đó
 		resp.sendRedirect(req.getHeader("Referer"));
-	}
-
-	private void getInforCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<CartItemModel> cartItemList = cartItemService.getAll();
-		
-		
-		req.setAttribute("cartItemList", cartItemList);
-		
-		RequestDispatcher rd = req.getRequestDispatcher("/views/customer/checkout.jsp");
-		rd.forward(req, resp);
 	}
 
 	private void addProductToCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -260,9 +266,7 @@ public class CartController extends HttpServlet{
 						CartModel newCart = new CartModel();
 						newCart.setUserId(user.getId());
 						newCart.setStoreId(product.getStoreId());
-						cartService.insert(newCart);
-						
-						cartList = cartService.getAll();
+						cartService.insert(newCart);						
 						
 						for (CartModel cartModel : cartList) {										
 							if (product.getStoreId() == cartModel.getStoreId()) {
