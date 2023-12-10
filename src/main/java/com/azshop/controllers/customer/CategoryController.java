@@ -168,7 +168,7 @@ private static final long serialVersionUID = 1L;
 	                	productList = productService.getByCategoryId(category.getId());
 	                	
 	                	//Lấy danh sách style value từ category parent
-		                List<StyleModel> styleList = styleService.getAll();  
+		                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());  
 		                
 		                req.setAttribute("styleList", styleList);
 		                
@@ -213,6 +213,16 @@ private static final long serialVersionUID = 1L;
 	        			imageList.add(image);
 	        		}
 	                
+	                List<ProductModel> hotProductList = productService.GetTopSellerProduct(productListSort, 3);
+	                List<ImageModel> imageModels = new ArrayList<ImageModel>();
+	                
+	                for (ProductModel productModel : hotProductList) {
+	        			ImageModel image = imageService.getImage(productModel.getId());
+	        			imageModels.add(image);
+	        		}	                
+	                
+	                req.setAttribute("hotProductList",hotProductList);
+	                req.setAttribute("imageProHotList", imageModels);	
 	                req.setAttribute("sortBy", sortBy);
 	                req.setAttribute("category", category);	                
 	                req.setAttribute("categoryChildList", categoryChildList);

@@ -77,53 +77,41 @@
 					<!-- aside Widget -->
 					<div class="aside">
 						<h3 class="aside-title">Top selling</h3>
-						<div class="product-widget">
-							<div class="product-img">
-								<img src="./img/product01.png" alt="">
-							</div>
-							<div class="product-body">
-								<p class="product-category">Category</p>
-								<h3 class="product-name">
-									<a href="#">product name goes here</a>
-								</h3>
-								<h4 class="product-price">
-									$980.00
-									<del class="product-old-price">$990.00</del>
-								</h4>
-							</div>
-						</div>
 
-						<div class="product-widget">
-							<div class="product-img">
-								<img src="./img/product02.png" alt="">
-							</div>
-							<div class="product-body">
-								<p class="product-category">Category</p>
-								<h3 class="product-name">
-									<a href="#">product name goes here</a>
-								</h3>
-								<h4 class="product-price">
-									$980.00
-									<del class="product-old-price">$990.00</del>
-								</h4>
-							</div>
-						</div>
+						<c:forEach var="hotProduct" items="${hotProductList}">
+							<a href='<c:url value="/${role}/product/${hotProduct.slug}"/>'>
+								<div class="product-widget">
+									<div class="product-img">
+										<c:set var="hasImages" value="false" />
+										<c:forEach var="image" items="${imageProHotList}">
+											<c:if test="${hotProduct.id eq image.productId}">
+												<img src="/AZShop/image?fname=${image.image}" alt="" />
+												<c:set var="hasImages" value="true" />
+											</c:if>
+										</c:forEach>
 
-						<div class="product-widget">
-							<div class="product-img">
-								<img src="./img/product03.png" alt="">
-							</div>
-							<div class="product-body">
-								<p class="product-category">Category</p>
-								<h3 class="product-name">
-									<a href="#">product name goes here</a>
-								</h3>
-								<h4 class="product-price">
-									$980.00
-									<del class="product-old-price">$990.00</del>
-								</h4>
-							</div>
-						</div>
+										<c:if test="${not hasImages}">
+											<!-- Nếu không có hình ảnh, sử dụng hình ảnh mặc định -->
+											<img
+												src="${pageContext.request.contextPath}/templates/static/none.png"
+												alt="" />
+										</c:if>
+									</div>
+									<div class="product-body">
+										<c:forEach var="category" items="${categoryList}">
+											<c:if test="${hotProduct.categoryId eq category.id}">
+												<p class="product-category">${category.name}</p>
+											</c:if>
+										</c:forEach>
+										<h3 class="product-name">
+											<a href='<c:url value="/${role}/product/${hotProduct.slug}"/>'>${hotProduct.name}</a>
+										</h3>
+										<h4 class="product-price">${hotProduct.price}</h4>
+									</div>
+								</div>
+							</a>
+						</c:forEach>
+
 					</div>
 					<!-- /aside Widget -->
 				</div>
@@ -158,7 +146,7 @@
 						<!-- product -->
 							<div class="col-md-4 col-xs-6">
 								<div class="product">
-									<a href='<c:url value="/customer/product/${product.slug}"/>'>
+									<a href='<c:url value="/${role}/product/${product.slug}"/>'>
 										<div class="product-img">
 											<c:set var="hasImages" value="false" />
 											<c:forEach var="image" items="${imageList}">
