@@ -173,15 +173,23 @@ private static final long serialVersionUID = 1L;
 	        			imageList.add(image);
 	        		}
 	                
+	                
+	                List<ProductModel> productListSort = new ArrayList<ProductModel>();             
+	                
 	                int sortBy = Integer.parseInt(req.getParameter("sortBy"));
 	                
-	                if (sortBy == 0) productList = productService.SortingProductbyPriceAscending(productList);
-	                else productList = productService.SortingProductbyPriceDecending(productList);
+	              //sắp xếp
+	                if (sortBy == 0) {
+		                productListSort = productService.SortingProductbyPriceAscending(productList);
+	                }
+	                else if (sortBy == 1) {
+	                	productListSort = productService.SortingProductbyPriceDecending(productList);		               
+	                }	 
 	                
 	                req.setAttribute("sortBy", sortBy);
 	                req.setAttribute("store", store);	               
 	                req.setAttribute("categoryChildList", categoryChildList);
-	                req.setAttribute("productList", productList);
+	                req.setAttribute("productList", productListSort);
 	                req.setAttribute("imageList", imageList);
 	               	                
 	                
