@@ -90,6 +90,12 @@ public class UserServiceImpl implements IUserService{
 	public int getTotalUsers() {
 		return userDAO.getTotalUsers();
 	}
+
+	@Override
+	public List<UserModel> getUserWithinDays(int days) {
+		// TODO Auto-generated method stub
+		return userDAO.getUserWithinDays(days);
+	}
 	
 	
 

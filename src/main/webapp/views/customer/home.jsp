@@ -25,7 +25,7 @@
 							<ul class="section-tab-nav tab-nav">
 								<c:forEach var="category" items="${categoryParentList}">
 									<li><a
-										href='<c:url value="/customer/category/${category.slug}?sortBy=${0}"/>'>${category.name}</a></li>
+										href='<c:url value="/home/category/${category.slug}?sortBy=${0}"/>'>${category.name}</a></li>
 								</c:forEach>
 							</ul>
 						</div>
@@ -140,7 +140,7 @@
 							<ul class="section-tab-nav tab-nav">
 								<c:forEach var="category" items="${categoryParentList}">
 									<li><a
-										href='<c:url value="/customer/category/${category.slug}"/>'>${category.name}</a></li>
+										href='<c:url value="/home/category/${category.slug}"/>'>${category.name}</a></li>
 								</c:forEach>
 							</ul>
 						</div>
