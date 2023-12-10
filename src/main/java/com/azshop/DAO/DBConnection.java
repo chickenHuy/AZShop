@@ -17,8 +17,12 @@ public class DBConnection {
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         return DriverManager.getConnection(url, username, password);
     }
+<<<<<<< HEAD
 
 
+=======
+    
+>>>>>>> fbbce573674897522caf80bc5b54923032484d18
 	public static void main(String[] args) {
 
 		try {

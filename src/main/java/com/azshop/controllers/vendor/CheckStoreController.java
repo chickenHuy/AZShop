@@ -1,6 +1,7 @@
 package com.azshop.controllers.vendor;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -82,6 +83,7 @@ public class CheckStoreController extends HttpServlet{
 				storeModel.setName(name);
 				storeModel.setStoreLevelId(storeLevel);
 				storeModel.setOwnerId(ownerId);
+				storeModel.seteWallet(BigDecimal.valueOf(0));
 				userModel = userService.getById(userModel.getId());
 				String phone = req.getParameter("phoneNumber");
 				String address = req.getParameter("address");
