@@ -18,7 +18,7 @@ public interface IUserService {
 	
 	boolean checkExistEmial(String email);
 
-	boolean insertRegister(String firstName, String lastName, String email, String password);
+	boolean insertRegister(UserModel user);
 
 	void updateStatusEmail(UserModel user);
 	
@@ -33,6 +33,7 @@ public interface IUserService {
 	
 	int getTotalUsers();
 	void updateVendor(UserModel userModel);
+	List<UserModel> getUserWithinDays(int days);
 	
 
 }

@@ -41,11 +41,11 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public boolean insertRegister(String firstName, String lastName, String email, String password) {
-		if (userDAO.checkExistEmial(email)) {
+	public boolean insertRegister(UserModel user) {
+		if (userDAO.checkExistEmial(user.getEmail())) {
 			return false;
 		}
-		userDAO.insertRegister(firstName, lastName, email, password);
+		userDAO.insertRegister(user);
 		return true;
 	}
 
@@ -89,6 +89,12 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	public int getTotalUsers() {
 		return userDAO.getTotalUsers();
+	}
+
+	@Override
+	public List<UserModel> getUserWithinDays(int days) {
+		// TODO Auto-generated method stub
+		return userDAO.getUserWithinDays(days);
 	}
 	
 	

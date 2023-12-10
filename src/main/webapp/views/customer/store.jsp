@@ -33,13 +33,13 @@
 					<div class="aside">
 						<h3 class="aside-title">Danh mục sản phẩm</h3>
 						<div class="checkbox-filter">
-							<a href='<c:url value="/customer/store/${store.slug}?cate=&sortBy=${0}"/>'>
+							<a href='<c:url value="/${role}/store/${store.slug}?cate=&sortBy=${0}"/>'>
 								<div class="input-checkbox ${category.slug}">
 									<label><span>Tất cả</span></label>
 								</div>
 							</a>
 							<c:forEach var="category" items="${categoryChildList}">	
-								<a href='<c:url value="/customer/store/${store.slug}?cate=${category.slug}&sortBy=${sortBy}"/>'>
+								<a href='<c:url value="/${role}/store/${store.slug}?cate=${category.slug}&sortBy=${sortBy}"/>'>
 									<div class="input-checkbox ${category.slug}">
 										<label><span>${category.name}</span><small>
 												(${category.countProduct})</small></label>
@@ -129,11 +129,11 @@
 					<div class="store-filter clearfix">
 						<h3 style="text-transform: uppercase; font-size: 18px; margin: 0px; position: absolute; bottom: 0;">${category.name}</h3>
 						<div class="radio-container store-grid">
-							<a href='<c:url value="/customer/store/${store.slug}?cate=${category.slug}&sortBy=${0}"/>'>
+							<a href='<c:url value="/${role}/store/${store.slug}?cate=${category.slug}&sortBy=${0}"/>'>
 								<button id="buttonAscending" class="radio-button"
 									onclick="redirect('ascending')">Giá tăng dần</button>
 							</a> 
-							<a href='<c:url value="/customer/store/${store.slug}?cate=${category.slug}&sortBy=${1}"/>'>
+							<a href='<c:url value="/${role}/store/${store.slug}?cate=${category.slug}&sortBy=${1}"/>'>
 								<button id="buttonDescending" class="radio-button"
 									onclick="redirect('descending')">Giá giảm dần</button>
 							</a>
@@ -149,7 +149,7 @@
 						<!-- product -->
 							<div class="col-md-4 col-xs-6">
 								<div class="product">
-									<a href='<c:url value="/customer/product/${product.slug}"/>'>
+									<a href='<c:url value="/${role}/product/${product.slug}"/>'>
 										<div class="product-img">
 											<c:set var="hasImages" value="false" />
 											<c:forEach var="image" items="${imageList}">

@@ -39,11 +39,13 @@ import com.azshop.models.ProductModel;
 import com.azshop.models.RevenueData;
 import com.azshop.models.ReviewModel;
 import com.azshop.models.StoreLevelModel;
+import com.azshop.models.TransactionModel;
 import com.azshop.services.*;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
 		* 50)
 
+<<<<<<< HEAD
 //@WebServlet(urlPatterns = { "/admin/dashboard", "/admin/product", "/admin/customer", "/admin/store",
 //		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit",
 //		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory",
@@ -54,6 +56,19 @@ import com.azshop.services.*;
 //		"/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
 //		"/admin/order-detail","/admin/UserStatic","/admin/StoreStatic", "/admin/style/edit", "/admin/category/restore",
 //        "/admin/delivery","/admin/adddelivery","/admin/editdelivery","/admin/deletedelivery","admin/transaction" })
+=======
+@WebServlet(urlPatterns = { "/admin/dashboard", "/admin/product", "/admin/customer", "/admin/store",
+		"/admin/categories", "/admin/addcategory", "/admin/orders", "/admin/category/edit",
+		"/admin/store/edit-status/*", "/admin/product/edit-status/*", "/admin/productsByCategory",
+		"/admin/order-edit-status", "/admin/userlevel", "/admin/adduserlevel", "/admin/edituserlevel",
+		"/admin/deleteuserlevel", "/admin/restoreuserlevel", "/admin/storelevel", "/admin/addstorelevel",
+		"/admin/editstorelevel", "/admin/deletestorelevel", "/admin/restorestorelevel", "/admin/category/delete",
+		"/admin/styles", "/admin/style/delete", "/admin/style/restore", "/admin/addstyle", "/admin/style/stylevalues",
+		"/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
+		"/admin/order-detail", "/admin/UserStatic", "/admin/StoreStatic", "/admin/style/edit",
+		"/admin/category/restore", "/admin/delivery", "/admin/adddelivery", "/admin/editdelivery",
+		"/admin/deletedelivery", "/admin/transaction", "/admin/order/cancel-order" })
+>>>>>>> db5542ebd4c13eefd56346b30ffae3c4f8802b23
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -72,35 +87,31 @@ public class AdminController extends HttpServlet {
 	IDeliveryService deliveryService = new DeliveryServiceImpl();
 	IReviewService ReviewService = new ReviewServiceImpl();
 	IImageService imageService = new ImageServiceImpl();
+	ITransactionService transactionService = new TransactionServiceImpl();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		String url = req.getRequestURL().toString();
-		
+
 		try {
 			HttpSession session = req.getSession();
 			if (session != null) {
 				Object sessionObject = session.getAttribute(Constant.userSession);
 				if (sessionObject instanceof UserModel) {
-					UserModel user = (UserModel) sessionObject;	
-					
+					UserModel user = (UserModel) sessionObject;
+
 					String name = user.getFirstName() + " " + user.getLastName();
-					
+
 					req.setAttribute("userName", name);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 
-
-		
-		
-		
 		if (url.contains("/admin/dashboard")) {
-			GetStatisticRevenue(req,resp);
+			GetStatisticRevenue(req, resp);
 		} else if (url.contains("/admin/product/edit-status")) {
 			try {
 				editProductStatus(req, resp);
@@ -108,7 +119,7 @@ public class AdminController extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
+
 		} else if (url.contains("/admin/productsByCategory")) {
 			getProductByCategory(req, resp);
 		} else if (url.contains("/admin/product")) {
@@ -121,7 +132,7 @@ public class AdminController extends HttpServlet {
 			getAddCategory(req, resp);
 		} else if (url.contains("/admin/category/edit")) {
 			getEditCategory(req, resp);
-		}  else if (url.contains("/admin/category/restore")) {
+		} else if (url.contains("/admin/category/restore")) {
 			editCategoryStatus(req, resp);
 		} else if (url.contains("/admin/customer")) {
 			getAllUser(req, resp);
@@ -134,7 +145,7 @@ public class AdminController extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
+
 		} else if (url.contains("/admin/storelevel")) {
 			getAllStoreLevel(req, resp);
 			getAllStoreLevelDeleted(req, resp);
@@ -205,21 +216,20 @@ public class AdminController extends HttpServlet {
 			restoreUserLevel(req, resp);
 		} else if (url.contains("/admin/order-detail")) {
 			getOrderDetail(req, resp);
-		}
-		else if (url.contains("/admin/StoreStatic")) {
-		GetStatisticsStore(req, resp);
-		}
-		else if (url.contains("/admin/UserStatic")) {
-		GetStatisticsUser(req, resp);
-		}
-		else if (url.contains("/admin/delivery")) {
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/orderDetail.jsp");
+			rDispatcher.forward(req, resp);
+		} else if (url.contains("/admin/StoreStatic")) {
+			GetStatisticsStore(req, resp);
+		} else if (url.contains("/admin/UserStatic")) {
+			GetStatisticsUser(req, resp);
+		} else if (url.contains("/admin/delivery")) {
 			getDelivery(req, resp);
-		}else if (url.contains("/admin/adddelivery")) {
+		} else if (url.contains("/admin/adddelivery")) {
 			String message = req.getParameter("message");
 			req.setAttribute("message", message);
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/adddelivery.jsp");
 			rDispatcher.forward(req, resp);
-		} else if(url.contains("/admin/editdelivery")) {
+		} else if (url.contains("/admin/editdelivery")) {
 			String id = req.getParameter("id");
 			String message = req.getParameter("message");
 			req.setAttribute("message", message);
@@ -229,6 +239,8 @@ public class AdminController extends HttpServlet {
 			}
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editdelivery.jsp");
 			rDispatcher.forward(req, resp);
+		} else if (url.contains("/admin/transaction")) {
+			getTransaction(req, resp);
 		}
 	}
 
@@ -250,7 +262,7 @@ public class AdminController extends HttpServlet {
 		String orderId = req.getParameter("orderId");
 		if (orderId != null) {
 			List<OrderItemModel> listOrderItem = orderItemService.getByOrderId(Integer.parseInt(orderId));
-			req.setAttribute("listOrderItem", listOrderItem);
+			
 			int countProduct = listOrderItem.size();
 			req.setAttribute("countProduct", countProduct);
 			BigDecimal totalOrder = BigDecimal.ZERO;
@@ -279,9 +291,21 @@ public class AdminController extends HttpServlet {
 
 			UserLevelModel userLevel = userLevelService.getById(user.getUserLevelId());
 			req.setAttribute("discount", BigDecimal.valueOf(userLevel.getDiscount() / 100.0).multiply(totalOrder));
+			
+			for (int i = 0; i < listOrderItem.size(); i++) {
+			    for (int j = i + 1; j < listOrderItem.size(); j++) {
+			        if (listOrderItem.get(i).getProductId() == listOrderItem.get(j).getProductId()) {
+			        	listOrderItem.get(i).setCount(listOrderItem.get(i).getCount() + listOrderItem.get(j).getCount());
+			        	orderItemService.update(listOrderItem.get(i));
+			        	listOrderItem.remove(j);
+			        }
+			    }
+			}
+			req.setAttribute("listOrderItem", listOrderItem);
 
-			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/orderDetail.jsp");
-			rDispatcher.forward(req, resp);
+			String message = req.getParameter("message");
+			req.setAttribute("message", message);
+
 		}
 	}
 
@@ -306,6 +330,21 @@ public class AdminController extends HttpServlet {
 		String selectedDateStr = req.getParameter("selectedDate");
 		Date selectedDate = null;
 
+		try {
+			HttpSession session = req.getSession();
+			if (session != null) {
+				Object sessionObject = session.getAttribute(Constant.userSession);
+				if (sessionObject instanceof UserModel) {
+					UserModel user = (UserModel) sessionObject;
+
+					String name = user.getFirstName() + " " + user.getLastName();
+
+					req.setAttribute("userName", name);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if (selectedDateStr != null && !selectedDateStr.isEmpty()) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			try {
@@ -325,7 +364,7 @@ public class AdminController extends HttpServlet {
 		List<OrderModel> orderModels = orderService.getAll();
 		if (orderModels != null)
 			req.setAttribute("totalOrders", orderModels.size());
-		
+
 		List<ReviewModel> ReviewModels = ReviewService.getAll();
 		if (ReviewModels != null)
 			req.setAttribute("totalReview", ReviewModels.size());
@@ -337,6 +376,7 @@ public class AdminController extends HttpServlet {
 		rd.forward(req, resp);
 
 	}
+
 	private void GetStatisticsUser(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		Date currentDate = new Date();
@@ -353,35 +393,66 @@ public class AdminController extends HttpServlet {
 		} else {
 			selectedDate = currentDate;
 		}
+		int n;
+		String dayParam = req.getParameter("quantity");
+		if (dayParam != null) {
+			try {
+				n = Integer.parseInt(dayParam);
+			} catch (NumberFormatException e) {
+				e.printStackTrace(); // Xử lý ngoại lệ nếu có lỗi khi chuyển đổi
+				n = 1; // Nếu có lỗi, sử dụng giá trị mặc định là 1
+			}
+		} else {
+			n = 1;
+		}
+		List<UserModel> users = userService.getUserWithinDays(n);
+		req.setAttribute("day", n);
+		req.setAttribute("users", users);
 		int count = userService.countUser(selectedDate);
 		int total = userService.getTotalUsers();
 		req.setAttribute("total", total);
 		req.setAttribute("count", count);
+
 		// view nhan du lieu
 		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/StaticsUser.jsp");
 		rd.forward(req, resp);
-		}
-	
-	private void GetStatisticsStore(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Date currentDate = new Date();
-	    String selectedDateStr = req.getParameter("selectedDate");
-	    Date selectedDate = null;
+	}
 
-	    if (selectedDateStr != null && !selectedDateStr.isEmpty()) {
-	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	        try {
-	            selectedDate = dateFormat.parse(selectedDateStr);
-	        } catch (Exception e) {
-	            e.printStackTrace(); // Xử lý ngoại lệ nếu có lỗi khi chuyển đổi
-	        }	        
-	    }
-	    else
-        {
-        	selectedDate= currentDate;
-        }
-	    int count = storeService.countNewStores(selectedDate);
+	private void GetStatisticsStore(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		Date currentDate = new Date();
+		String selectedDateStr = req.getParameter("selectedDate");
+		Date selectedDate = null;
+
+		if (selectedDateStr != null && !selectedDateStr.isEmpty()) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				selectedDate = dateFormat.parse(selectedDateStr);
+			} catch (Exception e) {
+				e.printStackTrace(); // Xử lý ngoại lệ nếu có lỗi khi chuyển đổi
+			}
+		} else {
+			selectedDate = currentDate;
+		}
+		int n;
+		String dayParam = req.getParameter("quantity");
+		if (dayParam != null) {
+			try {
+				n = Integer.parseInt(dayParam);
+			} catch (NumberFormatException e) {
+				e.printStackTrace(); // Xử lý ngoại lệ nếu có lỗi khi chuyển đổi
+				n = 1; // Nếu có lỗi, sử dụng giá trị mặc định là 1
+			}
+		} else {
+			n = 1;
+		}
+		List<StoreModel> stores = storeService.getStoreWithinDays(n);
+		
+		req.setAttribute("day", n);
+		req.setAttribute("stores", stores);
+		int count = storeService.countNewStores(selectedDate);
 		int total = storeService.getTotalStores();
-		req.setAttribute("total",total);
+		req.setAttribute("total", total);
 		req.setAttribute("count", count);
 		// view nhan du lieu
 		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/StaticsStore.jsp");
@@ -494,15 +565,30 @@ public class AdminController extends HttpServlet {
 
 		OrderModel order = orderService.getById(Integer.parseInt(orderId));
 
-		if ("pending Pickup".equals(order.getStatus())) {
-			order.setStatus("shipping");
-		} else if ("shipping".equals(order.getStatus())) {
-			order.setStatus("delivered");
-		} else if ("delivered".equals(order.getStatus())) {
-			order.setStatus("completed");
-			StoreModel storeModel = storeService.getById(order.getStoreId());
-			storeModel.seteWallet(order.getAmountToStore());
-			storeService.update(storeModel);
+		if ("Pending Pickup".equals(order.getStatus())) {
+			order.setStatus("Shipping");
+		} else if ("Shipping".equals(order.getStatus())) {
+			order.setStatus("Selivered");
+		} else if ("Delivered".equals(order.getStatus())) {
+			order.setStatus("Completed");
+			try {
+				// Cộng tiền vào cho Store
+				StoreModel storeModel = storeService.getById(order.getStoreId());
+				storeModel.seteWallet(storeModel.geteWallet().add(order.getAmountFromStore()));
+				storeService.update(storeModel);
+
+				// Tăng số lượng đã bán của sản phẩm
+				// Lấy danh sách orderItem
+				List<OrderItemModel> listOrderItem = orderItemService.getByOrderId(Integer.parseInt(orderId));
+				for (OrderItemModel orderItem : listOrderItem) {
+					ProductModel product = productService.getById(orderItem.getProductId());
+					product.setSold(product.getSold() + orderItem.getCount());
+					productService.update(product);
+				}
+			} catch (Exception e) {
+
+			}
+
 		}
 
 		// Update the order only once after processing all conditions
@@ -727,14 +813,49 @@ public class AdminController extends HttpServlet {
 			postDeleteCategory(req, resp);
 		} else if (url.contains("/admin/style/edit")) {
 			postEditStyle(req, resp);
-		} else if(url.contains("/admin/adddelivery")) {
-            postAddDelivery(req,resp);
-        } else if(url.contains("/admin/editdelivery")) {
-            postEditDelivery(req,resp);
-        } else if (url.contains("/admin/deletedelivery")) {
-            postDeleteDelivery(req, resp);
-        }
+		} else if (url.contains("/admin/adddelivery")) {
+			postAddDelivery(req, resp);
+		} else if (url.contains("/admin/editdelivery")) {
+			postEditDelivery(req, resp);
+		} else if (url.contains("/admin/deletedelivery")) {
+			postDeleteDelivery(req, resp);
+		} else if (url.contains("/admin/order/cancel-order")) {
+			postCancelOrder(req, resp);
+		}
 
+	}
+
+	private void postCancelOrder(HttpServletRequest req, HttpServletResponse resp)
+			throws IOException, ServletException {
+		String id = req.getParameter("id");
+
+		if (id != null) {
+			try {
+				OrderModel order = orderService.getById(Integer.parseInt(id));
+				order.setStatus("Cancelled");
+
+				List<OrderItemModel> listOrderItem = orderItemService.getByOrderId(order.getId());
+				for (OrderItemModel orderItem : listOrderItem) {
+					ProductModel product = productService.getById(orderItem.getProductId());
+					product.setQuantity(product.getQuantity() + orderItem.getCount());
+					productService.update(product);
+				}
+				if (order.isPaidBefore() == true) {
+					UserModel user = userService.getById(order.getUserId());
+					user.seteWallet(user.geteWallet().add(order.getAmountFromUser()));
+					userService.update(user);
+				}
+				orderService.update(order);
+				getOrderDetail(req, resp);
+				resp.sendRedirect("/AZShop/admin/order-detail?orderId=" + id + "&&message=Successfully");
+			} catch (Exception e) {
+				getOrderDetail(req, resp);
+				resp.sendRedirect("/AZShop/admin/order-detail?orderId=" + id + "&&message=Failed");
+			}
+		} else {
+			getOrderDetail(req, resp);
+			resp.sendRedirect("/AZShop/admin/order-detail?orderId=" + id + "&&message=Failed");
+		}
 	}
 
 	private void postEditStyle(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -754,8 +875,7 @@ public class AdminController extends HttpServlet {
 
 				resp.sendRedirect("/AZShop/admin/style/edit?id=" + id + "&&message=Successfully");
 			} catch (Exception e) {
-				resp.sendRedirect(
-						"/AZShop/admin/style/edit?id=" + id + "&&message=Failed to add the user level");
+				resp.sendRedirect("/AZShop/admin/style/edit?id=" + id + "&&message=Failed to add the user level");
 			}
 
 		} else {
@@ -763,7 +883,8 @@ public class AdminController extends HttpServlet {
 		}
 	}
 
-	private void postDeleteCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private void postDeleteCategory(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 
@@ -777,17 +898,17 @@ public class AdminController extends HttpServlet {
 		resp.sendRedirect("/AZShop/admin/categories");
 	}
 
-	private void postEditCategory(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+	private void postEditCategory(HttpServletRequest req, HttpServletResponse resp)
+			throws IOException, ServletException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 
 		String id = req.getParameter("id");
 		CategoryModel category = categoryService.getById(Integer.parseInt(id));
-		String slug=null;
+		String slug = null;
 
 		String name = req.getParameter("categoryName");
-		if (name != "")
-		{
+		if (name != "") {
 
 			try {
 				slug = SlugUtil.toSlug(name);
@@ -800,9 +921,8 @@ public class AdminController extends HttpServlet {
 
 				if ("0".equals(categoryId)) {
 					if (category.getCategoryId() > 0) {
-						
-					}
-					else {
+
+					} else {
 						category.setCategoryId(0);
 					}
 				} else {
@@ -830,7 +950,6 @@ public class AdminController extends HttpServlet {
 		} else {
 			resp.sendRedirect("?slug=" + category.getSlug() + "?message=You must fill out the form");
 		}
-
 
 	}
 
@@ -1145,14 +1264,14 @@ public class AdminController extends HttpServlet {
 		req.setAttribute("listuser", list);
 	}
 
-	private void getDelivery(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+	private void getDelivery(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<DeliveryModel> list = deliveryService.getAll();
 		req.setAttribute("listDelivery", list);
 		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/delivery.jsp");
 		rDispatcher.forward(req, resp);
 	}
 
-	private void postAddDelivery(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+	private void postAddDelivery(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 
@@ -1164,21 +1283,21 @@ public class AdminController extends HttpServlet {
 
 		if (name != null && price != null && description != null) {
 
-				if (!deliveryService.checkName(name)) {
-					try {
-						deliveryModel.setName(name);
-						deliveryModel.setPrice(new BigDecimal(price));
-						deliveryModel.setDescription(description);
-						deliveryService.insert(deliveryModel);
-						resp.sendRedirect("?message=Successfully");
-					} catch (Exception e) {
-						resp.sendRedirect("?message=Failed to add the delivery level");
-					}
-				} else {
-					resp.sendRedirect("?message=Name already exists");
+			if (!deliveryService.checkName(name)) {
+				try {
+					deliveryModel.setName(name);
+					deliveryModel.setPrice(new BigDecimal(price));
+					deliveryModel.setDescription(description);
+					deliveryService.insert(deliveryModel);
+					resp.sendRedirect("?message=Successfully");
+				} catch (Exception e) {
+					resp.sendRedirect("?message=Failed to add the delivery level");
 				}
+			} else {
+				resp.sendRedirect("?message=Name already exists");
+			}
 		} else {
-				resp.sendRedirect("?message=You must fill out the form");
+			resp.sendRedirect("?message=You must fill out the form");
 		}
 	}
 
@@ -1224,5 +1343,11 @@ public class AdminController extends HttpServlet {
 		}
 	}
 
+	private void getTransaction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		List<TransactionModel> list = transactionService.getAll();
+		req.setAttribute("listTransaction", list);
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/transaction.jsp");
+		rDispatcher.forward(req, resp);
+	}
 
 }

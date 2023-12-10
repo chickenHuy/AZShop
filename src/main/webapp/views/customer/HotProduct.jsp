@@ -8,7 +8,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-<!-- SECTION -->
+	
+	<!-- TẤT CẢ SẢN PHẨM -->
+	<!-- SECTION -->
 	<div class="section">
 		<!-- container -->
 		<div class="container">
@@ -18,7 +20,15 @@
 				<!-- section title -->
 				<div class="col-md-12">
 					<div class="section-title">
-						<h3 class="title">Tất cả sản phẩm</h3>						
+						<h3 class="title">Top 10 sản phẩm bán nhiều nhất</h3>
+						<div class="section-nav">
+							<ul class="section-tab-nav tab-nav">
+								<c:forEach var="category" items="${categoryParentList}">
+									<li><a
+										href='<c:url value="/home/category/${category.slug}?sortBy=${0}"/>'>${category.name}</a></li>
+								</c:forEach>
+							</ul>
+						</div>
 					</div>
 				</div>
 				<!-- /section title -->
@@ -87,7 +97,7 @@
 													</button>
 												</div>
 											</div>
-											<a href="<c:url value='/login-customer' />">
+											<a href="<c:url value='/customer/add-to-cart/${product.slug}?count=${1}'/>">
 												<div class="add-to-cart">
 													<button class="add-to-cart-btn">
 														<i class="fa fa-shopping-cart"></i> add to cart
@@ -113,5 +123,8 @@
 		<!-- /container -->
 	</div>
 	<!-- /SECTION -->
+	
+	<br><br>
+
 </body>
 </html>

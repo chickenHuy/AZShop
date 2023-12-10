@@ -64,7 +64,7 @@
 				<div class="row">
 					<c:forEach var="store" items="${stores}">
 						<!-- shop -->
-						<a href='<c:url value="/customer/store/${store.slug}?cate=&sortBy=${0}"/>'>
+						<a href='<c:url value="/${role}/store/${store.slug}?cate=&sortBy=${0}"/>'>
 							<div class="col-md-4 col-xs-6">
 								<div class="shop">
 									<div class="shop-img">
@@ -166,11 +166,12 @@
 					<div class="store-filter clearfix">
 						<span class="store-qty">Showing 20-100 products</span>
 						<ul class="store-pagination">
-							<li class="active">1</li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+							<c:if test="${page != null && page != 1}">
+								<li><a href='<c:url value="/customer/search?categoryId=${categoryId}&styleId=${styleId}&action=left&page=${page == null ? '1' : page}&searchTerm=${searchTerm}"/>'><i class="fa fa-angle-left"></i></a></li>
+							</c:if>
+								<li class="active">${page == null ? '1' : page}</li> 
+								
+							<li><a href='<c:url value="/customer/search?categoryId=${categoryId}&styleId=${styleId}&action=right&page=${page == null ? '1' : page}&searchTerm=${searchTerm}"/>'><i class="fa fa-angle-right"></i></a></li>
 						</ul>
 					</div>
 					<!-- /store bottom filter -->

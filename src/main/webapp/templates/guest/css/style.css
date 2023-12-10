@@ -757,6 +757,7 @@ textarea.input {
   width: 100%;
   -webkit-transition: 0.2s all;
   transition: 0.2s all;
+  height: 360px;
 }
 
 .shop:hover .shop-img>img {

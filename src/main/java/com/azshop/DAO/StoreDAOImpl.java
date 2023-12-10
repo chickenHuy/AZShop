@@ -439,4 +439,45 @@ public class StoreDAOImpl implements IStoreDAO {
         }
         return totalStores;
 	}
+
+	@Override
+	public List<StoreModel> getStoreWithinDays(int days) {
+		List<StoreModel> storeList = new ArrayList<>();
+        try {
+            
+            String sql = "SELECT * FROM Store WHERE  [createAt] >= DATEADD(DAY, -"+days+", GETDATE())";
+            conn = new DBConnection().getConnection();
+
+            ps = conn.prepareStatement(sql);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                StoreModel store = new StoreModel();
+                store.setId(rs.getInt("id"));
+                store.setName(rs.getString("name"));
+                store.setBio(rs.getString("bio"));
+                store.setSlug(rs.getString("slug"));
+                store.setOwnerId(rs.getInt("ownerId"));
+                store.setStoreLevelId(rs.getInt("storeLevelId"));
+                store.setActive(rs.getBoolean("isActive"));
+                store.setDeleted(rs.getBoolean("isDeleted"));
+                store.setAvatar(rs.getString("avatar"));
+                store.setCover(rs.getString("cover"));
+                store.setFeaturedImage(rs.getString("featuredImage"));
+                store.setPoint(rs.getInt("point"));
+                store.setRating(rs.getBigDecimal("rating"));
+                store.seteWallet(rs.getBigDecimal("eWallet"));
+                store.setCreateAt(rs.getDate("createAt"));
+                store.setUpdateAt(rs.getDate("updateAt"));
+
+                storeList.add(store);
+            }
+
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return storeList;
+
+	}
 }

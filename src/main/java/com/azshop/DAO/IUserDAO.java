@@ -18,20 +18,20 @@ public interface IUserDAO {
 
 	boolean checkExistEmial(String email);
 
-	void insertRegister(String firstName, String lastName, String email, String password);
+	void insertRegister(UserModel user);
 
 	void updateStatusEmail(UserModel user);
-	
+
 	UserModel getByEmail(String email);
-	
+
 	void updatePassword(UserModel user, String newPassword);
 
-	
 	int countUser(Date datetime);
+
 	int getTotalUsers();
 
 	void updateVendor(UserModel userModel);
-	
-	
-	
+
+	List<UserModel> getUserWithinDays(int days);
+
 }

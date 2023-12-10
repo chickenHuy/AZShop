@@ -23,12 +23,47 @@
         padding: 2px 0 0 5px;
     }
 
-
+	.custom-alert {
+			display: none;
+			position: fixed;
+			top: 20px;
+			left: 50%;
+			transform: translateX(-50%);
+			padding: 15px;
+			background-color: #4CAF50;
+			color: white;
+			border-radius: 5px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			z-index: 999;
+		}
+	
+		.close-btn {
+			position: absolute;
+			top: 5px;
+			right: 10px;
+			cursor: pointer;
+			font-size: 18px;
+			color: #fff;
+		}
 
 </style>
 </head>
 <body>
+	<c:if test="${done != null}">
+		<div class="custom-alert" id="customAlert">
+			<span class="close-btn" onclick="closeAlert()">&times;</span>
+			${done}
+		</div>
+		<script>
+			// Hiển thị thông báo khi có nội dung
+			document.getElementById('customAlert').style.display = 'block';
 
+			// Hàm đóng thông báo
+			function closeAlert() {
+				document.getElementById('customAlert').style.display = 'none';
+			}
+		</script>
+	</c:if>
 	<!-- BREADCRUMB -->
 	<div id="breadcrumb" class="section">
 		<!-- container -->
@@ -128,7 +163,7 @@
 							</h3>
 							<span class="product-available">In Stock</span>
 						</div>
-						<p>Cửa hàng: <a href='/AZShop/customer/store/slug={$store.slug}' style="text-decorator:none;">${store.name}</a></p>
+						<p>Cửa hàng: <a href='<c:url value="/${role}/store/${store.slug}?cate=&sortBy=${0}"/>' style="text-decorator:none;">${store.name}</a></p>
 
 						
 
@@ -389,7 +424,7 @@
 					<!-- product -->
 					<div class="col-md-3 col-xs-6">
 						<div class="product">
-							<a href='<c:url value="/customer/product/${product.slug}"/>'>
+							<a href='<c:url value="/${role}/product/${product.slug}"/>'>
 								<div class="product-img">
 									<c:set var="hasImages" value="false" />
 									<c:forEach var="image" items="${imageRelateds}">

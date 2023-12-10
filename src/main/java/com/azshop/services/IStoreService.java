@@ -31,4 +31,5 @@ public interface IStoreService {
     int countNewStores(Date datetime);
     
     int getTotalStores();
+    List<StoreModel> getStoreWithinDays(int days) ;
 }

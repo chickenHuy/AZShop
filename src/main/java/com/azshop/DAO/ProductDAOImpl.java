@@ -693,10 +693,17 @@ public class ProductDAOImpl implements IProductDAO {
 		}
 		
 		// Lấy ra một danh sách con gồm k sản phẩm bán được nhiều nhất
-		List<ProductModel> topSellerList = productList.subList(0, k);
-		
-		// Trả về danh sách con đó
-		return topSellerList;
+        List<ProductModel> topSellerList = new ArrayList<>();
+
+        // Đảm bảo không vượt quá số lượng sản phẩm trong danh sách
+        int limit = Math.min(k, productList.size());
+
+        for (int i = 0; i < limit; i++) {
+            topSellerList.add(productList.get(i));
+        }
+
+        // Trả về danh sách con đó
+        return topSellerList;
 	}
 
 	@Override
@@ -847,6 +854,44 @@ public class ProductDAOImpl implements IProductDAO {
 		    }
 
 		    return productList;
+	}
+
+	@Override
+	public List<ProductModel> getAllProductActive() {
+		List<ProductModel> listProduct = new ArrayList<ProductModel>();
+		try {
+			String sql = "SELECT * FROM dbo.[Product] WHERE isDeleted = 0 and isActive = 1";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				ProductModel product = new ProductModel();
+
+				product.setId(rs.getInt("id"));
+				product.setName(rs.getString("name"));
+				product.setSlug(rs.getString("slug"));
+				product.setDescription(rs.getString("description"));
+				product.setPrice(rs.getBigDecimal("price"));
+				product.setQuantity(rs.getInt("quantiny"));
+				product.setSold(rs.getInt("sold"));
+				product.setActive(rs.getBoolean("isActive"));
+				product.setVideo(rs.getString("video"));
+				product.setCategoryId(rs.getInt("categoryId"));
+				product.setStyleValueId(rs.getInt("styleValueId"));
+				product.setStoreId(rs.getInt("storeId"));
+				product.setRating(rs.getBigDecimal("rating"));
+				product.setCreateAt(rs.getDate("createAt"));
+				product.setUpdateAt(rs.getDate("updateAt"));
+
+				listProduct.add(product);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listProduct;
 	}
 
 }

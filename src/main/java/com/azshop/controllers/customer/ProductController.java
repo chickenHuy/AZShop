@@ -52,7 +52,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = { "/customer/product/*", "/review-product" })
+@WebServlet(urlPatterns = { "/customer/product/*", "/guest/product/*", "/review-product" })
 public class ProductController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -76,48 +76,64 @@ public class ProductController extends HttpServlet {
 		List<CategoryModel> categoryParentList = categoryService.getParentCategory();
 		req.setAttribute("categoryParentList", categoryParentList);
 
-		try {
-			HttpSession session = req.getSession();
-			if (session != null) {
-				Object sessionObject = session.getAttribute(Constant.userSession);
-				if (sessionObject instanceof UserModel) {
-					UserModel user = (UserModel) sessionObject;
-					List<CartModel> cartList = cartService.getByUserId(user.getId());
-					List<CartItemModel> cartItemList = new ArrayList<CartItemModel>();
-
-					// Hiển thị item trong giỏ hàng
-					for (CartModel cart : cartList) {
-						List<CartItemModel> itemList = cartItemService.getByCartId(cart.getId());
-						cartItemList.addAll(itemList);
-					}
-
-					// Lấy thông tin danh sách product có trong giỏ hàng
-					List<ProductModel> productsInCart = new ArrayList<ProductModel>();
-
-					for (CartItemModel cartItem : cartItemList) {
-						ProductModel productInCart = productService.getById(cartItem.getProductId());
-						productsInCart.add(productInCart);
-					}
-
-					List<ImageModel> imageProductsInCart = new ArrayList<ImageModel>();
-
-					for (ProductModel productModel : productsInCart) {
-						ImageModel image = imageService.getImage(productModel.getId());
-						imageProductsInCart.add(image);
-					}
-
-					req.setAttribute("quantity", cartItemList.size());
-					req.setAttribute("user", user);
-					req.setAttribute("imageProductsInCart", imageProductsInCart);
-					req.setAttribute("cartItemList", cartItemList);
-					req.setAttribute("productsInCart", productsInCart);
-				}
+		if (url.contains("customer")) {
+			HttpSession sessionCart = req.getSession();
+			UserModel userCart = (UserModel) sessionCart.getAttribute(Constant.userSession);	
+			
+			List<CartModel> cartList = cartService.getByUserId(userCart.getId());
+			List<CartItemModel> cartItemList = new ArrayList<CartItemModel>();
+			
+			//Hiển thị item trong giỏ hàng
+			for (CartModel cart : cartList) {
+				List<CartItemModel> itemList = cartItemService.getByCartId(cart.getId());
+				cartItemList.addAll(itemList);
+			}										
+			
+			//Lấy thông tin danh sách product có trong giỏ hàng
+			List<ProductModel> productsInCart = new ArrayList<ProductModel>();
+			
+			for (CartItemModel cartItem : cartItemList) {
+				ProductModel  productInCart = productService.getById(cartItem.getProductId());
+				productInCart.setPrice(productInCart.getPrice().setScale(0));
+				productsInCart.add(productInCart);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			
+			BigDecimal sum = BigDecimal.ZERO;
+
+			for (int i = 0; i < cartItemList.size(); i++) {
+			    ProductModel productModel = productService.getById(cartItemList.get(i).getProductId());
+			    
+			    if (productModel != null) {
+			        BigDecimal productPrice = productModel.getPrice();
+			        int count = cartItemList.get(i).getCount();
+			        
+			        sum = sum.add(productPrice.multiply(BigDecimal.valueOf(count))).setScale(0);
+			    }
+			}
+
+		    req.setAttribute("sumPrice", sum);
+			
+			List<ImageModel> imageProductsInCart = new ArrayList<ImageModel>();
+
+			for (ProductModel productModel : productsInCart) {
+				ImageModel image = imageService.getImage(productModel.getId());
+				imageProductsInCart.add(image);
+			}
+			
+			req.setAttribute("role", "customer");
+			req.setAttribute("quantity", cartItemList.size());
+			req.setAttribute("user", userCart);
+			req.setAttribute("imageProductsInCart", imageProductsInCart);	
+			req.setAttribute("cartItemList", cartItemList);
+			req.setAttribute("productsInCart", productsInCart);	
+		}
+		
+		
+		else if (url.contains("guest")) {
+			req.setAttribute("role", "guest");
 		}
 
-		if (url.contains("customer/product")) {
+		if (url.contains("/customer/product/") || url.contains("/guest/product/")) {
 			try {
 				getProduct(req, resp);
 			} catch (Exception e) {
@@ -142,64 +158,66 @@ public class ProductController extends HttpServlet {
 
 	private void postReviewProduct(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		// Đặt kiểu và bảng mã cho response
-	    resp.setContentType("text/html;charset=UTF-8");
-	    req.setCharacterEncoding("UTF-8");
+		resp.setContentType("text/html;charset=UTF-8");
+		req.setCharacterEncoding("UTF-8");
 
-	    // Lấy thông tin người dùng từ session
-	    HttpSession session = req.getSession();
-	    UserModel user = (UserModel) session.getAttribute(Constant.userSession);
-	    int orderId = 0;
+		// Lấy thông tin người dùng từ session
+		HttpSession session = req.getSession();
+		UserModel user = (UserModel) session.getAttribute(Constant.userSession);
+		int orderId = 0;
 
-	    // Lấy thông tin sản phẩm và cửa hàng từ session
-	    ProductModel product = (ProductModel) session.getAttribute("productsession");
-	    StoreModel store = (StoreModel) session.getAttribute("storesession");
+		// Lấy thông tin sản phẩm và cửa hàng từ session
+		ProductModel product = (ProductModel) session.getAttribute("productsession");
+		StoreModel store = (StoreModel) session.getAttribute("storesession");
 
-	    // Lấy danh sách đơn hàng của người dùng cho cửa hàng cụ thể
-	    List<OrderModel> orders = orderService.getByUserIdAndStoreId(user.getId(), store.getId());
+		// Lấy danh sách đơn hàng của người dùng cho cửa hàng cụ thể
+		List<OrderModel> orders = orderService.getByUserIdAndStoreId(user.getId(), store.getId());
 
-	    // Duyệt qua danh sách đơn hàng
-	    for (OrderModel orderModel : orders) {
-	        // Lấy danh sách các mục đơn hàng cho sản phẩm cụ thể
-	        List<OrderItemModel> orderItemModels = orderItemService.getByOrderIdAndProductId(orderModel.getId(),
-	                product.getId());
+		// Duyệt qua danh sách đơn hàng
+		for (OrderModel orderModel : orders) {
+			// Lấy danh sách các mục đơn hàng cho sản phẩm cụ thể
+			List<OrderItemModel> orderItemModels = orderItemService.getByOrderIdAndProductId(orderModel.getId(),
+					product.getId());
 
-	        // Kiểm tra điều kiện để đảm bảo đánh giá có thể được thêm
-	        if (orderItemModels != null && "Completed".equals(orderModel.getStatus())) {
-	            orderId = orderModel.getId();
-	            String content = req.getParameter("review");
-	            String start = req.getParameter("rating");
-	            int rating = (start != null) ? Integer.parseInt(start) : 0;
+			// Kiểm tra điều kiện để đảm bảo đánh giá có thể được thêm
+			if (orderItemModels != null && "Completed".equals(orderModel.getStatus())) {
+				orderId = orderModel.getId();
+				String content = req.getParameter("review");
+				String start = req.getParameter("rating");
+				int rating = (start != null) ? Integer.parseInt(start) : 0;
 
-	            // Tạo đối tượng đánh giá và thêm vào cơ sở dữ liệu
-	            ReviewModel reviewModel = new ReviewModel();
-	            reviewModel.setUserId(user.getId());
-	            reviewModel.setStoreId(store.getId());
-	            reviewModel.setProductId(product.getId());
-	            reviewModel.setOrderId(orderId);
-	            reviewModel.setContent(content);
-	            reviewModel.setRating(rating);
-	            reviewService.insert(reviewModel);
+				// Tạo đối tượng đánh giá và thêm vào cơ sở dữ liệu
+				ReviewModel reviewModel = new ReviewModel();
+				reviewModel.setUserId(user.getId());
+				reviewModel.setStoreId(store.getId());
+				reviewModel.setProductId(product.getId());
+				reviewModel.setOrderId(orderId);
+				reviewModel.setContent(content);
+				reviewModel.setRating(rating);
+				reviewService.insert(reviewModel);
 
-	            // Cập nhật đánh giá trung bình cho sản phẩm
-	            product.setRating(reviewService.avgRating(product.getId()));
-	            productService.update(product);
+				// Cập nhật đánh giá trung bình cho sản phẩm
+				product.setRating(reviewService.avgRating(product.getId()));
+				productService.update(product);
+				
+				// Đặt thông báo thành công và chuyển hướng trang
+				resp.sendRedirect(req.getContextPath() + "/customer/product/" + product.getSlug() + "?done= Riview san pham thanh cong!");
+				return;
+			}
+		}
 
-	            // Đặt thông báo thành công và chuyển hướng trang
-	            req.setAttribute("commentSuccess", "Bình luận thành công!");
-	            resp.sendRedirect(req.getContextPath() + "/customer/product/" + product.getSlug());
-	            return;
-	        } else {
-	            // Đặt thông báo lỗi và chuyển hướng trang
-	            req.setAttribute("commentError", "Bình luận thất bại! Vui lòng thử lại.");
-	            resp.sendRedirect(req.getContextPath() + "/customer/product/" + product.getSlug());
-	        }
-	    }
+		// Đặt thông báo lỗi và chuyển hướng trang
+		resp.sendRedirect(req.getContextPath() + "/customer/product/" + product.getSlug() + "?done= Riview san pham that bai!");
+
 	}
 
 	private void getProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
 			// Trích xuất slug từ request URL
 			String slug = extractSlugFromRequest(req);
+			
+			String done = req.getParameter("done");
+			req.setAttribute("done", done);
 
 			if (slug != null) {
 				// Lấy thông tin sản phẩm dựa trên slug

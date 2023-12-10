@@ -105,24 +105,47 @@ public class searchController extends HttpServlet {
 						imageProductsInCart.add(image);
 					}
 					
+					request.setAttribute("role", "customer");
 					request.setAttribute("quantity", cartItemList.size());
 					request.setAttribute("imageProductsInCart", imageProductsInCart);	
 					request.setAttribute("cartItemList", cartItemList);
 					request.setAttribute("productsInCart", productsInCart);	
 			}
 			
+			else if (url.contains("/guest/search")) request.setAttribute("role", "guest");
+			
 			String style = request.getParameter("styleId");
+			String action = request.getParameter("action");
 			int styleTmp = -1;
 			if (style != null) {
 				styleTmp = Integer.parseInt(style);
 			}
+			String page = request.getParameter("page");
+			int pageNumber = 1;
+			if (page != null)
+				pageNumber = Integer.parseInt(page);
+			if (action != null)
+			{
+				if (action.equals("left"))
+				{
+					if (pageNumber -1 >= 1)
+						pageNumber = pageNumber -1;
+				}
+				if (action.equals("right"))
+				{
+					pageNumber = pageNumber + 1;
+				}
+			}
+			
 	        String keyword = request.getParameter("searchTerm");
 	        int categoryId = Integer.parseInt(request.getParameter("categoryId"));
-	        List<ProductModel> productModels = productService.search(keyword, categoryId, -1, -1, styleTmp,1,12);
-	        for (ProductModel productModel : productModels) {
-				System.out.println(productModel.getName());
-			}
-	        
+	        List<ProductModel> productModels = productService.search(keyword, categoryId, -1, -1, styleTmp,pageNumber,6);
+	        if (productModels.size() == 0 && pageNumber!= 1)
+	        {
+	        	pageNumber = pageNumber -1;
+	        	productModels = productService.search(keyword, categoryId, -1, -1, styleTmp,pageNumber,6);
+	        }
+	        request.setAttribute("page", pageNumber);
 	        List<StoreModel> storeModels = storeService.searchByKey(keyword, -1);
 
 			if (storeModels != null && !storeModels.isEmpty()) {
@@ -135,8 +158,8 @@ public class searchController extends HttpServlet {
 			
 			    request.setAttribute("stores", selectedStores);
 			} else {
-			    // Xử lý khi danh sách là null hoặc rỗng
-			    // Ví dụ: Gán một danh sách trống cho thuộc tính "stores"
+				
+				
 			    request.setAttribute("stores", Collections.emptyList());
 			}
 	        
@@ -153,7 +176,7 @@ public class searchController extends HttpServlet {
 	        for (CategoryModel categoryParent : categoryParentList) {
 				List<CategoryModel> categoryChildList = categoryService.getChildCategory(categoryParent.getId());
 				for (CategoryModel categoryChild : categoryChildList) {
-					categoryChild.setCountProduct(categoryChild.getId());
+					categoryChild.setCountProduct(countProductsInCategory(categoryChild.getId()));
 					quantity += categoryChild.getCountProduct();
 				}
 				categoryParent.setCountProduct(quantity);
@@ -166,6 +189,8 @@ public class searchController extends HttpServlet {
 	        request.setAttribute("searchTerm", keyword);
 	        request.setAttribute("categoryId", categoryId);
 	        request.setAttribute("categoryParentList", categoryParentList);
+	        
+	        
 	        request.getRequestDispatcher("/views/customer/search.jsp").forward(request, response);
 	    }
 	    

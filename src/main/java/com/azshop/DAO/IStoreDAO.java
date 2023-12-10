@@ -20,5 +20,5 @@ public interface IStoreDAO {
     List<StoreModel> searchByKey(String key, int storeLevelId);
     int countNewStores(Date datetime);
     int getTotalStores();
-    
+    public List<StoreModel> getStoreWithinDays(int days);
 }

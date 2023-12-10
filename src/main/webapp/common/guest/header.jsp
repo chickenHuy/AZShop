@@ -66,15 +66,7 @@
 
 				<!-- ACCOUNT -->
 				<div class="col-md-3 clearfix">
-					<div class="header-ctn">
-						<!-- Wishlist -->
-						<div>
-							<a href="#"> <i class="fa fa-heart-o"></i> <span>Your
-									Wishlist</span>
-								<div class="qty">2</div>
-							</a>
-						</div>
-						<!-- /Wishlist -->
+					<div class="header-ctn">						
 
 						<!-- Cart -->
 						<div class="dropdown">
@@ -109,7 +101,7 @@
 				<!-- NAV -->
 				<ul class="main-nav nav navbar-nav">
 					<li><a href='<c:url value="/guest-home"/>'>Trang chủ</a></li>
-					<li><a href='<c:url value="/guest-clothing"/>'>Sản phẩm hot</a></li>
+					<li><a href='<c:url value="/guest/hot-product"/>'>Sản phẩm hot</a></li>
 					<c:forEach var="category" items="${categoryParentList}">
 						<li><a
 							href='<c:url value="/guest/category/${category.slug}?sortBy=${0}"/>'>${category.name}</a></li>

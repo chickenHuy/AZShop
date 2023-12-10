@@ -27,8 +27,51 @@
 <!-- Template Main CSS File -->
 <link rel="stylesheet" type="text/css"
 	href="<c:url value='/templates/account/assets/css/style.css' />">
+
+	<style>
+		.custom-alert {
+			display: none;
+			position: fixed;
+			top: 20px;
+			left: 50%;
+			transform: translateX(-50%);
+			padding: 15px;
+			background-color: #4CAF50;
+			color: white;
+			border-radius: 5px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			z-index: 999;
+		}
+	
+		.close-btn {
+			position: absolute;
+			top: 5px;
+			right: 10px;
+			cursor: pointer;
+			font-size: 18px;
+			color: #fff;
+		}
+	</style>
+	
 </head>
 <body>
+
+	<c:if test="${done != null}">
+		<div class="custom-alert" id="customAlert">
+			<span class="close-btn" onclick="closeAlert()">&times;</span>
+			${done}
+		</div>
+		<script>
+			// Hiển thị thông báo khi có nội dung
+			document.getElementById('customAlert').style.display = 'block';
+
+			// Hàm đóng thông báo
+			function closeAlert() {
+				document.getElementById('customAlert').style.display = 'none';
+			}
+		</script>
+	</c:if>
+
 
 	<!-- ======= Header ======= -->
 	<header id="header" class="header fixed-top d-flex align-items-center" style="background-color: #15161d;">
@@ -378,7 +421,16 @@
 																<td>${order.status}</td>
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
-																<td>Action</td>
+																
+																<td>
+																	<a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a>
+																	
+																	<form action="cancellOrder" method="post" style="display: inline;">
+																		<input type="hidden" name="id" value="${order.id}">
+																		<button class="btn btn-danger" type="submit">Cancel</button>
+																	</form>
+																</td>
+																
 															</tr>
 														</c:forEach>
 													</tbody>
@@ -410,7 +462,7 @@
 																<td>${order.status}</td>
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
-																<td>Action</td>
+																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a></td>
 															</tr>
 														</c:forEach>
 													</tbody>
@@ -442,7 +494,7 @@
 																<td>${order.status}</td>
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
-																<td>Action</td>
+																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a></td>
 															</tr>
 														</c:forEach>
 													</tbody>
@@ -474,7 +526,7 @@
 																<td>${order.status}</td>
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
-																<td>Action</td>
+																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a></td>
 															</tr>
 														</c:forEach>
 													</tbody>
@@ -506,7 +558,7 @@
 																<td>${order.status}</td>
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
-																<td>Action</td>
+																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a></td>
 															</tr>
 														</c:forEach>
 													</tbody>
@@ -538,7 +590,7 @@
 																<td>${order.status}</td>
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
-																<td>Action</td>
+																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a></td>
 															</tr>
 														</c:forEach>
 													</tbody>
@@ -570,7 +622,7 @@
 																<td>${order.status}</td>
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
-																<td>Action</td>
+																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a></td>
 															</tr>
 														</c:forEach>
 													</tbody>

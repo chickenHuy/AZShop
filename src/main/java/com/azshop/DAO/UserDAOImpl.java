@@ -195,9 +195,9 @@ public class UserDAOImpl implements IUserDAO {
 	}
 
 	@Override
-	public void insertRegister(String firstName, String lastName, String email, String password) {
+	public void insertRegister(UserModel user) {
 		String sql = "INSERT INTO [User](firstName, lastName, slug, cartId, email, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, point, eWallet, createAt) VALUES (?, ?, ?, ?, ?, 'false', 'false', ?, ?, 'customer', '1', 0, 0, GetDate())";
-		String slugString = slugUtil.toSlug(firstName + " " + lastName);
+		String slugString = slugUtil.toSlug(user.getFirstName() + " " + user.getLastName());
 		String salt = Integer.toString(random.nextInt(1000000000 - 1 + 1) + 1);
 		String cartId = Integer.toString(random.nextInt(100000 - 1 + 1) + 1);
 		try {
@@ -205,13 +205,13 @@ public class UserDAOImpl implements IUserDAO {
 
 			ps = conn.prepareStatement(sql);
 
-			ps.setString(1, firstName);
-			ps.setString(2, lastName);
+			ps.setString(1, user.getFirstName());
+			ps.setString(2, user.getLastName());
 			ps.setString(3, slugString);
 			ps.setString(4, cartId);
-			ps.setString(5, email);
+			ps.setString(5, user.getEmail());
 			ps.setString(6, salt);
-			ps.setString(7, password + "-" + salt);
+			ps.setString(7, user.getHashedPassword() + "-" + salt);
 
 			ps.executeUpdate();
 
@@ -355,6 +355,49 @@ public class UserDAOImpl implements IUserDAO {
             e.printStackTrace();
         }
         return totalUsers;
+	}
+
+	@Override
+	public List<UserModel> getUserWithinDays(int days) {
+		List<UserModel> userModelList = new ArrayList<UserModel>();
+		try {
+			String sql = "SELECT * FROM [User] WHERE  [createAt] >= DATEADD(DAY, -"+days+", GETDATE())";
+			conn = new DBConnection().getConnection();
+
+			ps = conn.prepareStatement(sql);
+
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				UserModel userModel = new UserModel();
+				userModel.setId(rs.getInt("id"));
+				userModel.setFirstName(rs.getString("firstName"));
+				userModel.setLastName(rs.getString("lastName"));
+				userModel.setSlug(rs.getString("slug"));
+				userModel.setCartId(rs.getString("cartId"));
+				userModel.setEmail(rs.getString("email"));
+				userModel.setPhone(rs.getString("phone"));
+				userModel.setEmailActive(rs.getBoolean("isEmailActive"));
+				userModel.setPhoneActive(rs.getBoolean("isPhoneActive"));
+				userModel.setSalt(rs.getString("salt"));
+				userModel.setHashedPassword(rs.getString("hashedPassword"));
+				userModel.setRole(rs.getString("role"));
+				userModel.setUserLevelId(rs.getInt("userLevelId"));
+				userModel.setAvatar(rs.getString("avatar"));
+				userModel.setCoverImage(rs.getString("coverImage"));
+				userModel.setPoint(rs.getInt("point"));
+				userModel.seteWallet(rs.getBigDecimal("eWallet"));
+				userModel.setCreateAt(rs.getDate("createAt"));
+				userModel.setUpdateAt(rs.getDate("updateAt"));
+				userModel.setAddress(rs.getString("address"));
+				userModelList.add(userModel);
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return userModelList;
+
 	}
 
 

@@ -54,6 +54,11 @@
 							        <!-- Thêm các mục con khác nếu cần -->
 							   </ul>	
 								</li>
+								
+						<li><a href='<c:url value="/admin/transaction"/>'><span
+							class="material-symbols-outlined">arrow_right</span>Transaction</a></li>
+								
+					
 									
 								
 				</ul></li>

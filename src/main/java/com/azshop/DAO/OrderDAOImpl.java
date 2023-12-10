@@ -644,6 +644,31 @@ public class OrderDAOImpl implements IOrderDAO {
 
 		return oderModelList;
 	}
+
+	@Override
+	public boolean resoreQuantityProduct(int orderId) {
+		try {
+			String sql = "UPDATE Product\r\n"
+					+ "SET quantiny = Product.quantiny + OrderItem.count\r\n"
+					+ "FROM Product\r\n"
+					+ "INNER JOIN OrderItem ON Product.id = OrderItem.productId\r\n"
+					+ "INNER JOIN [Order] ON OrderItem.orderId = [Order].id\r\n"
+					+ "WHERE [Order].id = ? ;";
+
+			conn = new DBConnection().getConnection();
+
+			ps = conn.prepareStatement(sql);
+
+			ps.setInt(1, orderId);
+			ps.executeUpdate();
+			conn.close();
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
 	@Override
 	public OrderModel getByStatus(String status) {
