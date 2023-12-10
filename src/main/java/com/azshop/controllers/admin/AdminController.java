@@ -570,7 +570,7 @@ public class AdminController extends HttpServlet {
 		if ("Pending Pickup".equals(order.getStatus())) {
 			order.setStatus("Shipping");
 		} else if ("Shipping".equals(order.getStatus())) {
-			order.setStatus("Selivered");
+			order.setStatus("Delivered");
 		} else if ("Delivered".equals(order.getStatus())) {
 			order.setStatus("Completed");
 			try {
