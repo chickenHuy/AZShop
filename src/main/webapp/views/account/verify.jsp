@@ -25,6 +25,14 @@
             <div class="form-holder">
                 <div class="form-content">
                     <div class="form-items">
+                    	<%-- Hiển thị thông báo lỗi nếu có --%>
+                        <% String verifyError = (String) request.getAttribute("verifyError"); %>
+                        <% if (verifyError != null) { %>
+                            <div class="alert alert-danger" role="alert">
+                                <%= verifyError %>
+                            </div>
+                        <% } %>
+                        
                         <h3>Verify Code</h3>
                         <br>
                         <form action="verify-customer" method="post">
