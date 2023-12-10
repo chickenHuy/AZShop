@@ -52,7 +52,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = { "/customer/product/*", "/review-product" })
+@WebServlet(urlPatterns = { "/customer/product/*", "/guest/product/*", "/review-product" })
 public class ProductController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -117,7 +117,7 @@ public class ProductController extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		if (url.contains("customer/product")) {
+		if (url.contains("/customer/product/") || url.contains("/guest/product/")) {
 			try {
 				getProduct(req, resp);
 			} catch (Exception e) {

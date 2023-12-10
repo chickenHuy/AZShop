@@ -163,7 +163,7 @@
 							</h3>
 							<span class="product-available">In Stock</span>
 						</div>
-						<p>Cửa hàng: <a href='/AZShop/customer/store/slug={$store.slug}' style="text-decorator:none;">${store.name}</a></p>
+						<p>Cửa hàng: <a href='/AZShop/${role}/store/slug={$store.slug}' style="text-decorator:none;">${store.name}</a></p>
 
 						
 

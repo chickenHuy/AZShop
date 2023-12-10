@@ -73,7 +73,7 @@
 									<c:forEach var="product" items="${productList}">
 										<!-- product -->
 										<div class="product">
-											<a href='<c:url value="/customer/product/${product.slug}"/>'>
+											<a href='<c:url value="/${role}/product/${product.slug}"/>'>
 												<div class="product-img">
 													<!-- Use product-specific information -->
 													<c:set var="hasImages" value="false" />
@@ -232,7 +232,7 @@
 													</button>
 												</div>
 											</div>
-											<a href="<c:url value='/${role}/add-to-cart/${product.slug}?count=${1}'/>">
+											<a href="<c:url value='/customer/add-to-cart/${product.slug}?count=${1}'/>">
 												<div class="add-to-cart">
 													<button class="add-to-cart-btn">
 														<i class="fa fa-shopping-cart"></i> add to cart

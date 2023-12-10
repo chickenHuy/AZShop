@@ -65,6 +65,7 @@ public class GuestController extends HttpServlet{
 		List<CategoryModel> categoryParentList = categoryService.getParentCategory();
 		req.setAttribute("categoryParentList", categoryParentList);
 		
+		req.setAttribute("role", "guest");	
 		if (url.contains("guest-home")) {
 			try {
 				getAll(req, resp);
