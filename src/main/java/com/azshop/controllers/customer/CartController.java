@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.metadata.IIOMetadataFormat;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -72,14 +73,17 @@ public class CartController extends HttpServlet{
 			resp.sendRedirect(req.getContextPath() + "/login-customer");
 			return;
 		}
+		
 		List<CartModel> cartList = cartService.getByUserId(user.getId());
 		List<CartItemModel> cartItemList = new ArrayList<CartItemModel>();
 		
-		//Hiển thị item trong giỏ hàng
-		for (CartModel cart : cartList) {
-			List<CartItemModel> itemList = cartItemService.getByCartId(cart.getId());
-			cartItemList.addAll(itemList);
-		}										
+		if (cartList.size() != 0) {
+			//Lấy danh sách cart item
+			for (CartModel cart : cartList) {
+				List<CartItemModel> itemList = cartItemService.getByCartId(cart.getId());
+				cartItemList.addAll(itemList);
+			}		
+		}
 		
 		//Lấy thông tin danh sách product có trong giỏ hàng
 		List<ProductModel> productsInCart = new ArrayList<ProductModel>();
@@ -205,54 +209,60 @@ public class CartController extends HttpServlet{
 					
 					//Lấy thử danh sách cart
 					List<CartModel> cartList = cartService.getByUserId(user.getId());
-					boolean isExistCart = false;
+					
 					CartModel cart = new CartModel();
+					boolean isExistCart = false;
 					
-					for (CartModel cartModel : cartList) {
-						//Kiểm tra xem store id của product được thêm vào có trong cart nào chưa
-						if (product.getStoreId() == cartModel.getStoreId()) {
-							isExistCart = true;
-							cart = cartModel;
-						}
-					}
-					
-					//nếu đã có thì sẽ tiếp tục thêm sản phẩm vào
-					if (isExistCart == true) {
-						//Kiểm tra có item trong giỏ hàng chưa
-						boolean isExistItemCart = false;
-						List<CartItemModel> cartItems = new ArrayList<CartItemModel>();
-						for (CartModel cartModel : cartList) {	
-							cartItems.addAll(cartItemService.getByCartId(cartModel.getId()));
-						}
+					if (cartList.size() != 0) {												
 						
-						CartItemModel itemInCart = new CartItemModel();
-						for (CartItemModel item : cartItems) {
-							if(product.getId() == item.getProductId()) {
-								isExistItemCart = true;
-								itemInCart = item;
+						for (CartModel cartModel : cartList) {
+							//Kiểm tra xem store id của product được thêm vào có trong cart nào chưa
+							if (product.getStoreId() == cartModel.getStoreId()) {
+								isExistCart = true;
+								cart = cartModel;
 							}
 						}
-						//Nếu chưa có item trong cart
-						if (isExistItemCart == false) {
-							//Thêm item mới vào cart
-							CartItemModel newItem = new CartItemModel();
-							newItem.setCartId(cart.getId());
-							newItem.setProductId(product.getId());
-							newItem.setStyleValueId(product.getStyleValueId());
-							newItem.setCount(Integer.parseInt(req.getParameter("count")));
-							cartItemService.insert(newItem);
-						}
-						//Nếu đã có thì tăng thêm số lượng
-						else {
-							int count = Integer.parseInt(req.getParameter("count"));
+						
+						//nếu đã có thì sẽ tiếp tục thêm sản phẩm vào
+						if (isExistCart == true) {
+							//Kiểm tra có item trong giỏ hàng chưa
+							boolean isExistItemCart = false;
+							List<CartItemModel> cartItems = new ArrayList<CartItemModel>();
+							for (CartModel cartModel : cartList) {	
+								cartItems.addAll(cartItemService.getByCartId(cartModel.getId()));
+							}
 							
-							itemInCart.setCount(itemInCart.getCount() + count);
-							cartItemService.update(itemInCart);
+							CartItemModel itemInCart = new CartItemModel();
+							for (CartItemModel item : cartItems) {
+								if(product.getId() == item.getProductId()) {
+									isExistItemCart = true;
+									itemInCart = item;
+								}
+							}
+							//Nếu chưa có item trong cart
+							if (isExistItemCart == false) {
+								//Thêm item mới vào cart
+								CartItemModel newItem = new CartItemModel();
+								newItem.setCartId(cart.getId());
+								newItem.setProductId(product.getId());
+								newItem.setStyleValueId(product.getStyleValueId());
+								newItem.setCount(Integer.parseInt(req.getParameter("count")));
+								cartItemService.insert(newItem);
+							}
+							//Nếu đã có thì tăng thêm số lượng
+							else {
+								int count = Integer.parseInt(req.getParameter("count"));
+								
+								itemInCart.setCount(itemInCart.getCount() + count);
+								cartItemService.update(itemInCart);
+							}
 						}
+						
+						
 					}
 					
-					//nếu chưa có thì tạo cart mới cho store id này
-					else {
+					if (cartList.size() == 0 || isExistCart == false) {
+						//nếu chưa có thì tạo cart mới cho store id này
 						CartModel newCart = new CartModel();
 						newCart.setUserId(user.getId());
 						newCart.setStoreId(product.getStoreId());
@@ -272,6 +282,8 @@ public class CartController extends HttpServlet{
 						cartItem.setCount(Integer.parseInt(req.getParameter("count")));
 						cartItemService.insert(cartItem);
 					}
+					
+					
 
 				} catch (Exception e) {
 					e.printStackTrace();
