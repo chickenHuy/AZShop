@@ -62,7 +62,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = { "/customer/add-to-cart/*", "/customer/delete-item-cart", "/customer/cart/checkout",
+@WebServlet(urlPatterns = { "/customer/add-to-cart/*", "/guest/add-to-cart/*", "/customer/delete-item-cart", "/customer/cart/checkout",
 		"/customer/cart/checkout-comfirm" })
 public class CartController extends HttpServlet {
 
@@ -81,10 +81,15 @@ public class CartController extends HttpServlet {
 	IAddressShippingService addressShippingService = new AddressShippingServiceImpl();
 	IOrderService orderService = new OrderServiceImpl();
 	IOrderItemService orderItemService = new OrderItemServiceImpl();
-	UserModel user = null;
+	UserModel user = new UserModel();
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI().toString();
+		
+		if (url.contains("guest")) {
+			resp.sendRedirect(req.getContextPath() + "/login-customer");
+		}
+		
 		try {
 			HttpSession session = req.getSession();
 			if (session != null) {

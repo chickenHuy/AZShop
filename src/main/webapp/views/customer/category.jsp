@@ -169,7 +169,7 @@
 										</div>
 									</div>
 									<a
-										href="<c:url value='/customer/add-to-cart/${product.slug}?count=${1}'/>">
+										href="<c:url value='/${role}/add-to-cart/${product.slug}?count=${1}'/>">
 										<div class="add-to-cart">
 											<button class="add-to-cart-btn">
 												<i class="fa fa-shopping-cart"></i> add to cart
