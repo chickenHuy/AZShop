@@ -30,7 +30,7 @@
 					</ol>
 				</nav>
 			</div>
-			
+
 		</div>
 		<!--end breadcrumb-->
 
@@ -41,7 +41,8 @@
 					<div class="flex-grow-1">
 						<h4 class="fw-bold">Order #${orderId}</h4>
 						<p class="mb-0">
-							Customer : <a href="javascript:;">${user.firstName} ${user.lastName}</a>
+							Customer : <a href="javascript:;">${user.firstName}
+								${user.lastName}</a>
 						</p>
 						<p class="mb-0">
 							Recipient : <a href="javascript:;">${order.recipientName}</a>
@@ -128,13 +129,16 @@
 						<div class="card-body">
 							<h4 class="card-title mb-4 fw-bold">Order Status</h4>
 							<div id="d-flex"></div>
-							<label class="form-label">Completed status: </label> 
-							<label class="form-label">${order.status}</label> 
-							</div>
+							<label class="form-label">Completed status: </label> <label
+								class="form-label">${order.status}</label>
+							<c:if test="${order.status == 'Shipping'}"><button type="button" class="btn btn-danger px-4 ms-2"
+								data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal">Cancel</button></c:if>
+							<p>${message}</p>
 						</div>
 					</div>
 				</div>
 			</div>
+		</div>
 		</div>
 		<!--end row-->
 
@@ -150,7 +154,8 @@
 							</div>
 							<div class="detail-info">
 								<p class="fw-bold mb-1">Customer Name</p>
-								<a href="javascript:;" class="mb-0">${user.firstName} ${user.lastName}</a>
+								<a href="javascript:;" class="mb-0">${user.firstName}
+									${user.lastName}</a>
 							</div>
 						</div>
 					</div>
@@ -163,7 +168,7 @@
 							<div class="detail-info">
 								<h6 class="fw-bold mb-1">Email</h6>
 								<c:if test="${user.isEmailActive() == true}">
-								<a href="javascript:;" class="mb-0">${user.email}</a>
+									<a href="javascript:;" class="mb-0">${user.email}</a>
 								</c:if>
 							</div>
 						</div>
@@ -177,13 +182,13 @@
 							<div class="detail-info">
 								<h6 class="fw-bold mb-1">Phone</h6>
 								<c:if test="${user.isEmailActive() == true}">
-								<a href="javascript:;" class="mb-0">${user.phone}</a>
+									<a href="javascript:;" class="mb-0">${user.phone}</a>
 								</c:if>
 							</div>
 						</div>
 					</div>
 
-					
+
 
 					<div class="col">
 						<div class="d-flex align-items-start gap-3 border p-3 rounded">
@@ -208,7 +213,29 @@
 
 	</main>
 	<!--end main content-->
-
+	<div class="modal fade" id="deleteConfirmationModal" tabindex="-1"
+		aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteConfirmationModalLabel">Cancel Order</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure you want to cancel this order?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Cancel</button>
+					<form action="/AZShop/admin/order/cancel-order" method="post">
+						<input type="hidden" name="id" value="${order.id}">
+						<button type="submit" class="btn btn-danger">Cancel</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </body>
 </html>
