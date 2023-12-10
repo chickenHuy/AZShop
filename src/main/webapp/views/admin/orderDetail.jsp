@@ -131,7 +131,7 @@
 							<div id="d-flex"></div>
 							<label class="form-label">Completed status: </label> <label
 								class="form-label">${order.status}</label>
-							<c:if test="${order.status == 'Shipping'}"><button type="button" class="btn btn-danger px-4 ms-2"
+							<c:if test="${order.status != 'Completed'}"><button type="button" class="btn btn-danger px-4 ms-2"
 								data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal">Cancel</button></c:if>
 							<p>${message}</p>
 						</div>

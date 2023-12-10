@@ -812,6 +812,11 @@ public class AdminController extends HttpServlet {
 					product.setQuantity(product.getQuantity() + orderItem.getCount());
 					productService.update(product);
 				}
+				if (order.isPaidBefore() == true) {
+					UserModel user = userService.getById(order.getUserId());
+					user.seteWallet(user.geteWallet().add(order.getAmountFromUser()));
+					userService.update(user);
+				}
 				orderService.update(order);
 				getOrderDetail(req, resp);
 				resp.sendRedirect("/AZShop/admin/order-detail?orderId=" + id + "&&message=Successfully");
