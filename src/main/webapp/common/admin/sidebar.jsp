@@ -65,11 +65,11 @@
 
 
 			<li class="menu-label">Pages</li>
-			<li><a href="user-profile.html">
+			<li><a href="<c:url value="/admin/admin-info"/>">
 					<div class="parent-icon">
 						<span class="material-symbols-outlined">account_circle</span>
 					</div>
-					<div class="menu-title">User Profile</div>
+					<div class="menu-title">Admin Profile</div>
 			</a></li>
 
 			<li><a href="pricing-table.html">
@@ -100,7 +100,7 @@
 			class="dropdown-toggle d-flex align-items-center px-3 gap-3 w-100 h-100"
 			data-bs-toggle="dropdown">
 			<div class="user-img">
-				<img src="assets/images/avatars/01.png" alt="">
+				<img src="https://zpsocial-f53-org.zadn.vn/cb028b736f4d8e13d75c.jpg" alt="">
 			</div>
 			<div class="user-info">
 				<h5 class="mb-0 user-name">${userName}</h5>

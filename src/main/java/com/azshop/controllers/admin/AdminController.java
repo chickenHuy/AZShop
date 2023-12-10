@@ -56,7 +56,7 @@ import com.azshop.services.*;
 		"/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
 		"/admin/order-detail", "/admin/UserStatic", "/admin/StoreStatic", "/admin/style/edit",
 		"/admin/category/restore", "/admin/delivery", "/admin/adddelivery", "/admin/editdelivery",
-		"/admin/deletedelivery", "/admin/transaction", "/admin/order/cancel-order" })
+		"/admin/deletedelivery", "/admin/transaction", "/admin/order/cancel-order","/admin/admin-info" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -81,13 +81,15 @@ public class AdminController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		String url = req.getRequestURL().toString();
+		
+		UserModel user = new UserModel();
 
 		try {
 			HttpSession session = req.getSession();
 			if (session != null) {
 				Object sessionObject = session.getAttribute(Constant.userSession);
 				if (sessionObject instanceof UserModel) {
-					UserModel user = (UserModel) sessionObject;
+					user = (UserModel) sessionObject;
 
 					String name = user.getFirstName() + " " + user.getLastName();
 
@@ -229,7 +231,17 @@ public class AdminController extends HttpServlet {
 			rDispatcher.forward(req, resp);
 		} else if (url.contains("/admin/transaction")) {
 			getTransaction(req, resp);
+		} else if(url.contains("/admin/admin-info")) {
+			
+			getAdminInfo(user,req, resp);
+			
 		}
+	}
+	
+	private void getAdminInfo(UserModel user,HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setAttribute("adminName", user.getFirstName() + " " + user.getLastName());
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/admin-info.jsp");
+		rDispatcher.forward(req, resp);
 	}
 
 	private void getEditStyle(HttpServletRequest req, HttpServletResponse resp) {
@@ -362,7 +374,6 @@ public class AdminController extends HttpServlet {
 		// view nhan du lieu
 		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
 		rd.forward(req, resp);
-
 	}
 
 	private void GetStatisticsUser(HttpServletRequest req, HttpServletResponse resp)

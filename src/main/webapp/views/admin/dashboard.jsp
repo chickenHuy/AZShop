@@ -181,7 +181,7 @@
 								style="height: 5px;">
 								<div class="progress-bar bg-info" role="progressbar"
 									style="width: 60%"></div>
-							</div> <small class="mb-0">Manage Your Store</small>
+							</div> <small class="mb-0">Manage Stores</small>
 						</a>
 					</div>
 				</div>
