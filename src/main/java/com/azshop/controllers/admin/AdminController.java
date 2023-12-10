@@ -53,7 +53,7 @@ import com.azshop.services.*;
 		"/admin/styles", "/admin/style/delete", "/admin/style/restore", "/admin/addstyle", "/admin/style/stylevalues",
 		"/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
 		"/admin/order-detail","/admin/UserStatic","/admin/StoreStatic", "/admin/style/edit", "/admin/category/restore",
-        "/admin/delivery","/admin/adddelivery","/admin/editdelivery","/admin/deletedelivery" })
+        "/admin/delivery","/admin/adddelivery","/admin/editdelivery","/admin/deletedelivery","admin/transaction" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
