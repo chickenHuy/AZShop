@@ -129,11 +129,11 @@
 					<div class="store-filter clearfix">
 						<h3 style="text-transform: uppercase; font-size: 18px; margin: 0px; position: absolute; bottom: 0;">${category.name}</h3>
 						<div class="radio-container store-grid">
-							<a href='<c:url value="/customer/store/${store.slug}?cate=${category.slug}&sortBy=${0}"/>'>
+							<a href='<c:url value="/${role}/store/${store.slug}?cate=${category.slug}&sortBy=${0}"/>'>
 								<button id="buttonAscending" class="radio-button"
 									onclick="redirect('ascending')">Giá tăng dần</button>
 							</a> 
-							<a href='<c:url value="/customer/store/${store.slug}?cate=${category.slug}&sortBy=${1}"/>'>
+							<a href='<c:url value="/${role}/store/${store.slug}?cate=${category.slug}&sortBy=${1}"/>'>
 								<button id="buttonDescending" class="radio-button"
 									onclick="redirect('descending')">Giá giảm dần</button>
 							</a>
