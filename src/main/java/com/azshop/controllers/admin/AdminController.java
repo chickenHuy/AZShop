@@ -94,6 +94,7 @@ public class AdminController extends HttpServlet {
 					String name = user.getFirstName() + " " + user.getLastName();
 
 					req.setAttribute("userName", name);
+					req.setAttribute("adminAvatar", user.getAvatar());
 				}
 			}
 		} catch (Exception e) {
@@ -240,6 +241,8 @@ public class AdminController extends HttpServlet {
 	
 	private void getAdminInfo(UserModel user,HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setAttribute("adminName", user.getFirstName() + " " + user.getLastName());
+		req.setAttribute("adminAddress", user.getAddress());
+		req.setAttribute("adminAvatar", user.getAvatar());
 		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/admin-info.jsp");
 		rDispatcher.forward(req, resp);
 	}

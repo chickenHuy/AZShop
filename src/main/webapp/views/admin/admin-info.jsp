@@ -35,7 +35,7 @@
             <div class="card overflow-hidden">
               <div class="profile-cover bg-dark position-relative mb-4">
                 <div class="user-profile-avatar shadow position-absolute top-50 start-0 translate-middle-x">
-                  <img src="https://zpsocial-f53-org.zadn.vn/cb028b736f4d8e13d75c.jpg" alt="...">
+                  <img src="${adminAvatar}" alt="...">
                 </div>
               </div>
               <div class="card-body">
@@ -43,7 +43,7 @@
                   <div class="">
                     <h3 class="mb-2">${adminName}</h3>
                     <p class="mb-1">Software engineer at VNG</p>
-                    <p>Số 1, Võ Văn Ngân</p>
+                    <p>${adminAddress}</p>
                     <div class="">
                       <span class="badge rounded-pill bg-primary">Java Developer</span>
                       <span class="badge rounded-pill bg-primary">Project Management</span>

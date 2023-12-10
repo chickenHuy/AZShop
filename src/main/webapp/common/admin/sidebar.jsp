@@ -72,19 +72,19 @@
 					<div class="menu-title">Admin Profile</div>
 			</a></li>
 
-			<li><a href="pricing-table.html">
+			<li><a>
 					<div class="parent-icon">
 						<span class="material-symbols-outlined">currency_bitcoin</span>
 					</div>
 					<div class="menu-title">Pricing</div>
 			</a></li>
-			<li><a href="javascript:;">
+			<li><a>
 					<div class="parent-icon">
 						<span class="material-symbols-outlined">receipt_long</span>
 					</div>
 					<div class="menu-title">Documentation</div>
 			</a></li>
-			<li><a href="javascript:;">
+			<li><a>
 					<div class="parent-icon">
 						<span class="material-symbols-outlined">shop</span>
 					</div>
@@ -100,7 +100,7 @@
 			class="dropdown-toggle d-flex align-items-center px-3 gap-3 w-100 h-100"
 			data-bs-toggle="dropdown">
 			<div class="user-img">
-				<img src="https://zpsocial-f53-org.zadn.vn/cb028b736f4d8e13d75c.jpg" alt="">
+				<img src="${adminAvatar}" alt="">
 			</div>
 			<div class="user-info">
 				<h5 class="mb-0 user-name">${userName}</h5>
@@ -108,13 +108,13 @@
 			</div>
 		</div>
 		<ul class="dropdown-menu dropdown-menu-end">
-			<li><a class="dropdown-item" href="javascript:;"><span
+			<li><a class="dropdown-item" href='<c:url value="/admin/admin-info"/>'><span
 					class="material-symbols-outlined me-2"> account_circle </span><span>Profile</span></a>
 			</li>
-			<li><a class="dropdown-item" href="javascript:;"><span
+			<li><a class="dropdown-item" ><span
 					class="material-symbols-outlined me-2"> tune </span><span>Settings</span></a>
 			</li>
-			<li><a class="dropdown-item" href="javascript:;"><span
+			<li><a class="dropdown-item" href='<c:url value="/admin/dashboard"/>'><span
 					class="material-symbols-outlined me-2"> dashboard </span><span>Dashboard</span></a>
 			</li>
 			<li><a class="dropdown-item" href="javascript:;"><span
