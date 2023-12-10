@@ -291,9 +291,9 @@ public class AccountController extends HttpServlet {
 		try {
 			Integer orderId = Integer.parseInt(req.getParameter("id"));
 			orderService.changeStatus(orderId, "Cancelled");
-			resp.sendRedirect("/AZShop/information?done= Đơn hàng đã xóa thành công!");
+			resp.sendRedirect("/AZShop/information?done= Don hang duoc xoa thanh cong!");
 		} catch (Exception e) {
-			resp.sendRedirect("/AZShop/information?done= Đơn hàng xóa không thành công!");
+			resp.sendRedirect("/AZShop/information?done= Don hang xoa khong thanh cong!");
 		}
 
 	}
@@ -333,7 +333,7 @@ public class AccountController extends HttpServlet {
 			resp.sendRedirect(req.getContextPath() + "/guest-home");
 		} else {
 			// Nếu có lỗi, chuyển hướng đến trang thông tin người dùng với thông báo lỗi
-			resp.sendRedirect("/AZShop/information?done=Đổi mật khẩu không thành công!");
+			resp.sendRedirect("/AZShop/information?done=Mat khau duoc doi khong thanh cong!");
 		}
 	}
 
@@ -375,7 +375,7 @@ public class AccountController extends HttpServlet {
 		userService.update(user);
 
 		// Chuyển hướng đến trang thông tin người dùng với thông báo thành công
-		resp.sendRedirect("/AZShop/information?done=Cập nhật thông tin thành công!");
+		resp.sendRedirect("/AZShop/information?done=Cap nhat thong tin thanh cong!");
 	}
 
 	private void postForget(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
