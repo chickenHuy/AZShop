@@ -62,8 +62,13 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
+<<<<<<< HEAD
 @WebServlet(urlPatterns = { "/customer/add-to-cart/*", "/customer/delete-item-cart", "/customer/cart/checkout",
 		"/customer/cart/checkout-comfirm", "/customer/add-address" })
+=======
+@WebServlet(urlPatterns = { "/customer/add-to-cart/*", "/guest/add-to-cart/*", "/customer/delete-item-cart", "/customer/cart/checkout",
+		"/customer/cart/checkout-comfirm" })
+>>>>>>> 10803449f6bbe9bcf65563f0d77db9407935d930
 public class CartController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -81,10 +86,15 @@ public class CartController extends HttpServlet {
 	IAddressShippingService addressShippingService = new AddressShippingServiceImpl();
 	IOrderService orderService = new OrderServiceImpl();
 	IOrderItemService orderItemService = new OrderItemServiceImpl();
-	UserModel user = null;
+	UserModel user = new UserModel();
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI().toString();
+		
+		if (url.contains("guest")) {
+			resp.sendRedirect(req.getContextPath() + "/login-customer");
+		}
+		
 		try {
 			HttpSession session = req.getSession();
 			if (session != null) {

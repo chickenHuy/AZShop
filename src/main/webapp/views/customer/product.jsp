@@ -168,7 +168,7 @@
 						
 
 						<form
-							action="<c:url value='/customer/add-to-cart/${product.slug}'/>"
+							action="<c:url value='/${role}/add-to-cart/${product.slug}'/>"
 							method="get">
 							<div class="add-to-cart">
 								<div class="qty-label">
@@ -476,7 +476,7 @@
 									</button>
 								</div>
 							</div>
-							<a href="<c:url value='/customer/add-to-cart'/>">
+							<a href="<c:url value='/${role}/add-to-cart'/>">
 								<div class="add-to-cart">
 									<button class="add-to-cart-btn">
 										<i class="fa fa-shopping-cart"></i> add to cart

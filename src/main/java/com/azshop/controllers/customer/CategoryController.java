@@ -168,7 +168,7 @@ private static final long serialVersionUID = 1L;
 	                	productList = productService.getByCategoryId(category.getId());
 	                	
 	                	//Lấy danh sách style value từ category parent
-		                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());  
+		                List<StyleModel> styleList = styleService.getByCateId(category.getId());  
 		                
 		                req.setAttribute("styleList", styleList);
 		                
@@ -196,30 +196,31 @@ private static final long serialVersionUID = 1L;
 					}	
 	                
 	                List<ProductModel> productListSort = new ArrayList<ProductModel>();             
+	                          
 	                
-	                int sortBy = Integer.parseInt(req.getParameter("sortBy"));
-	                
-	              //sắp xếp
-	                if (sortBy == 0) {
-		                productListSort = productService.SortingProductbyPriceAscending(productList);
-	                }
-	                else if (sortBy == 1) {
-	                	productListSort = productService.SortingProductbyPriceDecending(productList);		               
-	                }	 
-	                        	                	                
-	                
-	                for (ProductModel productModel : productList) {
-	        			ImageModel image = imageService.getImage(productModel.getId());
-	        			imageList.add(image);
-	        		}
-	                
-	                List<ProductModel> hotProductList = productService.GetTopSellerProduct(productListSort, 3);
+	                List<ProductModel> hotProductList = productService.GetTopSellerProduct(productList, 3);
 	                List<ImageModel> imageModels = new ArrayList<ImageModel>();
 	                
 	                for (ProductModel productModel : hotProductList) {
 	        			ImageModel image = imageService.getImage(productModel.getId());
 	        			imageModels.add(image);
 	        		}	                
+	                
+	                int sortBy = Integer.parseInt(req.getParameter("sortBy"));
+	                
+		              //sắp xếp
+		                if (sortBy == 0) {
+			                productListSort = productService.SortingProductbyPriceAscending(productList);
+		                }
+		                else if (sortBy == 1) {
+		                	productListSort = productService.SortingProductbyPriceDecending(productList);		               
+		                }	 
+		                        	                	                
+		                
+		                for (ProductModel productModel : productList) {
+		        			ImageModel image = imageService.getImage(productModel.getId());
+		        			imageList.add(image);
+		        		}
 	                
 	                req.setAttribute("hotProductList",hotProductList);
 	                req.setAttribute("imageProHotList", imageModels);	

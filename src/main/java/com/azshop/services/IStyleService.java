@@ -12,6 +12,8 @@ public interface IStyleService {
 	List<StyleModel> getAll();
 
 	List<StyleModel> getByCategoryId(int categoryId);
+	
+	public List<StyleModel> getByCateId(int categoryId);
 
 	void update(StyleModel style);
 

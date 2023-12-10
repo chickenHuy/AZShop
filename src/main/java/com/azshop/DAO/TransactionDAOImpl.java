@@ -79,7 +79,7 @@ public class TransactionDAOImpl implements ITransactionDAO {
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
 
-			if (rs.next()) {
+			while (rs.next()) {
 				TransactionModel transaction = new TransactionModel();
 				transaction.setId(rs.getInt("id"));
 				transaction.setUserId(rs.getInt("userId"));
