@@ -103,6 +103,7 @@
 								</c:forEach>
 							</select>
 						</div>
+						<a href="/AZShop/customer/add-address"><button style="width: 210px; height: 35px; color: #fff; border-radius: 7px; background-color: #1e1f29;">Add address shipping</button></a>
 					</div>
 
 				</div>
@@ -117,7 +118,7 @@
 							<div></div>
 							<div></div>
 						</div>
-						<div class="order-products">
+						<div class="order-products" style="display: flex; flex-direction: column;">
 							<c:forEach var="cart" items="${cartList}">
 								<label class="nameStore-count">${cart.nameStore}</label>
 								<c:forEach var="cartItem" items="${cartItemList}">
