@@ -244,10 +244,10 @@
 		<ul class="list-group list-group-flush mb-0">
 			<li
 				class="list-group-item border-top d-flex justify-content-between align-items-center bg-transparent">Revenue
-				in day<span class="badge bg-success rounded-pill">${((count/total)*100)}%</span>
+				in day<span class="badge bg-success rounded-pill"> ${Math.round((count / total * 100) * 100) / 100}%</span>
 			</li>
 			<li
-				class="list-group-item d-flex justify-content-between align-items-center bg-transparent">Other<span class="badge bg-primary rounded-pill">${(((total-count)/total)*100)}%</span>
+				class="list-group-item d-flex justify-content-between align-items-center bg-transparent">Other<span class="badge bg-primary rounded-pill">${Math.round(((total - count) / total * 100) * 100) / 100}%</span>
 			</li>
 			<li
 				class="list-group-item d-flex justify-content-between align-items-center bg-transparent">Total<span
