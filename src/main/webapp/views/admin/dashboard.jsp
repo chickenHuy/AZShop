@@ -115,7 +115,7 @@
 				</div>
 			</div>
 			<div class="col">
-				<div class="card radius-10 bg-info">
+				<div class="card radius-10 bg-warning">
 					<div class="card-body">
 						<div class="d-flex align-items-center">
 							<div class="">
@@ -131,7 +131,7 @@
 				</div>
 			</div>
 			<div class="col">
-				<div class="card radius-10 bg-purple">
+				<div class="card radius-10 bg-primary">
 					<div class="card-body">
 						<div class="d-flex align-items-center">
 							<div class="">
@@ -146,7 +146,7 @@
 				</div>
 			</div>
 			<div class="col">
-				<div class="card radius-10 bg-primary">
+				<div class="card radius-10 bg-purple">
 					<div class="card-body">
 						<div class="d-flex align-items-center">
 							<div class="">
