@@ -14,8 +14,7 @@ public class TransactionServiceImpl implements ITransactionService{
 
 	@Override
 	public void insert(TransactionModel transaction) {
-		// TODO Auto-generated method stub
-		
+		TransactionDAO.insert(transaction);
 	}
 
 	@Override
