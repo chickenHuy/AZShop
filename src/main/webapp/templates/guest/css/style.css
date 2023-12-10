@@ -757,6 +757,7 @@ textarea.input {
   width: 100%;
   -webkit-transition: 0.2s all;
   transition: 0.2s all;
+  height: 360px;
 }
 
 .shop:hover .shop-img>img {
@@ -1201,7 +1202,7 @@ textarea.input {
   width: 20px;
   height: 20px;
   display: inline-block !important;
-  margin: 0px 2px;
+  margin: 60px 2px;
 }
 
 .products-slick-nav .slick-prev:before, .products-slick-nav .slick-next:before {

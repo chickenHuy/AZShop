@@ -693,10 +693,17 @@ public class ProductDAOImpl implements IProductDAO {
 		}
 		
 		// Lấy ra một danh sách con gồm k sản phẩm bán được nhiều nhất
-		List<ProductModel> topSellerList = productList.subList(0, k);
-		
-		// Trả về danh sách con đó
-		return topSellerList;
+        List<ProductModel> topSellerList = new ArrayList<>();
+
+        // Đảm bảo không vượt quá số lượng sản phẩm trong danh sách
+        int limit = Math.min(k, productList.size());
+
+        for (int i = 0; i < limit; i++) {
+            topSellerList.add(productList.get(i));
+        }
+
+        // Trả về danh sách con đó
+        return topSellerList;
 	}
 
 	@Override

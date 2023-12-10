@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="/common/taglib.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +8,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-<!-- TẤT CẢ SẢN PHẨM -->
+	
+	<!-- TẤT CẢ SẢN PHẨM -->
 	<!-- SECTION -->
 	<div class="section">
 		<!-- container -->
@@ -18,7 +20,7 @@
 				<!-- section title -->
 				<div class="col-md-12">
 					<div class="section-title">
-						<h3 class="title">Tất cả sản phẩm</h3>
+						<h3 class="title">Top 10 sản phẩm bán nhiều nhất</h3>
 						<div class="section-nav">
 							<ul class="section-tab-nav tab-nav">
 								<c:forEach var="category" items="${categoryParentList}">
@@ -121,6 +123,8 @@
 		<!-- /container -->
 	</div>
 	<!-- /SECTION -->
+	
+	<br><br>
 
 </body>
 </html>
