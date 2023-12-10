@@ -63,7 +63,7 @@ import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
 @WebServlet(urlPatterns = { "/customer/add-to-cart/*", "/customer/delete-item-cart", "/customer/cart/checkout",
-		"/customer/cart/checkout-comfirm" })
+		"/customer/cart/checkout-comfirm", "/customer/add-address" })
 public class CartController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -208,6 +208,13 @@ public class CartController extends HttpServlet {
 		} else if (url.contains("customer/delete-item-cart")) {
 			try {
 				deleteCartItem(req, resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (url.contains("customer/add-address")) {
+			try {
+				RequestDispatcher rd = req.getRequestDispatcher("/views/customer/addAddress.jsp");
+				rd.forward(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -452,6 +459,25 @@ public class CartController extends HttpServlet {
 				resp.setCharacterEncoding("UTF-8");
 				resp.getWriter().write(jsonResponse);
 			}
+			return;
+		}
+		if (url.contains("/customer/add-address")) {
+			req.setCharacterEncoding("UTF-8");
+			resp.setCharacterEncoding("UTF-8");
+			
+			String recipientName = req.getParameter("recipientName");
+	        String address = req.getParameter("address");
+	        String phone = req.getParameter("phone");
+			
+	        AddressShippingModel addressShipping = new AddressShippingModel();
+	        addressShipping.setUserId(user.getId());
+	        addressShipping.setRecipientName(recipientName);
+	        addressShipping.setAddress(address);
+	        addressShipping.setPhone(phone);
+	        
+	        addressShippingService.insert(addressShipping);
+	        
+	        resp.sendRedirect("cart/checkout");
 		}
 	}
 }
