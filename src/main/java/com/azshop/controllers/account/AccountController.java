@@ -465,33 +465,35 @@ public class AccountController extends HttpServlet {
 		resp.setCharacterEncoding("UTF-8");
 		req.setCharacterEncoding("UTF-8");
 
-		try (PrintWriter outPrintWriter = resp.getWriter()) {
-			// Lấy phiên (session) hiện tại từ request
-			HttpSession session = req.getSession();
+		// Lấy phiên (session) hiện tại từ request
+		HttpSession session = req.getSession();
 
-			// Lấy thông tin người dùng và mã xác nhận từ session
-			UserModel userModel = (UserModel) session.getAttribute("user");
-			String codeSend = (String) session.getAttribute("code");
+		// Lấy thông tin người dùng và mã xác nhận từ session
+		UserModel userModel = (UserModel) session.getAttribute("user");
+		String codeSend = (String) session.getAttribute("code");
 
-			// Lấy mã xác nhận từ tham số request
-			String code = req.getParameter("verify-code");
+		// Lấy mã xác nhận từ tham số request
+		String code = req.getParameter("verify-code");
 
-			// Kiểm tra xem mã xác nhận nhập vào có khớp với mã đã gửi đi không
-			if (code.equals(codeSend)) {
-				// Nếu khớp, cập nhật trạng thái email đã được xác nhận và chuyển hướng đến
-				// trang đăng nhập
+		// Kiểm tra xem mã xác nhận nhập vào có khớp với mã đã gửi đi không
+		if (code.equals(codeSend)) {
+			// Nếu khớp, cập nhật trạng thái email đã được xác nhận và chuyển hướng đến
+			// trang đăng nhập
+			boolean isSuccess = userService.insertRegister(userModel);
+			if (isSuccess) {
 				userModel.setEmail(userModel.getEmail());
 				userModel.setEmailActive(true);
 				userService.updateStatusEmail(userModel);
 				resp.sendRedirect(req.getContextPath() + "/login-customer");
 			}
-		} catch (Exception e) {
+		} else {
 			// Xử lý ngoại lệ nếu có lỗi xảy ra
 			req.setAttribute("verifyError", "Thông tin xác thực không chính xác!");
 
 			// Forward lại đến trang login.jsp để hiển thị thông báo lỗi
 			req.getRequestDispatcher("/views/account/verify.jsp").forward(req, resp);
 		}
+
 	}
 
 	private void postRegister(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
@@ -520,7 +522,7 @@ public class AccountController extends HttpServlet {
 			String code = mail.getRandom();
 
 			// Tạo đối tượng UserModel để chứa thông tin người dùng
-			UserModel user = new UserModel(firstName, lastName, email);
+			UserModel user = new UserModel(firstName, lastName, email, password);
 
 			// Gửi email xác nhận đăng ký và kiểm tra xem việc gửi email có thành công không
 			boolean test = mail.sendEmail(user, code);
@@ -532,16 +534,9 @@ public class AccountController extends HttpServlet {
 				session.setAttribute("user", user);
 				session.setAttribute("code", code);
 
-				// Thực hiện đăng ký người dùng trong cơ sở dữ liệu
-				boolean isSuccess = userService.insertRegister(firstName, lastName, email, password);
+				// Nếu đăng ký thành công, chuyển hướng đến trang xác nhận đăng ký
+				resp.sendRedirect(req.getContextPath() + "/verify-customer");
 
-				if (isSuccess) {
-					// Nếu đăng ký thành công, chuyển hướng đến trang xác nhận đăng ký
-					resp.sendRedirect(req.getContextPath() + "/verify-customer");
-				} else {
-					// Nếu đăng ký không thành công, chuyển hướng đến trang đăng ký để nhập lại
-					req.getRequestDispatcher("/views/account/register.jsp").forward(req, resp);
-				}
 			} else {
 				// Nếu gửi email thất bại, in thông báo lỗi ra response
 				PrintWriter outPrintWriter = resp.getWriter();

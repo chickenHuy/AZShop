@@ -195,9 +195,9 @@ public class UserDAOImpl implements IUserDAO {
 	}
 
 	@Override
-	public void insertRegister(String firstName, String lastName, String email, String password) {
+	public void insertRegister(UserModel user) {
 		String sql = "INSERT INTO [User](firstName, lastName, slug, cartId, email, isEmailActive, isPhoneActive, salt, hashedPassword, role, userLevelId, point, eWallet, createAt) VALUES (?, ?, ?, ?, ?, 'false', 'false', ?, ?, 'customer', '1', 0, 0, GetDate())";
-		String slugString = slugUtil.toSlug(firstName + " " + lastName);
+		String slugString = slugUtil.toSlug(user.getFirstName() + " " + user.getLastName());
 		String salt = Integer.toString(random.nextInt(1000000000 - 1 + 1) + 1);
 		String cartId = Integer.toString(random.nextInt(100000 - 1 + 1) + 1);
 		try {
@@ -205,13 +205,13 @@ public class UserDAOImpl implements IUserDAO {
 
 			ps = conn.prepareStatement(sql);
 
-			ps.setString(1, firstName);
-			ps.setString(2, lastName);
+			ps.setString(1, user.getFirstName());
+			ps.setString(2, user.getLastName());
 			ps.setString(3, slugString);
 			ps.setString(4, cartId);
-			ps.setString(5, email);
+			ps.setString(5, user.getEmail());
 			ps.setString(6, salt);
-			ps.setString(7, password + "-" + salt);
+			ps.setString(7, user.getHashedPassword() + "-" + salt);
 
 			ps.executeUpdate();
 

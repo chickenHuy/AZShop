@@ -48,19 +48,4 @@ public class DBConnection {
 //
 //		}
 //	}
-=======
-
-	public static void main(String[] args) {
-
-		try {
-
-			System.out.println(new DBConnection().getConnection());
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-
-		}
-	}
->>>>>>> a58eb72ef393c7d6bf67b5073dae681da8dca1aa
 }

@@ -41,11 +41,11 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public boolean insertRegister(String firstName, String lastName, String email, String password) {
-		if (userDAO.checkExistEmial(email)) {
+	public boolean insertRegister(UserModel user) {
+		if (userDAO.checkExistEmial(user.getEmail())) {
 			return false;
 		}
-		userDAO.insertRegister(firstName, lastName, email, password);
+		userDAO.insertRegister(user);
 		return true;
 	}
 
