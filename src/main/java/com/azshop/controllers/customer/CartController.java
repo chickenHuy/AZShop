@@ -91,7 +91,6 @@ public class CartController extends HttpServlet{
 		}
 		
 		BigDecimal sum = BigDecimal.ZERO;
-
 		for (int i = 0; i < cartItemList.size(); i++) {
 		    ProductModel productModel = productService.getById(cartItemList.get(i).getProductId());
 		    
