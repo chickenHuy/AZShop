@@ -18,6 +18,7 @@ public class DBConnection {
         return DriverManager.getConnection(url, username, password);
     }
 
+
 	public static void main(String[] args) {
 
 		try {
