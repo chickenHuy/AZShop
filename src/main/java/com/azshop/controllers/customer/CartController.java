@@ -157,12 +157,7 @@ public class CartController extends HttpServlet{
 			}			
 		}
 		else if (url.contains("customer/cart/checkout")) {
-			try {
-				List<CartItemModel> cartItemModels = new ArrayList<CartItemModel>();
-				for (CartModel cartModel : cartList) {	
-					cartItemModels.addAll(cartItemService.getByCartId(cartModel.getId()));
-				}
-				
+			try {				
 				req.setAttribute("cartItemList", cartItemList);
 				
 				RequestDispatcher rd = req.getRequestDispatcher("/views/customer/checkout.jsp");
@@ -172,12 +167,7 @@ public class CartController extends HttpServlet{
 			}
 		}
 		else if (url.contains("customer/cart/checkout-comfirm")) {
-			try {
-				List<CartItemModel> cartItemModels = new ArrayList<CartItemModel>();
-				for (CartModel cartModel : cartList) {	
-					cartItemModels.addAll(cartItemService.getByCartId(cartModel.getId()));
-				}
-				
+			try {			
 				req.setAttribute("cartItemList", cartItemList);
 				
 				RequestDispatcher rd = req.getRequestDispatcher("/views/customer/checkout.jsp");
