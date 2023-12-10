@@ -317,6 +317,21 @@ public class AdminController extends HttpServlet {
 		String selectedDateStr = req.getParameter("selectedDate");
 		Date selectedDate = null;
 
+		try {
+			HttpSession session = req.getSession();
+			if (session != null) {
+				Object sessionObject = session.getAttribute(Constant.userSession);
+				if (sessionObject instanceof UserModel) {
+					UserModel user = (UserModel) sessionObject;
+
+					String name = user.getFirstName() + " " + user.getLastName();
+
+					req.setAttribute("userName", name);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if (selectedDateStr != null && !selectedDateStr.isEmpty()) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			try {

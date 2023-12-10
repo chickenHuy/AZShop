@@ -39,7 +39,7 @@
 							</div>
 							<div class="dropdown"></div>
 						</div>
-						<h5 class="mt-3 mb-0">Revenue in day</h5>
+						<h5 class="mt-3 mb-0">Revenue In Day</h5>
 						<div>&nbsp;</div>
 						<h4 class="mb-0 text-primary">${count*1000} VND</h4>
 						<div>&nbsp;</div>
@@ -150,7 +150,7 @@
 					<div class="card-body">
 						<div class="d-flex align-items-center">
 							<div class="">
-								<p class="mb-1 text-white">Total completed</p>
+								<p class="mb-1 text-white">Total Completed</p>
 								<h4 class="mb-0 text-white">${totalCompleted != null ? totalCompleted : '0'}</h4>
 							</div>
 							<div class="ms-auto fs-2 text-white">
@@ -170,8 +170,8 @@
 						<a href="/AZShop/customer-home" style="color: white;">
 							<div class="d-flex align-items-center justify-content-between">
 								<div class="">
-									<h4 class="mb-0">Hello: ${user.firstName}</h4>
-									<p class="mb-0">Shopping now</p>
+									<h4 class="mb-0">Hello: ${userName}</h4>
+									<p class="mb-0">Go to Shop</p>
 								</div>
 								<div class="fs-2">
 									<i class="bi bi-apple"></i>
@@ -181,7 +181,7 @@
 								style="height: 5px;">
 								<div class="progress-bar bg-info" role="progressbar"
 									style="width: 60%"></div>
-							</div> <small class="mb-0">Are you in the mood for shopping?</small>
+							</div> <small class="mb-0">Manage Your Store</small>
 						</a>
 					</div>
 				</div>
@@ -244,11 +244,10 @@
 		<ul class="list-group list-group-flush mb-0">
 			<li
 				class="list-group-item border-top d-flex justify-content-between align-items-center bg-transparent">Revenue
-				in day<span class="badge bg-success rounded-pill">${((count/total)*100)}%</span>
+				in day<span class="badge bg-success rounded-pill"> ${Math.round((count / total * 100) * 100) / 100}%</span>
 			</li>
 			<li
-				class="list-group-item d-flex justify-content-between align-items-center bg-transparent">Last
-				day<span class="badge bg-primary rounded-pill">${(((total-count)/total)*100)}%</span>
+				class="list-group-item d-flex justify-content-between align-items-center bg-transparent">Other<span class="badge bg-primary rounded-pill">${Math.round(((total - count) / total * 100) * 100) / 100}%</span>
 			</li>
 			<li
 				class="list-group-item d-flex justify-content-between align-items-center bg-transparent">Total<span
