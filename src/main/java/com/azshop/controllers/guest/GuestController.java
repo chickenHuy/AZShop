@@ -45,7 +45,7 @@ import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 import com.azshop.utils.Email;
 
-@WebServlet(urlPatterns = {"/guest-home", "/guest/category/*",  "/guest/store/*", "/guest/store-category/*", "/guest/style/*", "/guest/product/*", "/guest-search"})
+@WebServlet(urlPatterns = {"/guest-home",  "/guest/store/*", "/guest/product/*", "/guest-search"})
 public class GuestController extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -71,32 +71,10 @@ public class GuestController extends HttpServlet{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-		else if (url.contains("guest/category")) {
-			try {
-				getCategory(req, resp);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		else if (url.contains("guest/style")) {
-			try {
-				getStyle(req, resp);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		}		
 		else if (url.contains("guest/store/")) {
 			try {
 				getStore(req, resp);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		else if (url.contains("guest/store-category")) {
-			try {
-				getCategoryInStore(req, resp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -133,84 +111,6 @@ public class GuestController extends HttpServlet{
 
         return productCount;
     }
-
-	private void getCategoryInStore(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String url = req.getRequestURL().toString();
-		URI uri;
-		try {
-
-			uri = new URI(url);
-			String path = uri.getPath();
-
-			String[] parts = path.split("/");
-
-			if (parts.length > 0) {
-				String slug = parts[parts.length - 1];
-				
-				try {
-
-					StoreModel store = new StoreModel();		
-					CategoryModel category = categoryService.getCategoryBySlug(slug);
-					
-					List<ProductModel> productList = new ArrayList<ProductModel>();
-					List<ProductModel> productsInCate = new ArrayList<ProductModel>();
-	                List<ImageModel> imageList = new ArrayList<ImageModel>();
-	                List<CategoryModel> categoryChildList = new ArrayList<CategoryModel>();
-	                
-	                //lấy tất cả sp trong dnah mục
-	                productsInCate = productService.getByCategoryId(category.getId());
-	                
-	                //lấy sp theo cửa hàng
-	                for (ProductModel productInCate : productsInCate) {
-	                	StoreModel storeModel = storeService.getById(productInCate.getStoreId());
-	                	
-						if (url.contains(storeModel.getSlug())) {
-							productList.add(productInCate);
-							store = storeModel;
-						}
-					}
-	                
-	                //Lấy ảnh sp
-	                for (ProductModel productModel : productList) {
-	        			ImageModel image = imageService.getImage(productModel.getId());
-	        			imageList.add(image);
-	        		}
-	                
-	                //Lấy tất cả sản phẩm trong cửa hàng
-	                List<ProductModel> allProductList = productService.getByStoreId(store.getId());
-	                
-	                
-	                //lấy danh sách danh mục
-	                for (ProductModel productModel : allProductList) {
-						CategoryModel categoryChild = categoryService.getById(productModel.getCategoryId());
-						categoryChildList.add(categoryChild);
-					}	       
-	                
-	                //đếm số lượng product trong mỗi category
-	                for (CategoryModel categoryChild : categoryChildList) {
-						int countProduct = countProductsInCategoryStore(store.getId(), categoryChild.getId());
-						
-						categoryChild.setCountProduct(countProduct);
-					}
-	                
-	                req.setAttribute("store", store);
-	                req.setAttribute("categoryChildList", categoryChildList);
-	                req.setAttribute("productList", productList);
-	                req.setAttribute("imageList", imageList);
-	               	                
-	                
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-				
-			}
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		
-		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/store.jsp");
-        rd.forward(req, resp);
-	}
 	
 	private void getStore(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURL().toString();
@@ -271,74 +171,6 @@ public class GuestController extends HttpServlet{
 		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/store.jsp");
         rd.forward(req, resp);
 	}
-	
-	private void getStyle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String url = req.getRequestURL().toString();
-		URI uri;
-		try {
-
-			uri = new URI(url);
-			String path = uri.getPath();
-
-			String[] parts = path.split("/");
-
-			if (parts.length > 0) {
-				String slug = parts[parts.length - 1];
-				
-				try {
-					//Lấy category từ slug
-	                CategoryModel category = categoryService.getCategoryBySlug(slug);	                	                
-	                
-	                CategoryModel categoryParent = categoryService.getById(category.getCategoryId());		                		                
-	                List<CategoryModel> categoryChildList = categoryService.getChildCategory(category.getCategoryId());
-	              //đếm số lượng product trong mỗi category
-	                for (CategoryModel categoryChild : categoryChildList) {
-						int countProduct = countProductsInCategory(categoryChild.getId());
-						
-						categoryChild.setCountProduct(countProduct);
-					}
-	                
-	                List<ProductModel> productList = new ArrayList<ProductModel>();
-	                List<ImageModel> imageList = new ArrayList<ImageModel>();
-	                
-//	              //Lấy danh sách style từ category parent
-	                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
-	                req.setAttribute("styleList", styleList);  
-	                req.setAttribute("category", category);
-	                
-	                int styleId = Integer.parseInt(req.getParameter("styleId"));
-	                List<StyleValueModel> styleValueList = styleValueService.getByStyleId(styleId);	              
-	                
-	                for (StyleValueModel styleValue : styleValueList) {
-	                	List<ProductModel> productsInStyle = productService.getByStyleValueId(styleValue.getId());
-	                	productList.addAll(productsInStyle);
-					}	                	     	                
-	                
-	                
-	                for (ProductModel productModel : productList) {
-	        			ImageModel image = imageService.getImage(productModel.getId());
-	        			imageList.add(image);
-	        		}	                
-	                
-	                req.setAttribute("categoryChildList", categoryChildList);
-	                req.setAttribute("categoryList", categoryChildList);
-	                req.setAttribute("productList", productList);
-	                req.setAttribute("imageList", imageList);
-	                req.setAttribute("categoryParent", categoryParent);
-	               	                
-	                
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-				
-			}
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		
-		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/category.jsp");
-        rd.forward(req, resp);
-	}
 
 	public int countProductsInCategory(int categoryId) {
         // Get products by category
@@ -349,105 +181,6 @@ public class GuestController extends HttpServlet{
 
         return productCount;
     }
-	
-	private void getCategory(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String url = req.getRequestURL().toString();
-		URI uri;
-		try {
-
-			uri = new URI(url);
-			String path = uri.getPath();
-
-			String[] parts = path.split("/");
-
-			if (parts.length > 0) {
-				String slug = parts[parts.length - 1];
-				
-				try {
-					//Lấy category từ slug
-	                CategoryModel category = categoryService.getCategoryBySlug(slug);
-	                
-	                Boolean isCategoryOrigin = false;
-	                
-	                //Kiếm tra category có phải là một caetgory gốc
-	                List<CategoryModel> categoryParentList = categoryService.getParentCategory();
-	                for (CategoryModel categoryModel : categoryParentList) {
-						if (category.getId() == categoryModel.getId()) {
-							isCategoryOrigin = true;
-						}
-					}
-	                
-	                //Khai báo trong trường hợp nó là category gốc
-	                CategoryModel categoryParent = categoryService.getParentCategory(category.getId());		                		                
-	                List<CategoryModel> categoryChildList = categoryService.getChildCategory(category.getId());
-	                List<ProductModel> productList = new ArrayList<ProductModel>();
-	                List<ImageModel> imageList = new ArrayList<ImageModel>();
-	                
-	                //Lấy ra tất cả sản phẩm
-	                for (CategoryModel categoryChild : categoryChildList) {
-	                	List<ProductModel> productCategoryChilds = productService.getByCategoryId(categoryChild.getId());
-	                	productList.addAll(productCategoryChilds);
-					}
-	                
-	                int sortBy = Integer.parseInt(req.getParameter("sortBy"));	                	                	                	                	                  
-	                
-	                //nếu không phải
-	                if (isCategoryOrigin == false) {
-	                	categoryChildList = categoryService.getChildCategory(category.getCategoryId());
-	                	categoryParent = categoryService.getById(category.getCategoryId());
-	                	productList = productService.getByCategoryId(category.getId());
-	                	
-	                	//Lấy danh sách style value từ category parent
-		                List<StyleModel> styleList = styleService.getByCategoryId(category.getId());
-		                req.setAttribute("styleList", styleList);
-		                
-		                req.setAttribute("categoryStyle", category);
-	                }
-	                
-	                List<ProductModel> productListSort = new ArrayList<ProductModel>();             
-	                
-	                //sắp xếp
-	                if (sortBy == 0) {
-		                productListSort = productService.SortingProductbyPriceAscending(productList);
-	                }
-	                else if (sortBy == 1) {
-	                	productListSort = productService.SortingProductbyPriceDecending(productList);		               
-	                }
-	                
-	                
-	                //đếm số lượng product trong mỗi category
-	                for (CategoryModel categoryChild : categoryChildList) {
-						int countProduct = countProductsInCategory(categoryChild.getId());
-						
-						categoryChild.setCountProduct(countProduct);
-					}	
-	                
-	                for (ProductModel productModel : productList) {
-	        			ImageModel image = imageService.getImage(productModel.getId());
-	        			imageList.add(image);
-	        		}
-	                
-	                req.setAttribute("sortBy", sortBy);
-	                req.setAttribute("category", category);
-	                req.setAttribute("categoryChildList", categoryChildList);
-	                req.setAttribute("categoryList", categoryChildList);
-	                req.setAttribute("productList", productListSort);
-	                req.setAttribute("imageList", imageList);
-	                req.setAttribute("categoryParent", categoryParent);
-	               	                
-	                
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-				
-			}
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		
-		RequestDispatcher rd = req.getRequestDispatcher("/views/guest/category.jsp");
-        rd.forward(req, resp);
-	}
 
 	private void search(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// ma hoa UTF-8
