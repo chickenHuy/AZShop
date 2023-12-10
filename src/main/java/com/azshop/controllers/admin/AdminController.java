@@ -39,6 +39,7 @@ import com.azshop.models.ProductModel;
 import com.azshop.models.RevenueData;
 import com.azshop.models.ReviewModel;
 import com.azshop.models.StoreLevelModel;
+import com.azshop.models.TransactionModel;
 import com.azshop.services.*;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
@@ -53,7 +54,7 @@ import com.azshop.services.*;
 		"/admin/styles", "/admin/style/delete", "/admin/style/restore", "/admin/addstyle", "/admin/style/stylevalues",
 		"/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
 		"/admin/order-detail","/admin/UserStatic","/admin/StoreStatic", "/admin/style/edit", "/admin/category/restore",
-        "/admin/delivery","/admin/adddelivery","/admin/editdelivery","/admin/deletedelivery","admin/transaction" })
+        "/admin/delivery","/admin/adddelivery","/admin/editdelivery","/admin/deletedelivery","/admin/transaction" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -72,6 +73,7 @@ public class AdminController extends HttpServlet {
 	IDeliveryService deliveryService = new DeliveryServiceImpl();
 	IReviewService ReviewService = new ReviewServiceImpl();
 	IImageService imageService = new ImageServiceImpl();
+	ITransactionService transactionService = new TransactionServiceImpl();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -229,6 +231,8 @@ public class AdminController extends HttpServlet {
 			}
 			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/editdelivery.jsp");
 			rDispatcher.forward(req, resp);
+		}	else if(url.contains("/admin/transaction")) {
+			getTransaction(req, resp);
 		}
 	}
 
@@ -1223,6 +1227,15 @@ public class AdminController extends HttpServlet {
 			resp.sendRedirect("editdelivery?message=Failed to delete delivery");
 		}
 	}
+	
+	private void getTransaction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		List<TransactionModel> list = transactionService.getAll();
+		req.setAttribute("listTransaction", list);
+		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/transaction.jsp");
+		rDispatcher.forward(req, resp);
+	}
+	
+	
 
 
 }
