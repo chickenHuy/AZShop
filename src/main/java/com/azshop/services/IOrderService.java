@@ -35,6 +35,8 @@ public interface IOrderService {
 	List<OrderModel> getProcessed(int storeId);
 
 	BigDecimal calculateOrderTotal(int id);
+	
+	OrderModel getByStatus(String status);
 
 	List<BigDecimal> GetRevenueLastNDays(int nDay, int storeId);
 

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.azshop.models.OrderModel;
+import com.mysql.cj.protocol.x.SyncFlushDeflaterOutputStream;
 
 public class OrderDAOImpl implements IOrderDAO {
 
@@ -644,8 +645,39 @@ public class OrderDAOImpl implements IOrderDAO {
 		return oderModelList;
 	}
 	
-	
-	
+	@Override
+	public OrderModel getByStatus(String status) {
+		OrderModel order = new OrderModel();
+		try {
+			String sql = "Select * from [Order] where status = ?";
+			conn = new DBConnection().getConnection();
 
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, status);
 
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				order.setId(rs.getInt("id"));
+				order.setUserId(rs.getInt("userId"));
+				order.setStoreId(rs.getInt("storeId"));
+				order.setDeliveryId(rs.getInt("deliveryId"));
+				order.setRecipientName(rs.getString("recipientName"));
+				order.setAddress(rs.getString("address"));
+				order.setPhone(rs.getString("phone"));
+				order.setStatus(rs.getString("status"));
+				order.setPaidBefore(rs.getBoolean("isPaidBefore"));
+				order.setAmountFromUser(rs.getBigDecimal("amountFromUser"));
+				order.setAmountFromStore(rs.getBigDecimal("amountFromStore"));
+				order.setAmountToStore(rs.getBigDecimal("amountToStore"));
+				order.setAmountToAZShop(rs.getBigDecimal("amountToAZShop"));
+				order.setCreateAt(rs.getDate("createAt"));
+				order.setUpdateAt(rs.getDate("updateAt"));
+			}
+
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return order;
+	}
 }

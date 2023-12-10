@@ -15,8 +15,7 @@ public class OrderItemServiceImpl implements IOrderItemService {
 
 	@Override
 	public void insert(OrderItemModel orderItem) {
-		// TODO Auto-generated method stub
-
+		orderItemDAO.insert(orderItem);
 	}
 
 	@Override

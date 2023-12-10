@@ -18,6 +18,8 @@ public interface IOrderDAO {
 	List<OrderModel> getByStoreId(int storeId);
 
 	List<OrderModel> getByDeliveryId(int deliveryId);
+	
+	OrderModel getByStatus(String status);
 
 	void update(OrderModel order);
 

@@ -23,8 +23,12 @@ public class OrderServiceImpl implements IOrderService {
 
 	@Override
 	public void insert(OrderModel order) {
-		// TODO Auto-generated method stub
+		orderDAO.insert(order);
 
+	}
+	
+	public OrderModel getByStatus(String status) {
+		return orderDAO.getByStatus(status);
 	}
 
 	@Override

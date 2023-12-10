@@ -17,17 +17,25 @@
 	href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700"
 	rel="stylesheet">
 
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+	integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <!-- Bootstrap -->
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 <!-- Slick -->
-<link rel="stylesheet" type="text/css" href="<c:url value='/templates/guest/css/slick.css' />">
-<link rel="stylesheet" type="text/css" href="<c:url value='/templates/guest/css/slick-theme.css' />">
+<link rel="stylesheet" type="text/css"
+	href="<c:url value='/templates/guest/css/slick.css' />">
+<link rel="stylesheet" type="text/css"
+	href="<c:url value='/templates/guest/css/slick-theme.css' />">
 
 <!-- nouislider -->
-<link rel="stylesheet" type="text/css" href="<c:url value='/templates/guest/css/nouislider.min.css' />">
+<link rel="stylesheet" type="text/css"
+	href="<c:url value='/templates/guest/css/nouislider.min.css' />">
 
 <!-- Font Awesome Icon -->
 <link
@@ -35,8 +43,9 @@
 	rel="stylesheet" type="text/css">
 
 <!-- Custom stlylesheet -->
-<link rel="stylesheet" type="text/css" href="<c:url value='/templates/guest/css/style.css' />">
-	
+<link rel="stylesheet" type="text/css"
+	href="<c:url value='/templates/guest/css/style.css' />">
+
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -60,13 +69,10 @@
 	<script src="<c:url value='/templates/guest/js/jquery.min.js' />"></script>
 
 	<script src="<c:url value='/templates/guest/js/slick.min.js' />"></script>
-	<script
-		src="<c:url value='/templates/guest/js/bootstrap.min.js' />"></script>
+	<script src="<c:url value='/templates/guest/js/bootstrap.min.js' />"></script>
 	<script src="<c:url value='/templates/guest/js/slick.min.js' />"></script>
-	<script
-		src="<c:url value='/templates/guest/js/nouislider.min.js' />"></script>
-	<script
-		src="<c:url value='/templates/guest/js/jquery.zoom.min.js' />"></script>
+	<script src="<c:url value='/templates/guest/js/nouislider.min.js' />"></script>
+	<script src="<c:url value='/templates/guest/js/jquery.zoom.min.js' />"></script>
 	<script src="<c:url value='/templates/guest/js/main.js' />"></script>
 
 </body>

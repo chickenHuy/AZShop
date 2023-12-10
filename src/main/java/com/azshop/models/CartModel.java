@@ -11,6 +11,7 @@ public class CartModel implements Serializable {
     private int storeId;
     private Date createAt;
     private Date updateAt;
+    private String nameStore;
     
 	public CartModel() {
 	}
@@ -44,6 +45,10 @@ public class CartModel implements Serializable {
 		return storeId;
 	}
 
+	public String getNameStore() {
+		return nameStore;
+	}
+
 	public void setStoreId(int storeId) {
 		this.storeId = storeId;
 	}
@@ -62,6 +67,10 @@ public class CartModel implements Serializable {
 
 	public void setUpdateAt(Date updateAt) {
 		this.updateAt = updateAt;
+	}
+
+	public void setNameStore(String nameStore) {
+		this.nameStore = nameStore;
 	}
 
 	@Override
