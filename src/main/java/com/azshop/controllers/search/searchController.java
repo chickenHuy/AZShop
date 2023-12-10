@@ -113,17 +113,37 @@ public class searchController extends HttpServlet {
 			}
 			
 			String style = request.getParameter("styleId");
+			String action = request.getParameter("action");
 			int styleTmp = -1;
 			if (style != null) {
 				styleTmp = Integer.parseInt(style);
 			}
+			String page = request.getParameter("page");
+			int pageNumber = 1;
+			if (page != null)
+				pageNumber = Integer.parseInt(page);
+			if (action != null)
+			{
+				if (action.equals("left"))
+				{
+					if (pageNumber -1 >= 1)
+						pageNumber = pageNumber -1;
+				}
+				if (action.equals("right"))
+				{
+					pageNumber = pageNumber + 1;
+				}
+			}
+			
 	        String keyword = request.getParameter("searchTerm");
 	        int categoryId = Integer.parseInt(request.getParameter("categoryId"));
-	        List<ProductModel> productModels = productService.search(keyword, categoryId, -1, -1, styleTmp,1,12);
-	        for (ProductModel productModel : productModels) {
-				System.out.println(productModel.getName());
-			}
-	        
+	        List<ProductModel> productModels = productService.search(keyword, categoryId, -1, -1, styleTmp,pageNumber,6);
+	        if (productModels.size() == 0 && pageNumber!= 1)
+	        {
+	        	pageNumber = pageNumber -1;
+	        	productModels = productService.search(keyword, categoryId, -1, -1, styleTmp,pageNumber,6);
+	        }
+	        request.setAttribute("page", pageNumber);
 	        List<StoreModel> storeModels = storeService.searchByKey(keyword, -1);
 
 			if (storeModels != null && !storeModels.isEmpty()) {
@@ -167,6 +187,8 @@ public class searchController extends HttpServlet {
 	        request.setAttribute("searchTerm", keyword);
 	        request.setAttribute("categoryId", categoryId);
 	        request.setAttribute("categoryParentList", categoryParentList);
+	        
+	        
 	        request.getRequestDispatcher("/views/customer/search.jsp").forward(request, response);
 	    }
 	    
