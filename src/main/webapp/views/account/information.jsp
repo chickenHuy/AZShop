@@ -29,6 +29,11 @@
 	href="<c:url value='/templates/account/assets/css/style.css' />">
 </head>
 <body>
+	<c:if test="${done != null}">
+	<script>
+        window.alert("${done}");
+    </script>
+	</c:if>
 
 	<!-- ======= Header ======= -->
 	<header id="header" class="header fixed-top d-flex align-items-center" style="background-color: #15161d;">
@@ -380,7 +385,9 @@
 																<td>${order.createAt}</td>
 																
 																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a>
-																	<a href="/AZShop/cancellOrder?id=${order.id}" class="btn btn-danger">Cancell</a>
+																	<form action="cancellOrder" method="post">
+																	<button name = "id" value = "${order.id}" class="btn btn-danger" type="submit" st>Cancell</button>
+																	</form>
 																</td>
 															</tr>
 														</c:forEach>
