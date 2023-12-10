@@ -143,6 +143,6 @@
 			</div>
 		</div>
 	</div>
-	<p>${messagae}</p>
+	<p>${message}</p>
 
 </main>
