@@ -18,7 +18,7 @@ public interface IUserService {
 	
 	boolean checkExistEmial(String email);
 
-	boolean insertRegister(String firstName, String lastName, String email, String password);
+	boolean insertRegister(UserModel user);
 
 	void updateStatusEmail(UserModel user);
 	

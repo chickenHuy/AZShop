@@ -123,33 +123,48 @@ public class StyleDAOImpl implements IStyleDAO{
 
 	@Override
 	public List<StyleModel> getByCategoryId(int categoryId) {
-		List<StyleModel> styleModels = new ArrayList<StyleModel>();
-		try {
-			 String sql = "SELECT * FROM Style WHERE categoryId = ? AND isDeleted = 0";
-		        conn = new DBConnection().getConnection();
-		        
-		        ps = conn.prepareStatement(sql);
-		        ps.setInt(1, categoryId);
-		        rs = ps.executeQuery();
-		        
-		        while (rs.next()) {
-		        	StyleModel styleModel = new StyleModel();
-		        	styleModel.setId(rs.getInt("id"));
-		        	styleModel.setName(rs.getString("name"));
-		        	styleModel.setCategoryId(rs.getInt("categoryId"));
-		        	styleModel.setDeleted(rs.getBoolean("isDeleted"));
-		            styleModel.setCreateAt(rs.getDate("createAt"));
-		            styleModel.setUpdateAt(rs.getDate("updateAt"));
-		            
-		            styleModels.add(styleModel);
-		        }
-		        
-		        conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return styleModels;
+	    List<StyleModel> styleModels = new ArrayList<>();
+	    Connection conn = null;
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	    int id = categoryId;
+
+	    try {
+	        conn = new DBConnection().getConnection();
+	        String sql1 = "SELECT categoryId FROM Category WHERE Id = ?";
+	        ps = conn.prepareStatement(sql1);
+	        ps.setInt(1, id);
+	        rs = ps.executeQuery();
+  
+	        if (rs.next()) {
+	            int categoryIdFromRs = rs.getInt("categoryId");
+	            if (categoryIdFromRs != 0) {
+	                id = categoryIdFromRs;
+	            }
+	        }
+
+	        String sql2 = "SELECT * FROM Style WHERE categoryId = ? AND isDeleted = 0";
+	        ps = conn.prepareStatement(sql2);
+	        ps.setInt(1, id);
+	        rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            StyleModel styleModel = new StyleModel();
+	            styleModel.setId(rs.getInt("id"));
+	            styleModel.setName(rs.getString("name"));
+	            styleModel.setCategoryId(rs.getInt("categoryId"));
+	            styleModel.setDeleted(rs.getBoolean("isDeleted"));
+	            styleModel.setCreateAt(rs.getDate("createAt"));
+	            styleModel.setUpdateAt(rs.getDate("updateAt"));
+
+	            styleModels.add(styleModel);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } 
+	    return styleModels;
 	}
+
 
 	@Override
 	public void update(StyleModel style) {

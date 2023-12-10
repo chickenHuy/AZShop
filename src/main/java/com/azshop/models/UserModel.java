@@ -62,10 +62,11 @@ public class UserModel implements Serializable {
 	}
 
 
-	public UserModel(String firstName, String lastName, String email) {
+	public UserModel(String firstName, String lastName, String email, String hashedPassword) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
+		this.hashedPassword = hashedPassword;
 	}
 
 

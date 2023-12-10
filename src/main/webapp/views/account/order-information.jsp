@@ -119,8 +119,8 @@
 					<div class="card">
 						<div class="card-body pt-3">
 							<!-- Nội dung cho Đơn hàng Đang Chờ -->
-							<h5 class="card-title">Bảng dữ liệu</h5>
-							<p>Theo dõi đơn hàng tại đây!</p>
+							<h5 class="card-title">THÔNG TIN CHI TIẾT ĐƠN HÀNG</h5>
+							<p>Các đơn hàng bạn đã đặt!</p>
 				
 							<table class="table datatable">
 								<thead>
@@ -133,16 +133,26 @@
 									</tr>
 								</thead>
 								<tbody>
-									<c:forEach var="index" begin="0" end="${size - 1}">
-										<tr>
-											<td>${orderItems[index].productId}</td>
-											<td>${product[index].name}</td>
-											<td>${product[index].price}</td>
-											<td>${product[index].description}</td>
-											<td>${orderItems[index].count}</td>
-										</tr>
-									</c:forEach>
+									<c:choose>
+										<c:when test="${size > 0}">
+											<c:forEach var="index" begin="0" end="${size - 1}">
+												<tr>
+													<td>${orderItems[index].productId}</td>
+													<td>${product[index].name}</td>
+													<td>${product[index].price}</td>
+													<td>${product[index].description}</td>
+													<td>${orderItems[index].count}</td>
+												</tr>
+											</c:forEach>
+										</c:when>
+										<c:otherwise>
+											<tr>
+												<td colspan="5">Không có dữ liệu để hiển thị.</td>
+											</tr>
+										</c:otherwise>
+									</c:choose>
 								</tbody>
+								
 							</table>
 				
 						</div>

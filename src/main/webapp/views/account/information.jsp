@@ -384,11 +384,15 @@
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
 																
-																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a>
-																	<form action="cancellOrder" method="post">
-																	<button name = "id" value = "${order.id}" class="btn btn-danger" type="submit" st>Cancell</button>
+																<td>
+																	<a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a>
+																	
+																	<form action="cancellOrder" method="post" style="display: inline;">
+																		<input type="hidden" name="id" value="${order.id}">
+																		<button class="btn btn-danger" type="submit">Cancel</button>
 																	</form>
 																</td>
+																
 															</tr>
 														</c:forEach>
 													</tbody>
@@ -420,7 +424,7 @@
 																<td>${order.status}</td>
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
-																<td>Action</td>
+																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a></td>
 															</tr>
 														</c:forEach>
 													</tbody>
@@ -452,7 +456,7 @@
 																<td>${order.status}</td>
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
-																<td>Action</td>
+																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a></td>
 															</tr>
 														</c:forEach>
 													</tbody>
@@ -484,7 +488,7 @@
 																<td>${order.status}</td>
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
-																<td>Action</td>
+																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a></td>
 															</tr>
 														</c:forEach>
 													</tbody>
@@ -516,7 +520,7 @@
 																<td>${order.status}</td>
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
-																<td>Action</td>
+																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a></td>
 															</tr>
 														</c:forEach>
 													</tbody>
@@ -548,7 +552,7 @@
 																<td>${order.status}</td>
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
-																<td>Action</td>
+																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a></td>
 															</tr>
 														</c:forEach>
 													</tbody>
@@ -580,7 +584,7 @@
 																<td>${order.status}</td>
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
-																<td>Action</td>
+																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a></td>
 															</tr>
 														</c:forEach>
 													</tbody>

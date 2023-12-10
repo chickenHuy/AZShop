@@ -55,7 +55,7 @@ import com.azshop.services.*;
 		"/admin/style/stylevalue/*", "/admin/style/addstylevalue", "/admin/style/stylevalue/edit",
 		"/admin/order-detail", "/admin/UserStatic", "/admin/StoreStatic", "/admin/style/edit",
 		"/admin/category/restore", "/admin/delivery", "/admin/adddelivery", "/admin/editdelivery",
-		"/admin/deletedelivery", "/admin/transaction" })
+		"/admin/deletedelivery", "/admin/transaction", "/admin/order/cancel-order" })
 
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -203,6 +203,8 @@ public class AdminController extends HttpServlet {
 			restoreUserLevel(req, resp);
 		} else if (url.contains("/admin/order-detail")) {
 			getOrderDetail(req, resp);
+			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/orderDetail.jsp");
+			rDispatcher.forward(req, resp);
 		} else if (url.contains("/admin/StoreStatic")) {
 			GetStatisticsStore(req, resp);
 		} else if (url.contains("/admin/UserStatic")) {
@@ -247,7 +249,7 @@ public class AdminController extends HttpServlet {
 		String orderId = req.getParameter("orderId");
 		if (orderId != null) {
 			List<OrderItemModel> listOrderItem = orderItemService.getByOrderId(Integer.parseInt(orderId));
-			req.setAttribute("listOrderItem", listOrderItem);
+			
 			int countProduct = listOrderItem.size();
 			req.setAttribute("countProduct", countProduct);
 			BigDecimal totalOrder = BigDecimal.ZERO;
@@ -276,9 +278,21 @@ public class AdminController extends HttpServlet {
 
 			UserLevelModel userLevel = userLevelService.getById(user.getUserLevelId());
 			req.setAttribute("discount", BigDecimal.valueOf(userLevel.getDiscount() / 100.0).multiply(totalOrder));
+			
+			for (int i = 0; i < listOrderItem.size(); i++) {
+			    for (int j = i + 1; j < listOrderItem.size(); j++) {
+			        if (listOrderItem.get(i).getProductId() == listOrderItem.get(j).getProductId()) {
+			        	listOrderItem.get(i).setCount(listOrderItem.get(i).getCount() + listOrderItem.get(j).getCount());
+			        	orderItemService.update(listOrderItem.get(i));
+			        	listOrderItem.remove(j);
+			        }
+			    }
+			}
+			req.setAttribute("listOrderItem", listOrderItem);
 
-			RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/orderDetail.jsp");
-			rDispatcher.forward(req, resp);
+			String message = req.getParameter("message");
+			req.setAttribute("message", message);
+
 		}
 	}
 
@@ -392,6 +406,22 @@ public class AdminController extends HttpServlet {
 		} else {
 			selectedDate = currentDate;
 		}
+		int n;
+		String dayParam = req.getParameter("quantity");
+		if (dayParam != null) {
+			try {
+				n = Integer.parseInt(dayParam);
+			} catch (NumberFormatException e) {
+				e.printStackTrace(); // Xử lý ngoại lệ nếu có lỗi khi chuyển đổi
+				n = 1; // Nếu có lỗi, sử dụng giá trị mặc định là 1
+			}
+		} else {
+			n = 1;
+		}
+		List<StoreModel> stores = storeService.getStoreWithinDays(n);
+		
+		req.setAttribute("day", n);
+		req.setAttribute("stores", stores);
 		int count = storeService.countNewStores(selectedDate);
 		int total = storeService.getTotalStores();
 		req.setAttribute("total", total);
@@ -507,15 +537,30 @@ public class AdminController extends HttpServlet {
 
 		OrderModel order = orderService.getById(Integer.parseInt(orderId));
 
-		if ("pending Pickup".equals(order.getStatus())) {
-			order.setStatus("shipping");
-		} else if ("shipping".equals(order.getStatus())) {
-			order.setStatus("delivered");
-		} else if ("delivered".equals(order.getStatus())) {
-			order.setStatus("completed");
-			StoreModel storeModel = storeService.getById(order.getStoreId());
-			storeModel.seteWallet(order.getAmountToStore());
-			storeService.update(storeModel);
+		if ("Pending Pickup".equals(order.getStatus())) {
+			order.setStatus("Shipping");
+		} else if ("Shipping".equals(order.getStatus())) {
+			order.setStatus("Selivered");
+		} else if ("Delivered".equals(order.getStatus())) {
+			order.setStatus("Completed");
+			try {
+				// Cộng tiền vào cho Store
+				StoreModel storeModel = storeService.getById(order.getStoreId());
+				storeModel.seteWallet(storeModel.geteWallet().add(order.getAmountFromStore()));
+				storeService.update(storeModel);
+
+				// Tăng số lượng đã bán của sản phẩm
+				// Lấy danh sách orderItem
+				List<OrderItemModel> listOrderItem = orderItemService.getByOrderId(Integer.parseInt(orderId));
+				for (OrderItemModel orderItem : listOrderItem) {
+					ProductModel product = productService.getById(orderItem.getProductId());
+					product.setSold(product.getSold() + orderItem.getCount());
+					productService.update(product);
+				}
+			} catch (Exception e) {
+
+			}
+
 		}
 
 		// Update the order only once after processing all conditions
@@ -746,8 +791,38 @@ public class AdminController extends HttpServlet {
 			postEditDelivery(req, resp);
 		} else if (url.contains("/admin/deletedelivery")) {
 			postDeleteDelivery(req, resp);
+		} else if (url.contains("/admin/order/cancel-order")) {
+			postCancelOrder(req, resp);
 		}
 
+	}
+
+	private void postCancelOrder(HttpServletRequest req, HttpServletResponse resp)
+			throws IOException, ServletException {
+		String id = req.getParameter("id");
+
+		if (id != null) {
+			try {
+				OrderModel order = orderService.getById(Integer.parseInt(id));
+				order.setStatus("Cancelled");
+
+				List<OrderItemModel> listOrderItem = orderItemService.getByOrderId(order.getId());
+				for (OrderItemModel orderItem : listOrderItem) {
+					ProductModel product = productService.getById(orderItem.getProductId());
+					product.setQuantity(product.getQuantity() + orderItem.getCount());
+					productService.update(product);
+				}
+				orderService.update(order);
+				getOrderDetail(req, resp);
+				resp.sendRedirect("/AZShop/admin/order-detail?orderId=" + id + "&&message=Successfully");
+			} catch (Exception e) {
+				getOrderDetail(req, resp);
+				resp.sendRedirect("/AZShop/admin/order-detail?orderId=" + id + "&&message=Failed");
+			}
+		} else {
+			getOrderDetail(req, resp);
+			resp.sendRedirect("/AZShop/admin/order-detail?orderId=" + id + "&&message=Failed");
+		}
 	}
 
 	private void postEditStyle(HttpServletRequest req, HttpServletResponse resp) throws IOException {
