@@ -378,7 +378,10 @@
 																<td>${order.status}</td>
 																<td>${order.phone}</td>
 																<td>${order.createAt}</td>
-																<td>Action</td>
+																
+																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a>
+																	<a href="/AZShop/cancellOrder?id=${order.id}" class="btn btn-danger">Cancell</a>
+																</td>
 															</tr>
 														</c:forEach>
 													</tbody>

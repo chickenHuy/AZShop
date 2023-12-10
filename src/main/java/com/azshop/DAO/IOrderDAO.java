@@ -44,4 +44,5 @@ public interface IOrderDAO {
 	int getTotalShopRevenue();
 
 	List<OrderModel> getByUserIdandStatus(int userId, String status);
+	boolean resoreQuantityProduct(int orderId);
 }

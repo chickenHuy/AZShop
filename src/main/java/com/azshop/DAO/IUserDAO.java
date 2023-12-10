@@ -32,6 +32,6 @@ public interface IUserDAO {
 
 	void updateVendor(UserModel userModel);
 	
-	
+	List<UserModel> getUserWithinDays(int days);
 	
 }
