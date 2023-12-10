@@ -48,4 +48,9 @@ public class StyleServiceImpl implements IStyleService {
 	public void restore(int id) {
 		styleDAO.restore(id);
 	}
+
+	@Override
+	public List<StyleModel> getByCateId(int categoryId) {
+		return styleDAO.getByCateId(categoryId);
+	}
 }
