@@ -255,7 +255,7 @@ public class CustomerController extends HttpServlet {
 	}
 
 	private void getAll(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<ProductModel> productList = productService.getAll();
+		List<ProductModel> productList = productService.getAllProductActive();
 		List<CategoryModel> categoryList = categoryService.getAll();
 		List<ImageModel> imageList = new ArrayList<ImageModel>();
 		

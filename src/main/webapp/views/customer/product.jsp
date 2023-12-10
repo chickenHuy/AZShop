@@ -163,7 +163,7 @@
 							</h3>
 							<span class="product-available">In Stock</span>
 						</div>
-						<p>Cửa hàng: <a href='/AZShop/${role}/store/slug={$store.slug}' style="text-decorator:none;">${store.name}</a></p>
+						<p>Cửa hàng: <a href='<c:url value="/${role}/store/${store.slug}?cate=&sortBy=${0}"/>' style="text-decorator:none;">${store.name}</a></p>
 
 						
 
@@ -424,7 +424,7 @@
 					<!-- product -->
 					<div class="col-md-3 col-xs-6">
 						<div class="product">
-							<a href='<c:url value="/customer/product/${product.slug}"/>'>
+							<a href='<c:url value="/${role}/product/${product.slug}"/>'>
 								<div class="product-img">
 									<c:set var="hasImages" value="false" />
 									<c:forEach var="image" items="${imageRelateds}">

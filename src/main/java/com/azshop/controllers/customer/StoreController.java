@@ -146,7 +146,15 @@ private static final long serialVersionUID = 1L;
 	              //lấy danh sách danh mục
 	                for (ProductModel productModel : productList) {
 						CategoryModel categoryChild = categoryService.getById(productModel.getCategoryId());
-						categoryChildList.add(categoryChild);
+						boolean isExistCategoryChild = false;
+						for (CategoryModel categoryModel : categoryChildList) {
+							if (categoryModel.getId() == categoryChild.getId()) {
+								isExistCategoryChild = true;
+							}
+						}
+						if (isExistCategoryChild == false) {
+							categoryChildList.add(categoryChild);
+						}
 					}	                           
 	                
 	              //đếm số lượng product trong mỗi category

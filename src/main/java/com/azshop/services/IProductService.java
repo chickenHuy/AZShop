@@ -13,6 +13,8 @@ public interface IProductService {
 	List<ProductModel> FindProduct(String keyword);
 
 	List<ProductModel> getAll();
+	
+	List<ProductModel> getAllProductActive();
 
 	List<ProductModel> getByCategoryId(int categoryId);
 
