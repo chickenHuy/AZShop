@@ -221,4 +221,36 @@ public class StyleDAOImpl implements IStyleDAO{
 		}
 		
 	}
+
+	@Override
+	public List<StyleModel> getByCateId(int categoryId) {
+		List<StyleModel> styleModels = new ArrayList<>();
+	    Connection conn = null;
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	    int id = categoryId;
+
+	    try {
+	        conn = new DBConnection().getConnection();
+	        String sql2 = "SELECT * FROM Style WHERE categoryId = ? AND isDeleted = 0";
+	        ps = conn.prepareStatement(sql2);
+	        ps.setInt(1, id);
+	        rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            StyleModel styleModel = new StyleModel();
+	            styleModel.setId(rs.getInt("id"));
+	            styleModel.setName(rs.getString("name"));
+	            styleModel.setCategoryId(rs.getInt("categoryId"));
+	            styleModel.setDeleted(rs.getBoolean("isDeleted"));
+	            styleModel.setCreateAt(rs.getDate("createAt"));
+	            styleModel.setUpdateAt(rs.getDate("updateAt"));
+
+	            styleModels.add(styleModel);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } 
+	    return styleModels;
+	}
 }

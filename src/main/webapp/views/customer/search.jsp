@@ -14,7 +14,7 @@
 					<div class="aside">
 						<h3 class="aside-title">Danh mục tìm kiếm</h3>
 						<div class="checkbox-filter">
-							<a href='<c:url value="/customer/search?categoryId=-1&styleId=${styleId}&searchTerm=${searchTerm}"/>'>
+							<a href='<c:url value="/${role}/search?categoryId=-1&styleId=${styleId}&searchTerm=${searchTerm}"/>'>
 								<div class="input-checkbox ${category.slug}">
 										<c:if test="${categoryId eq '-1'}"> 
 											<label style="color: #d10024"> Tất cả
@@ -25,7 +25,7 @@
 								</div>
 							</a>
 							<c:forEach var="category" items="${categoryParentList}">	
-								<a href='<c:url value="/customer/search?categoryId=${category.id}&styleId=${styleId}&searchTerm=${searchTerm}"/>'>
+								<a href='<c:url value="/${role}/search?categoryId=${category.id}&styleId=${styleId}&searchTerm=${searchTerm}"/>'>
 									<div class="input-checkbox ${category.slug}">
 										<c:if test="${categoryId eq category.id}"> 
 											<label style="color: #d10024">${category.name}
@@ -48,7 +48,7 @@
 						<h3 class="aside-title">Style</h3>
 						<div class="checkbox-filter">
 							<c:forEach var="style" items="${styles}">	
-								<a href='<c:url value="/customer/search?categoryId=${categoryId}&styleId=${style.id}&searchTerm=${searchTerm}"/>'>
+								<a href='<c:url value="/${role}/search?categoryId=${categoryId}&styleId=${style.id}&searchTerm=${searchTerm}"/>'>
 									<div class="input-checkbox">
 											<label>${style.name}</label>
 									</div>
@@ -96,7 +96,7 @@
 						<!-- product -->
 							<div class="col-md-4 col-xs-6">
 								<div class="product">
-									<a href='<c:url value="/customer/product/${product.slug}"/>'>
+									<a href='<c:url value="/${role}/product/${product.slug}"/>'>
 										<div class="product-img">
 											<c:set var="hasImages" value="false" />
 											<c:forEach var="image" items="${images}">
@@ -111,9 +111,6 @@
 													src="${pageContext.request.contextPath}/templates/static/none.png"
 													alt="" />
 											</c:if>
-											<div class="product-label">
-												<span class="sale">-30%</span> <span class="new">NEW</span>
-											</div>
 										</div>
 									</a>
 									<div class="product-body">
@@ -167,11 +164,11 @@
 						<span class="store-qty">Showing 20-100 products</span>
 						<ul class="store-pagination">
 							<c:if test="${page != null && page != 1}">
-								<li><a href='<c:url value="/customer/search?categoryId=${categoryId}&styleId=${styleId}&action=left&page=${page == null ? '1' : page}&searchTerm=${searchTerm}"/>'><i class="fa fa-angle-left"></i></a></li>
+								<li><a href='<c:url value="/${role}/search?categoryId=${categoryId}&styleId=${styleId}&action=left&page=${page == null ? '1' : page}&searchTerm=${searchTerm}"/>'><i class="fa fa-angle-left"></i></a></li>
 							</c:if>
 								<li class="active">${page == null ? '1' : page}</li> 
 								
-							<li><a href='<c:url value="/customer/search?categoryId=${categoryId}&styleId=${styleId}&action=right&page=${page == null ? '1' : page}&searchTerm=${searchTerm}"/>'><i class="fa fa-angle-right"></i></a></li>
+							<li><a href='<c:url value="/${role}/search?categoryId=${categoryId}&styleId=${styleId}&action=right&page=${page == null ? '1' : page}&searchTerm=${searchTerm}"/>'><i class="fa fa-angle-right"></i></a></li>
 						</ul>
 					</div>
 					<!-- /store bottom filter -->
