@@ -406,6 +406,22 @@ public class AdminController extends HttpServlet {
 		} else {
 			selectedDate = currentDate;
 		}
+		int n;
+		String dayParam = req.getParameter("quantity");
+		if (dayParam != null) {
+			try {
+				n = Integer.parseInt(dayParam);
+			} catch (NumberFormatException e) {
+				e.printStackTrace(); // Xử lý ngoại lệ nếu có lỗi khi chuyển đổi
+				n = 1; // Nếu có lỗi, sử dụng giá trị mặc định là 1
+			}
+		} else {
+			n = 1;
+		}
+		List<StoreModel> stores = storeService.getStoreWithinDays(n);
+		
+		req.setAttribute("day", n);
+		req.setAttribute("stores", stores);
 		int count = storeService.countNewStores(selectedDate);
 		int total = storeService.getTotalStores();
 		req.setAttribute("total", total);

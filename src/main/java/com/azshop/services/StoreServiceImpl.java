@@ -84,4 +84,10 @@ public class StoreServiceImpl implements IStoreService {
 		return storeDAO.getTotalStores();
 	}
 
+	@Override
+	public List<StoreModel> getStoreWithinDays(int days) {
+		// TODO Auto-generated method stub
+		return storeDAO.getStoreWithinDays(days);
+	}
+
 }
