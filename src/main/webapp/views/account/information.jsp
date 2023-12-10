@@ -380,7 +380,7 @@
 																<td>${order.createAt}</td>
 																
 																<td><a href="/AZShop/detailOrder?id=${order.id}" class="btn btn-primary">Detail</a>
-																	<a href="${pageContext.request.contextPath} /cancellOrder?id=${order.id}" class="btn btn-danger">Cancell</a>
+																	<a href="/AZShop/cancellOrder?id=${order.id}" class="btn btn-danger">Cancell</a>
 																</td>
 															</tr>
 														</c:forEach>
