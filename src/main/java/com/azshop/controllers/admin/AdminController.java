@@ -564,13 +564,15 @@ public class AdminController extends HttpServlet {
 	private void editOrderStatus(HttpServletRequest req, HttpServletResponse resp)
 			throws UnsupportedEncodingException, IOException, ServletException {
 		String orderId = req.getParameter("orderId");
-
+		String message="";
 		OrderModel order = orderService.getById(Integer.parseInt(orderId));
 
 		if ("Pending Pickup".equals(order.getStatus())) {
 			order.setStatus("Shipping");
+			message = "Successfully";
 		} else if ("Shipping".equals(order.getStatus())) {
 			order.setStatus("Delivered");
+			message = "Successfully";
 		} else if ("Delivered".equals(order.getStatus())) {
 			order.setStatus("Completed");
 			try {
@@ -587,8 +589,18 @@ public class AdminController extends HttpServlet {
 					product.setSold(product.getSold() + orderItem.getCount());
 					productService.update(product);
 				}
-			} catch (Exception e) {
+				
+				TransactionModel transaction = new TransactionModel();
+				transaction.setUserId(order.getUserId());
+				transaction.setStoreId(order.getStoreId());
+				transaction.setAmount(order.getAmountFromUser());
+				transaction.setUp(true);
 
+				transactionService.insert(transaction);
+				message = "Successfully";	
+			} catch (Exception e) {
+				order.setStatus("Delivered");
+				message = "Failed";
 			}
 
 		}
@@ -597,7 +609,7 @@ public class AdminController extends HttpServlet {
 		orderService.update(order);
 
 		// Redirect the user after updating the order status
-		resp.sendRedirect("orders");
+		resp.sendRedirect("orders?message=" + message);
 	}
 
 	private void getProductByCategory(HttpServletRequest req, HttpServletResponse resp)
@@ -711,6 +723,9 @@ public class AdminController extends HttpServlet {
 		List<OrderModel> listOrderAdmin = orderService.getAllAdmin();
 		int countAllOrderAdmin = listOrderAdmin.size();
 		req.setAttribute("countAllOrderAdmin", countAllOrderAdmin);
+		
+		String message = req.getParameter("message");
+		req.setAttribute("message", message);
 
 		RequestDispatcher rDispatcher = req.getRequestDispatcher("/views/admin/orders.jsp");
 		rDispatcher.forward(req, resp);
