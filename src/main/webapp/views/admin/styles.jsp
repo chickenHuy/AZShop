@@ -103,11 +103,11 @@
 												href='<c:url value="/admin/style/edit?id=${style.id}"/>'>Edit</a>
 										</c:if> <c:if test="${style.isDeleted() == true}">
 											<!-- Nếu isDeleted là true, hiển thị nút Restore -->
-											<a class="dropdown-item"
+											<a class="dropdown-item" style="color: green;"
 												href='<c:url value="/admin/style/restore?id=${style.id}"/>'>Restore</a>
 										</c:if> <c:if test="${style.isDeleted() == false}">
 											<!-- Nếu isDeleted là false, hiển thị nút Delete -->
-											<a class="dropdown-item"
+											<a class="dropdown-item" style="color: red;"
 												href='<c:url value="/admin/style/delete?id=${style.id}"/>'>Delete</a>
 										</c:if></td>
 									<td><a class="dropdown-item"
