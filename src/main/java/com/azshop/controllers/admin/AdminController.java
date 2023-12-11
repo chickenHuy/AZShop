@@ -83,9 +83,17 @@ public class AdminController extends HttpServlet {
 		String url = req.getRequestURL().toString();
 		
 		UserModel user = new UserModel();
+		
+		HttpSession session = req.getSession();
+		UserModel userModel = (UserModel) session.getAttribute(Constant.userSession);
+		
+		if (userModel == null) {
+			resp.sendRedirect(req.getContextPath() + "/login-customer");
+			return;
+		}
 
 		try {
-			HttpSession session = req.getSession();
+			session = req.getSession();
 			if (session != null) {
 				Object sessionObject = session.getAttribute(Constant.userSession);
 				if (sessionObject instanceof UserModel) {
