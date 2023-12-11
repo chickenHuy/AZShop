@@ -170,12 +170,14 @@ public class searchController extends HttpServlet {
 	        	imageModels.add(imageService.getImage(productModel.getId()));
 			}
 	        
-	        List<CategoryModel> categoryParentList = categoryService.getParentCategory();
-	        List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+//	        List<CategoryModel> categoryParentList = categoryService.getParentCategory();
+//	        List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
 	        
-	        for (CategoryModel categoryModel : categoryParentList) {
-				categoryList.addAll(categoryService.getChildCategory(categoryModel.getId()));
-			}
+	        List<CategoryModel> categoryList = categoryService.getAll();
+	        
+//	        for (CategoryModel categoryModel : categoryParentList) {
+//				categoryList.addAll(categoryService.getChildCategory(categoryModel.getId()));
+//			}
 	        
 	        for (CategoryModel category : categoryList) {
 				
