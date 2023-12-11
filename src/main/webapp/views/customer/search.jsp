@@ -49,7 +49,7 @@
 						<div class="checkbox-filter">
 						<a href='<c:url value="/${role}/search?categoryId=${categoryId}&styleId=-1&searchTerm=${searchTerm}"/>'>
 										<c:if test="${styleId eq '-1'}"> 
-											<label style="color: #d10024"> Tất cả
+											<label style="color: #d10024; font-size: 1.35em; font-weight: 500; padding-left: 17px"> Tất cả
 										</c:if>
 										<c:if test="${!(styleId eq '-1')}">
 											<label >Tất cả</label>
