@@ -259,7 +259,7 @@
 															class="col-md-4 col-lg-3 col-form-label">First Name</label>
 														<div class="col-md-8 col-lg-9">
 															<input name="firstName" type="text" class="form-control"
-																id="firstName" value="${user.firstName}">
+																id="firstName" value="${user.firstName}" required>
 														</div>
 													</div>
 
@@ -268,7 +268,7 @@
 															class="col-md-4 col-lg-3 col-form-label">Last Name</label>
 														<div class="col-md-8 col-lg-9">
 															<input name="lastName" type="text" class="form-control"
-																id="lastName" value="${user.lastName}">
+																id="lastName" value="${user.lastName}" required>
 														</div>
 													</div>
 
@@ -348,7 +348,7 @@
 															Password</label>
 														<div class="col-md-8 col-lg-9">
 															<input name="currentPassword" type="password"
-																class="form-control" id="currentPassword">
+																class="form-control" id="currentPassword" required>
 														</div>
 													</div>
 
@@ -358,7 +358,7 @@
 															Password</label>
 														<div class="col-md-8 col-lg-9">
 															<input name="newPassword" type="password"
-																class="form-control" id="newPassword">
+																class="form-control" id="newPassword" required>
 														</div>
 													</div>
 
@@ -368,7 +368,7 @@
 															New Password</label>
 														<div class="col-md-8 col-lg-9">
 															<input name="renewPassword" type="password"
-																class="form-control" id="renewPassword">
+																class="form-control" id="renewPassword" required>
 														</div>
 													</div>
 
