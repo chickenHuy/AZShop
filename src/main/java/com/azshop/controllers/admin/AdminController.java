@@ -379,9 +379,11 @@ public class AdminController extends HttpServlet {
 		List<ReviewModel> ReviewModels = ReviewService.getAll();
 		if (ReviewModels != null)
 			req.setAttribute("totalReview", ReviewModels.size());
+		int totalus = userService.getTotalUsers();
 		req.setAttribute("total", total);
 		req.setAttribute("count", count);
 		req.setAttribute("totalFL", totalFL);
+		req.setAttribute("totalus", totalus);
 		// view nhan du lieu
 		RequestDispatcher rd = req.getRequestDispatcher("/views/admin/dashboard.jsp");
 		rd.forward(req, resp);
@@ -601,7 +603,7 @@ public class AdminController extends HttpServlet {
 				TransactionModel transaction = new TransactionModel();
 				transaction.setUserId(order.getUserId());
 				transaction.setStoreId(order.getStoreId());
-				transaction.setAmount(order.getAmountFromUser());
+				transaction.setAmount(order.getAmountToAZShop());
 				transaction.setUp(true);
 
 				transactionService.insert(transaction);

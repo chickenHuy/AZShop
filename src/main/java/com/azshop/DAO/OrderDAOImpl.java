@@ -557,7 +557,7 @@ public class OrderDAOImpl implements IOrderDAO {
 		    try {
 		        String sql = "SELECT SUM(amountFromStore + amountToStore + amountToAZShop) AS total_shop_revenue " +
 		                     "FROM [Order] " +
-		                     "WHERE CONVERT(DATE, createAt) = ?";
+		                     "WHERE CONVERT(DATE, createAt) = ? and  isDeleted=0 and status='completed'";
 
 		        conn = new DBConnection().getConnection();
 		        ps = conn.prepareStatement(sql);
@@ -583,7 +583,7 @@ public class OrderDAOImpl implements IOrderDAO {
 
 	    try {
 	        String sql = "SELECT SUM(amountFromStore + amountToStore + amountToAZShop) AS total_shop_revenue " +
-	                     "FROM [Order] ";
+	                     "FROM [Order] where isDeleted=0 and status='completed' ";
 
 	        conn = new DBConnection().getConnection();
 	        ps = conn.prepareStatement(sql);
