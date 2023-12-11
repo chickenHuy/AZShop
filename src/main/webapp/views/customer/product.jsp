@@ -161,7 +161,7 @@
 							<h3 class="product-price">
 								${product.price}
 							</h3>
-							<span class="product-available">In Stock</span>
+							<span class="product-available">In Stock: ${product.quantity}</span>
 						</div>
 						<p>Cửa hàng: <a href='<c:url value="/${role}/store/${store.slug}?cate=&sortBy=${0}"/>' style="text-decorator:none;">${store.name}</a></p>
 
