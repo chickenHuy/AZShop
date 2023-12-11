@@ -47,10 +47,23 @@
 					<div class="aside">
 						<h3 class="aside-title">Style</h3>
 						<div class="checkbox-filter">
+						<a href='<c:url value="/${role}/search?categoryId=${categoryId}&styleId=-1&searchTerm=${searchTerm}"/>'>
+										<c:if test="${styleId eq '-1'}"> 
+											<label style="color: #d10024"> Tất cả
+										</c:if>
+										<c:if test="${!(styleId eq '-1')}">
+											<label >Tất cả</label>
+										</c:if>
+							</a>
 							<c:forEach var="style" items="${styles}">	
 								<a href='<c:url value="/${role}/search?categoryId=${categoryId}&styleId=${style.id}&searchTerm=${searchTerm}"/>'>
 									<div class="input-checkbox">
-											<label>${style.name}</label>
+									<c:if test="${styleId eq style.id}">
+											<label style="color: #d10024">${style.name}</label>
+									</c:if>
+									<c:if test="${! (styleId eq style.id)}">
+											<label ">${style.name}</label>
+									</c:if>
 									</div>
 								</a>
 							</c:forEach>
