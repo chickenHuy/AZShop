@@ -62,7 +62,7 @@
 															alt="" />
 													</c:if>
 													<div class="product-label">
-														<span class="new">NEW</span>
+														<span class="new">HOT</span>
 													</div>
 												</div>
 											</a>

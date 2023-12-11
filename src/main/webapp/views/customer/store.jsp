@@ -133,9 +133,6 @@
 													src="${pageContext.request.contextPath}/templates/static/none.png"
 													alt="" />
 											</c:if>
-											<div class="product-label">
-												<span class="sale">-30%</span> <span class="new">NEW</span>
-											</div>
 										</div>
 									</a>
 									<div class="product-body">
