@@ -77,7 +77,7 @@ public class OrderServiceImpl implements IOrderService {
 	public List<String> statusForVendor() {
 		List<String> staList = new ArrayList<String>();
 		staList.add("Processing");
-		staList.add("Pending pickup");
+		staList.add("Pending Pickup");
 		staList.add("Cancelled");
 		return staList;
 	}
