@@ -24,7 +24,7 @@
 							<div id="tab1" class="tab-pane active">
 								<div class="products-slick" data-nav="#slick-nav-6">
 
-									<c:forEach var="category" items="${categoryParentList}">
+									<c:forEach var="category" items="${categoryList}">
 										<!-- shop -->
 										<div class="col-md-4 col-xs-6">
 					
