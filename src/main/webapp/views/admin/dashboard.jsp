@@ -151,7 +151,7 @@
 						<div class="d-flex align-items-center">
 							<div class="">
 								<p class="mb-1 text-white">Total User</p>
-								<h4 class="mb-0 text-white">${totalus}</h4>
+								<h4 class="mb-0 text-white">${totalus == null ? '0' : totalus}</h4>
 							</div>
 							<div class="ms-auto fs-2 text-white">
 								<i class="bi bi-truck"></i>
