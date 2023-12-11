@@ -62,7 +62,7 @@ import com.azshop.services.StyleValueImpl;
 import com.azshop.services.UserServiceImpl;
 import com.azshop.utils.Constant;
 
-@WebServlet(urlPatterns = { "/customer/add-to-cart/*", "/customer/delete-item-cart", "/customer/cart/checkout",
+@WebServlet(urlPatterns = { "/customer/add-to-cart/*", "/guest/add-to-cart/*", "/customer/delete-item-cart", "/customer/cart/checkout",
 		"/customer/cart/checkout-comfirm", "/customer/add-address" })
 public class CartController extends HttpServlet {
 
