@@ -146,7 +146,11 @@ public class ProductController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI().toString();
-		if (url.contains("review-product")) {
+		if (url.contains("guest")) {
+			resp.sendRedirect(req.getContextPath() + "/login-customer");
+		}
+		
+		else if (url.contains("review-product")) {
 			try {
 				postReviewProduct(req, resp);
 			} catch (Exception e) {
