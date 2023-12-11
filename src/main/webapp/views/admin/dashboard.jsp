@@ -189,7 +189,7 @@
 			<div class="col">
 				<div class="card rounded-4 bg-texture-info">
 					<div class="card-body">
-						<a href="/AZShop/information" style="color: white;">
+						<a href="/AZShop/admin/admin-info" style="color: white;">
 							<div class="d-flex align-items-center justify-content-between">
 								<div class="">
 									<h4 class="mb-0">SECURITY</h4>
