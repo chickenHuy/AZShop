@@ -75,53 +75,6 @@ public class GuestController extends HttpServlet{
 		}		
 	}
 
-	private void search(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ma hoa UTF-8
-		req.setCharacterEncoding("UTF-8");
-		resp.setCharacterEncoding("UTF-8");
-
-		// nhan du lieu tu form
-		String keyword = req.getParameter("keyword");
-		
-		List<ProductModel> productList = productService.FindProduct(keyword);
-		List<StoreModel> storeList = storeService.FindStore(keyword);
-		List<CategoryModel> categoryList = categoryService.FindCategory(keyword);
-		
-		if (productList.size()!=0){		
-			List<CategoryModel> categorys = categoryService.getAll();
-			List<ImageModel> imageList = new ArrayList<ImageModel>();
-			
-			for (ProductModel productModel : productList) {
-				ImageModel image = imageService.getImage(productModel.getId());
-				imageList.add(image);
-			}
-			
-			req.setAttribute("productList",productList);
-			req.setAttribute("categoryList", categorys);
-			req.setAttribute("imageList", imageList);
-			RequestDispatcher rd = req.getRequestDispatcher("/views/guest/SearchProduct.jsp");
-			rd.forward(req, resp);
-		}
-		
-		else {
-			//Tìm danh mục
-			if (storeList.size()!=0) {
-				req.setAttribute("storeList", storeList);
-				RequestDispatcher rd = req.getRequestDispatcher("/views/guest/SearchStore.jsp");
-				rd.forward(req, resp);
-			}
-			else {
-				//Tìm danh mục
-				if (categoryList.size()!=0) {
-					req.setAttribute("categoryList", categoryList);
-					RequestDispatcher rd = req.getRequestDispatcher("/views/guest/SearchCategory.jsp");
-					rd.forward(req, resp);
-				}		
-			}
-		}		
-		
-	}
-
 	private void getAll(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		List<CategoryModel> categoryList = categoryService.getAll();
