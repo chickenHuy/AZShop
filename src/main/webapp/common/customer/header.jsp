@@ -7,14 +7,12 @@
 	<div id="top-header">
 		<div class="container">
 			<ul class="header-links pull-left">
-				<li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>
+				<li><a href="#"><i class="fa fa-phone"></i>0869017464</a></li>
 				<li><a href="#"><i class="fa fa-envelope-o"></i>
-						email@email.com</a></li>
-				<li><a href="#"><i class="fa fa-map-marker"></i> 1734
-						Stonecoal Road</a></li>
+						AZShopNhom3@gmail.com</a></li>
+				<li><a href="#"><i class="fa fa-map-marker"></i>Số 1 Võ Văn Ngân</a></li>
 			</ul>
 			<ul class="header-links pull-right">
-				<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 					   <i class="fa fa-user-o"></i> ${user.email} <span class="caret"></span>
@@ -125,7 +123,7 @@
 									<h5>SUBTOTAL: ${sumPrice} VNĐ</h5>
 								</div>
 								<div class="cart-btns">
-									<a href='<c:url value="/customer/cart"/>'>View Cart</a> <a href='<c:url value="/customer/cart/checkout"/>'>Checkout <i
+									<a style="display: none;" href='<c:url value="/customer/cart"/>'>View Cart</a> <a style="width: 100%;" href='<c:url value="/customer/cart/checkout"/>'>Checkout <i
 										class="fa fa-arrow-circle-right"></i></a>
 								</div>
 							</div>
