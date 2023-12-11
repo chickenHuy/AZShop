@@ -370,12 +370,17 @@ public class AccountController extends HttpServlet {
 		user.setPhone(req.getParameter("phone"));
 		user.setAddress(req.getParameter("address"));
 		user.setAvatar(image);
+		
+		if (req.getParameter("phone").length() < 10) {
+			resp.sendRedirect("/AZShop/information?done=Cap nhat thong tin khong thanh cong!");
+			return;
+		} else {
+			// Gọi service để cập nhật thông tin người dùng
+			userService.update(user);
 
-		// Gọi service để cập nhật thông tin người dùng
-		userService.update(user);
-
-		// Chuyển hướng đến trang thông tin người dùng với thông báo thành công
-		resp.sendRedirect("/AZShop/information?done=Cap nhat thong tin thanh cong!");
+			// Chuyển hướng đến trang thông tin người dùng với thông báo thành công
+			resp.sendRedirect("/AZShop/information?done=Cap nhat thong tin thanh cong!");
+		}
 	}
 
 	private void postForget(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {

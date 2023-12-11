@@ -290,6 +290,7 @@
 											<label for="Country" class="col-md-4 col-lg-3 col-form-label">Phone</label>
 											<div class="col-md-8 col-lg-9">
 												<input name="phone" type="text" class="form-control"
+
 													id="phone" value="${user.phone}" pattern="[0-9]+" title="Chỉ được nhập số" maxlength="10" required>
 											</div>
 										</div>
