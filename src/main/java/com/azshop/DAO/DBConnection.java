@@ -4,8 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DBConnection {
-<<<<<<< HEAD
-
+	
 	private final String serverName = "DESKTOP-NN1DVIA";
 	private final String dbName = "AZShop_Nhom_3";
 	private final String portNumber = "1433";
@@ -22,35 +21,7 @@ public class DBConnection {
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		return DriverManager.getConnection(url);
 		}
-=======
-    private final String serverName = "THANH-HUY";
-    private final String dbName = "AZShop_Nhom_3";
-    private final String portNumber = "1433";
-    private final String username = "sa";
-    private final String password = "Httt2807";
-
     
-    public Connection getConnection() throws Exception {
-        String url = "jdbc:sqlserver://" + serverName + ":" + portNumber + ";databaseName=" + dbName;
-        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        return DriverManager.getConnection(url, username, password);
-    }
-    
-//
-//    private final String serverName = "database-azshop.cvv8fenhkivu.ap-southeast-2.rds.amazonaws.com";
-//    private final String dbName = "AZShop_Nhom_3";
-//    private final String portNumber = "1433";
-//    private final String username = "admin";
-//    private final String password = "Nth250603";
-//    
-//    
-//    public Connection getConnection() throws Exception {
-//        String url = "jdbc:sqlserver://" + serverName + ":" + portNumber + ";databaseName=" + dbName;
-//        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-//        return DriverManager.getConnection(url, username, password);
-//    }
-
->>>>>>> 42d64c1c9ecf6b8c3cb6e1f47245a9d6afc4ff01
 	public static void main(String[] args) {
 
 		try {
