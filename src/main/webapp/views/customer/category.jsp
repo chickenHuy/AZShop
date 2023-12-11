@@ -164,9 +164,6 @@
 											<i class="fa fa-star"></i>
 											<i class="fa fa-star"></i>
 										</div>
-										<div class="product-btns">
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
 									</div>
 									<a
 										href="<c:url value='/${role}/add-to-cart/${product.slug}?count=${1}'/>">
