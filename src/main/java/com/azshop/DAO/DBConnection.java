@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DBConnection {
-
+//
     private final String serverName = "database-azshop.cvv8fenhkivu.ap-southeast-2.rds.amazonaws.com";
     private final String dbName = "AZShop_Nhom_3";
     private final String portNumber = "1433";
@@ -18,6 +18,22 @@ public class DBConnection {
         return DriverManager.getConnection(url, username, password);
     }
     
+//    private final String serverName = "DESKTOP-NN1DVIA";
+//	private final String dbName = "AZShop_Nhom_4";
+//	private final String portNumber = "1433";
+//	private final String instance = "";// MSSQLSERVER LEAVE THIS ONE
+//	
+//	public Connection getConnection() throws Exception {
+//		String url = "jdbc:sqlserver://" + serverName + ":" + portNumber
+//		+ "\\" + instance + ";integratedSecurity=true;databaseName=" +
+//		dbName;
+//		if (instance == null || instance.trim().isEmpty())
+//		url = "jdbc:sqlserver://" + serverName + ":" + portNumber +
+//		";integratedSecurity=true;databaseName=" + dbName;
+//		//DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
+//		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+//		return DriverManager.getConnection(url);
+//		}
 
 	public static void main(String[] args) {
 
