@@ -62,7 +62,7 @@
                     <div class="d-flex align-items-center">
                       <div class="">
                         <p class="mb-1">Sold on the day</p>
-                        <h4 class="mb-0 text-warning">${totalInDay != null ? totalInDay : '0'}</h4>
+                        <h4 class="mb-0 text-warning">${totalInday != null ? totalInday : '0'}</h4>
                       </div>
                       <div class="ms-auto widget-icon bg-warning text-dark">
                         <i class="bi bi-people-fill"></i>

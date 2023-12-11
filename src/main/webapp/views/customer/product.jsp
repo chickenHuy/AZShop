@@ -461,20 +461,6 @@
 									<del class="product-old-price">$990.00</del>
 								</h4>
 								<div class="product-rating"></div>
-								<div class="product-btns">
-									<button class="add-to-wishlist">
-										<i class="fa fa-heart-o"></i><span class="tooltipp">add
-											to wishlist</span>
-									</button>
-									<button class="add-to-compare">
-										<i class="fa fa-exchange"></i><span class="tooltipp">add
-											to compare</span>
-									</button>
-									<button class="quick-view">
-										<i class="fa fa-eye"></i><span class="tooltipp">quick
-											view</span>
-									</button>
-								</div>
 							</div>
 							<a href="<c:url value='/${role}/add-to-cart'/>">
 								<div class="add-to-cart">

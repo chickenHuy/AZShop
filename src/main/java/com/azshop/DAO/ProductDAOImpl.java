@@ -860,7 +860,7 @@ public class ProductDAOImpl implements IProductDAO {
 	public List<ProductModel> getAllProductActive() {
 		List<ProductModel> listProduct = new ArrayList<ProductModel>();
 		try {
-			String sql = "SELECT * FROM dbo.[Product] WHERE isDeleted = 0 and isActive = 1";
+			String sql = "SELECT * FROM dbo.[Product] WHERE isDeleted = 0 and isActive = 1 and quantiny > 0";
 			conn = new DBConnection().getConnection();
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();

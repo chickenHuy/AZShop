@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 public class DBConnection {
 
     private final String serverName = "HIEULAG\\THANHHIEU";
+
     private final String dbName = "AZShop_Nhom_3";
     private final String portNumber = "1433";
     private final String username = "sa";
