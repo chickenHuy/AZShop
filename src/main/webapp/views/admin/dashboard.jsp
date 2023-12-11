@@ -150,8 +150,8 @@
 					<div class="card-body">
 						<div class="d-flex align-items-center">
 							<div class="">
-								<p class="mb-1 text-white">Total Completed</p>
-								<h4 class="mb-0 text-white">${totalCompleted != null ? totalCompleted : '0'}</h4>
+								<p class="mb-1 text-white">Total User</p>
+								<h4 class="mb-0 text-white">${totalus}</h4>
 							</div>
 							<div class="ms-auto fs-2 text-white">
 								<i class="bi bi-truck"></i>
