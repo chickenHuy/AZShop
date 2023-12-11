@@ -370,6 +370,11 @@ public class AccountController extends HttpServlet {
 		user.setPhone(req.getParameter("phone"));
 		user.setAddress(req.getParameter("address"));
 		user.setAvatar(image);
+		
+		if (req.getParameter("phone").length() < 10) {
+			resp.sendRedirect("/AZShop/information?done=Cap nhat thong tin khong thanh cong!");
+			return;
+		}
 
 		// Gọi service để cập nhật thông tin người dùng
 		userService.update(user);
