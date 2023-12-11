@@ -5,11 +5,11 @@ import java.sql.DriverManager;
 
 public class DBConnection {
 //
-    private final String serverName = "database-azshop.cvv8fenhkivu.ap-southeast-2.rds.amazonaws.com";
+    private final String serverName = "THANH-HUY";
     private final String dbName = "AZShop_Nhom_3";
     private final String portNumber = "1433";
-    private final String username = "admin";
-    private final String password = "Nth250603";
+    private final String username = "sa";
+    private final String password = "Httt2807";
     
     
     public Connection getConnection() throws Exception {
