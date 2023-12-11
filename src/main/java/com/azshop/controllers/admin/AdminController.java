@@ -601,7 +601,7 @@ public class AdminController extends HttpServlet {
 				TransactionModel transaction = new TransactionModel();
 				transaction.setUserId(order.getUserId());
 				transaction.setStoreId(order.getStoreId());
-				transaction.setAmount(order.getAmountFromUser());
+				transaction.setAmount(order.getAmountToAZShop());
 				transaction.setUp(true);
 
 				transactionService.insert(transaction);
