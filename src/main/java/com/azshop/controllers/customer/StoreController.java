@@ -105,7 +105,7 @@ private static final long serialVersionUID = 1L;
 			for (ProductModel productModel : productsInCart) {
 				ImageModel image = imageService.getImage(productModel.getId());
 				imageProductsInCart.add(image);
-			}
+			}			
 			
 			req.setAttribute("role", "customer");
 			req.setAttribute("quantity", cartItemList.size());
@@ -192,8 +192,18 @@ private static final long serialVersionUID = 1L;
 	                }
 	                else if (sortBy == 1) {
 	                	productListSort = productService.SortingProductbyPriceDecending(productList);		               
-	                }	 
+	                }
 	                
+	                List<ProductModel> hotProductList = productService.getHotProduct(store.getId());
+	                List<ImageModel> imageModels = new ArrayList<ImageModel>();
+	                
+	                for (ProductModel productModel : hotProductList) {
+	        			ImageModel image = imageService.getImage(productModel.getId());
+	        			imageModels.add(image);
+	        		}	  
+	                
+	                req.setAttribute("hotProductList",hotProductList);
+	                req.setAttribute("imageProHotList", imageModels);
 	                req.setAttribute("sortBy", sortBy);
 	                req.setAttribute("store", store);	               
 	                req.setAttribute("categoryChildList", categoryChildList);

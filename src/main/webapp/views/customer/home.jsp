@@ -38,7 +38,7 @@
 													<h3>
 														${category.name}</a><br>Danh mục
 													</h3>
-													<a href="#" class="cta-btn">Mua ngay <i
+													<a href='<c:url value="/${role}/category/${category.slug}?sortBy=${0}"/>' class="cta-btn">Mua ngay <i
 														class="fa fa-arrow-circle-right"></i></a>
 												</div>
 											</div>
