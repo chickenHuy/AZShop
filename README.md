@@ -1,35 +1,40 @@
-# Nhóm 3 - Dự án AZSHOP
-AZShop là một website thương mại điện tử đa chức năng, được xây dựng trên nền tảng Servlet, JSP/JSTL, Bootstrap, JDBC, SQL Server, và Decorator Seitemest. Nó mang lại trải nghiệm mua sắm trực tuyến toàn diện cho cả khách hàng và người bán hàng.
-## Thành viên
+# Website thương mại điện tử AZShop
 
-1. **MSSV:** 21110497
-   - **Họ tên:** Trần Lâm Nhựt Khang (Nhóm trưởng)
+AZShop là một website thương mại điện tử đa chức năng, mang lại trải nghiệm mua sắm trực tuyến toàn diện cho cả khách hàng và người bán hàng. Được xây dựng trên các nền tảng:
+* Servlet
+* JSP/JSTL
+* Bootstrap
+* JDBC
+* SQL Server*
+* Decorator Seitemest.
 
-2. **MSSV:** 21110473
-   - **Họ tên:** Nguyễn Thanh Huy
-
-3. **MSSV:** 21110492
-   - **Họ tên:** Đỗ Thanh Khang
-
-4. **MSSV:** 21110374
-   - **Họ tên:** Lê Nguyễn Bảo
-
-5. **MSSV:** 21110448
-   - **Họ tên:** Trần Thanh Hiếu
-
-6. **MSSV:** 20110733
-   - **Họ tên:** Võ Đinh Quốc Thuật
-
-7. **MSSV:** 20110750
-   - **Họ tên:** Hoàng Hạ Vũ
-
-8. **MSSV:** 21110637
-   - **Họ tên:** Nguyễn Thiện Tâm
-9. **MSSV:** 21110424
-   - **Họ tên:** Hồ Phương Đông
 
 ## Môi trường phát triển
+
 - **Máy chủ web:** Apache Tomcat
 - **Cơ sở dữ liệu:** Microsoft SQL Server
 - **JDK:** Java 20
 - **IDE:** Eclipse
+
+## Tải và cài đặt
+* Clone repository này về máy của bạn bằng lệnh:
+```bash
+git clone https://github.com/chickenHuy/AZShop.git
+```
+* Mở Eclipse IDE và import project vào workspace.
+* Backup cơ sở dữ liệu mẫu từ file `/database/AZShop.bak` vào SQL Server.
+* Mở file `/src/main/java/com/azshop/DAO/DBConnection.java` và chỉnh sửa thông tin kết nối cơ sở dữ liệu.
+* Import thư mục `/database/uploads` vào ổ đĩa `:D/`.
+* Chạy project trên máy chủ web Apache Tomcat.
+
+## Thành viên
+
+* Trần Lâm Nhựt Khang (Nhóm trưởng)
+* Nguyễn Thanh Huy
+* Đỗ Thanh Khang
+* Lê Nguyễn Bảo
+* Trần Thanh Hiếu
+* Võ Đinh Quốc Thuật
+* Hoàng Hạ Vũ
+* Nguyễn Thiện Tâm
+* Hồ Phương Đông
