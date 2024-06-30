@@ -5,7 +5,7 @@ AZShop là một website thương mại điện tử đa chức năng, mang lạ
 * JSP/JSTL
 * Bootstrap
 * JDBC
-* SQL Server*
+* SQL Server
 * Decorator Seitemest.
 
 
